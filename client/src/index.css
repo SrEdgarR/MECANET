@@ -1,0 +1,428 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 transition-colors duration-300;
+    font-family: 'Inter', system-ui, sans-serif;
+    font-size: 14px; /* Reducir tamaño base para mejor densidad */
+  }
+
+  /* Ajustes para pantallas pequeñas (1366x768 y menores) */
+  @media (max-width: 1400px) {
+    body {
+      font-size: 13px;
+    }
+    
+    h1 {
+      @apply text-2xl;
+    }
+    
+    h2 {
+      @apply text-xl;
+    }
+    
+    h3 {
+      @apply text-lg;
+    }
+  }
+}
+
+@layer components {
+  /* Glassmorphism Effect */
+  .glass {
+    @apply backdrop-blur-lg bg-white/90 dark:!bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-sm;
+  }
+
+  .glass-strong {
+    @apply backdrop-blur-xl bg-white/95 dark:!bg-gray-900 border border-gray-300 dark:border-gray-700 shadow-md;
+  }
+
+  /* Buttons */
+  .btn {
+    @apply px-3 py-1.5 rounded-lg font-medium transition-all duration-200 active:scale-95 text-sm;
+  }
+
+  /* Versión más grande para pantallas grandes */
+  @media (min-width: 1400px) {
+    .btn {
+      @apply px-4 py-2;
+    }
+  }
+
+  .btn-primary {
+    @apply btn bg-primary-600 hover:bg-primary-700 text-white shadow-lg shadow-primary-500/30 hover:shadow-xl hover:shadow-primary-500/40;
+  }
+
+  .btn-secondary {
+    @apply btn bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-900 dark:text-gray-100 border border-gray-300 dark:border-gray-600 shadow-sm;
+  }
+
+  .btn-danger {
+    @apply btn bg-red-600 hover:bg-red-700 text-white shadow-lg shadow-red-500/30;
+  }
+
+  .btn-success {
+    @apply btn bg-green-600 hover:bg-green-700 text-white shadow-lg shadow-green-500/30;
+  }
+
+  /* Cards */
+  .card {
+    @apply rounded-xl p-4 shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-200 dark:border-transparent;
+  }
+
+  /* Padding mayor para pantallas grandes */
+  @media (min-width: 1400px) {
+    .card {
+      @apply p-6;
+    }
+  }
+
+  .card-glass {
+    @apply card glass;
+  }
+
+  /* Inputs */
+  .input {
+    @apply w-full px-3 py-1.5 text-sm rounded-lg border-2 border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-primary-500 focus:border-primary-500 dark:focus:border-transparent transition-all duration-200 shadow-sm;
+  }
+
+  /* Prevenir fondo blanco en autocompletado modo oscuro */
+  .input:-webkit-autofill,
+  .input:-webkit-autofill:hover,
+  .input:-webkit-autofill:focus,
+  .input:-webkit-autofill:active {
+    -webkit-box-shadow: 0 0 0 30px rgb(31 41 55) inset !important;
+    -webkit-text-fill-color: rgb(243 244 246) !important;
+    transition: background-color 5000s ease-in-out 0s;
+  }
+
+  /* Autocompletado en modo claro */
+  :root:not(.dark) .input:-webkit-autofill,
+  :root:not(.dark) .input:-webkit-autofill:hover,
+  :root:not(.dark) .input:-webkit-autofill:focus {
+    -webkit-box-shadow: 0 0 0 30px white inset !important;
+    -webkit-text-fill-color: rgb(17 24 39) !important;
+  }
+
+  /* Inputs más grandes en pantallas grandes */
+  @media (min-width: 1400px) {
+    .input {
+      @apply px-4 py-2 text-base;
+    }
+  }
+
+  /* Smooth hover transitions */
+  .hover-lift {
+    @apply transition-transform duration-200 hover:-translate-y-1;
+  }
+
+  /* Scrollbar */
+  .custom-scrollbar::-webkit-scrollbar {
+    @apply w-2 h-2;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-track {
+    @apply bg-gray-100 dark:bg-gray-800 rounded-full;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    @apply bg-gray-300 dark:bg-gray-600 rounded-full hover:bg-gray-400 dark:hover:bg-gray-500;
+  }
+
+  /* Tablas mejoradas para modo claro */
+  .table-row {
+    @apply border-b border-gray-200 dark:border-gray-700;
+  }
+
+  .table-header {
+    @apply border-b-2 border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-800/50;
+  }
+
+  /* Dividers más visibles en modo claro */
+  .divider {
+    @apply border-t border-gray-300 dark:border-gray-700;
+  }
+
+  /* Badges mejorados */
+  .badge {
+    @apply px-3 py-1 rounded-full text-xs font-semibold border;
+  }
+
+  .badge-success {
+    @apply badge bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 border-green-200 dark:border-green-800;
+  }
+
+  .badge-warning {
+    @apply badge bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-400 border-yellow-200 dark:border-yellow-800;
+  }
+
+  .badge-danger {
+    @apply badge bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400 border-red-200 dark:border-red-800;
+  }
+
+  .badge-info {
+    @apply badge bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 border-blue-200 dark:border-blue-800;
+  }
+
+  .badge-neutral {
+    @apply badge bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 border-gray-200 dark:border-gray-700;
+  }
+}
+
+@layer utilities {
+  .active\:scale-98:active {
+    transform: scale(0.98);
+  }
+
+  /* Contenedor de página responsivo */
+  .page-container {
+    @apply p-3;
+  }
+
+  @media (min-width: 1400px) {
+    .page-container {
+      @apply p-6;
+    }
+  }
+
+  /* Grid responsivo más compacto */
+  .stats-grid {
+    @apply grid gap-3;
+  }
+
+  @media (min-width: 1400px) {
+    .stats-grid {
+      @apply gap-4;
+    }
+  }
+}
+
+/* Print Styles */
+@media print {
+  /* Ocultar todo */
+  body * {
+    visibility: hidden;
+  }
+
+  /* Mostrar solo el reporte imprimible y sus hijos */
+  .printable-report,
+  .printable-report * {
+    visibility: visible !important;
+  }
+
+  /* Posicionar el reporte */
+  .printable-report {
+    position: absolute !important;
+    left: 0 !important;
+    top: 0 !important;
+    width: 100%;
+  }
+
+  /* Eliminar márgenes y padding del body */
+  body {
+    margin: 0;
+    padding: 0;
+    background: white;
+  }
+
+  /* Estilos para el reporte */
+  .printable-report {
+    font-family: 'Times New Roman', Times, serif;
+    font-size: 11pt;
+    line-height: 1.4;
+    padding: 20mm;
+    max-width: 210mm;
+    margin: 0 auto;
+  }
+
+  .printable-report h1 {
+    font-size: 18pt;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 10pt;
+  }
+
+  .printable-report h2 {
+    font-size: 14pt;
+    font-weight: bold;
+    margin-top: 15pt;
+    margin-bottom: 8pt;
+    border-bottom: 2pt solid black;
+    padding-bottom: 3pt;
+  }
+
+  .printable-report table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 10pt;
+  }
+
+  .printable-report th,
+  .printable-report td {
+    padding: 6pt;
+    text-align: left;
+    border-bottom: 1pt solid #ccc;
+  }
+
+  .printable-report th {
+    font-weight: bold;
+    background-color: #f0f0f0;
+  }
+
+  .printable-report .signature-line {
+    border-top: 1pt solid black;
+    margin-top: 40pt;
+    padding-top: 5pt;
+  }
+
+  /* Forzar saltos de página si es necesario */
+  .page-break {
+    page-break-after: always;
+  }
+}
+
+/* Animaciones */
+@layer utilities {
+  @keyframes fade-in {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .animate-fade-in {
+    animation: fade-in 0.3s ease-out forwards;
+  }
+
+  @keyframes pulse-slow {
+    0%, 100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.5;
+    }
+  }
+
+  .animate-pulse-slow {
+    animation: pulse-slow 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+
+  /* Animación shimmer para skeletons */
+  @keyframes shimmer {
+    0% {
+      transform: translateX(-100%);
+    }
+    100% {
+      transform: translateX(100%);
+    }
+  }
+
+  .animate-shimmer {
+    animation: shimmer 2s infinite;
+  }
+
+  /* Animaciones escalonadas para listas */
+  .animate-stagger-1 {
+    animation: fade-in 0.3s ease-out 0.1s forwards;
+    opacity: 0;
+  }
+
+  .animate-stagger-2 {
+    animation: fade-in 0.3s ease-out 0.2s forwards;
+    opacity: 0;
+  }
+
+  .animate-stagger-3 {
+    animation: fade-in 0.3s ease-out 0.3s forwards;
+    opacity: 0;
+  }
+
+  .animate-stagger-4 {
+    animation: fade-in 0.3s ease-out 0.4s forwards;
+    opacity: 0;
+  }
+
+  /* Animación para modales */
+  @keyframes scale-in {
+    from {
+      opacity: 0;
+      transform: scale(0.9);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+
+  .animate-scale-in {
+    animation: scale-in 0.2s ease-out;
+  }
+
+  /* Animación suave para items del carrito cuando se agregan/actualizan */
+  @keyframes pulse-gentle {
+    0%, 100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.85;
+    }
+  }
+
+  .animate-pulse-gentle {
+    animation: pulse-gentle 0.6s ease-in-out 3;
+  }
+
+  /* Animaciones para el fondo del login */
+  @keyframes blob {
+    0%, 100% {
+      transform: translate(0, 0) scale(1);
+    }
+    25% {
+      transform: translate(20px, -50px) scale(1.1);
+    }
+    50% {
+      transform: translate(-20px, 20px) scale(0.9);
+    }
+    75% {
+      transform: translate(50px, 50px) scale(1.05);
+    }
+  }
+
+  .animate-blob {
+    animation: blob 7s infinite;
+  }
+
+  .animation-delay-2000 {
+    animation-delay: 2s;
+  }
+
+  .animation-delay-4000 {
+    animation-delay: 4s;
+  }
+
+  @keyframes gradient {
+    0%, 100% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+  }
+
+  .animate-gradient {
+    background-size: 200% 200%;
+    animation: gradient 15s ease infinite;
+  }
+
+  /* Grid pattern */
+  .bg-grid-white\/\[0\.05\] {
+    background-image: linear-gradient(to right, rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+                      linear-gradient(to bottom, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+  }
+}

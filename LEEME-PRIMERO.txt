@@ -1,0 +1,12 @@
+MECANET - Instalación local
+
+1. Descomprima el paquete en una carpeta propia, por ejemplo C:\MECANET.
+2. Use Node.js 22.12 o posterior, o el entorno incluido en la carpeta node.
+3. Ejecute CONFIGURAR-INICIAL.bat y proporcione sus credenciales en ese equipo.
+4. Ejecute INICIAR-MECANET.bat para abrir el sistema.
+5. Use DETENER-MECANET.bat para cerrar la instancia local.
+
+Conserve su archivo .env y sus copias de la base de datos de forma privada.
+No los adjunte a GitHub ni a un paquete público.
+Las actualizaciones se consultan en los Releases de SrEdgarR/MECANET.
+Consulte README.md para la configuración y las instrucciones completas.

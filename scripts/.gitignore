@@ -1,0 +1,31 @@
+# Scripts de desarrollo y testing
+# Estos scripts son solo para desarrollo local y no deben subirse a GitHub
+
+# Análisis y verificación
+analyzeDatabase.js
+checkReturns.js
+checkSales.js
+
+# Limpieza y seed
+cleanAndSeed.backup.js
+cleanAndSeed.js
+cleanDuplicateCollections.js
+cleanLogs.js
+resetDatabase.js
+seed.js
+
+# Correcciones one-time (ya ejecutadas)
+fixProductPrices.js
+fixReturnTotals.js
+fixSalesFields.js
+fixSalesIndex.js
+fixStatuses.js
+
+# Testing y load testing
+generateJWT.js
+loadtest-db.js
+
+# Migraciones antiguas
+migrateInventoryItems.js
+updateLogsSystemAction.js
+updateSoldCount.js

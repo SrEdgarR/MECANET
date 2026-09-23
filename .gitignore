@@ -1,0 +1,63 @@
+# Dependencies
+node_modules/
+client/node_modules/
+
+# Local configuration and secrets
+.env
+.env.*
+!.env.example
+!**/.env.example
+*.pem
+*.p12
+*.pfx
+*.key
+*.keystore
+credentials*.json
+service-account*.json
+backups/
+backup/
+MECANET-Distribuciones/
+*.sqlite
+*.sqlite3
+*.dump
+*.bak
+
+# Build output
+dist/
+build/
+client/dist/
+client/build/
+distribucion/
+*.zip
+*.exe
+*.exe.map
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+logs/
+
+# OS and editor files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Test and temporary files
+coverage/
+.nyc_output/
+*.tmp
+*.temp
+.mecanet-update-*/
+
+# Railway and local state
+.railway/
+.kilo/
+.mecanet-configured
+docs/

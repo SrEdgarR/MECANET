@@ -1,0 +1,23 @@
+{
+  "watch": [
+    "server.js",
+    "controllers/**/*.js",
+    "models/**/*.js",
+    "routes/**/*.js",
+    "middleware/**/*.js",
+    "config/**/*.js",
+    "services/**/*.js"
+  ],
+  "ignore": [
+    "node_modules/**",
+    "client/**",
+    "scripts/**",
+    "*.md",
+    ".env",
+    ".git/**",
+    "*.log"
+  ],
+  "ext": "js,json",
+  "delay": 1000,
+  "verbose": false
+}

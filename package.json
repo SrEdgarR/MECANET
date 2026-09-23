@@ -1,0 +1,92 @@
+{
+  "name": "mecanet-backend",
+  "version": "2.0.1",
+  "description": "Backend para sistema POS de taller mecanico",
+  "main": "server.js",
+  "type": "module",
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "bin": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js",
+    "setup": "node scripts/setup.js",
+    "generate-jwt": "node scripts/generateJwtSecret.js",
+    "setup:local": "node scripts/generateJwtSecret.js",
+    "test:setup": "node --test scripts/localSetup.test.js",
+    "test:setup-client": "node --test scripts/setup-client.test.js",
+    "create-admin": "node scripts/createAdmin.js",
+    "seed": "node scripts/seed.js",
+    "clean-seed": "node scripts/cleanAndSeed.js",
+    "reset-db": "node scripts/resetDatabase.js",
+    "setup-client": "node scripts/setup-client.js",
+    "clean-logs": "node scripts/cleanLogs.js",
+    "fix-return-totals": "node scripts/fixReturnTotals.js",
+    "client": "npm start --prefix client",
+    "server": "node server.js",
+    "build:cloud": "npm install && npm install --prefix client && npm run build --prefix client",
+    "build:desktop": "powershell -ExecutionPolicy Bypass -File .\\scripts\\build-all.ps1 -SkipNodeJS",
+    "package:release": "node scripts/create-release-zip.js",
+    "release": "node scripts/automated-release.js",
+    "build:exe": "node scripts/build-desktop.js",
+    "build:portable": "powershell -ExecutionPolicy Bypass -File .\\scripts\\create-portable.ps1",
+    "package:zip": "powershell -ExecutionPolicy Bypass -File .\\scripts\\package-for-distribution.ps1",
+    "clean:dist": "powershell -ExecutionPolicy Bypass -File .\\scripts\\clean-dist.ps1",
+    "download:node": "powershell -ExecutionPolicy Bypass -File .\\scripts\\download-nodejs.ps1",
+    "build:all": "powershell -ExecutionPolicy Bypass -File .\\scripts\\build-all.ps1",
+    "build:all:clean": "powershell -ExecutionPolicy Bypass -File .\\scripts\\build-all.ps1 -Clean",
+    "build:all:skip-node": "powershell -ExecutionPolicy Bypass -File .\\scripts\\build-all.ps1 -SkipNodeJS",
+    "test:security": "node --test scripts/security.test.js"
+  },
+  "keywords": [
+    "pos",
+    "autoparts",
+    "inventory"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "adm-zip": "^0.6.1",
+    "axios": "^1.20.0",
+    "bcryptjs": "^2.4.3",
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "express": "^4.22.3",
+    "express-rate-limit": "^8.7.0",
+    "express-validator": "^7.3.2",
+    "form-data": "^4.0.6",
+    "helmet": "^8.1.0",
+    "inquirer": "^13.0.1",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.24.4",
+    "node-fetch": "^3.3.2",
+    "nodemailer": "^10.0.10",
+    "open": "^11.0.0",
+    "pdfkit": "^0.17.2",
+    "semver": "^7.7.3"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1",
+    "pkg": "npm:@yao-pkg/pkg@^6.22.0"
+  },
+  "pkg": {
+    "assets": [
+      "client/dist/**/*",
+      "server.js",
+      "config/**/*.js",
+      "controllers/**/*.js",
+      "middleware/**/*.js",
+      "models/**/*.js",
+      "routes/**/*.js",
+      "services/**/*.js",
+      "utils/**/*.js",
+      "package.json",
+      "version.json"
+    ],
+    "targets": [
+      "node24-win-x64"
+    ],
+    "outputPath": "dist"
+  }
+}
