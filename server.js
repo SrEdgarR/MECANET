@@ -29,11 +29,11 @@ import { rejectUnsafeKeys } from './middleware/validationMiddleware.js';
 // ========== MANEJO DE ERRORES GLOBALES ==========
 // Capturar errores no manejados para evitar que el ejecutable se cierre sin mostrar informaciÃ³n
 process.on('uncaughtException', (error) => {
-  console.error('\nâŒ ERROR CRÃTICO NO CAPTURADO:');
+  console.error('\n[ERROR] ERROR CRÍTICO NO CAPTURADO:');
   console.error(error);
   console.error('\nStack trace:', error.stack);
   if (process.env.NODE_ENV === 'production' && process.stdin.isTTY) {
-    console.log('\nâ¸ï¸  Presiona cualquier tecla para cerrar...');
+    console.log('\n[INFO] Presiona cualquier tecla para cerrar...');
     process.stdin.setRawMode(true);
     process.stdin.resume();
     process.stdin.once('data', () => process.exit(1));
@@ -43,11 +43,11 @@ process.on('uncaughtException', (error) => {
 });
 
 process.on('unhandledRejection', (reason, promise) => {
-  console.error('\nâŒ PROMESA RECHAZADA NO MANEJADA:');
-  console.error('RazÃ³n:', reason);
+  console.error('\n[ERROR] PROMESA RECHAZADA NO MANEJADA:');
+  console.error('Razón:', reason);
   console.error('Promesa:', promise);
   if (process.env.NODE_ENV === 'production' && process.stdin.isTTY) {
-    console.log('\nâ¸ï¸  Presiona cualquier tecla para cerrar...');
+    console.log('\n[INFO] Presiona cualquier tecla para cerrar...');
     process.stdin.setRawMode(true);
     process.stdin.resume();
     process.stdin.once('data', () => process.exit(1));
@@ -102,7 +102,7 @@ try {
   const versionJson = JSON.parse(fs.readFileSync(path.join(__dirname, 'version.json'), 'utf8'));
 
   if (packageJson.version !== versionJson.version) {
-    console.error('âŒ ERROR CRÃTICO DE VERSIÃ“N:');
+    console.error('[ERROR] ERROR CRÍTICO DE VERSIÓN:');
     console.error(`   package.json: ${packageJson.version}`);
     console.error(`   version.json: ${versionJson.version}`);
     console.error('   Las versiones deben coincidir para iniciar el sistema.');
@@ -110,16 +110,16 @@ try {
   }
 
   APP_VERSION = packageJson.version;
-  console.log(`\nðŸš€ MECANET v${APP_VERSION} âœ…`);
+  console.log(`\n[INFO] MECANET v${APP_VERSION}`);
 } catch (error) {
-  console.error('âŒ Error leyendo versiÃ³n:', error.message);
+  console.error('[ERROR] Error leyendo versión:', error.message);
   if (process.env.NODE_ENV === 'production') process.exit(1);
 }
 
 // Determinar modo de aplicaciÃ³n
 const envResult = dotenv.config();
 if (envResult.error) {
-  console.error('âš ï¸  Archivo .env no encontrado');
+  console.error('[ERROR] Archivo .env no encontrado');
 }
 
 const IS_CLOUD_ENV = process.env.RAILWAY_ENVIRONMENT || process.env.VERCEL || process.env.HEROKU_APP_NAME;
@@ -150,26 +150,26 @@ const waitAndExit = async (exitCode = 1) => {
 };
 
 if (!jwtSecret || String(jwtSecret).length < MIN_JWT_LENGTH) {
-  console.error('\nâŒ FATAL: La variable de entorno JWT_SECRET no estÃ¡ definida o es demasiado corta.');
-  console.error('   Longitud actual:', jwtSecret ? jwtSecret.length : 0, '| MÃ­nimo requerido:', MIN_JWT_LENGTH);
-  console.error('\nðŸ“ Soluciones:');
-  console.error('   1. AsegÃºrate de que el archivo .env exista en la misma carpeta que el ejecutable');
+  console.error('\n[ERROR] FATAL: La variable de entorno JWT_SECRET no está definida o es demasiado corta.');
+  console.error('   Longitud actual:', jwtSecret ? jwtSecret.length : 0, '| Mínimo requerido:', MIN_JWT_LENGTH);
+  console.error('\nSoluciones:');
+  console.error('   1. Asegúrate de que el archivo .env exista en la misma carpeta que el ejecutable');
   console.error('   2. Genera un secreto seguro ejecutando: node ./scripts/generateJwtSecret.js');
   console.error('   3. Copia el secreto generado al archivo .env');
-  console.error('\nðŸ“‚ UbicaciÃ³n esperada del .env:', path.join(__dirname, '.env'));
+  console.error('\nUbicación esperada del .env:', path.join(__dirname, '.env'));
   // Cortamos el arranque del servidor para evitar correr sin secreto vÃ¡lido
   await waitAndExit(1);
 }
 
 // Conectar a MongoDB
-console.log('ðŸ“¡ Conectando a base de datos...');
+console.log('[INFO] Conectando a base de datos...');
 try {
   await connectDB();
   const pendingSetup = await mongoose.connection.db.collection('__mecanet_setup_recovery').findOne({ _id: 'active' });
   if (pendingSetup) throw new Error('Hay una configuración pendiente de recuperación. Revísala con setup-client antes de iniciar MECANET.');
-  console.log('âœ… Base de datos conectada');
+  console.log('[OK] Base de datos conectada');
 } catch (error) {
-  console.error('âŒ Error de conexiÃ³n:', error.message);
+  console.error('[ERROR] Error de conexión:', error.message);
   await waitAndExit(1);
 }
 
@@ -352,7 +352,7 @@ app.get('/api/version', (req, res) => {
 
     res.json(versionData);
   } catch (error) {
-    console.error('Error al leer versiÃ³n:', error);
+    console.error('Error al leer versión:', error);
     // Enviar JSON incluso en error 500 para evitar SyntaxError en cliente
     res.status(500).json({ message: 'Error al obtener versiÃ³n', version: '0.0.0' });
   }
@@ -454,7 +454,7 @@ const PORT = process.env.PORT || 5000;
 
 const BIND_HOST = process.env.BIND_HOST || (IS_LOCAL_APP ? '127.0.0.1' : '0.0.0.0');
 app.listen(PORT, BIND_HOST, async () => {
-  console.log('\nâœ… Servidor iniciado en http://localhost:' + PORT);
+  console.log('\n[OK] Servidor iniciado en http://localhost:' + PORT);
   console.log('   Entorno:', process.env.NODE_ENV || 'development');
 
   // En modo ESCRITORIO (Local), abrir automÃ¡ticamente el navegador
@@ -462,18 +462,18 @@ app.listen(PORT, BIND_HOST, async () => {
   if (IS_LOCAL_APP && process.env.NODE_ENV === 'production' && !process.env.SKIP_BROWSER_OPEN) {
     try {
       await open(`http://localhost:${PORT}`);
-      console.log('âœ… Navegador abierto\n');
+      console.log('[OK] Navegador abierto\n');
     } catch (error) {
-      console.log('âš ï¸  Abre manualmente: http://localhost:' + PORT + '\n');
+      console.log('[INFO] Abre manualmente: http://localhost:' + PORT + '\n');
     }
   }
 }).on('error', (error) => {
-  console.error('\nâŒ Error al iniciar servidor:', error.message);
+  console.error('\n[ERROR] Error al iniciar servidor:', error.message);
   if (error.code === 'EADDRINUSE') {
-    console.error(`   Puerto ${PORT} ya estÃ¡ en uso. Cierra otras instancias.`);
+    console.error(`   Puerto ${PORT} ya está en uso. Cierra otras instancias.`);
   }
   if (process.env.NODE_ENV === 'production' && process.stdin.isTTY) {
-    console.log('\nâ¸ï¸  Presiona cualquier tecla para cerrar...');
+    console.log('\n[INFO] Presiona cualquier tecla para cerrar...');
     process.stdin.setRawMode(true);
     process.stdin.resume();
     process.stdin.once('data', () => process.exit(1));

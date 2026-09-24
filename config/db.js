@@ -114,7 +114,7 @@ const connectDB = async ({ allowFallback = true } = {}) => {
 
       try {
         dns.setServers(dnsServers);
-        console.warn(`Fallo DNS SRV con resolver local. Reintentando con DNS: ${dnsServers.join(', ')}`);
+        console.info(`[INFO] El DNS local no resolvió el registro SRV; reintentando con DNS alternativos: ${dnsServers.join(', ')}`);
         return await connectWithUri(primaryUri, 'principal con dns alternativo', mongooseOptions);
       } catch (dnsRetryError) {
         lastError = dnsRetryError;
@@ -123,7 +123,7 @@ const connectDB = async ({ allowFallback = true } = {}) => {
 
     if (fallbackUri && allowFallback) {
       try {
-        console.warn('Intentando MONGODB_URI_FALLBACK...');
+        console.info('[INFO] Intentando la conexión MONGODB_URI_FALLBACK...');
         return await connectWithUri(fallbackUri, 'fallback', mongooseOptions);
       } catch (fallbackError) {
         lastError = fallbackError;
