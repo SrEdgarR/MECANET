@@ -130,7 +130,8 @@ describe('Settings Integration Tests', () => {
 
     // Wait for page to load and show warning message
     await waitFor(() => {
-      expect(screen.getByText(/solo los administradores pueden modificar/i)).toBeInTheDocument();
+      expect(screen.getByText(/solo administradores o desarrolladores pueden modificar/i)).toBeInTheDocument();
     }, { timeout: 2000 });
+    expect(screen.getByPlaceholderText('MECANET')).toBeDisabled();
   });
 });

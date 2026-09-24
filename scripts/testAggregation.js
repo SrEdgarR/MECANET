@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 import 'dotenv/config';
 import mongoose from 'mongoose';
-const MONGODB_URI = process.env.MONGODB_URI;
-await mongoose.connect(MONGODB_URI);
+import connectDB from '../config/db.js';
+await connectDB({ allowFallback: false });
 const db = mongoose.connection.db;
 
 const startOfWeek = new Date();

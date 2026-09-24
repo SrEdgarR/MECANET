@@ -1,9 +1,11 @@
-# ============================================
+﻿# ============================================
 # MECANET - Script de Prueba de Compilación
 # ============================================
 # Este script verifica que el frontend se compile correctamente
 # sin generar el ejecutable completo (más rápido)
 # ============================================
+
+$ErrorActionPreference = 'Stop'
 
 Write-Host ""
 Write-Host "============================================" -ForegroundColor Cyan

@@ -1,6 +1,10 @@
 import { searchLiteral } from '../services/searchLiteral.js';
 import Customer from '../models/Customer.js';
 import Sale from '../models/Sale.js';
+import AuditLogService from '../services/auditLogService.js';
+import { auditChanges } from '../services/auditChanges.js';
+
+const customerLabels = { fullName: 'Nombre', cedula: 'Cédula/RNC', phone: 'Teléfono', email: 'Email', address: 'Dirección', isArchived: 'Archivado' };
 
 // @desc    Obtener todos los clientes (con paginación)
 // @route   GET /api/customers
@@ -203,6 +207,10 @@ export const createCustomer = async (req, res) => {
     console.log('💾 Datos a crear en DB:', customerData);
     const customer = await Customer.create(customerData);
     console.log('✅ Cliente creado exitosamente:', customer._id);
+    await AuditLogService.logCustomer({ user: req.user, action: 'Creación de Cliente',
+      customerId: customer._id, customerName: customer.fullName,
+      description: `Se creó el cliente ${customer.fullName}`,
+      changes: auditChanges(null, customer, customerLabels), req });
 
     res.status(201).json(customer);
   } catch (error) {
@@ -261,6 +269,11 @@ export const updateCustomer = async (req, res) => {
       { new: true, runValidators: true }
     );
 
+    const changes = auditChanges(customer, updatedCustomer, customerLabels);
+    if (changes.length) await AuditLogService.logCustomer({ user: req.user, action: 'Modificación de Cliente',
+      customerId: updatedCustomer._id, customerName: updatedCustomer.fullName,
+      description: `Se modificó el cliente ${updatedCustomer.fullName}`, changes, req });
+
     res.json(updatedCustomer);
   } catch (error) {
     console.error('Error al actualizar cliente:', error);
@@ -289,6 +302,10 @@ export const deleteCustomer = async (req, res) => {
       // Soft delete: archivar el cliente si tiene ventas activas
       customer.isArchived = true;
       await customer.save();
+      await AuditLogService.logCustomer({ user: req.user, action: 'Eliminación de Cliente',
+        customerId: customer._id, customerName: customer.fullName,
+        description: `Se archivó el cliente ${customer.fullName}`,
+        changes: [{ field: 'isArchived', fieldLabel: 'Archivado', oldValue: false, newValue: true }], req });
 
       console.log(`Cliente ${customer._id} archivado (tiene ${activeSalesCount} ventas activas)`);
 
@@ -301,6 +318,10 @@ export const deleteCustomer = async (req, res) => {
 
     // Hard delete: eliminar permanentemente si no tiene ventas activas
     await Customer.findByIdAndDelete(req.params.id);
+    await AuditLogService.logCustomer({ user: req.user, action: 'Eliminación de Cliente',
+      customerId: customer._id, customerName: customer.fullName,
+      description: `Se eliminó el cliente ${customer.fullName}`,
+      changes: auditChanges(customer, null, customerLabels), req });
 
     console.log(`Cliente ${customer._id} eliminado permanentemente (sin ventas activas)`);
 

@@ -9,9 +9,14 @@ Write-Host "============================================`n" -ForegroundColor Cya
 
 # Verificar si ya fue configurado
 $configFlag = ".mecanet-configured"
-if (Test-Path $configFlag) {
+if ((Test-Path $configFlag) -and (Test-Path ".env")) {
     Write-Host "MECANET ya esta configurado." -ForegroundColor Yellow
-    Write-Host "Si necesitas reconfigurar, elimina el archivo: $configFlag" -ForegroundColor Gray
+    $nodePath = if (Test-Path "node\node.exe") { "node\node.exe" } else { "node" }
+    & $nodePath "scripts\createDeveloper.js" --if-empty
+    if ($LASTEXITCODE -ne 0) {
+        Write-Host "[ERROR] No se pudo completar la configuracion del primer usuario." -ForegroundColor Red
+        exit 1
+    }
     Write-Host "`nPresiona Enter para continuar..." -ForegroundColor Gray
     Read-Host
     exit 0
@@ -68,7 +73,10 @@ Write-Host "Configurando MECANET para nuevo cliente...`n" -ForegroundColor White
 
 # Generar JWT Secret
 Write-Host "[1/4] Generando JWT Secret seguro..." -ForegroundColor Cyan
-$jwtSecret = -join ((1..64) | ForEach-Object { '{0:x}' -f (Get-Random -Maximum 16) })
+$secretBytes = New-Object byte[] 32
+$randomGenerator = [System.Security.Cryptography.RandomNumberGenerator]::Create()
+try { $randomGenerator.GetBytes($secretBytes) } finally { $randomGenerator.Dispose() }
+$jwtSecret = [System.BitConverter]::ToString($secretBytes).Replace('-', '').ToLowerInvariant()
 
 # Solicitar información de MongoDB
 Write-Host "[2/4] Configuracion de Base de Datos" -ForegroundColor Cyan
@@ -208,55 +216,18 @@ try {
     $connectionOk = $false
 }
 
-# Crear usuario si hay conexión
-if ($connectionOk) {
-    Write-Host "`n============================================" -ForegroundColor Cyan
-    Write-Host "   CREAR USUARIO ADMINISTRADOR" -ForegroundColor Cyan
-    Write-Host "============================================`n" -ForegroundColor Cyan
-    
-    $createUser = Read-Host "Crear usuario administrador ahora? (s/n)"
-    
-    if ($createUser -eq 's' -or $createUser -eq 'S') {
-        Write-Host "`nCreando usuario administrador..." -ForegroundColor Cyan
-        Write-Host "Usando script createAdmin.js" -ForegroundColor Gray
-        
-        try {
-            # Detener servidor temporal primero
-            Stop-Process -Id $serverProcess.Id -Force -ErrorAction SilentlyContinue
-            Start-Sleep -Seconds 2
-            
-            # Ejecutar script de creación de admin
-            & $nodePath "scripts\createAdmin.js" 2>&1
-            
-            if ($LASTEXITCODE -eq 0) {
-                Write-Host "[OK] Usuario administrador creado!" -ForegroundColor Green
-                
-                # Preguntar si desea crear usuario desarrollador
-                Write-Host "`n" -NoNewline
-                $createDev = Read-Host "Crear usuario desarrollador tambien? (s/n)"
-                
-                if ($createDev -eq 's' -or $createDev -eq 'S') {
-                    Write-Host "`nCreando usuario desarrollador..." -ForegroundColor Cyan
-                    & $nodePath "scripts\createDeveloper.js"
-                    
-                    if ($LASTEXITCODE -eq 0) {
-                        Write-Host "[OK] Usuario desarrollador creado!" -ForegroundColor Green
-                    } else {
-                        Write-Host "[ADVERTENCIA] No se pudo crear usuario desarrollador" -ForegroundColor Yellow
-                    }
-                }
-                
-                Write-Host "`n⚠️  IMPORTANTE: Cambia las contraseñas tras el primer login" -ForegroundColor Yellow
-            } else {
-                Write-Host "[ERROR] No se pudo crear el usuario" -ForegroundColor Red
-                Write-Host "Podras crearlo desde la interfaz web" -ForegroundColor Yellow
-            }
-            
-        } catch {
-            Write-Host "[ERROR] Error ejecutando createAdmin.js" -ForegroundColor Red
-            Write-Host "Podras crear usuarios desde la interfaz web" -ForegroundColor Yellow
-        }
-    }
+if (-not $connectionOk) {
+    Write-Host "[ERROR] La configuracion no se completo porque MongoDB no esta disponible." -ForegroundColor Red
+    exit 1
+}
+
+Write-Host "`n============================================" -ForegroundColor Cyan
+Write-Host "   VERIFICANDO USUARIOS" -ForegroundColor Cyan
+Write-Host "============================================`n" -ForegroundColor Cyan
+& $nodePath "scripts\createDeveloper.js" --if-empty
+if ($LASTEXITCODE -ne 0) {
+    Write-Host "[ERROR] No se pudo completar la configuracion del primer usuario." -ForegroundColor Red
+    exit 1
 }
 
 # Crear marca de configuración

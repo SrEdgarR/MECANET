@@ -4,6 +4,21 @@ import Product from '../models/Product.js';
 import Customer from '../models/Customer.js';
 import Sale from '../models/Sale.js';
 import mongoose from 'mongoose';
+import AuditLogService from '../services/auditLogService.js';
+import { auditChanges } from '../services/auditChanges.js';
+
+const quotationLabels = { customer: 'Cliente', genericCustomerName: 'Cliente genérico', genericCustomerContact: 'Contacto', items: 'Productos y cantidades', subtotal: 'Subtotal', tax: 'Impuesto', total: 'Total', status: 'Estado', validUntil: 'Válida hasta', notes: 'Notas', terms: 'Términos', convertedToSale: 'Venta generada' };
+const quotationSnapshot = quotation => quotation && ({
+  ...Object.fromEntries(Object.keys(quotationLabels).filter(key => key !== 'items').map(key => [key, quotation[key] ?? null])),
+  customer: quotation.customer?._id?.toString() || quotation.customer?.toString() || null,
+  convertedToSale: quotation.convertedToSale?.toString() || null,
+  items: quotation.items?.map(item => ({ product: item.product?._id?.toString() || item.product?.toString(), quantity: item.quantity, unitPrice: item.unitPrice, discount: item.discount, subtotal: item.subtotal })) || []
+});
+const logQuotation = (req, quotation, action, description, before = null) => AuditLogService.log({
+  user: req.user, module: 'cotizaciones', action,
+  entity: { type: 'Cotización', id: quotation._id, name: `Cotización #${quotation.quotationNumber}` },
+  description, changes: auditChanges(quotationSnapshot(before), quotationSnapshot(quotation), quotationLabels), req
+});
 
 const addBusinessDays = (startDate, days) => {
   const date = new Date(startDate);
@@ -175,6 +190,7 @@ export const createQuotation = async (req, res) => {
     });
 
     await quotation.save();
+    await logQuotation(req, quotation, 'Creación de Cotización', `Se creó la cotización ${quotation.quotationNumber}`);
 
     // Populate para retornar datos completos
     await quotation.populate('customer', 'fullName phone email');
@@ -199,6 +215,7 @@ export const updateQuotation = async (req, res) => {
     if (!quotation) {
       return res.status(404).json({ message: 'CotizaciÃ³n no encontrada' });
     }
+    const previous = quotation.toObject();
 
     // Solo se puede editar si estÃ¡ pendiente
     if (quotation.status !== 'Pendiente') {
@@ -287,6 +304,9 @@ export const updateQuotation = async (req, res) => {
     if (terms !== undefined) quotation.terms = terms;
 
     await quotation.save();
+    if (auditChanges(quotationSnapshot(previous), quotationSnapshot(quotation), quotationLabels).length) {
+      await logQuotation(req, quotation, 'Modificación de Cotización', `Se modificó la cotización ${quotation.quotationNumber}`, previous);
+    }
 
     await quotation.populate('customer', 'fullName phone email');
     await quotation.populate('items.product', 'name sku');
@@ -320,6 +340,10 @@ export const deleteQuotation = async (req, res) => {
     const deleted = await Quotation.deleteOne({ _id: quotation._id, __v: quotation.__v,
       status: { $ne: 'Convertida' }, convertedToSale: null });
     if (!deleted.deletedCount) return res.status(409).json({ message: 'La cotización cambió. Recarga antes de eliminarla.' });
+    await AuditLogService.log({ user: req.user, module: 'cotizaciones', action: 'Eliminación de Cotización',
+      entity: { type: 'Cotización', id: quotation._id, name: `Cotización #${quotation.quotationNumber}` },
+      description: `Se eliminó la cotización ${quotation.quotationNumber}`,
+      changes: auditChanges(quotationSnapshot(quotation), null, quotationLabels), req });
 
     res.json({ message: 'CotizaciÃ³n eliminada correctamente' });
   } catch (error) {
@@ -449,6 +473,7 @@ export const convertToSale = async (req, res) => {
     }, { session });
 
     // Actualizar cotización
+    const previous = quotation.toObject();
     quotation.status = 'Convertida';
     quotation.convertedToSale = sale._id;
     quotation.convertedDate = new Date();
@@ -456,6 +481,10 @@ export const convertToSale = async (req, res) => {
     await quotation.save({ session });
 
     await session.commitTransaction();
+    await logQuotation(req, quotation, 'Cambio de Estado de Cotización', `Se convirtió la cotización ${quotation.quotationNumber} en venta`, previous);
+    await AuditLogService.logSale({ user: req.user, action: 'Creación de Venta', saleId: sale._id,
+      saleNumber: sale.invoiceNumber, description: `Se creó la venta ${sale.invoiceNumber} desde la cotización ${quotation.quotationNumber}`,
+      amount: sale.total, changes: [{ field: 'sourceQuotation', fieldLabel: 'Cotización origen', oldValue: null, newValue: quotation.quotationNumber }], req });
 
     await sale.populate('customer', 'fullName phone email');
     await sale.populate('items.product', 'name sku');
@@ -496,9 +525,11 @@ export const updateQuotationStatus = async (req, res) => {
     if (quotation.convertedToSale || !['Pendiente', 'Aprobada', 'Rechazada'].includes(quotation.status)) {
       return res.status(400).json({ message: 'No se puede cambiar el estado de una cotización cerrada' });
     }
+    const previous = quotation.toObject();
     quotation.status = status;
     quotation.processedBy = req.user.id;
     await quotation.save();
+    await logQuotation(req, quotation, 'Cambio de Estado de Cotización', `Se cambió el estado de la cotización ${quotation.quotationNumber} a ${quotation.status}`, previous);
 
     await quotation.populate('customer', 'fullName phone email');
     await quotation.populate('createdBy', 'name email');

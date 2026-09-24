@@ -1,6 +1,7 @@
 import { csvCell } from '../utils/safeDocuments';
 import { useState, useEffect } from "react";
 import api from "../services/api";
+import { useAuthStore } from '../store/authStore';
 import { toast } from "react-hot-toast";
 import {
   Shield,
@@ -16,7 +17,12 @@ import {
   Clock
 } from "lucide-react";
 
+const formatAuditValue = value => value == null ? '—'
+  : typeof value === 'object' ? JSON.stringify(value, null, 2)
+  : typeof value === 'boolean' ? (value ? 'Sí' : 'No') : String(value);
+
 const AuditLogs = () => {
+  const isDeveloper = useAuthStore(state => state.user?.role === 'desarrollador');
   const [logs, setLogs] = useState([]);
   const [stats, setStats] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -93,14 +99,15 @@ const AuditLogs = () => {
   };
 
   const exportLogs = () => {
-    const headers = ["Fecha", "Usuario", "Módulo", "Acción", "Entidad", "Descripción"];
+    const headers = ["Fecha", "Usuario", "Módulo", "Acción", "Entidad", "Descripción", "Cambios"];
     const rows = logs.map(log => [
       new Date(log.timestamp).toLocaleString("es-DO"),
       log.userInfo?.name || "Desconocido",
       log.module,
       log.action,
       `${log.entity.type} - ${log.entity.name}`,
-      log.description
+      log.description,
+      (log.changes || []).map(change => `${change.fieldLabel}: ${formatAuditValue(change.oldValue)} → ${formatAuditValue(change.newValue)}`).join('; ')
     ]);
 
     const csvContent = [
@@ -142,6 +149,7 @@ const AuditLogs = () => {
       caja: "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200",
       devoluciones: "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200",
       ordenes_compra: "bg-cyan-100 text-cyan-800 dark:bg-cyan-900 dark:text-cyan-200",
+      cotizaciones: "bg-violet-100 text-violet-800 dark:bg-violet-900 dark:text-violet-200",
       configuracion: "bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200"
     };
 
@@ -186,13 +194,13 @@ const AuditLogs = () => {
             <Download className="w-4 h-4" />
             Exportar CSV
           </button>
-          <button
+          {isDeveloper && <button
             onClick={cleanOldLogs}
             className="btn-secondary flex items-center gap-2"
           >
             <Trash2 className="w-4 h-4" />
             Limpiar Antiguos
-          </button>
+          </button>}
         </div>
       </div>
 
@@ -271,6 +279,7 @@ const AuditLogs = () => {
             <option value="caja">Caja</option>
             <option value="devoluciones">Devoluciones</option>
             <option value="ordenes_compra">Órdenes de Compra</option>
+            <option value="cotizaciones">Cotizaciones</option>
             <option value="configuracion">Configuración</option>
           </select>
 
@@ -296,12 +305,27 @@ const AuditLogs = () => {
               <option value="Eliminación de Cliente">Eliminación de Cliente</option>
               <option value="Modificación de Cliente">Modificación de Cliente</option>
             </optgroup>
+            <optgroup label="Proveedores">
+              {['Creación de Proveedor', 'Modificación de Proveedor', 'Eliminación de Proveedor'].map(action => <option key={action} value={action}>{action}</option>)}
+            </optgroup>
+            <optgroup label="Órdenes de compra">
+              {['Creación de Orden de Compra', 'Modificación de Orden de Compra', 'Recepción de Orden de Compra', 'Anulación de Orden de Compra', 'Eliminación de Orden de Compra', 'Envío de Orden de Compra'].map(action => <option key={action} value={action}>{action}</option>)}
+            </optgroup>
+            <optgroup label="Cotizaciones">
+              {['Creación de Cotización', 'Modificación de Cotización', 'Cambio de Estado de Cotización', 'Eliminación de Cotización'].map(action => <option key={action} value={action}>{action}</option>)}
+            </optgroup>
+            <optgroup label="Devoluciones y caja">
+              {['Creación de Devolución', 'Aprobación de Devolución', 'Rechazo de Devolución', 'Retiro de Efectivo', 'Aprobación de Retiro', 'Rechazo de Retiro', 'Eliminación de Retiro', 'Cierre de Caja'].map(action => <option key={action} value={action}>{action}</option>)}
+            </optgroup>
             <optgroup label="Usuarios y Seguridad">
               <option value="Inicio de Sesión Exitoso">Inicio de Sesión Exitoso</option>
               <option value="Intento de Inicio de Sesión Fallido">Intento Fallido</option>
               <option value="Creación de Usuario">Creación de Usuario</option>
+              <option value="Modificación de Usuario">Modificación de Usuario</option>
               <option value="Eliminación de Usuario">Eliminación de Usuario</option>
               <option value="Cambio de Rol">Cambio de Rol</option>
+              <option value="Cambio de Permisos">Cambio de Permisos</option>
+              <option value="Cambio de Contraseña">Cambio de Contraseña</option>
             </optgroup>
           </select>
 
@@ -329,6 +353,9 @@ const AuditLogs = () => {
             <option value="Usuario">Usuario</option>
             <option value="Caja">Caja</option>
             <option value="Devolución">Devolución</option>
+            <option value="Orden de Compra">Orden de Compra</option>
+            <option value="Cotización">Cotización</option>
+            <option value="Configuración">Configuración</option>
           </select>
 
           <input
@@ -530,11 +557,11 @@ const AuditLogs = () => {
                     <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-2">Cambios Realizados</h3>
                     <div className="bg-gray-50 rounded-lg p-4 space-y-2 dark:bg-gray-800">
                       {selectedLog.changes.map((change, index) => (
-                        <div key={index} className="flex items-center gap-2 text-sm">
+                        <div key={index} className="grid grid-cols-1 sm:grid-cols-[9rem_1fr_auto_1fr] gap-2 text-sm border-b border-gray-200 dark:border-gray-700 pb-2 last:border-0">
                           <span className="font-medium text-gray-700 dark:text-gray-300">{change.fieldLabel}:</span>
-                          <span className="text-gray-500 line-through">{String(change.oldValue)}</span>
+                          <span className="text-gray-500 whitespace-pre-wrap break-all">{formatAuditValue(change.oldValue)}</span>
                           <span>→</span>
-                          <span className="text-green-600 font-medium">{String(change.newValue)}</span>
+                          <span className="text-green-600 dark:text-green-400 font-medium whitespace-pre-wrap break-all">{formatAuditValue(change.newValue)}</span>
                         </div>
                       ))}
                     </div>

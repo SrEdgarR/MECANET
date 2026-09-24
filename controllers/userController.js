@@ -1,4 +1,8 @@
 import User from '../models/User.js';
+import AuditLogService from '../services/auditLogService.js';
+import { auditChanges } from '../services/auditChanges.js';
+
+const userLabels = { name: 'Nombre', email: 'Email', role: 'Rol', isActive: 'Estado activo' };
 
 // @desc    Obtener todos los usuarios
 // @route   GET /api/users
@@ -41,6 +45,9 @@ export const createUser = async (req, res) => {
     if (role === 'desarrollador' && req.user?.role !== 'desarrollador') {
       return res.status(403).json({ message: 'Solo un desarrollador puede crear usuarios desarrolladores' });
     }
+    if (req.user.role === 'cajero' && role !== 'cajero') {
+      return res.status(403).json({ message: 'No puedes asignar un rol superior al tuyo' });
+    }
 
     // Verificar si el usuario ya existe
     const existingUser = await User.findOne({ email });
@@ -55,6 +62,11 @@ export const createUser = async (req, res) => {
       email,
       password,
       role
+    });
+    await AuditLogService.logUser({
+      user: req.user, action: 'Creación de Usuario', targetUserId: user._id,
+      targetUserName: user.name, description: `Se creó el usuario ${user.name}`,
+      changes: auditChanges(null, user, userLabels), req
     });
 
     res.status(201).json({
@@ -84,6 +96,9 @@ export const updateUser = async (req, res) => {
 
     const targetIsDeveloper = user.role === 'desarrollador';
     const requesterIsDeveloper = req.user.role === 'desarrollador';
+    if (req.user.role === 'cajero' && (user.role !== 'cajero' || (req.body.role && req.body.role !== 'cajero'))) {
+      return res.status(403).json({ message: 'No puedes modificar usuarios con un rol superior al tuyo' });
+    }
 
     if ((targetIsDeveloper || req.body.role === 'desarrollador') && !requesterIsDeveloper) {
       return res.status(403).json({ message: 'No puedes modificar a un desarrollador' });
@@ -100,6 +115,7 @@ export const updateUser = async (req, res) => {
       return res.status(400).json({ message: 'No puedes cambiar tu propio rol de administrador' });
     }
 
+    const previous = user.toObject();
     // Actualizar campos
     user.name = req.body.name || user.name;
     user.email = req.body.email || user.email;
@@ -111,6 +127,18 @@ export const updateUser = async (req, res) => {
     }
 
     const updatedUser = await user.save();
+    const changes = auditChanges(previous, updatedUser, userLabels);
+    if (changes.length) {
+      await AuditLogService.logUser({ user: req.user, action: 'Modificación de Usuario',
+        targetUserId: user._id, targetUserName: user.name,
+        description: `Se modificó el usuario ${user.name}`, changes, req });
+    }
+    if (req.body.password) {
+      await AuditLogService.logUser({ user: req.user, action: 'Cambio de Contraseña',
+        targetUserId: user._id, targetUserName: user.name,
+        description: `Se cambió la contraseña de ${user.name}`,
+        changes: [{ field: 'password', fieldLabel: 'Contraseña', oldValue: 'Protegida', newValue: 'Actualizada' }], req });
+    }
 
     res.json({
       _id: updatedUser._id,
@@ -146,10 +174,18 @@ export const deleteUser = async (req, res) => {
     if (user.role === 'desarrollador' && req.user.role !== 'desarrollador') {
       return res.status(403).json({ message: 'No puedes eliminar a un desarrollador' });
     }
+    if (req.user.role === 'cajero' && user.role !== 'cajero') {
+      return res.status(403).json({ message: 'No puedes eliminar usuarios con un rol superior al tuyo' });
+    }
 
     const deleted = await User.findOneAndDelete({ _id: req.params.id,
       ...(req.user.role !== 'desarrollador' ? { role: { $ne: 'desarrollador' } } : {}) });
     if (!deleted) return res.status(409).json({ message: 'El usuario cambió. Recarga la lista antes de eliminarlo.' });
+
+    await AuditLogService.logUser({ user: req.user, action: 'Eliminación de Usuario',
+      targetUserId: deleted._id, targetUserName: deleted.name,
+      description: `Se eliminó el usuario ${deleted.name}`,
+      changes: auditChanges(deleted, null, userLabels), req });
 
     res.json({ message: 'Usuario eliminado exitosamente' });
   } catch (error) {

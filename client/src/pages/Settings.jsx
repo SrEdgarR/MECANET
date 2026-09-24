@@ -86,6 +86,7 @@ import {
   updateNotificationPreferences
 } from '../services/api';
 import { useAuthStore } from '../store/authStore';
+import { hasSection } from '../utils/sectionAccess';
 import { useSettingsStore } from '../store/settingsStore';
 import { useThemeStore } from '../store/themeStore';
 import toast from 'react-hot-toast';
@@ -617,7 +618,7 @@ const Settings = ({ section = 'all' }) => {
     { id: 'notifications', label: 'Notificaciones', icon: Bell, path: '/configuracion/notificaciones' },
     { id: 'billing', label: 'Facturación', icon: CreditCard, path: '/configuracion/facturacion' },
     { id: 'integrations', label: 'Integraciones', icon: Cloud, path: '/configuracion/integraciones' },
-  ].filter(tab => !tab.developerOnly || isDeveloper);
+  ].filter(tab => hasSection(user, tab.path.slice(1)));
 
   // Función para verificar si una sección debe mostrarse
   const shouldShowSection = (sectionId) => {

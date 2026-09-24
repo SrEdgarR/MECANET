@@ -5,6 +5,20 @@ import Sale from '../models/Sale.js';
 import Product from '../models/Product.js';
 import Customer from '../models/Customer.js';
 import mongoose from 'mongoose';
+import AuditLogService from '../services/auditLogService.js';
+import { auditChanges } from '../services/auditChanges.js';
+
+const returnLabels = { sale: 'Venta', items: 'Productos devueltos', reason: 'Motivo', notes: 'Notas', totalAmount: 'Total', refundMethod: 'Método de reembolso', status: 'Estado', exchangeItems: 'Productos de cambio', priceDifference: 'Diferencia de precio' };
+const returnSnapshot = doc => doc && ({ ...Object.fromEntries(Object.keys(returnLabels).filter(key => !['items', 'exchangeItems'].includes(key)).map(key => [key, doc[key] ?? null])),
+  sale: doc.sale?.toString(),
+  items: doc.items?.map(item => ({ product: item.product?.toString(), quantity: item.quantity, originalPrice: item.originalPrice, returnAmount: item.returnAmount, isDefective: item.isDefective })) || [],
+  exchangeItems: doc.exchangeItems?.map(item => ({ product: item.product?.toString(), quantity: item.quantity, price: item.price })) || []
+});
+const logReturnChange = (req, doc, action, description, before = null, extraChanges = []) => AuditLogService.logReturn({
+  user: req.user, action, returnId: doc._id, returnNumber: doc.returnNumber,
+  description, amount: doc.totalAmount,
+  changes: [...auditChanges(returnSnapshot(before), returnSnapshot(doc), returnLabels), ...extraChanges], req
+});
 
 // Obtener todas las devoluciones con filtros y paginaciÃ³n
 export const getReturns = async (req, res) => {
@@ -195,6 +209,7 @@ export const createReturn = async (req, res) => {
 
     await newReturn.save({ session });
     await session.commitTransaction();
+    await logReturnChange(req, newReturn, 'Creación de Devolución', `Se creó la devolución ${newReturn.returnNumber}`);
 
     // Obtener la devolución completa con populate
     const populatedReturn = await Return.findById(newReturn._id)
@@ -232,6 +247,7 @@ export const approveReturn = async (req, res) => {
       await session.abortTransaction();
       return res.status(400).json({ message: 'Solo se pueden aprobar devoluciones pendientes' });
     }
+    const previous = returnDoc.toObject();
 
     const sale = await Sale.findOneAndUpdate({ _id: returnDoc.sale }, { $inc: { returnRevision: 1 } }, { new: true, session });
     if (!sale) {
@@ -331,6 +347,9 @@ export const approveReturn = async (req, res) => {
     await returnDoc.save({ session });
 
     await session.commitTransaction();
+    await logReturnChange(req, returnDoc, 'Aprobación de Devolución', `Se aprobó la devolución ${returnDoc.returnNumber}`, previous,
+      [{ field: 'stock', fieldLabel: 'Productos reintegrados o intercambiados', oldValue: null,
+        newValue: returnDoc.items.map(item => ({ product: item.product.toString(), quantity: item.quantity, defective: item.isDefective })) }]);
 
     const updatedReturn = await Return.findById(returnDoc._id)
       .populate('sale', 'invoiceNumber')
@@ -365,11 +384,13 @@ export const rejectReturn = async (req, res) => {
     if (returnDoc.status !== 'Pendiente') {
       return res.status(400).json({ message: 'Solo se pueden rechazar devoluciones pendientes' });
     }
+    const previous = returnDoc.toObject();
 
     returnDoc.status = 'Rechazada';
     returnDoc.notes = notes || returnDoc.notes;
     returnDoc.approvedBy = req.user._id;
     await returnDoc.save();
+    await logReturnChange(req, returnDoc, 'Rechazo de Devolución', `Se rechazó la devolución ${returnDoc.returnNumber}`, previous);
 
     const updatedReturn = await Return.findById(returnDoc._id)
       .populate('sale', 'invoiceNumber')

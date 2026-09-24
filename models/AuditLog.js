@@ -49,6 +49,7 @@ const auditLogSchema = new mongoose.Schema({
       'caja',            // Módulo de Caja/Retiros
       'devoluciones',    // Módulo de Devoluciones
       'ordenes_compra',  // Módulo de Órdenes de Compra
+      'cotizaciones',    // Módulo de Cotizaciones
       'configuracion'    // Módulo de Configuración
     ],
     index: true
@@ -87,6 +88,7 @@ const auditLogSchema = new mongoose.Schema({
       'Intento de Inicio de Sesión Fallido',
       'Cierre de Sesión',
       'Creación de Usuario',
+      'Modificación de Usuario',
       'Eliminación de Usuario',
       'Cambio de Rol',
       'Cambio de Permisos',
@@ -103,8 +105,20 @@ const auditLogSchema = new mongoose.Schema({
       
       // Órdenes de Compra
       'Creación de Orden de Compra',
+      'Modificación de Orden de Compra',
       'Recepción de Orden de Compra',
       'Anulación de Orden de Compra',
+      'Eliminación de Orden de Compra',
+      'Envío de Orden de Compra',
+      'Creación de Cotización',
+      'Modificación de Cotización',
+      'Eliminación de Cotización',
+      'Cambio de Estado de Cotización',
+      'Aprobación de Devolución',
+      'Rechazo de Devolución',
+      'Aprobación de Retiro',
+      'Rechazo de Retiro',
+      'Eliminación de Retiro',
       
       // Configuración
       'Modificación de Configuración'
@@ -118,7 +132,7 @@ const auditLogSchema = new mongoose.Schema({
       required: true,
       enum: [
         'Factura', 'Producto', 'Servicio', 'Cliente', 'Proveedor', 
-        'Usuario', 'Caja', 'Devolución', 'Orden de Compra', 'Configuración'
+        'Usuario', 'Caja', 'Devolución', 'Orden de Compra', 'Cotización', 'Configuración'
       ]
     },
     id: {

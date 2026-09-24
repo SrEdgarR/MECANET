@@ -3,6 +3,30 @@ import Product from '../models/Product.js';
 import Supplier from '../models/Supplier.js';
 import { sendPurchaseOrderEmail } from '../services/emailService.js';
 import mongoose from 'mongoose';
+import AuditLogService from '../services/auditLogService.js';
+import { auditChanges } from '../services/auditChanges.js';
+
+const orderLabels = {
+  supplier: 'Proveedor', genericSupplierName: 'Proveedor genérico', items: 'Productos y cantidades',
+  subtotal: 'Subtotal', tax: 'Impuesto', total: 'Total', status: 'Estado',
+  expectedDeliveryDate: 'Entrega prevista', receivedDate: 'Fecha de recepción',
+  notes: 'Notas', receiveNotes: 'Notas de recepción', emailSent: 'Enviada por correo'
+};
+const orderSnapshot = order => order && ({
+  ...Object.fromEntries(Object.keys(orderLabels).filter(key => key !== 'items').map(key => [key, order[key] ?? null])),
+  supplier: order.supplier?._id?.toString() || order.supplier?.toString() || null,
+  items: order.items?.map(item => ({
+    product: item.product?._id?.toString() || item.product?.toString(),
+    quantity: item.quantity, unitPrice: item.unitPrice, subtotal: item.subtotal
+  })) || []
+});
+const logOrder = (req, order, action, description, before = null, extraChanges = []) => {
+  const changes = [...auditChanges(orderSnapshot(before), orderSnapshot(order), orderLabels), ...extraChanges];
+  return changes.length ? AuditLogService.logPurchaseOrder({
+    user: req.user, action, orderId: order._id, orderNumber: order.orderNumber,
+    description, changes, req
+  }) : Promise.resolve(null);
+};
 
 // Obtener todas las Ã³rdenes de compra
 export const getPurchaseOrders = async (req, res) => {
@@ -109,6 +133,7 @@ export const createPurchaseOrder = async (req, res) => {
     const order = new PurchaseOrder(orderData);
 
     await order.save();
+    await logOrder(req, order, 'Creación de Orden de Compra', `Se creó la orden ${order.orderNumber}`);
 
     // Populate para retornar datos completos
     await order.populate('supplier', 'name email phone');
@@ -205,6 +230,7 @@ export const generateAutoOrder = async (req, res) => {
       const order = new PurchaseOrder(orderPayload);
 
       await order.save();
+      await logOrder(req, order, 'Creación de Orden de Compra', `Se generó automáticamente la orden ${order.orderNumber}`);
 
       // Populate condicional
       if (!orderData.isGeneric) {
@@ -272,6 +298,7 @@ export const updatePurchaseOrder = async (req, res) => {
       ...(expectedDeliveryDate && { expectedDeliveryDate }),
     };
 
+    const previous = await PurchaseOrder.findById(req.params.id).lean();
     const order = await PurchaseOrder.findByIdAndUpdate(
       req.params.id,
       updateData,
@@ -283,6 +310,10 @@ export const updatePurchaseOrder = async (req, res) => {
 
     if (!order) {
       return res.status(404).json({ message: 'Orden no encontrada' });
+    }
+    const after = await PurchaseOrder.findById(req.params.id).lean();
+    if (auditChanges(orderSnapshot(previous), orderSnapshot(after), orderLabels).length) {
+      await logOrder(req, after, 'Modificación de Orden de Compra', `Se modificó la orden ${after.orderNumber}`, previous);
     }
 
     res.json(order);
@@ -307,6 +338,7 @@ export const updateOrderStatus = async (req, res) => {
       await session.abortTransaction();
       return res.status(404).json({ message: 'Orden no encontrada' });
     }
+    const previous = order.toObject();
 
     const wasAlreadyReceived = order.status === 'Recibida' || Boolean(order.receivedDate);
     if (wasAlreadyReceived && status && status !== 'Recibida') {
@@ -363,6 +395,12 @@ export const updateOrderStatus = async (req, res) => {
 
     await order.save({ session });
     await session.commitTransaction();
+    const receivedChanges = shouldApplyStock && receivedQuantities
+      ? [{ field: 'receivedQuantities', fieldLabel: 'Cantidades recibidas', oldValue: null, newValue: receivedQuantities }]
+      : [];
+    await logOrder(req, order,
+      status === 'Recibida' ? 'Recepción de Orden de Compra' : status === 'Cancelada' ? 'Anulación de Orden de Compra' : 'Modificación de Orden de Compra',
+      `Se actualizó la orden ${order.orderNumber} a ${order.status}`, previous, receivedChanges);
 
     await order.populate('supplier', 'name email phone');
     await order.populate('items.product', 'sku name');
@@ -429,6 +467,10 @@ export const sendPurchaseOrder = async (req, res) => {
     order.emailSent = true;
     order.emailSentDate = new Date();
     await order.save();
+    await AuditLogService.logPurchaseOrder({ user: req.user, action: 'Envío de Orden de Compra',
+      orderId: order._id, orderNumber: order.orderNumber,
+      description: `Se envió la orden ${order.orderNumber} al proveedor`,
+      changes: [{ field: 'emailSent', fieldLabel: 'Enviada por correo', oldValue: false, newValue: true }], req });
 
     res.json({
       message: `Orden enviada exitosamente a ${order.supplier.email}`,
@@ -451,6 +493,8 @@ export const deletePurchaseOrder = async (req, res) => {
     if (!order) {
       return res.status(404).json({ message: 'Orden no encontrada' });
     }
+    await logOrder(req, order, 'Eliminación de Orden de Compra', `Se eliminó la orden ${order.orderNumber}`, order,
+      [{ field: 'deleted', fieldLabel: 'Eliminada', oldValue: false, newValue: true }]);
     res.json({ message: 'Orden eliminada correctamente' });
   } catch (error) {
     console.error('Error al eliminar orden:', error);

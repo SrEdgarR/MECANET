@@ -13,6 +13,7 @@ cleanDuplicateCollections.js
 cleanLogs.js
 resetDatabase.js
 seed.js
+!seed.js
 
 # Correcciones one-time (ya ejecutadas)
 fixProductPrices.js

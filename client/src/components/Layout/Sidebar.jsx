@@ -33,6 +33,8 @@ import { NavLink, useLocation } from 'react-router-dom';
 import { useAuthStore } from '../../store/authStore';
 import { useSettingsStore } from '../../store/settingsStore';
 import API from '../../services/api';
+import { hasSection } from '../../utils/sectionAccess';
+import UserMenu from './UserMenu';
 import {
   Home,
   FileText,
@@ -66,9 +68,6 @@ const Sidebar = () => {
   const { user } = useAuthStore();
   const { settings } = useSettingsStore();
   const location = useLocation();
-  const privilegedRoles = ['admin', 'desarrollador'];
-  const canSeeAdminMenu = privilegedRoles.includes(user?.role);
-  const isDeveloper = user?.role === 'desarrollador';
   const shortcutsEnabled = user?.shortcutsEnabled !== false;
 
   // Estados para controlar expansión de secciones
@@ -119,7 +118,7 @@ const Sidebar = () => {
   // Secciones principales sin subsecciones
   const mainItems = [
     { path: '/', icon: Home, label: 'Dashboard' },
-  ];
+  ].filter(item => hasSection(user, item.path === '/' ? 'dashboard' : item.path.slice(1)));
 
   // Subsecciones de Ventas
   const ventasSections = [
@@ -127,38 +126,38 @@ const Sidebar = () => {
     { path: '/historial-ventas', icon: Receipt, label: 'Historial', shortcut: 'Ctrl+H' },
     { path: '/cotizaciones', icon: FileText, label: 'Cotizaciones' },
     { path: '/devoluciones', icon: RefreshCw, label: 'Devoluciones' },
-  ];
+  ].filter(item => hasSection(user, item.path.slice(1)));
 
   // Subsecciones de Inventario
   const inventarioSections = [
     { path: '/inventario', icon: Package, label: 'Productos', shortcut: 'Ctrl+I' },
     { path: '/ordenes-compra', icon: ClipboardList, label: 'Órdenes de Compra' },
-  ];
+  ].filter(item => hasSection(user, item.path.slice(1)));
 
   // Subsecciones de Contactos
   const contactosSections = [
     { path: '/clientes', icon: Users, label: 'Clientes', shortcut: 'Ctrl+C' },
     { path: '/proveedores', icon: Truck, label: 'Proveedores' },
-  ];
+  ].filter(item => hasSection(user, item.path.slice(1)));
 
   // Subsecciones de Caja
   const cajaSections = [
     { path: '/cierre-caja', icon: DollarSign, label: 'Cierre de Caja' },
     { path: '/retiros-caja', icon: Receipt, label: 'Retiros de Caja' },
-  ];
+  ].filter(item => hasSection(user, item.path.slice(1)));
 
   // Subsecciones de Sistema (Logs y Monitoreo)
   const sistemaSections = [
     { path: '/logs', icon: Activity, label: 'Logs Técnicos' },
     { path: '/auditoria', icon: Shield, label: 'Auditoría de Usuario' },
     { path: '/monitoreo', icon: Activity, label: 'Monitoreo en Tiempo Real' },
-  ];
+  ].filter(item => hasSection(user, item.path.slice(1)));
 
   // Secciones administrativas (solo para administradores)
   const adminItems = [
     { path: '/reportes', icon: BarChart3, label: 'Reportes', shortcut: 'Ctrl+R' },
     { path: '/usuarios', icon: UserCog, label: 'Usuarios' },
-  ];
+  ].filter(item => hasSection(user, item.path.slice(1)));
 
   // Subsecciones de Configuración
   const configSections = [
@@ -167,7 +166,7 @@ const Sidebar = () => {
     { path: '/configuracion/notificaciones', icon: Bell, label: 'Notificaciones' },
     { path: '/configuracion/facturacion', icon: CreditCard, label: 'Facturación' },
     { path: '/configuracion/integraciones', icon: Cloud, label: 'Integraciones' },
-  ].filter(section => !section.developerOnly || isDeveloper);
+  ].filter(item => hasSection(user, item.path.slice(1)));
 
   return (
     <aside className="w-56 xl:w-64 glass-strong border-r border-gray-200 dark:border-gray-700 flex flex-col">
@@ -225,7 +224,7 @@ const Sidebar = () => {
         </div>
 
         {/* Sección Ventas */}
-        <div className="pt-1 xl:pt-2">
+        {ventasSections.length > 0 && <div className="pt-1 xl:pt-2">
           <button
             onClick={() => setVentasExpanded(!ventasExpanded)}
             className={`w-full flex items-center gap-2 xl:gap-3 px-3 xl:px-4 py-2 xl:py-3 rounded-lg transition-all duration-200 text-sm xl:text-base ${location.pathname.includes('/facturacion') ||
@@ -271,10 +270,10 @@ const Sidebar = () => {
               ))}
             </div>
           )}
-        </div>
+        </div>}
 
         {/* Sección Inventario */}
-        <div>
+        {inventarioSections.length > 0 && <div>
           <button
             onClick={() => setInventarioExpanded(!inventarioExpanded)}
             className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 ${location.pathname.includes('/inventario') ||
@@ -318,10 +317,10 @@ const Sidebar = () => {
               ))}
             </div>
           )}
-        </div>
+        </div>}
 
         {/* Sección Contactos */}
-        <div>
+        {contactosSections.length > 0 && <div>
           <button
             onClick={() => setContactosExpanded(!contactosExpanded)}
             className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 ${location.pathname.includes('/clientes') ||
@@ -365,10 +364,10 @@ const Sidebar = () => {
               ))}
             </div>
           )}
-        </div>
+        </div>}
 
         {/* Sección Caja */}
-        <div>
+        {cajaSections.length > 0 && <div>
           <button
             onClick={() => setCajaExpanded(!cajaExpanded)}
             className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 ${location.pathname.includes('/cierre-caja') ||
@@ -405,10 +404,10 @@ const Sidebar = () => {
               ))}
             </div>
           )}
-        </div>
+        </div>}
 
         {/* Admin Section */}
-        {canSeeAdminMenu && (
+        {(adminItems.length > 0 || sistemaSections.length > 0 || configSections.length > 0) && (
           <div className="pt-4 mt-4 border-t border-gray-200 dark:border-gray-700">
             <p className="px-4 mb-2 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
               Administración
@@ -438,7 +437,7 @@ const Sidebar = () => {
               ))}
 
               {/* Sistema (Logs y Monitoreo) con subsecciones */}
-              {isDeveloper && (
+              {sistemaSections.length > 0 && (
                 <div>
                   <button
                     onClick={() => setSistemaExpanded(!sistemaExpanded)}
@@ -484,7 +483,7 @@ const Sidebar = () => {
               )}
 
               {/* Configuración con subsecciones */}
-              <div>
+              {configSections.length > 0 && <div>
                 <button
                   onClick={() => setConfigExpanded(!configExpanded)}
                   className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 ${location.pathname.startsWith('/configuracion')
@@ -528,7 +527,7 @@ const Sidebar = () => {
                     ))}
                   </div>
                 )}
-              </div>
+              </div>}
             </div>
           </div>
         )}
@@ -548,24 +547,7 @@ const Sidebar = () => {
         </button>
       </div>
 
-      {/* User Info */}
-      <div className="p-4 border-t border-gray-200 dark:border-gray-700">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 bg-gradient-to-br from-primary-500 to-primary-600 rounded-full flex items-center justify-center">
-            <span className="text-white font-semibold">
-              {user?.name?.charAt(0).toUpperCase()}
-            </span>
-          </div>
-          <div className="flex-1 min-w-0">
-            <p className="text-sm font-medium text-gray-900 dark:text-white truncate">
-              {user?.name}
-            </p>
-            <p className="text-xs text-gray-500 dark:text-gray-400 capitalize">
-              {user?.role}
-            </p>
-          </div>
-        </div>
-      </div>
+      <UserMenu />
 
       {/* Version Modal */}
       {showVersionModal && versionInfo && createPortal(

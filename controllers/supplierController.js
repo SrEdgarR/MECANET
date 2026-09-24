@@ -1,5 +1,9 @@
 import { searchLiteral } from '../services/searchLiteral.js';
 import Supplier from '../models/Supplier.js';
+import AuditLogService from '../services/auditLogService.js';
+import { auditChanges } from '../services/auditChanges.js';
+
+const supplierLabels = { name: 'Nombre', contactName: 'Contacto', email: 'Email', phone: 'Teléfono', address: 'Dirección', rnc: 'RNC', paymentTerms: 'Plazo de pago', notes: 'Notas', isActive: 'Activo', isArchived: 'Archivado' };
 
 // Obtener todos los proveedores (con paginación)
 export const getSuppliers = async (req, res) => {
@@ -71,6 +75,10 @@ export const createSupplier = async (req, res) => {
   try {
     const supplier = new Supplier(req.body);
     await supplier.save();
+    await AuditLogService.logSupplier({ user: req.user, action: 'Creación de Proveedor',
+      supplierId: supplier._id, supplierName: supplier.name,
+      description: `Se creó el proveedor ${supplier.name}`,
+      changes: auditChanges(null, supplier, supplierLabels), req });
     res.status(201).json(supplier);
   } catch (error) {
     console.error('Error al crear proveedor:', error);
@@ -84,6 +92,7 @@ export const createSupplier = async (req, res) => {
 // Actualizar proveedor
 export const updateSupplier = async (req, res) => {
   try {
+    const previous = await Supplier.findById(req.params.id);
     const supplier = await Supplier.findByIdAndUpdate(
       req.params.id,
       req.body,
@@ -92,6 +101,10 @@ export const updateSupplier = async (req, res) => {
     if (!supplier) {
       return res.status(404).json({ message: 'Proveedor no encontrado' });
     }
+    const changes = auditChanges(previous, supplier, supplierLabels);
+    if (changes.length) await AuditLogService.logSupplier({ user: req.user, action: 'Modificación de Proveedor',
+      supplierId: supplier._id, supplierName: supplier.name,
+      description: `Se modificó el proveedor ${supplier.name}`, changes, req });
     res.json(supplier);
   } catch (error) {
     console.error('Error al actualizar proveedor:', error);
@@ -133,6 +146,10 @@ export const deleteSupplier = async (req, res) => {
       // Soft delete: archivar el proveedor si tiene referencias activas
       supplier.isArchived = true;
       await supplier.save();
+      await AuditLogService.logSupplier({ user: req.user, action: 'Eliminación de Proveedor',
+        supplierId: supplier._id, supplierName: supplier.name,
+        description: `Se archivó el proveedor ${supplier.name}`,
+        changes: [{ field: 'isArchived', fieldLabel: 'Archivado', oldValue: false, newValue: true }], req });
       
       console.log(`Proveedor ${supplier._id} archivado (${productsCount} productos, ${purchaseOrdersCount} órdenes activas)`);
       
@@ -148,6 +165,10 @@ export const deleteSupplier = async (req, res) => {
 
     // Hard delete: eliminar permanentemente si no tiene referencias activas
     await Supplier.findByIdAndDelete(req.params.id);
+    await AuditLogService.logSupplier({ user: req.user, action: 'Eliminación de Proveedor',
+      supplierId: supplier._id, supplierName: supplier.name,
+      description: `Se eliminó el proveedor ${supplier.name}`,
+      changes: auditChanges(supplier, null, supplierLabels), req });
     
     console.log(`Proveedor ${supplier._id} eliminado permanentemente (sin referencias activas)`);
 

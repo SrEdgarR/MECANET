@@ -1,4 +1,13 @@
 import CashWithdrawal from '../models/CashWithdrawal.js';
+import AuditLogService from '../services/auditLogService.js';
+import { auditChanges } from '../services/auditChanges.js';
+
+const withdrawalLabels = { amount: 'Monto', reason: 'Motivo', category: 'Categoría', status: 'Estado', receiptAttached: 'Comprobante adjunto', notes: 'Notas' };
+const logWithdrawal = (req, withdrawal, action, description, before = null) => AuditLogService.log({
+  user: req.user, module: 'caja', action,
+  entity: { type: 'Caja', id: withdrawal._id, name: `Retiro #${withdrawal.withdrawalNumber}` },
+  description, changes: auditChanges(before, withdrawal, withdrawalLabels), req
+});
 
 // @desc    Crear nuevo retiro de caja
 // @route   POST /api/cash-withdrawals
@@ -28,6 +37,7 @@ export const createCashWithdrawal = async (req, res) => {
       receiptAttached: receiptAttached || false,
       notes: notes || ''
     });
+    await logWithdrawal(req, withdrawal, 'Retiro de Efectivo', `Se registró el retiro ${withdrawal.withdrawalNumber}`);
 
     // Poblar información del usuario
     await withdrawal.populate('withdrawnBy', 'fullName email');
@@ -118,7 +128,6 @@ export const getCashWithdrawalById = async (req, res) => {
     if (!withdrawal) {
       return res.status(404).json({ message: 'Retiro no encontrado' });
     }
-
     // Verificar permisos
     const canManageWithdrawals = ['admin', 'desarrollador'].includes(req.user.role);
     if (!canManageWithdrawals && withdrawal.withdrawnBy._id.toString() !== req.user._id.toString()) {
@@ -149,6 +158,7 @@ export const updateCashWithdrawalStatus = async (req, res) => {
     if (!withdrawal) {
       return res.status(404).json({ message: 'Retiro no encontrado' });
     }
+    const previous = withdrawal.toObject();
 
     // Actualizar estado
     withdrawal.status = status;
@@ -160,6 +170,8 @@ export const updateCashWithdrawalStatus = async (req, res) => {
     }
 
     await withdrawal.save();
+    await logWithdrawal(req, withdrawal, status === 'approved' ? 'Aprobación de Retiro' : 'Rechazo de Retiro',
+      `Se cambió el estado del retiro ${withdrawal.withdrawalNumber} a ${withdrawal.status}`, previous);
 
     await withdrawal.populate('withdrawnBy', 'fullName email');
     await withdrawal.populate('authorizedBy', 'fullName email');
@@ -188,6 +200,10 @@ export const deleteCashWithdrawal = async (req, res) => {
     }
 
     await withdrawal.deleteOne();
+    await AuditLogService.log({ user: req.user, module: 'caja', action: 'Eliminación de Retiro',
+      entity: { type: 'Caja', id: withdrawal._id, name: `Retiro #${withdrawal.withdrawalNumber}` },
+      description: `Se eliminó el retiro ${withdrawal.withdrawalNumber}`,
+      changes: auditChanges(withdrawal, null, withdrawalLabels), req });
 
     res.json({ message: 'Retiro eliminado exitosamente' });
   } catch (error) {

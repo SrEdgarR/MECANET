@@ -1,6 +1,7 @@
 import express from 'express';
 import AuditLogService from '../services/auditLogService.js';
-import { protect, admin } from '../middleware/authMiddleware.js';
+import { protect } from '../middleware/authMiddleware.js';
+import { requireSection, developerOnly } from '../middleware/sectionAccessMiddleware.js';
 
 const router = express.Router();
 
@@ -8,7 +9,7 @@ const router = express.Router();
  * Todas las rutas requieren autenticación y rol de administrador
  */
 router.use(protect);
-router.use(admin);
+router.use(requireSection('auditoria'));
 
 /**
  * @route   GET /api/audit-logs
@@ -78,7 +79,7 @@ router.get('/stats', async (req, res) => {
  * @desc    Limpiar logs antiguos
  * @access  Administradores
  */
-router.delete('/clean', async (req, res) => {
+router.delete('/clean', developerOnly, async (req, res) => {
   try {
     const { daysToKeep = 365 } = req.body;
     

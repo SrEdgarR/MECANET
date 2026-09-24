@@ -28,18 +28,19 @@ import {
   updateUser,
   deleteUser
 } from '../controllers/userController.js';
-import { protect, admin } from '../middleware/authMiddleware.js';
+import { protect } from '../middleware/authMiddleware.js';
+import { requireSection } from '../middleware/sectionAccessMiddleware.js';
 import { userValidation, userUpdateValidation, validate } from '../middleware/validationMiddleware.js';
 
 const router = express.Router();
 
 router.route('/')
-  .get(protect, admin, getUsers)
-  .post(protect, admin, userValidation, validate, createUser);
+  .get(protect, requireSection('usuarios'), getUsers)
+  .post(protect, requireSection('usuarios'), userValidation, validate, createUser);
 
 router.route('/:id')
-  .get(protect, admin, getUserById)
-  .put(protect, admin, userUpdateValidation, validate, updateUser)
-  .delete(protect, admin, deleteUser);
+  .get(protect, requireSection('usuarios'), getUserById)
+  .put(protect, requireSection('usuarios'), userUpdateValidation, validate, updateUser)
+  .delete(protect, requireSection('usuarios'), deleteUser);
 
 export default router;

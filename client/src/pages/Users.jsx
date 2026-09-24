@@ -34,7 +34,7 @@
  * 
  * Validaciones:
  * - Email único (backend valida)
- * - Password mínimo 6 caracteres al crear
+ * - Contraseña mínima de 12 caracteres al crear
  * - No puede eliminar al usuario actual (currentUser._id)
  * 
  * UI Features:
@@ -42,13 +42,13 @@
  * - Badge de rol (admin=rojo, cajero=azul)
  * - Badge de estado (activo=verde, inactivo=gris)
  * - Filtro por rol
- * - Modal con toggle de password
+ * - Modal con visibilidad y generador seguro de contraseña
  * - Confirmación antes de eliminar
  * - Prevención de auto-eliminación
  */
 
 import React, { useState, useEffect } from 'react';
-import { getUsers, createUser, updateUser, deleteUser } from '../services/api';
+import { getUsers, createUser, updateUser, deleteUser, getSectionPermissions, updateRoleSections, updateUserSections } from '../services/api';
 import { useAuthStore } from '../store/authStore';
 import toast from 'react-hot-toast';
 import { UsersSkeleton } from '../components/SkeletonLoader';
@@ -78,11 +78,31 @@ const Users = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [showUserModal, setShowUserModal] = useState(false);
+  const [accessTarget, setAccessTarget] = useState(null);
+  const [permissionCatalog, setPermissionCatalog] = useState(null);
   const [editingUser, setEditingUser] = useState(null);
   const [filterRole, setFilterRole] = useState('all');
   const [showTooltip, setShowTooltip] = useState(null);
   const { user: currentUser } = useAuthStore();
   const canManageDevelopers = currentUser?.role === 'desarrollador';
+
+  const openPermissions = async (target) => {
+    try {
+      const { data } = await getSectionPermissions();
+      setPermissionCatalog(data);
+      setAccessTarget(target);
+    } catch (error) {
+      toast.error(error.response?.data?.message || 'No se pudieron cargar los permisos');
+    }
+  };
+
+  const savePermissions = async (target, value) => {
+    if (target.type === 'role') await updateRoleSections(target.role, value);
+    else await updateUserSections(target.user._id, value);
+    await fetchUsers();
+    setAccessTarget(null);
+    toast.success('Accesos actualizados');
+  };
 
   useEffect(() => {
     fetchUsers();
@@ -236,10 +256,14 @@ const Users = () => {
             Administra los usuarios del sistema
           </p>
         </div>
-        <button onClick={handleAddUser} className="btn-primary">
-          <Plus className="w-5 h-5" />
-          Nuevo Usuario
-        </button>
+        <div className="flex flex-wrap gap-2">
+          {canManageDevelopers && <button onClick={() => openPermissions({ type: 'role', role: 'admin' })} className="btn-secondary flex items-center gap-2">
+            <Shield className="w-5 h-5" /> Accesos por rol
+          </button>}
+          <button onClick={handleAddUser} className="btn-primary flex items-center gap-2">
+            <Plus className="w-5 h-5" /> Nuevo Usuario
+          </button>
+        </div>
       </div>
 
       {/* Stats Cards */}
@@ -281,7 +305,7 @@ const Users = () => {
                   />
                   {showTooltip === 'administradores' && (
                     <div className="absolute bottom-full left-0 mb-2 w-48 p-2 bg-gray-900 text-white text-xs rounded shadow-lg z-50">
-                      Usuarios con permisos de administración completos
+                      Acceso según los permisos configurados para administradores
                     </div>
                   )}
                 </div>
@@ -329,7 +353,7 @@ const Users = () => {
                   />
                   {showTooltip === 'cajeros' && (
                     <div className="absolute bottom-full left-0 mb-2 w-48 p-2 bg-gray-900 text-white text-xs rounded shadow-lg z-50">
-                      Usuarios con permisos limitados a facturación y caja
+                      Acceso según los permisos configurados para cajeros
                     </div>
                   )}
                 </div>
@@ -456,6 +480,13 @@ const Users = () => {
                             >
                               <Edit className="w-5 h-5" />
                             </button>
+                            {canManageDevelopers && user.role !== 'desarrollador' && <button
+                              onClick={() => openPermissions({ type: 'user', user })}
+                              className="text-teal-600 hover:text-teal-700 dark:text-teal-400"
+                              title={`Configurar accesos de ${user.name}`}
+                              aria-label={`Configurar accesos de ${user.name}`}>
+                              <Shield className="w-5 h-5" />
+                            </button>}
                             <button
                               onClick={() => handleDeleteUser(user._id)}
                               className={`text-red-600 hover:text-red-700 dark:text-red-400 ${!canModifyRow || isSelf ? 'opacity-30 cursor-not-allowed' : ''}`}
@@ -485,11 +516,88 @@ const Users = () => {
           canManageDevelopers={canManageDevelopers}
         />
       )}
+      {accessTarget && permissionCatalog && <SectionPermissionsModal
+        target={accessTarget} catalog={permissionCatalog}
+        onSave={savePermissions} onClose={() => setAccessTarget(null)} />}
     </div>
   );
 };
 
+const SectionPermissionsModal = ({ target, catalog, onSave, onClose }) => {
+  const [role, setRole] = useState(target.role || 'admin');
+  const [roleSections, setRoleSections] = useState({ admin: [...catalog.roles.admin], cajero: [...catalog.roles.cajero] });
+  const [overrides, setOverrides] = useState({
+    enabled: [...(target.user?.sectionOverrides?.enabled || [])],
+    disabled: [...(target.user?.sectionOverrides?.disabled || [])]
+  });
+  const [saving, setSaving] = useState(false);
+  const isRole = target.type === 'role';
+  const currentRoleSections = catalog.roles[target.user?.role] || [];
+  const changeUserSection = (key, choice) => setOverrides(previous => ({
+    enabled: choice === 'allow' ? [...previous.enabled.filter(item => item !== key), key] : previous.enabled.filter(item => item !== key),
+    disabled: choice === 'deny' ? [...previous.disabled.filter(item => item !== key), key] : previous.disabled.filter(item => item !== key)
+  }));
+
+  const submit = async () => {
+    try {
+      setSaving(true);
+      await onSave(isRole ? { type: 'role', role } : target, isRole ? roleSections[role] : overrides);
+    } catch (error) {
+      toast.error(error.response?.data?.message || 'No se pudieron guardar los accesos');
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  return createPortal(
+    <div className="fixed inset-0 z-[100000] flex items-center justify-center bg-black/50 p-4">
+      <div role="dialog" aria-modal="true" aria-label="Configurar accesos" className="glass-strong w-full max-w-3xl max-h-[90vh] overflow-y-auto rounded-2xl shadow-2xl">
+        <div className="flex items-center justify-between border-b border-gray-200 dark:border-gray-700 p-5">
+          <div>
+            <h2 className="text-xl font-bold text-gray-900 dark:text-white">{isRole ? 'Accesos por rol' : `Accesos de ${target.user.name}`}</h2>
+            <p className="text-sm text-gray-500 dark:text-gray-400">{isRole ? 'Estos permisos se aplican a todos los usuarios del rol.' : 'Las excepciones individuales prevalecen sobre el rol.'}</p>
+          </div>
+          <button type="button" onClick={onClose} aria-label="Cerrar" className="p-2 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700"><X className="w-5 h-5" /></button>
+        </div>
+        <div className="p-5 space-y-4">
+          {isRole && <label className="block text-sm font-medium text-gray-700 dark:text-gray-200">Rol
+            <select className="input mt-1" value={role} onChange={event => setRole(event.target.value)}>
+              <option value="admin">Administrador</option><option value="cajero">Cajero</option>
+            </select>
+          </label>}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+            {catalog.sections.map(section => {
+              const choice = overrides.enabled.includes(section.key) ? 'allow' : overrides.disabled.includes(section.key) ? 'deny' : 'inherit';
+              return <div key={section.key} className="flex items-center justify-between gap-3 rounded-lg border border-gray-200 dark:border-gray-700 p-3">
+                <span className="text-sm text-gray-800 dark:text-gray-200">{section.label}</span>
+                {isRole ? <input type="checkbox" aria-label={`Habilitar ${section.label}`} checked={roleSections[role].includes(section.key)}
+                  onChange={event => setRoleSections(previous => ({ ...previous, [role]: event.target.checked
+                    ? [...previous[role], section.key] : previous[role].filter(key => key !== section.key) }))} />
+                  : <select className="input w-auto min-w-28 text-sm" aria-label={`Acceso a ${section.label}`} value={choice} onChange={event => changeUserSection(section.key, event.target.value)}>
+                    <option value="inherit">Heredar ({currentRoleSections.includes(section.key) ? 'Sí' : 'No'})</option>
+                    <option value="allow">Permitir</option><option value="deny">Denegar</option>
+                  </select>}
+              </div>;
+            })}
+          </div>
+        </div>
+        <div className="flex justify-end gap-3 border-t border-gray-200 dark:border-gray-700 p-5">
+          <button type="button" onClick={onClose} className="btn-secondary">Cancelar</button>
+          <button type="button" onClick={submit} disabled={saving} className="btn-primary">{saving ? 'Guardando...' : 'Guardar accesos'}</button>
+        </div>
+      </div>
+    </div>, document.body
+  );
+};
+
 // User Modal Component
+const generateSecurePassword = () => {
+  const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_';
+  const bytes = new Uint8Array(24);
+  window.crypto.getRandomValues(bytes);
+  return Array.from(bytes, (byte) => alphabet[byte & 63]).join('');
+};
+
 const UserModal = ({ user, onSave, onClose, canManageDevelopers }) => {
   const [formData, setFormData] = useState({
     name: user?.name || '',
@@ -502,9 +610,9 @@ const UserModal = ({ user, onSave, onClose, canManageDevelopers }) => {
   const [errors, setErrors] = useState({});
   const [showPassword, setShowPassword] = useState(false);
   const roleDescriptions = {
-    admin: 'Acceso completo al sistema',
+    admin: 'Acceso según los permisos del rol administrador',
     desarrollador: 'Acceso total + herramientas técnicas',
-    cajero: 'Acceso a facturación y cierre de caja',
+    cajero: 'Acceso según los permisos del rol cajero',
   };
 
   // Cerrar modal con tecla ESC
@@ -533,6 +641,17 @@ const UserModal = ({ user, onSave, onClose, canManageDevelopers }) => {
     
     if (errors[name]) {
       setErrors((prev) => ({ ...prev, [name]: '' }));
+    }
+  };
+
+  const handleGeneratePassword = () => {
+    try {
+      const password = generateSecurePassword();
+      setFormData((prev) => ({ ...prev, password }));
+      setErrors((prev) => ({ ...prev, password: '' }));
+      setShowPassword(true);
+    } catch {
+      toast.error('No se pudo generar una contraseña segura en este navegador');
     }
   };
 
@@ -598,16 +717,18 @@ const UserModal = ({ user, onSave, onClose, canManageDevelopers }) => {
           </button>
         </div>
 
-        <form onSubmit={handleSubmit} className="p-6 space-y-4">
+        <form onSubmit={handleSubmit} autoComplete="off" className="p-6 space-y-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+            <label htmlFor="user-form-name" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
               Nombre Completo *
             </label>
             <input
+              id="user-form-name"
               type="text"
               name="name"
               value={formData.name}
               onChange={handleChange}
+              autoComplete="off"
               className={`input ${errors.name ? 'border-red-500' : ''}`}
               placeholder="Juan Pérez"
               autoFocus
@@ -616,14 +737,16 @@ const UserModal = ({ user, onSave, onClose, canManageDevelopers }) => {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+            <label htmlFor="user-form-email" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
               Email *
             </label>
             <input
+              id="user-form-email"
               type="email"
               name="email"
               value={formData.email}
               onChange={handleChange}
+              autoComplete="off"
               className={`input ${errors.email ? 'border-red-500' : ''}`}
               placeholder="usuario@ejemplo.com"
             />
@@ -631,26 +754,35 @@ const UserModal = ({ user, onSave, onClose, canManageDevelopers }) => {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+            <label htmlFor="user-form-password" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
               Contraseña {user ? '(dejar vacío para no cambiar)' : '*'}
             </label>
             <div className="relative">
               <input
+                id="user-form-password"
                 type={showPassword ? 'text' : 'password'}
                 name="password"
                 value={formData.password}
                 onChange={handleChange}
+                autoComplete="new-password"
                 className={`input pr-10 ${errors.password ? 'border-red-500' : ''}`}
                 placeholder={user ? '••••••••' : 'Mínimo 12 caracteres'}
               />
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
+                aria-label={showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'}
                 className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700 dark:hover:text-gray-300"
               >
                 {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
               </button>
             </div>
+            <button type="button" onClick={handleGeneratePassword} className="mt-2 text-sm font-medium text-primary-600 hover:text-primary-700 dark:text-primary-400 dark:hover:text-primary-300">
+              Generar contraseña segura
+            </button>
+            <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+              La contraseña generada tiene 24 caracteres. Cópiala antes de guardar; no se mostrará después.
+            </p>
             {errors.password && <p className="text-xs text-red-600 mt-1">{errors.password}</p>}
           </div>
 

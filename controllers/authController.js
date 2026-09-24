@@ -13,6 +13,8 @@ import User from '../models/User.js';
 import { generateToken } from '../middleware/authMiddleware.js';
 import LogService from '../services/logService.js';
 import AuditLogService from '../services/auditLogService.js';
+import { getEffectiveSections } from '../services/sectionAccess.js';
+import { auditChanges } from '../services/auditChanges.js';
 
 /**
  * LOGIN - Autenticar usuario y obtener token JWT
@@ -109,6 +111,7 @@ export const login = async (req, res) => {
       role: user.role,
       isActive: user.isActive,
       shortcutsEnabled: user.shortcutsEnabled,
+      sections: await getEffectiveSections(user),
       token // El frontend guardará esto en localStorage
     });
   } catch (error) {
@@ -153,7 +156,8 @@ export const getProfile = async (req, res) => {
       role: user.role,
       isActive: user.isActive,
       createdAt: user.createdAt,
-      shortcutsEnabled: user.shortcutsEnabled
+      shortcutsEnabled: user.shortcutsEnabled,
+      sections: await getEffectiveSections(user)
     });
   } catch (error) {
     console.error('Error al obtener perfil:', error);
@@ -182,6 +186,7 @@ export const updateProfile = async (req, res) => {
     }
 
     // Actualizar solo los campos proporcionados
+    const previous = user.toObject();
     user.name = req.body.name || user.name; // Si no se envía, mantener el actual
     user.email = req.body.email || user.email;
     if (req.body.shortcutsEnabled !== undefined) {
@@ -195,6 +200,12 @@ export const updateProfile = async (req, res) => {
 
     // Guardar cambios (dispara pre-save hook)
     const updatedUser = await user.save();
+    const changes = auditChanges(previous, updatedUser, { name: 'Nombre', email: 'Email', shortcutsEnabled: 'Atajos de teclado' });
+    if (req.body.password) changes.push({ field: 'password', fieldLabel: 'Contraseña', oldValue: 'Protegida', newValue: 'Actualizada' });
+    if (changes.length) await AuditLogService.logUser({ user: req.user,
+      action: req.body.password ? 'Cambio de Contraseña' : 'Modificación de Usuario',
+      targetUserId: user._id, targetUserName: user.name,
+      description: `Se actualizó el perfil de ${user.name}`, changes, req });
 
     // Generar nuevo token (por si cambió el email)
     res.json({
@@ -204,6 +215,7 @@ export const updateProfile = async (req, res) => {
       role: updatedUser.role,
       isActive: updatedUser.isActive,
       shortcutsEnabled: updatedUser.shortcutsEnabled,
+      sections: await getEffectiveSections(updatedUser),
       token: generateToken(updatedUser) // Nuevo token
     });
   } catch (error) {

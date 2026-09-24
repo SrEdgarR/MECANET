@@ -74,6 +74,8 @@ import logRoutes from './routes/logRoutes.js'; // Sistema de logs tÃ©cnicos
 import auditLogRoutes from './routes/auditLogRoutes.js'; // Sistema de auditorÃ­a de usuario
 import quotationRoutes from './routes/quotationRoutes.js'; // Cotizaciones
 import systemRoutes from './routes/systemRoutes.js'; // Actualizaciones del sistema
+import permissionRoutes from './routes/permissionRoutes.js';
+import { sectionAccessGate } from './middleware/sectionAccessMiddleware.js';
 
 // Importar modelos para endpoint de debug
 import Return from './models/Return.js';
@@ -359,6 +361,8 @@ app.get('/api/version', (req, res) => {
 // ========== REGISTRO DE RUTAS API ==========
 // Cada ruta tiene su prefijo y se delega a su archivo de rutas correspondiente
 app.use('/api/auth', authRoutes); // /api/auth/login, /api/auth/register, etc
+app.use('/api', sectionAccessGate);
+app.use('/api/permissions', permissionRoutes);
 app.use('/api/users', userRoutes); // /api/users (CRUD usuarios)
 app.use('/api/products', productRoutes); // /api/products (CRUD productos)
 app.use('/api/sales', saleRoutes); // /api/sales (crear ventas, historial)

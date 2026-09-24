@@ -101,10 +101,16 @@ if (!useRealApi) {
 
   // Provide simple resolved values for settings and dashboard endpoints
   vi.spyOn(api, 'getSettings').mockResolvedValue({ data: { companyName: 'AutoParts', widgets: { clock: true, weather: true }, toastPosition: 'top-right' } });
+  vi.spyOn(api, 'getNotificationPreferences').mockResolvedValue({ data: { data: {} } });
+  vi.spyOn(api, 'getAllDashboardData').mockResolvedValue({ data: { stats: {}, salesByDay: [], topProducts: [], salesByPayment: [] } });
   vi.spyOn(api, 'getDashboardStats').mockResolvedValue({ data: { today: { total: 0, transactions: 0 }, inventory: { totalProducts: 10, lowStockProducts: 1 }, customers: 0 } });
   vi.spyOn(api, 'getSalesByDay').mockResolvedValue({ data: [] });
   vi.spyOn(api, 'getTopProducts').mockResolvedValue({ data: [] });
   vi.spyOn(api, 'getSalesByPayment').mockResolvedValue({ data: [] });
+  vi.spyOn(api.default, 'get').mockImplementation((url) => {
+    if (url === '/version') return Promise.resolve({ data: { version: '2.0.1' } });
+    throw new Error(`Unexpected API request in frontend tests: ${url}`);
+  });
 } else {
   // When running against a real API, perform a login using seeded credentials and store token
   // Do not mock fetch here so real network calls succeed.

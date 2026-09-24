@@ -2,6 +2,7 @@ import { csvCell } from '../utils/safeDocuments';
 ﻿import { useState, useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
 import api from "../services/api";
+import { useAuthStore } from '../store/authStore';
 import { toast } from "react-hot-toast";
 import {
   Activity,
@@ -19,6 +20,7 @@ import {
 } from "lucide-react";
 
 const Logs = () => {
+  const isDeveloper = useAuthStore(state => state.user?.role === 'desarrollador');
   const [logs, setLogs] = useState([]);
   const [stats, setStats] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -252,13 +254,13 @@ const Logs = () => {
             <Download className="w-4 h-4" />
             Exportar CSV
           </button>
-          <button
+          {isDeveloper && <button
             onClick={cleanOldLogs}
             className="btn-secondary flex items-center gap-2"
           >
             <Trash2 className="w-4 h-4" />
             Limpiar Antiguos
-          </button>
+          </button>}
         </div>
       </div>
 

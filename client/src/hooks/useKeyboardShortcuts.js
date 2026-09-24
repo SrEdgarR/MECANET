@@ -16,6 +16,7 @@
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../store/authStore';
+import { hasSection } from '../utils/sectionAccess';
 
 export const useKeyboardShortcuts = () => {
   const navigate = useNavigate();
@@ -39,27 +40,27 @@ export const useKeyboardShortcuts = () => {
         switch (event.key.toLowerCase()) {
           case 'b':
             event.preventDefault();
-            navigate('/facturacion');
+            if (hasSection(user, 'facturacion')) navigate('/facturacion');
             break;
           case 'i':
             event.preventDefault();
-            navigate('/inventario');
+            if (hasSection(user, 'inventario')) navigate('/inventario');
             break;
           case 'h':
             event.preventDefault();
-            navigate('/historial-ventas');
+            if (hasSection(user, 'historial-ventas')) navigate('/historial-ventas');
             break;
           case 'l':
             event.preventDefault();
-            navigate('/clientes');
+            if (hasSection(user, 'clientes')) navigate('/clientes');
             break;
           case 'r':
             event.preventDefault();
-            navigate('/reportes');
+            if (hasSection(user, 'reportes')) navigate('/reportes');
             break;
           case ',':
             event.preventDefault();
-            navigate('/configuracion/negocio');
+            if (hasSection(user, 'configuracion/negocio')) navigate('/configuracion/negocio');
             break;
           case 'k':
             event.preventDefault();
@@ -88,7 +89,7 @@ export const useKeyboardShortcuts = () => {
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
     };
-  }, [navigate, shortcutsEnabled]);
+  }, [navigate, shortcutsEnabled, user]);
 };
 
 export default useKeyboardShortcuts;

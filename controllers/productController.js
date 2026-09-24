@@ -19,6 +19,9 @@ import Product from '../models/Product.js';
 import mongoose from 'mongoose';
 import LogService from '../services/logService.js';
 import AuditLogService from '../services/auditLogService.js';
+import { auditChanges } from '../services/auditChanges.js';
+
+const productLabels = { sku: 'SKU', name: 'Nombre', description: 'Descripción', warranty: 'Garantía', brand: 'Marca', category: 'Categoría', purchasePrice: 'Precio de compra', sellingPrice: 'Precio de venta', stock: 'Stock', defectiveStock: 'Stock defectuoso', lowStockThreshold: 'Umbral de stock bajo', discountPercentage: 'Descuento', supplier: 'Proveedor', supplierSKU: 'SKU del proveedor', imageUrl: 'Imagen', isArchived: 'Archivado' };
 
 /**
  * GETPRODUCTS - Obtener lista de productos
@@ -245,6 +248,7 @@ export const createProduct = async (req, res) => {
       productId: product._id.toString(),
       productName: product.name,
       description: `Se creó el producto "${product.name}" (SKU: ${product.sku}) con ${product.stock} unidades en stock`,
+      changes: auditChanges(null, product, productLabels),
       metadata: {
         sku: product.sku,
         category: product.category,
@@ -294,6 +298,7 @@ export const updateProduct = async (req, res) => {
       sellingPrice: product.sellingPrice,
       purchasePrice: product.purchasePrice
     };
+    const previousProduct = product.toObject();
 
     // Si se está actualizando el SKU, verificar que no exista otro producto con ese SKU
     if (req.body.sku && req.body.sku !== product.sku) {
@@ -346,19 +351,7 @@ export const updateProduct = async (req, res) => {
     });
 
     // Log de auditoría de usuario
-    const changes = [];
-    if (before.name !== after.name) {
-      changes.push({ field: 'name', fieldLabel: 'Nombre', oldValue: before.name, newValue: after.name });
-    }
-    if (before.stock !== after.stock) {
-      changes.push({ field: 'stock', fieldLabel: 'Stock', oldValue: before.stock, newValue: after.stock });
-    }
-    if (before.sellingPrice !== after.sellingPrice) {
-      changes.push({ field: 'sellingPrice', fieldLabel: 'Precio de Venta', oldValue: `RD$${before.sellingPrice}`, newValue: `RD$${after.sellingPrice}` });
-    }
-    if (before.purchasePrice !== after.purchasePrice) {
-      changes.push({ field: 'purchasePrice', fieldLabel: 'Precio de Compra', oldValue: `RD$${before.purchasePrice}`, newValue: `RD$${after.purchasePrice}` });
-    }
+    const changes = auditChanges(previousProduct, updatedProduct, productLabels);
 
     await AuditLogService.logInventory({
       user: req.user,
@@ -456,6 +449,7 @@ export const deleteProduct = async (req, res) => {
         productId: product._id.toString(),
         productName: product.name,
         description: `Se archivó (no eliminó) el producto "${product.name}" (SKU: ${product.sku}) porque tiene referencias activas en ${activeSalesCount + activePurchaseOrdersCount + activeReturnsCount} transacciones`,
+        changes: [{ field: 'isArchived', fieldLabel: 'Archivado', oldValue: false, newValue: true }],
         metadata: {
           sku: product.sku,
           archived: true,
@@ -499,6 +493,7 @@ export const deleteProduct = async (req, res) => {
       productId: product._id.toString(),
       productName: product.name,
       description: `Se eliminó permanentemente el producto "${product.name}" (SKU: ${product.sku})`,
+      changes: auditChanges(product, null, productLabels),
       metadata: {
         sku: product.sku,
         deleted: true,

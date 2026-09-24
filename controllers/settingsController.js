@@ -8,6 +8,20 @@ import PurchaseOrder from '../models/PurchaseOrder.js';
 import Return from '../models/Return.js';
 import CashWithdrawal from '../models/CashWithdrawal.js';
 import { verifySmtpConfig } from '../services/emailService.js';
+import AuditLogService from '../services/auditLogService.js';
+import { auditChanges } from '../services/auditChanges.js';
+
+const settingLabels = { businessName: 'Nombre del negocio', businessLogoUrl: 'Logo', businessAddress: 'Dirección', businessPhone: 'Teléfono', businessEmail: 'Email', autoUpdate: 'Actualizaciones automáticas', taxRate: 'Impuesto', currency: 'Moneda', receiptFooter: 'Pie del comprobante', lowStockAlert: 'Alerta de stock bajo', weatherLocation: 'Ubicación del clima', showWeather: 'Mostrar clima', autoCreatePurchaseOrders: 'Órdenes automáticas', requireOrderReception: 'Recepción obligatoria', autoOrderThreshold: 'Umbral de órdenes', toastPosition: 'Posición de avisos', logRetention: 'Retención de logs' };
+const settingSection = {
+  businessName: 'configuracion/negocio', businessLogoUrl: 'configuracion/negocio', businessAddress: 'configuracion/negocio', businessPhone: 'configuracion/negocio', businessEmail: 'configuracion/negocio',
+  taxRate: 'configuracion/facturacion', currency: 'configuracion/facturacion', receiptFooter: 'configuracion/facturacion',
+  weatherLocation: 'configuracion/integraciones', weatherApiKey: 'configuracion/integraciones', showWeather: 'configuracion/integraciones', smtp: 'configuracion/integraciones'
+};
+const logSettings = (req, settings, description, changes) => changes.length && AuditLogService.log({
+  user: req.user, module: 'configuracion', action: 'Modificación de Configuración',
+  entity: { type: 'Configuración', id: settings._id, name: 'Configuración del sistema' },
+  description, changes, req
+});
 
 const settingsResponse = (settings, privileged = true) => {
   const { weatherApiKey, smtp, ...visible } = settings.toObject();
@@ -41,6 +55,7 @@ export const getSettings = async (req, res) => {
 export const updateSettings = async (req, res) => {
   try {
     let settings = await Settings.findOne().select('+weatherApiKey') || await Settings.create({});
+    const previous = settings.toObject();
 
     // Actualizar campos
     const allowed = ['businessName', 'businessLogoUrl', 'businessAddress', 'businessPhone', 'businessEmail', 'autoUpdate', 'smtp', 'taxRate', 'currency', 'receiptFooter', 'lowStockAlert', 'weatherLocation', 'weatherApiKey', 'showWeather', 'autoCreatePurchaseOrders', 'requireOrderReception', 'autoOrderThreshold', 'toastPosition', 'logRetention'];
@@ -67,8 +82,17 @@ export const updateSettings = async (req, res) => {
       }
     });
 
+    const changes = auditChanges(previous, settings, settingLabels);
+    if (req.body.smtp && JSON.stringify(previous.smtp) !== JSON.stringify(settings.smtp?.toObject?.() || settings.smtp)) {
+      changes.push({ field: 'smtp', fieldLabel: 'Configuración SMTP', oldValue: 'Protegida', newValue: 'Modificada' });
+    }
+    if (req.body.weatherApiKey && previous.weatherApiKey !== settings.weatherApiKey) changes.push({ field: 'weatherApiKey', fieldLabel: 'Clave de clima', oldValue: 'Protegida', newValue: 'Modificada' });
+    if (changes.some(change => !req.effectiveSections?.includes(settingSection[change.field] || 'configuracion/sistema'))) {
+      return res.status(403).json({ message: 'No tienes acceso para cambiar esta parte de la configuración' });
+    }
     settings.updatedAt = Date.now();
     await settings.save();
+    await logSettings(req, settings, 'Se modificó la configuración del sistema', changes);
 
     res.json(settingsResponse(settings));
   } catch (error) {
@@ -92,6 +116,7 @@ export const updateSmtpSettings = async (req, res) => {
         message: 'Configuración no encontrada. Inicialice el sistema primero.'
       });
     }
+    const previousSmtp = settings.smtp?.toObject?.() || settings.smtp || {};
     
     // Asegurar que smtp existe
     if (!settings.smtp) {
@@ -110,6 +135,10 @@ export const updateSmtpSettings = async (req, res) => {
     
     settings.updatedAt = Date.now();
     await settings.save();
+    const smtpLabels = { enabled: 'SMTP habilitado', host: 'Servidor SMTP', port: 'Puerto SMTP', secure: 'Conexión segura', user: 'Usuario SMTP', fromName: 'Nombre remitente', fromEmail: 'Email remitente' };
+    const changes = auditChanges(previousSmtp, settings.smtp, smtpLabels);
+    if (password) changes.push({ field: 'smtpPassword', fieldLabel: 'Contraseña SMTP', oldValue: 'Protegida', newValue: 'Modificada' });
+    await logSettings(req, settings, 'Se modificó la configuración SMTP', changes);
     
     const settingsResult = settingsResponse(settings);
 
@@ -203,6 +232,7 @@ export const updateCompanyInfo = async (req, res) => {
     }
     
     let settings = await Settings.getInstance();
+    const previous = settings.toObject();
     
     if (name !== undefined) settings.businessName = name;
     if (address !== undefined) settings.businessAddress = address;
@@ -214,6 +244,7 @@ export const updateCompanyInfo = async (req, res) => {
     
     settings.updatedAt = Date.now();
     await settings.save();
+    await logSettings(req, settings, 'Se modificaron los datos del negocio', auditChanges(previous, settings, settingLabels));
     
     res.json({
       success: true,
@@ -278,6 +309,7 @@ export const updateNotificationPreferences = async (req, res) => {
     if (!user) {
       return res.status(404).json({ message: 'Usuario no encontrado' });
     }
+    const previous = user.notificationPreferences?.toObject?.() || {};
     
     // Inicializar si no existe
     if (!user.notificationPreferences) {
@@ -291,6 +323,10 @@ export const updateNotificationPreferences = async (req, res) => {
     if (paymentReminders !== undefined) user.notificationPreferences.paymentReminders = paymentReminders;
     
     await user.save();
+    const changes = auditChanges(previous, user.notificationPreferences, { lowStockAlerts: 'Alertas de stock', expirationAlerts: 'Alertas de vencimiento', salesAlerts: 'Alertas de ventas', paymentReminders: 'Recordatorios de pagos' });
+    if (changes.length) await AuditLogService.log({ user: req.user, module: 'configuracion', action: 'Modificación de Configuración',
+      entity: { type: 'Configuración', id: user._id, name: `Notificaciones de ${user.name}` },
+      description: `Se cambiaron las preferencias de notificaciones de ${user.name}`, changes, req });
     
     res.json({
       success: true,

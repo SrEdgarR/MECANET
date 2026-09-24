@@ -163,6 +163,9 @@ export const getUserById = (id) => API.get(`/users/${id}`); // Obtener usuario e
 export const createUser = (data) => API.post('/users', data); // Crear usuario (admin/cajero)
 export const updateUser = (id, data) => API.put(`/users/${id}`, data); // Actualizar usuario
 export const deleteUser = (id) => API.delete(`/users/${id}`); // Desactivar usuario
+export const getSectionPermissions = () => API.get('/permissions');
+export const updateRoleSections = (role, sections) => API.put(`/permissions/roles/${role}`, { sections });
+export const updateUserSections = (id, sectionOverrides) => API.put(`/permissions/users/${id}`, sectionOverrides);
 
 // ===== SETTINGS - Configuración del sistema =====
 export const getSettings = () => API.get(localStorage.getItem('token') ? '/settings' : '/settings/public'); // Obtener configuración actual

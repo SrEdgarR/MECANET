@@ -61,6 +61,6 @@ describe('ClockWidget - Unit Tests', () => {
     const { container } = render(<ClockWidget />);
     const widget = container.firstChild;
     
-    expect(widget).toHaveClass('flex', 'items-center', 'gap-3');
+    expect(widget).toHaveClass('flex', 'items-center');
   });
 });

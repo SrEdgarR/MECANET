@@ -20,7 +20,7 @@ import { getProfile } from '../services/api';
 import { Loader } from 'lucide-react';
 
 const AuthValidator = ({ children }) => {
-  const { token, isAuthenticated, clearAuth } = useAuthStore();
+  const { token, isAuthenticated, clearAuth, updateUser } = useAuthStore();
   const [isValidating, setIsValidating] = useState(true);
 
   useEffect(() => {
@@ -33,7 +33,8 @@ const AuthValidator = ({ children }) => {
 
       try {
         // Intentar obtener el perfil del usuario con el token actual
-        await getProfile();
+        const { data: profile } = await getProfile();
+        updateUser(profile);
         // Si la petición es exitosa, el token es válido
         setIsValidating(false);
       } catch (error) {

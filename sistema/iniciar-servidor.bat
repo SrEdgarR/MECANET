@@ -51,6 +51,19 @@ if not exist ".env" (
 REM Establecer NODE_ENV en produccion
 set "NODE_ENV=production"
 
+REM Una instalacion sin usuarios debe crear primero la cuenta con mas permisos.
+if not exist "scripts\createDeveloper.js" (
+    echo [ERROR] No se encontro el creador del primer usuario.
+    pause
+    exit /b 1
+)
+"%NODE_CMD%" scripts\createDeveloper.js --if-empty
+if errorlevel 1 (
+    echo [ERROR] No se pudo preparar el primer usuario. MECANET no se iniciara.
+    pause
+    exit /b 1
+)
+
 if not exist "scripts\check-local-server.cjs" (
     echo [ERROR] No se encontro el verificador local de MECANET.
     pause

@@ -1094,7 +1094,7 @@ const ProductModal = ({ product, onSave, onClose, categories, brands, suppliers 
               {restockAmount > 0 && (
                 <div className="flex items-center justify-center gap-2 text-sm font-medium text-green-700 dark:text-green-300 bg-green-50 dark:bg-green-900/20 py-2 rounded">
                   <Check className="w-4 h-4" />
-                  Se agregarán {restockAmount} unidades ({existingProduct.stock} -> {targetStock})
+                  Se agregarán {restockAmount} unidades ({existingProduct.stock} → {targetStock})
                 </div>
               )}
             </div>
@@ -1382,7 +1382,6 @@ const ProductModal = ({ product, onSave, onClose, categories, brands, suppliers 
 };
 
 export default Inventory;
-
 
 
 

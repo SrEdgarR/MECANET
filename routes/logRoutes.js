@@ -1,12 +1,13 @@
 import express from 'express';
-import { protect, admin } from '../middleware/authMiddleware.js';
+import { protect } from '../middleware/authMiddleware.js';
+import { requireSection, developerOnly } from '../middleware/sectionAccessMiddleware.js';
 import LogService from '../services/logService.js';
 
 const router = express.Router();
 
 // Todas las rutas requieren autenticación y rol de admin
 router.use(protect);
-router.use(admin);
+router.use(requireSection('logs', 'monitoreo'));
 
 /**
  * @route   GET /api/logs
@@ -80,7 +81,7 @@ router.get('/stats', async (req, res) => {
  * @desc    Limpiar logs antiguos
  * @access  Admin
  */
-router.delete('/clean', async (req, res) => {
+router.delete('/clean', developerOnly, async (req, res) => {
   try {
     const { daysToKeep, severity, type, all } = req.body;
 

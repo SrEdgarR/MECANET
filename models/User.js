@@ -62,6 +62,10 @@ const userSchema = new mongoose.Schema({
     type: Boolean,
     default: true
   },
+  sectionOverrides: {
+    enabled: { type: [String], default: [] },
+    disabled: { type: [String], default: [] }
+  },
   
   // Preferencias de notificaciones del usuario
   notificationPreferences: {

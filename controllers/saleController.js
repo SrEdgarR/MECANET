@@ -153,6 +153,11 @@ export const createSale = async (req, res) => {
       saleId: sale._id.toString(),
       saleNumber: sale.invoiceNumber,
       description: `Se creó la factura #${sale.invoiceNumber} por un monto de RD$${total.toFixed(2)}${customerInfo ? ` para el cliente ${customerInfo.fullName}` : ''}`,
+      changes: [
+        { field: 'items', fieldLabel: 'Productos vendidos', oldValue: null, newValue: sale.items.map(item => ({ product: String(item.product), quantity: item.quantity, priceAtSale: item.priceAtSale, discountApplied: item.discountApplied })) },
+        { field: 'total', fieldLabel: 'Total', oldValue: null, newValue: sale.total },
+        { field: 'paymentMethod', fieldLabel: 'Método de pago', oldValue: null, newValue: sale.paymentMethod }
+      ],
       amount: total,
       customer: customerInfo?.fullName,
       metadata: {
@@ -475,10 +480,11 @@ export const cancelSale = async (req, res) => {
     // Log de auditorÃ­a de usuario
     await AuditLogService.logSale({
       user: req.user,
-      action: 'AnulaciÃ³n de Venta',
+      action: 'Anulación de Venta',
       saleId: sale._id.toString(),
       saleNumber: sale.invoiceNumber,
-      description: `Se anulÃ³ la factura #${sale.invoiceNumber} por un monto de RD$${sale.total.toFixed(2)}. ${req.body.reason ? `Motivo: ${req.body.reason}` : ''}`,
+      description: `Se anuló la factura #${sale.invoiceNumber} por un monto de RD$${sale.total.toFixed(2)}. ${req.body.reason ? `Motivo: ${req.body.reason}` : ''}`,
+      changes: [{ field: 'status', fieldLabel: 'Estado', oldValue: 'Completada', newValue: 'Cancelada' }],
       amount: sale.total,
       metadata: {
         itemsRestored: restoredCount,
@@ -607,6 +613,15 @@ export const closeCashRegister = async (req, res) => {
       totalWithdrawals,
       withdrawals: withdrawals.map((w) => w._id)
     });
+    await AuditLogService.log({ user: req.user, module: 'caja', action: 'Cierre de Caja',
+      entity: { type: 'Caja', id: session._id, name: `Caja de ${req.user.name}` },
+      description: `Se cerró la caja de ${req.user.name} con ${sales.length} ventas`,
+      changes: [
+        { field: 'systemTotals', fieldLabel: 'Totales del sistema', oldValue: null, newValue: systemTotals },
+        { field: 'countedTotals', fieldLabel: 'Totales contados', oldValue: null, newValue: normalizedCountedTotals },
+        { field: 'differences', fieldLabel: 'Diferencias', oldValue: null, newValue: differences },
+        { field: 'totalWithdrawals', fieldLabel: 'Retiros', oldValue: null, newValue: totalWithdrawals }
+      ], req });
 
     // Poblar datos del cajero para la respuesta
     await session.populate('cashier', 'fullName email');

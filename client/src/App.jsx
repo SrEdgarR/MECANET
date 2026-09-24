@@ -25,6 +25,7 @@ import { Toaster } from 'react-hot-toast';
 import { useAuthStore } from './store/authStore';
 import { useThemeStore } from './store/themeStore';
 import { useSettingsStore } from './store/settingsStore';
+import { hasSection, firstAllowedPath } from './utils/sectionAccess';
 
 // Pages
 import Login from './pages/Login';
@@ -60,16 +61,16 @@ import KeyboardShortcutsHelp from './components/KeyboardShortcutsHelp';
 import ChristmasSnow from './components/ChristmasSnow';
 
 // Protected Route Component
-const ProtectedRoute = ({ children, adminOnly = false }) => {
+const ProtectedRoute = ({ children, section }) => {
   const { user, isAuthenticated } = useAuthStore();
 
   if (!isAuthenticated) {
     return <Navigate to="/login" replace />;
   }
 
-  const privilegedRoles = ['admin', 'desarrollador'];
-  if (adminOnly && !privilegedRoles.includes(user?.role)) {
-    return <Navigate to="/" replace />;
+  if (section && !hasSection(user, section)) {
+    const destination = firstAllowedPath(user);
+    return destination ? <Navigate to={destination} replace /> : <div className="p-8">No tienes secciones habilitadas. Contacta al desarrollador.</div>;
   }
 
   return children;
@@ -130,23 +131,23 @@ export const AppRoutes = () => {
             </ProtectedRoute>
           }
         >
-          <Route index element={<Dashboard />} />
-          <Route path="facturacion" element={<Billing />} />
-          <Route path="inventario" element={<Inventory />} />
-          <Route path="clientes" element={<Customers />} />
-          <Route path="proveedores" element={<Suppliers />} />
-          <Route path="ordenes-compra" element={<PurchaseOrders />} />
-          <Route path="devoluciones" element={<Returns />} />
-          <Route path="historial-ventas" element={<SalesHistory />} />
-          <Route path="cotizaciones" element={<Quotations />} />
-          <Route path="cierre-caja" element={<CashRegister />} />
-          <Route path="retiros-caja" element={<CashWithdrawals />} />
+          <Route index element={<ProtectedRoute section="dashboard"><Dashboard /></ProtectedRoute>} />
+          <Route path="facturacion" element={<ProtectedRoute section="facturacion"><Billing /></ProtectedRoute>} />
+          <Route path="inventario" element={<ProtectedRoute section="inventario"><Inventory /></ProtectedRoute>} />
+          <Route path="clientes" element={<ProtectedRoute section="clientes"><Customers /></ProtectedRoute>} />
+          <Route path="proveedores" element={<ProtectedRoute section="proveedores"><Suppliers /></ProtectedRoute>} />
+          <Route path="ordenes-compra" element={<ProtectedRoute section="ordenes-compra"><PurchaseOrders /></ProtectedRoute>} />
+          <Route path="devoluciones" element={<ProtectedRoute section="devoluciones"><Returns /></ProtectedRoute>} />
+          <Route path="historial-ventas" element={<ProtectedRoute section="historial-ventas"><SalesHistory /></ProtectedRoute>} />
+          <Route path="cotizaciones" element={<ProtectedRoute section="cotizaciones"><Quotations /></ProtectedRoute>} />
+          <Route path="cierre-caja" element={<ProtectedRoute section="cierre-caja"><CashRegister /></ProtectedRoute>} />
+          <Route path="retiros-caja" element={<ProtectedRoute section="retiros-caja"><CashWithdrawals /></ProtectedRoute>} />
 
           {/* Admin Routes */}
           <Route
             path="usuarios"
             element={
-              <ProtectedRoute adminOnly>
+              <ProtectedRoute section="usuarios">
                 <Users />
               </ProtectedRoute>
             }
@@ -154,20 +155,20 @@ export const AppRoutes = () => {
           <Route
             path="reportes"
             element={
-              <ProtectedRoute adminOnly>
+              <ProtectedRoute section="reportes">
                 <Reports />
               </ProtectedRoute>
             }
           />
-          <Route path="configuracion" element={<ProtectedRoute adminOnly><Settings /></ProtectedRoute>} />
-          <Route path="configuracion/negocio" element={<ProtectedRoute adminOnly><Settings section="business" /></ProtectedRoute>} />
-          <Route path="configuracion/sistema" element={<ProtectedRoute adminOnly><Settings section="system" /></ProtectedRoute>} />
-          <Route path="configuracion/notificaciones" element={<ProtectedRoute adminOnly><Settings section="notifications" /></ProtectedRoute>} />
-          <Route path="configuracion/facturacion" element={<ProtectedRoute adminOnly><Settings section="billing" /></ProtectedRoute>} />
-          <Route path="configuracion/integraciones" element={<ProtectedRoute adminOnly><Settings section="integrations" /></ProtectedRoute>} />
-          <Route path="logs" element={<ProtectedRoute adminOnly><Logs /></ProtectedRoute>} />
-          <Route path="auditoria" element={<ProtectedRoute adminOnly><AuditLogs /></ProtectedRoute>} />
-          <Route path="monitoreo" element={<ProtectedRoute adminOnly><Monitoring /></ProtectedRoute>} />
+          <Route path="configuracion" element={<Navigate to="/configuracion/negocio" replace />} />
+          <Route path="configuracion/negocio" element={<ProtectedRoute section="configuracion/negocio"><Settings section="business" /></ProtectedRoute>} />
+          <Route path="configuracion/sistema" element={<ProtectedRoute section="configuracion/sistema"><Settings section="system" /></ProtectedRoute>} />
+          <Route path="configuracion/notificaciones" element={<ProtectedRoute section="configuracion/notificaciones"><Settings section="notifications" /></ProtectedRoute>} />
+          <Route path="configuracion/facturacion" element={<ProtectedRoute section="configuracion/facturacion"><Settings section="billing" /></ProtectedRoute>} />
+          <Route path="configuracion/integraciones" element={<ProtectedRoute section="configuracion/integraciones"><Settings section="integrations" /></ProtectedRoute>} />
+          <Route path="logs" element={<ProtectedRoute section="logs"><Logs /></ProtectedRoute>} />
+          <Route path="auditoria" element={<ProtectedRoute section="auditoria"><AuditLogs /></ProtectedRoute>} />
+          <Route path="monitoreo" element={<ProtectedRoute section="monitoreo"><Monitoring /></ProtectedRoute>} />
         </Route>
       </Routes>
 
@@ -214,4 +215,3 @@ function App() {
 }
 
 export default App;
-
