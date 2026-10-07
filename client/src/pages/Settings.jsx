@@ -76,7 +76,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { NavLink, useNavigate, useLocation } from 'react-router-dom';
-import {
+import API, {
   getSettings,
   updateSettings,
   exportSystemData,
@@ -511,40 +511,18 @@ const Settings = ({ section = 'all' }) => {
       setIsCleaningLogs(true);
       toast.loading('Limpiando logs...', { id: 'clean-logs' });
 
-      const response = await fetch('/api/logs/clean', {
-        method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-        },
-        body: JSON.stringify({
+      const { data } = await API.delete('/logs/clean', {
+        data: {
           ...logCleanFilters,
           all: logCleanFilters.type === 'all' && logCleanFilters.severity === 'all' && !logCleanFilters.days
-        })
+        }
       });
 
-      // Check if response has content before parsing JSON
-      const contentType = response.headers.get('content-type');
-      let data;
-
-      if (contentType && contentType.includes('application/json')) {
-        data = await response.json();
-      } else {
-        // Response is not JSON, might be an error from a proxy or auth issue
-        const text = await response.text();
-        console.error('Non-JSON response:', text);
-        throw new Error('Respuesta inválida del servidor. Verifica tu conexión y autenticación.');
-      }
-
-      if (response.ok) {
-        toast.success(`✅ ${data.message}`, { id: 'clean-logs' });
-        setShowLogCleanModal(false);
-      } else {
-        throw new Error(data.message || 'Error al limpiar logs');
-      }
+      toast.success(`✅ ${data.message}`, { id: 'clean-logs' });
+      setShowLogCleanModal(false);
     } catch (error) {
       console.error('Error al limpiar logs:', error);
-      toast.error(error.message || 'Error al limpiar logs', { id: 'clean-logs' });
+      toast.error(error.response?.data?.message || error.message || 'Error al limpiar logs', { id: 'clean-logs' });
     } finally {
       setIsCleaningLogs(false);
     }
@@ -568,14 +546,7 @@ const Settings = ({ section = 'all' }) => {
       }
 
       // Luego probar conexión
-      const response = await fetch('/api/settings/smtp/test', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-        }
-      });
-      const data = await response.json();
+      const { data } = await API.post('/settings/smtp/test');
 
       if (data.success) {
         toast.success('✅ Configuración SMTP correcta. El email se puede enviar.');

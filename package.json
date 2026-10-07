@@ -16,6 +16,7 @@
     "setup:local": "node scripts/generateJwtSecret.js",
     "test:setup": "node --test scripts/localSetup.test.js",
     "test:setup-client": "node --test scripts/setup-client.test.js",
+    "test:http": "node --test scripts/http.test.js",
     "create-admin": "node scripts/createAdmin.js",
     "seed": "node scripts/seed.js",
     "clean-seed": "node scripts/cleanAndSeed.js",

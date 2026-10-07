@@ -25,6 +25,7 @@ import rateLimit from 'express-rate-limit';
 import { execSync } from 'child_process';
 import helmet from 'helmet';
 import { rejectUnsafeKeys } from './middleware/validationMiddleware.js';
+import { createCorsOptions, createHealthHandler } from './config/http.js';
 
 // ========== MANEJO DE ERRORES GLOBALES ==========
 // Capturar errores no manejados para evitar que el ejecutable se cierre sin mostrar informaciÃ³n
@@ -118,8 +119,8 @@ try {
 
 // Determinar modo de aplicaciÃ³n
 const envResult = dotenv.config();
-if (envResult.error) {
-  console.error('[ERROR] Archivo .env no encontrado');
+if (envResult.error && envResult.error.code !== 'ENOENT') {
+  console.error('[ERROR] No fue posible leer .env:', envResult.error.message);
 }
 
 const IS_CLOUD_ENV = process.env.RAILWAY_ENVIRONMENT || process.env.VERCEL || process.env.HEROKU_APP_NAME;
@@ -187,47 +188,7 @@ app.set('trust proxy', IS_LOCAL_APP ? false : 1);
 // ========== MIDDLEWARE GLOBAL ==========
 // CORS: Configurado segÃºn el modo de aplicaciÃ³n (CamaleÃ³n)
 // DEBE IR PRIMERO para que las respuestas de error (como rate limit) tengan headers CORS
-const corsOptions = {
-  origin: function (origin, callback) {
-    // Permitir requests sin origin (mobile apps, curl, localhost)
-    if (!origin) return callback(null, true);
-
-    // MODO ESCRITORIO (LOCAL): Permisivo con localhost
-    if (IS_LOCAL_APP) {
-      try {
-        const parsed = new URL(origin);
-        if (['http:', 'https:'].includes(parsed.protocol) && ['localhost', '127.0.0.1', '[::1]'].includes(parsed.hostname)) {
-          return callback(null, true);
-        }
-      } catch {}
-      return callback(new Error('Acceso denegado por CORS'));
-    }
-    // MODO NUBE (RAILWAY/WEB): Estricto
-    else {
-      const allowedOrigins = [
-        'https://mecanet-production.up.railway.app',
-        'https://beneficial-reprieve-production-b547.up.railway.app',
-        'https://www.mecanet.site',
-        'https://mecanet.site'
-      ];
-
-      // En desarrollo (NODE_ENV !== production) permitimos localhost tambiÃ©n
-      if (process.env.NODE_ENV !== 'production') {
-        allowedOrigins.push('http://localhost:3000', 'http://localhost:3001', 'http://localhost:5000', 'http://localhost:5173');
-      }
-
-      if (allowedOrigins.indexOf(origin) !== -1) {
-        return callback(null, true);
-      } else {
-        console.warn(`Origen bloqueado por CORS: ${origin}`);
-        return callback(new Error('Acceso denegado por CORS'));
-      }
-    }
-  },
-  credentials: true // Permitir cookies/headers autorizados
-};
-
-app.use(cors(corsOptions));
+app.use(cors(createCorsOptions({ isLocalApp: IS_LOCAL_APP })));
 
 // ConfiguraciÃ³n de Proxy para modo Nube
 if (!IS_LOCAL_APP) {
@@ -246,6 +207,9 @@ app.use(helmet({
     }
   }
 }));
+
+// Coolify consulta este endpoint sin consumir el límite de peticiones de usuarios.
+app.get('/api/health', createHealthHandler(mongoose.connection));
 
 // 2. RATE LIMITING: Proteger contra fuerza bruta y DDoS
 // LÃ­mite general: 100 peticiones por IP cada 15 minutos
@@ -419,7 +383,7 @@ app.use('/api', (req, res) => {
 
 // ========== SERVIR FRONTEND EN PRODUCCIÃ“N ==========
 // En producciÃ³n, Express sirve los archivos estÃ¡ticos del build de React
-if (process.env.NODE_ENV === 'production') {
+if (process.env.NODE_ENV === 'production' && process.env.SERVE_FRONTEND !== 'false') {
   // Servir archivos estÃ¡ticos del frontend compilado
   const clientDistPath = path.join(__dirname, 'client', 'dist');
   app.use(express.static(clientDistPath));
@@ -453,7 +417,7 @@ app.use(errorHandler);
 const PORT = process.env.PORT || 5000;
 
 const BIND_HOST = process.env.BIND_HOST || (IS_LOCAL_APP ? '127.0.0.1' : '0.0.0.0');
-app.listen(PORT, BIND_HOST, async () => {
+const server = app.listen(PORT, BIND_HOST, async () => {
   console.log('\n[OK] Servidor iniciado en http://localhost:' + PORT);
   console.log('   Entorno:', process.env.NODE_ENV || 'development');
 
@@ -481,5 +445,16 @@ app.listen(PORT, BIND_HOST, async () => {
     process.exit(1);
   }
 });
+
+for (const signal of ['SIGTERM', 'SIGINT']) {
+  process.once(signal, () => {
+    console.log('[INFO] Cerrando conexiones antes de detener MECANET...');
+    setTimeout(() => process.exit(1), 10000).unref();
+    server.close(async () => {
+      await mongoose.disconnect();
+      process.exit(0);
+    });
+  });
+}
 
 
