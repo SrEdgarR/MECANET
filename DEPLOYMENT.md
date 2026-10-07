@@ -32,11 +32,39 @@ Variables de ejecución, sin habilitarlas durante la compilación:
 
 Si usas Atlas, autoriza la IP de salida del VPS y concede al usuario permisos únicamente sobre la base elegida. No configures un fallback hacia otra base: una incidencia de conexión debe detener el arranque, no cambiar el conjunto de datos. Conserva el mismo `JWT_SECRET` entre despliegues; cambiarlo invalida las sesiones existentes.
 
-El contenedor se ejecuta como usuario sin privilegios y solo contiene las dependencias de producción y el código del backend. `.dockerignore` excluye `.env`, credenciales, archivos locales y el frontend. No ejecutes `setup-client`, `seed` ni `reset-db` durante la compilación o el arranque: pueden reinicializar o modificar datos.
+El contenedor se ejecuta como usuario sin privilegios y contiene las dependencias de producción, el código del backend y `curl`, que necesita la comprobación de salud de Coolify. `.dockerignore` excluye `.env`, credenciales, archivos locales y el frontend. No ejecutes `setup-client`, `seed` ni `reset-db` durante la compilación o el arranque: pueden reinicializar o modificar datos.
 
 El `HEALTHCHECK` del Dockerfile consulta `/api/health`; devuelve `200` con `{"status":"ok"}` solo si MongoDB responde y `503` si no está disponible. No incluye credenciales ni datos del negocio. El servidor cierra sus conexiones al recibir una señal de parada.
 
 Para agregar un administrador sin borrar datos, abre una terminal interactiva del contenedor y ejecuta `node scripts/createAdmin.js`. Ese asistente requiere que las variables de ejecución ya estén configuradas. Guarda la contraseña que muestre en un gestor de contraseñas.
+
+### MongoDB dentro de Coolify
+
+Crea el recurso `mecanet-mongodb` dentro del mismo proyecto y entorno que la API. Utiliza una versión compatible con el sistema del VPS: este despliegue se verificó con `mongo:7`. Conserva los volúmenes de Coolify para `/data/db` y `/data/configdb`, activa la autenticación y mantén desactivado el acceso público a MongoDB.
+
+Las ventas requieren transacciones: MongoDB debe estar configurado como replica set. En este VPS se utiliza `mecanet-rs` con un miembro. Esto habilita transacciones, pero no aporta redundancia frente a una avería del VPS.
+
+Para una base nueva, crea una clave aleatoria de autenticación interna en `/data/configdb/mecanet-keyfile`, propiedad del usuario `mongodb` y con permisos `400`. Configura MongoDB en Coolify con:
+
+```yaml
+storage:
+  wiredTiger:
+    engineConfig:
+      cacheSizeGB: 0.25
+replication:
+  replSetName: mecanet-rs
+security:
+  authorization: enabled
+  keyFile: /data/configdb/mecanet-keyfile
+```
+
+Después de reiniciar ese recurso, autentícate como administrador e inicializa el replica set una sola vez con el hostname interno estable del recurso de Coolify. No uses una IP temporal del contenedor. Crea un usuario `mecanet_app` con permiso `readWrite` solo sobre la base `mecanet`; la API no debe usar la cuenta raíz. Su conexión tiene esta estructura:
+
+```text
+mongodb://mecanet_app:CONTRASENA@HOST_INTERNO:27017/mecanet?authSource=mecanet&directConnection=true&replicaSet=mecanet-rs
+```
+
+Guarda esta URI únicamente como variable de ejecución de la API. Conserva respaldos de la base y de la configuración del recurso, incluida su clave interna. Un volumen persistente protege los datos al reemplazar un contenedor, pero no sustituye a una copia de seguridad fuera del VPS.
 
 ## Frontend en Vercel
 
