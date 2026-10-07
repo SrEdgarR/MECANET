@@ -58,6 +58,7 @@ coverage/
 
 # Railway and local state
 .railway/
+.vercel/
 .kilo/
 .mecanet-configured
 docs/

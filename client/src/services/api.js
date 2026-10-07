@@ -19,7 +19,7 @@ import axios from 'axios';
 /**
  * Instancia de Axios configurada
  * baseURL: '/api' en desarrollo (proxy de Vite)
- * En producción: URL completa del backend (Railway/Render)
+ * En producción: URL HTTPS de la API del VPS, configurada con VITE_API_URL.
  */
 const API = axios.create({
   baseURL: import.meta.env.VITE_API_URL || '/api',

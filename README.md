@@ -104,42 +104,17 @@ npm --prefix client run dev
 
 ## ☁️ Despliegue en la nube
 
-### Railway + Vercel
+La distribución web usa dos proyectos de Vercel y un backend en Coolify:
 
-#### 1. Backend en Railway
+| Dirección | Contenido | Carpeta / plataforma |
+| --- | --- | --- |
+| `https://mecanet.site` | Presentación pública de Mecanet | `web` / Vercel |
+| `https://app.mecanet.site` | Aplicación React | `client` / Vercel |
+| `https://api.mecanet.site` | API Express conectada a MongoDB | `Dockerfile` / Coolify |
 
-1. Crea un proyecto desde este repositorio.
-2. Usa `npm start` como comando de inicio.
-3. Configura:
+Consulta [DEPLOYMENT.md](DEPLOYMENT.md) para las variables, los dominios, la comprobación del servicio y la reversión de una versión. Las credenciales de MongoDB y JWT se configuran únicamente en Coolify; Vercel recibe la dirección pública de la API.
 
-   ```dotenv
-   MONGODB_URI=tu_uri_de_mongodb_atlas
-   JWT_SECRET=un_secreto_aleatorio_de_32_caracteres_o_mas
-   NODE_ENV=production
-   ```
-
-4. Copia la URL pública del backend.
-
-#### 2. Frontend en Vercel
-
-1. Importa el mismo repositorio.
-2. Define **Root Directory** como `client`.
-3. Usa `npm run build` y el directorio de salida `dist`.
-4. Agrega la URL de la API, incluyendo `/api`:
-
-   ```dotenv
-   VITE_API_URL=https://tu-backend.up.railway.app/api
-   ```
-
-### Render: backend y frontend juntos
-
-Configura un Web Service con:
-
-- **Build Command:** `npm run build:cloud`
-- **Start Command:** `npm start`
-- **Variables:** `MONGODB_URI`, `JWT_SECRET` y `NODE_ENV=production`
-
-En producción, Express sirve el contenido compilado de `client/dist`.
+La aplicación actual administra un negocio por base de datos. No incluye registro público de empresas, suscripciones ni aislamiento de varios negocios en una misma base. La versión local sigue funcionando con Express sirviendo `client/dist`.
 
 ---
 
@@ -185,6 +160,7 @@ mongodb+srv://usuario:password@cluster0.xxxxx.mongodb.net/mecanet?retryWrites=tr
 ```text
 MECANET/
 ├── client/          # React, páginas, componentes, estado y cliente HTTP
+├── web/             # Sitio público estático para Vercel
 ├── config/          # Conexión y configuración del backend
 ├── controllers/     # Lógica de negocio
 ├── middleware/      # Autenticación, errores, logs y rendimiento
@@ -211,11 +187,13 @@ Si el repositorio es privado, cada instalación necesita `GITHUB_READ_TOKEN` en 
 ## 🧪 Verificación
 
 ```bash
+npm run test:http
+npm run test:security
 npm --prefix client run test:run
 npm --prefix client run build
 ```
 
-El backend no define todavía una suite automática en `package.json`; sus scripts de diagnóstico están en `scripts/`.
+Las pruebas HTTP verifican CORS y la comprobación de MongoDB sin acceder a una base real. Los scripts de diagnóstico adicionales están en `scripts/`.
 
 ---
 
