@@ -1,9 +1,9 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {readFile,writeFile,mkdir,readdir,unlink,rmdir,rename} from 'node:fs/promises';
+import {readFile,writeFile,mkdtemp,readdir,unlink,rmdir,rename} from 'node:fs/promises';
 import {randomUUID} from 'node:crypto';
 import {join} from 'node:path';
-import {fileURLToPath} from 'node:url';
+import {tmpdir} from 'node:os';
 import {setTimeout as delay} from 'node:timers/promises';
 import {assertShareWait,assertPromotedMetadata,scenarioPlan,validateDrainStartedProof,validatePromotionProvenance,publishDrainRequest,selectCurrentDrainStartedProof,waitForCurrentDrainStartedProof} from './revocation-live.mjs';
 const tenantId='11111111-1111-4111-8111-111111111111',generation='aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa',owner='bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb';
@@ -62,7 +62,7 @@ test('cross-cohort, cross-kind, different guard or missing positive preservation
 });
 const drainRequest=()=>({project:'mecanet-qa-p1l2-cp017',sourceSha:producerSha,generation,instance:'api1',owner,operationId:randomUUID(),ticketId:randomUUID(),requestedAt:new Date().toISOString(),releaseDeadlineMs:2500,signal:'SIGTERM'});
 async function drainFixture(fn){
- const parent=fileURLToPath(new URL('../../../.qa-private/',import.meta.url)),directory=join(parent,`drain-atomic-test-${randomUUID()}`);await mkdir(directory);
+ const directory=await mkdtemp(join(tmpdir(),'mecanet-cp017-drain-'));
  try{await fn({directory,file:join(directory,'drain-request.json')})}
  finally{for(const name of await readdir(directory)){assert(name==='drain-request.json'||/^\.drain-request\.[a-f0-9-]{36}\.tmp$/.test(name));await unlink(join(directory,name))}await rmdir(directory)}
 }

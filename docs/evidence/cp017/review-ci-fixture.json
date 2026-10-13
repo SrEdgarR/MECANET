@@ -1,0 +1,79 @@
+{
+  "id": "REV-CP017-CI-FIXTURE-01",
+  "reviewer": "l2_service",
+  "scope": "Corrección de portabilidad del fixture drainFixture en checkout limpio; sin cambios de producto, runtime, baseline ni infraestructura.",
+  "status": "STATIC REVIEW PASS / LOCAL RED-TO-GREEN EVIDENCE REVIEWED",
+  "criticalOpen": 0,
+  "requiredOpen": 0,
+  "sources": {
+    "priorTest": {
+      "path": "tests/qa/cp017/revocation-live.test.mjs",
+      "sha256": "f061f96c540183c9fd577fe7ab3adb07fe55705e049b1aeb36bcde67a50f024a"
+    },
+    "correctedTest": {
+      "path": "tests/qa/cp017/revocation-live.test.mjs",
+      "sha256": "096e0f89fed36fb6a1c09f00e23f36eb1495d5cca4fa6a2b09ef51b88f0ed3bd"
+    },
+    "unchangedRuntime": {
+      "path": "tests/qa/cp017/revocation-live.mjs",
+      "sha256": "753367320de5ea9fc199df95b189e9771c6f0055b5de147c2386576523f69ea6"
+    },
+    "priorIndependentReview": {
+      "path": "docs/evidence/cp017/review-drain-atomic.json",
+      "sha256": "d7fb1e361c259e82900d0a0e696fa6f49b41dbebc62ca4bd33e55fdcb5f6c71f"
+    }
+  },
+  "diagnosis": {
+    "classification": "DETECTED",
+    "rootCause": "El fixture intentaba crear un hijo de .qa-private mediante mkdir no recursivo. El directorio padre ignorado no existe en el checkout limpio de CI. Los tres casos fallaron antes de invocar publishDrainRequest o sus assertions.",
+    "historicalCi": {
+      "path": ".qa-private/cp017-ci-first-failure.log",
+      "localRawSha256": "1d8d8a2246021f9f2effbed18d668e23e3af977a14f96cb1fb1db9103f6aa319",
+      "observedAtUtc": "2026-10-13T22:58:52.5969591Z",
+      "status": "FAIL",
+      "tests": 258,
+      "pass": 255,
+      "fail": 3,
+      "causeCode": "ENOENT",
+      "operation": "mkdir",
+      "sourceReference": "c733 (abreviado, informado por root; SHA Git completo no comprobado por este revisor)"
+    }
+  },
+  "review": {
+    "exactDeltaVerified": true,
+    "method": "Revertir en memoria únicamente las dos sustituciones de imports y la línea de creación produce exactamente el SHA256 del test previo. No se escribió ni ejecutó el preimage.",
+    "change": "mkdtemp(join(tmpdir(), 'mecanet-cp017-drain-')) crea el directorio temporal exclusivo de cada prueba sin depender de un padre dentro del checkout.",
+    "cleanup": "Se conserva la allowlist de drain-request.json y del temporal con UUID. unlink actúa únicamente sobre esas entradas dentro del directorio obtenido de mkdtemp; rmdir retira solo ese directorio vacío. No hay borrado recursivo ni operación sobre tmpdir o la raíz del proyecto.",
+    "assertions": "Todas las assertions, los 24 ciclos de publicación, los conteos de lecturas/fsync, el rechazo previo a mutación y las negativas de provenance permanecen idénticos.",
+    "runtime": "publishDrainRequest, rename, apertura wx, fsync y limpieza de temporales no cambian; su SHA256 coincide con la revisión anterior.",
+    "removedImports": ["mkdir", "fileURLToPath"],
+    "addedImports": ["mkdtemp", "tmpdir"]
+  },
+  "localEvidenceReviewed": [
+    {
+      "path": ".qa-private/cp017-ci-clean-red.log",
+      "localRawSha256": "237769928ded3e9141fd616cf3df3e42f42170675494b9a7dfd8d4d32f038f56",
+      "provenance": "Ejecución de root en copia limpia; log leído por l2_service. La ausencia del padre reproduce la misma causa ENOENT.",
+      "status": "FAIL",
+      "tests": 15,
+      "pass": 12,
+      "fail": 3
+    },
+    {
+      "path": ".qa-private/cp017-ci-clean-green.log",
+      "localRawSha256": "8f921042900139ce6a6eefc526530a9696cc15de4928df22b8c5ae5df9b1c2ed",
+      "provenance": "Ejecución de root en la misma copia limpia con el único archivo corregido; log leído por l2_service. Root acredita que no se creó .qa-private dentro de la copia.",
+      "status": "PASS FOR THESE 15 LOCAL TESTS ONLY",
+      "tests": 15,
+      "pass": 15,
+      "fail": 0
+    }
+  ],
+  "limits": [
+    "La ejecución remota corregida de GitHub CI permanece NOT VERIFIED en este informe.",
+    "Los logs son copias locales con hash local; no se presenta un hash remoto no acreditado.",
+    "No se ejecutó Git, SSH, QA remota ni se leyó configuración de secretos por este revisor.",
+    "Las corridas FAIL históricas y la revisión original se conservan. Este informe no concede Integration Gate, merge, TERMINAL ni PASS global del lote."
+  ],
+  "nextStep": "Root puede volver a ejecutar CI sobre el cambio acotado; evaluar sus checks reales antes de integrar."
+}
