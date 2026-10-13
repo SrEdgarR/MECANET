@@ -1,0 +1,25 @@
+{
+  "reviewId":"CP017-REVIEW-RESTORE-REGISTRY",
+  "reviewer":"l2_ui",
+  "recordedAt":"2026-10-13T21:49:51.3145961Z",
+  "status":"PASS FOR STATIC DELTA AND LOCAL UNIT TESTS ONLY",
+  "environment":"Local Windows, Node 24.21.0, private runtime; no database, SSH, Git or infrastructure operation",
+  "inputs":[
+    {"path":"tests/qa/cp017/recovery.mjs","sha256":"344281ec4e0f8c54f49682453eecf47b69b52aa37c38753602cd7fc20ad6bc65","bytes":38296},
+    {"path":"tests/qa/cp017/recovery.unit.test.mjs","sha256":"849c78edd7bc14c4082563de318a4f81fc23a2b0869291137a5ac4c742de62ec","bytes":7905}
+  ],
+  "checks":[
+    {"status":"PASS","evidence":"Frozen integrity lists include saas.schema_migrations and catalog.schema_migrations. Both use sorted server JSONB text fingerprints, retaining complete version/source_hash rows and bigint precision."},
+    {"status":"PASS","evidence":"closedSnapshot covers the closed source, post-copy canary, initial restored target, restrictive journal replay and final transformed target. Initial restored snapshot equality includes both registries; restrictive-delta comparisons preserve central registry and full tenant snapshots."},
+    {"status":"PASS","evidence":"Final source lines 217–218 explicitly compare both schema_migrations hashes after generation/epoch/credential changes. Final result/stale-key probes also require a byte-exact unchanged closed snapshot."},
+    {"status":"PASS","evidence":"Final source local test run: 11 tests, 11 PASS, zero skipped. The focal unit checks registry inclusion plus detection of a removed row, changed version and changed source_hash; exact JSONB-text precision negative remains present."}
+  ],
+  "resolvedReviewObservation":{"status":"RESOLVED IN FINAL REVIEWED SOURCE","detail":"The initial 690b081e7b9fe96b0236dc5ded6bd5581b7b00cdc7ab3bd6a7bf684492f89a81 source lacked the registry in two final immutable lists. Root added both entries; final-source hashes and local test results above apply to 344281ec4e0f8c54f49682453eecf47b69b52aa37c38753602cd7fc20ad6bc65, not to the earlier hash."},
+  "findings":[],
+  "requiredFindingCount":0,
+  "A11":"NOT VERIFIED BY THIS REVIEW; actual closed backup/restore, journal, credential and continuity evidence remains a separate QA requirement",
+  "runtimeRestoreExecuted":false,
+  "productFilesModified":false,
+  "infrastructureModified":false,
+  "secretsReadOrPrinted":false
+}

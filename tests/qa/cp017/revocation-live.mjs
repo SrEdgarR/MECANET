@@ -3,15 +3,17 @@
 // capture-* deliberately finishes CLOSED and delegates credential/epoch changes
 // to the own-cohort controller; verify-* observes and exercises HTTP afterwards.
 import assert from 'node:assert/strict';
-import {readFile,writeFile,mkdir,stat} from 'node:fs/promises';
+import {readFile,writeFile,mkdir,stat,open,rename,unlink} from 'node:fs/promises';
 import {randomUUID,createHash} from 'node:crypto';
 import {setTimeout as sleep} from 'node:timers/promises';
 import {pathToFileURL} from 'node:url';
+import {dirname,basename,join,isAbsolute} from 'node:path';
 import {arch} from 'node:os';
 import {createPgPool} from '../../../server/saas/db/pools.js';
 import {createQaClient,assertStatus} from '../cp014/http-client.mjs';
 import {arm,waitEvent,release} from './faults.mjs';
 import {validateHostEndProof} from './resource-closure.mjs';
+import {syncDirectoryStrict} from '../recovery/journal.js';
 
 const PROJECT='mecanet-qa-p1l2-cp017',A='11111111-1111-4111-8111-111111111111',B='22222222-2222-4222-8222-222222222222';
 const OWNER_A='aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaa1',TEAMMATE='aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaa6';
@@ -54,6 +56,16 @@ export function validateDrainStartedProof(proof,context,{now=Date.now()}={}){
  for(const key of ['project','sourceSha','generation','instance','owner','operationId','ticketId'])if(proof[key]!==context[key])invalid();
  if(!HASH.test(proof.containerId??'')||! /^(?:sha256:)?[a-f0-9]{64}$/.test(proof.artifactDigest??'')||proof.signal!=='SIGTERM'||typeof proof.drainStartedAt!=='string'||!Number.isFinite(Date.parse(proof.drainStartedAt))||Date.parse(proof.drainStartedAt)>now+5000)invalid();return proof;
 }
+export function selectCurrentDrainStartedProof(text,context){
+ if(typeof text!=='string'||Buffer.byteLength(text,'utf8')>256*1024)return null;
+ try{return validateDrainStartedProof(JSON.parse(text),context)}catch(error){if(error instanceof SyntaxError||error.code==='DRAIN_START_NOT_PROVEN')return null;throw error}
+}
+export async function waitForCurrentDrainStartedProof(readCurrent,context,{timeoutMs=2500,pollMs=25,checkEnvelope=()=>{}}={}){
+ if(typeof readCurrent!=='function'||!Number.isInteger(timeoutMs)||timeoutMs<1||timeoutMs>2500||!Number.isInteger(pollMs)||pollMs<1||pollMs>25||pollMs>timeoutMs)throw fail('DRAIN_START_NOT_PROVEN');
+ const until=performance.now()+timeoutMs;
+ while(performance.now()<until){checkEnvelope();const proof=selectCurrentDrainStartedProof(await readCurrent(),context);if(proof)return proof;await sleep(pollMs)}
+ throw fail('DRAIN_START_NOT_PROVEN');
+}
 export function validatePromotionProvenance({phase,captured,proof,history,verifierSourceSha,generation,systemIdentifier}){
  const invalid=()=>{throw fail('PROMOTION_PROVENANCE_NOT_PROVEN')},boundary=captured?.boundary;
  if(!['rotation','epoch'].includes(phase)||!SHA.test(verifierSourceSha??'')||!UUID.test(generation??'')||
@@ -67,6 +79,18 @@ export function validatePromotionProvenance({phase,captured,proof,history,verifi
  const producer=accepted.filter(artifact=>artifact.codeSha===proof.sourceSha),verifier=accepted.filter(artifact=>artifact.codeSha===verifierSourceSha);
  if(producer.length!==1||verifier.length!==1)invalid();
  return {captureSourceSha:captured.sourceSha,promotionSourceSha:proof.sourceSha,verifierSourceSha,promotionArtifactDigest:producer[0].digest,verifierArtifactDigest:verifier[0].digest};
+}
+export async function publishDrainRequest(file,value,{checkpoint=async()=>{},syncDirectory=syncDirectoryStrict,replaceFile=rename}={}){
+ const keys='generation,instance,operationId,owner,project,releaseDeadlineMs,requestedAt,signal,sourceSha,ticketId';
+ if(typeof file!=='string'||!isAbsolute(file)||basename(file)!=='drain-request.json'||!value||Object.getPrototypeOf(value)!==Object.prototype||Object.keys(value).sort().join(',')!==keys||
+  value.project!==PROJECT||!SHA.test(value.sourceSha??'')||!['generation','owner','operationId','ticketId'].every(key=>UUID.test(value[key]??''))||value.instance!=='api1'||value.signal!=='SIGTERM'||value.releaseDeadlineMs!==2500||
+  typeof value.requestedAt!=='string'||!Number.isFinite(Date.parse(value.requestedAt))||new Date(value.requestedAt).toISOString()!==value.requestedAt)throw fail('DRAIN_REQUEST_EXACT_SHAPE_REQUIRED');
+ const text=JSON.stringify(value);if(Buffer.byteLength(text,'utf8')>4096)throw fail('DRAIN_REQUEST_EXACT_SHAPE_REQUIRED');
+ const directory=dirname(file),temporary=join(directory,`.drain-request.${randomUUID()}.tmp`);let handle,created=false,published=false;
+ try{
+  handle=await open(temporary,'wx',0o600);created=true;await checkpoint('temporaryOpened');await handle.writeFile(text,'utf8');await handle.sync();await handle.close();handle=null;
+  await replaceFile(temporary,file);published=true;await syncDirectory(directory);
+ }finally{await handle?.close();if(created&&!published)await unlink(temporary)}
 }
 
 export async function runRevocationAssay(phase){
@@ -157,13 +181,14 @@ export async function runRevocationAssay(phase){
     pending=receipt(actor,id,{quantity:'1',reason:'Drenaje ficticio'},{epoch:before.data_epoch});pending.catch(()=>{});const event=await waitEvent(gate);assert.equal(event.operationId,id);const original=await intent(id);assert.equal(original.status,'EXECUTING');
     const quotaBefore=(await central('SELECT coalesce(sum(qh),0)::text AS qh,coalesce(sum(qc),0)::text AS qc,coalesce(sum(qt),0)::text AS qt FROM saas.windows WHERE scope_key=$1',[`tenant:${A}`]))[0];
     const context={project:PROJECT,sourceSha,generation:qa.generation,instance:'api1',owner:original.owner_id,operationId:id,ticketId:original.ticket_id};
-    const requestFile='/run/qa-results/drain-request.json';await writeFile(requestFile,JSON.stringify({...context,requestedAt:new Date().toISOString(),releaseDeadlineMs:2500,signal:'SIGTERM'}),{mode:0o600});
-    const trustedJson=async name=>{const path=`/run/qa-results/${name}`;let info;try{info=await stat(path)}catch(error){if(error.code==='ENOENT')return null;throw error}if(!info.isFile()||(info.mode&0o222)!==0)return null;return JSON.parse(await readFile(path,'utf8'))};
-    const start=validateDrainStartedProof(await waitFor(()=>trustedJson('drain-started-proof.json'),proof=>proof!==null,2500),context);
+    const requestFile='/run/qa-results/drain-request.json';await publishDrainRequest(requestFile,{...context,requestedAt:new Date().toISOString(),releaseDeadlineMs:2500,signal:'SIGTERM'});
+    const trustedText=async name=>{if(!['drain-started-proof.json','host-end-proof-api1.json'].includes(name))throw fail('DRAIN_START_NOT_PROVEN');const path=`/run/qa-results/${name}`;let info;try{info=await stat(path)}catch(error){if(error.code==='ENOENT')return null;throw error}if(!info.isFile()||(info.mode&0o222)!==0||info.size>256*1024)return null;return readFile(path,'utf8')};
+    const trustedJson=async name=>{const text=await trustedText(name);if(text===null)return null;try{return JSON.parse(text)}catch(error){if(error instanceof SyntaxError)return null;throw error}};
+    const start=await waitForCurrentDrainStartedProof(()=>trustedText('drain-started-proof.json'),context,{checkEnvelope:bounded});
     const unavailable=await send(actor,'/api/health/ready');assertStatus(unavailable,503);assert.equal(unavailable.json.status,'unavailable');assertStatus(await send(peer,'/api/health/ready'),200);
     const deniedId=randomUUID(),denied=await receipt(actor,deniedId,{quantity:'1',reason:'Durante drenaje ficticio'},{epoch:before.data_epoch});assertStatus(denied,503);assert.deepEqual(denied.json,{error:'DRAINING'});assert.equal((await central('SELECT count(*)::int AS n FROM saas.write_intents WHERE operation_id=$1',[deniedId]))[0].n,0);
     await release(gate);const reply=await pending;assertStatus(reply,201);await settleResponse(id);
-    const stopped=await waitFor(()=>trustedJson('host-end-proof-api1.json'),proof=>proof?.owner===context.owner,30000);
+    const stopped=await waitFor(()=>trustedJson('host-end-proof-api1.json'),proof=>proof?.project===context.project&&proof.sourceSha===context.sourceSha&&proof.generation===context.generation&&proof.instance===context.instance&&proof.owner===context.owner&&proof.containerId===start.containerId&&Array.isArray(proof.operations)&&proof.operations.some(op=>op.operationId===id&&op.ticketId===original.ticket_id&&op.tenantId===A),30000);
     validateHostEndProof(stopped,{closureSourceSha:sourceSha,generation:qa.generation,instance:'api1',acceptedArtifacts:[{codeSha:sourceSha,digest:start.artifactDigest}]});assert.equal(stopped.containerId,start.containerId);assert.equal(stopped.sourceSha,sourceSha);assert(stopped.operations.some(op=>op.operationId===id&&op.ticketId===original.ticket_id&&op.tenantId===A));
     const duration=Date.parse(stopped.containerStoppedAt)-Date.parse(start.drainStartedAt);assert(duration>=0&&duration<=30000);assert.equal((await central('SELECT count(*)::int AS n FROM pg_stat_activity WHERE application_name=ANY($1::text[])',[[`mecanet-writer:${context.owner}`,`mecanet-qa-api:${context.owner}`]]))[0].n,0);
     const after=await snapshot();assert.equal(after.movements.count,data.movements.count+1);assert.equal(after.operations.count,data.operations.count+1);assert.equal(after.audit.count,data.audit.count+1);assert.equal((await business('SELECT count(*)::int AS n FROM inventory.movements WHERE operation_id=$1',[id]))[0].n,1);

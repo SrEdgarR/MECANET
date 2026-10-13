@@ -1,6 +1,11 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {assertShareWait,assertPromotedMetadata,scenarioPlan,validateDrainStartedProof,validatePromotionProvenance} from './revocation-live.mjs';
+import {readFile,writeFile,mkdir,readdir,unlink,rmdir,rename} from 'node:fs/promises';
+import {randomUUID} from 'node:crypto';
+import {join} from 'node:path';
+import {fileURLToPath} from 'node:url';
+import {setTimeout as delay} from 'node:timers/promises';
+import {assertShareWait,assertPromotedMetadata,scenarioPlan,validateDrainStartedProof,validatePromotionProvenance,publishDrainRequest,selectCurrentDrainStartedProof,waitForCurrentDrainStartedProof} from './revocation-live.mjs';
 const tenantId='11111111-1111-4111-8111-111111111111',generation='aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa',owner='bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb';
 const guard={generation,data_epoch:'2',open_version:'5',closed_version:'6',reopen_version:'7',close_proven:false,status:'CLOSING'};
 const central={generation,data_epoch:'2',writer_version:'6',state:'CLOSED'};
@@ -54,4 +59,52 @@ test('empty, malformed, duplicate or unaccepted history rejects promotion proven
 test('cross-cohort, cross-kind, different guard or missing positive preservation proof stays rejected',()=>{
  for(const patch of [{project:'other'},{generation:owner},{systemIdentifier:'1'},{restrictionId:tenantId},{tenantId:'22222222-2222-4222-8222-222222222222'},{kind:'EPOCH'},{closedPreparerVerified:false},{positiveProcessEndVerified:false},{sqlOwnerAbsent:false},{quotaCountersPreserved:false},{immutableIntentAndBusinessDigestsPreserved:false}]){const input=provenance();Object.assign(input.proof,patch);rejectProvenance(input)}
  const input=provenance();input.captured.boundary.promoted=true;rejectProvenance(input);
+});
+const drainRequest=()=>({project:'mecanet-qa-p1l2-cp017',sourceSha:producerSha,generation,instance:'api1',owner,operationId:randomUUID(),ticketId:randomUUID(),requestedAt:new Date().toISOString(),releaseDeadlineMs:2500,signal:'SIGTERM'});
+async function drainFixture(fn){
+ const parent=fileURLToPath(new URL('../../../.qa-private/',import.meta.url)),directory=join(parent,`drain-atomic-test-${randomUUID()}`);await mkdir(directory);
+ try{await fn({directory,file:join(directory,'drain-request.json')})}
+ finally{for(const name of await readdir(directory)){assert(name==='drain-request.json'||/^\.drain-request\.[a-f0-9-]{36}\.tmp$/.test(name));await unlink(join(directory,name))}await rmdir(directory)}
+}
+// Windows may temporarily reject replacement of a file held by a reader.
+// This fixture retries the SAME rename only; runtime Linux uses strict rename
+// and strict directory fsync defaults. It never unlinks/truncates the target.
+async function fixtureReplaceFile(from,to){
+ for(let attempt=0;attempt<20;attempt++)try{return await rename(from,to)}catch(error){if(process.platform!=='win32'||!['EPERM','EACCES'].includes(error.code)||attempt===19)throw error;await delay(2)}
+}
+test('repeated concurrent drain readers observe complete original or published requests, never truncation',async()=>{
+ await drainFixture(async({file})=>{
+  const first=drainRequest(),allowed=new Map([[first.operationId,JSON.stringify(first)]]);await writeFile(file,JSON.stringify(first));let publishing=true,reads=0,prepublishReads=0,directorySyncs=0;
+  const observe=async()=>{const text=await readFile(file,'utf8');assert(text.length>0);const value=JSON.parse(text);assert.equal(text,allowed.get(value.operationId));reads++};
+  const reader=(async()=>{while(publishing){await observe();await delay(0)}})();reader.catch(()=>{});
+  try{for(let index=0;index<24;index++){const value=drainRequest();allowed.set(value.operationId,JSON.stringify(value));await publishDrainRequest(file,value,{replaceFile:fixtureReplaceFile,syncDirectory:async()=>{directorySyncs++},checkpoint:async stage=>{if(stage==='temporaryOpened'){await observe();prepublishReads++;await delay(1)}}});await observe()}}
+  finally{publishing=false;await reader}
+  assert.equal(prepublishReads,24);assert.equal(directorySyncs,24);assert(reads>=48);await observe();
+ });
+});
+test('failed pre-publication leaves the complete previous drain request and no temporary orphan',async()=>{
+ await drainFixture(async({directory,file})=>{const previous=JSON.stringify(drainRequest());await writeFile(file,previous);
+  await assert.rejects(publishDrainRequest(file,drainRequest(),{syncDirectory:async()=>{},checkpoint:async stage=>{if(stage==='temporaryOpened')throw Error('PRIVATE_TEST_FAULT')}}),/PRIVATE_TEST_FAULT/);
+  assert.equal(await readFile(file,'utf8'),previous);assert.deepEqual(await readdir(directory),['drain-request.json']);
+ });
+});
+test('drain publication rejects secret-bearing or unrelated requests before any file mutation',async()=>{
+ await drainFixture(async({directory,file})=>{const previous=JSON.stringify(drainRequest());await writeFile(file,previous);
+  for(const patch of [{cookie:'PRIVATE_FAKE_COOKIE'},{project:'other'},{instance:'api2'},{signal:'SIGKILL'},{owner:'unknown'},{releaseDeadlineMs:0}])await assert.rejects(publishDrainRequest(file,{...drainRequest(),...patch},{syncDirectory:async()=>{}}),error=>error.code==='DRAIN_REQUEST_EXACT_SHAPE_REQUIRED');
+  assert.equal(await readFile(file,'utf8'),previous);assert.deepEqual(await readdir(directory),['drain-request.json']);
+ });
+});
+function drainStartedFixture(){const context=drainRequest();delete context.requestedAt;delete context.releaseDeadlineMs;delete context.signal;return{context,proof:{...context,containerId:'e'.repeat(64),artifactDigest:'sha256:'+'f'.repeat(64),signal:'SIGTERM',drainStartedAt:new Date().toISOString()}}}
+test('stale or partial started proofs are ignored until the complete current context appears',async()=>{
+ const {context,proof}=drainStartedFixture(),sequence=[JSON.stringify({...proof,operationId:randomUUID()}),'',JSON.stringify(proof).slice(0,80),JSON.stringify(proof)];let reads=0;
+ const actual=await waitForCurrentDrainStartedProof(async()=>sequence[reads++],context,{timeoutMs:100,pollMs:1});assert.deepEqual(actual,proof);assert.equal(reads,4);
+});
+test('no invalid source, owner, operation, ticket, CID or digest can satisfy the started proof wait',()=>{
+ const {context,proof}=drainStartedFixture();
+ for(const patch of [{sourceSha:verifierSha},{generation:owner},{owner:generation},{operationId:randomUUID()},{ticketId:randomUUID()},{containerId:'short'},{artifactDigest:'invalid'}])assert.equal(selectCurrentDrainStartedProof(JSON.stringify({...proof,...patch}),context),null);
+ assert.equal(selectCurrentDrainStartedProof('null',context),null);
+});
+test('partial and historical started proof timeout never returns or declares a drain PASS',async()=>{
+ const {context,proof}=drainStartedFixture();let reads=0;
+ await assert.rejects(waitForCurrentDrainStartedProof(async()=>{reads++;return reads%2?'':JSON.stringify({...proof,owner:generation})},context,{timeoutMs:20,pollMs:1}),error=>error.code==='DRAIN_START_NOT_PROVEN');assert(reads>=2);
 });

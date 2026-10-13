@@ -1,0 +1,39 @@
+{
+  "reviewId":"CP017-REVIEW-DRAIN-ATOMIC",
+  "reviewer":"l2_ui",
+  "recordedAt":"2026-10-13T22:00:30.3812816Z",
+  "status":"PASS FOR STATIC DELTA AND LOCAL FIXTURES ONLY",
+  "scope":"Private QA drain request producer, host consumer and atomic started/end evidence publication; no product or infrastructure review expansion",
+  "inputs":[
+    {"path":"tests/qa/cp017/host.py","sha256":"57361890d67898bbf0b692d5e9af0076abd0723f7e7dc3ecddac55f28520b7a4","bytes":49962},
+    {"path":"tests/qa/cp017/revocation-live.mjs","sha256":"753367320de5ea9fc199df95b189e9771c6f0055b5de147c2386576523f69ea6","bytes":43318},
+    {"path":"tests/qa/cp017/revocation-live.test.mjs","sha256":"f061f96c540183c9fd577fe7ab3adb07fe55705e049b1aeb36bcde67a50f024a","bytes":13385},
+    {"path":"tests/qa/recovery/journal.js","sha256":"56f8c7a9dca488bb283edbc4cfe80ca789394283cd2e7d6285c14c5ed0e31ca3","bytes":7801}
+  ],
+  "checks":[
+    {"status":"PASS","evidence":"Node producer validates a closed nonsecret request shape, own project/api1/SIGTERM/2500ms and UUID/source fields, at most 4KiB. It creates a unique same-directory temporary with wx/0600, writes and fsyncs/closes it, replaces the fixed destination by rename and calls the existing strict directory sync. Failed pre-publication preserves the former complete request and removes only its created temporary."},
+    {"status":"PASS","evidence":"Host consumer retries only partial JSON at 50ms within a 45s deadline. Project/source/generation/api1/signal, UUID fields, actual Compose project/CID and actual runtime owner/generation are validated before SIGTERM; malformed or mismatched requests cannot reach the signal operation."},
+    {"status":"PASS","evidence":"Host publish_drain_proof admits only two fixed own evidence names, rejects symlink destinations/directories, bounds output to 256KiB and uses O_EXCL|O_NOFOLLOW temporary creation. It sets 0400 and owner999 before file fsync, os.replace, O_DIRECTORY|O_NOFOLLOW directory fsync; cleanup is limited to the created temporary. Both started and end proofs use it."},
+    {"status":"PASS","evidence":"Started-proof selection validates the complete current context, CID64hex, artifact digest, signal and timestamp before returning. Partial JSON or an older/mismatched context yields no proof, and the bounded wait fails closed at 2500ms. End-proof selection also requires the current source/generation/instance/owner, the started CID and original operation/ticket before the existing positive host-end validator runs."},
+    {"status":"PASS","evidence":"Node24.21.0 local final-source run: 15 tests PASS, zero skips, syntax PASS. The original atomic-publication fragment reached 12 PASS before the current-context wait delta. New wait tests reproduced 3 FAIL under the old selection behavior, then passed stale/partial→current and no-current timeout negatives. Atomic fixtures cover 24 replacements with concurrent and causal prepublication reads, original-request preservation after fault, temporary cleanup and rejection of secret-bearing/unrelated shapes."}
+  ],
+  "resolvedFindings":[
+    {"id":"DRAIN-REUSE-01","priority":"REQUIRED FOR RELIABLE QA REPEAT","status":"RESOLVED","trigger":"An existing complete read-only started proof could satisfy the previous non-null predicate before its owner/operation/ticket were checked, terminating a valid later assay with DRAIN_START_NOT_PROVEN.","fix":"Validate/select the full current context inside the bounded wait; stale proofs do not end the wait."},
+    {"id":"DRAIN-TORN-PROOF-02","priority":"REQUIRED FOR RELIABLE QA REPEAT","status":"RESOLVED","trigger":"Root write_text truncated an existing 0400 proof while the Node reader could already trust its mode, allowing a read of empty or incomplete JSON.","fix":"Publish both host proofs through the exclusive fsynced temporary and atomic replacement, with read-only permissions applied before visibility; partial-read selection remains fail closed."}
+  ],
+  "findings":[],
+  "requiredFindingCount":0,
+  "limits":[
+    "CID is bound to the own host controller's actual Compose/runtime owner observation and then to the end proof. The assay has no independent expected CID before receiving the trusted started proof; this review does not invent one.",
+    "Local Windows fixture injects directory-sync accounting and bounded same-source rename retries for EPERM/EACCES caused by reader handles. Runtime Linux defaults remain strict rename and strict directory fsync. Local PASS is not Linux filesystem durability or a real HTTP/SQL drain PASS.",
+    "Parent-reported Python compilation and historical remote FAIL are not newly executed evidence by this reviewer. No host consumer or SIGTERM was executed locally; actual corrected QA drain remains NOT VERIFIED by this review.",
+    "Final host hash also includes parent's separate exact concurrency CLI arity assertion; this record reviews the drain functions, not the concurrency assay."
+  ],
+  "historicalFailuresPreserved":true,
+  "wholeA8Passed":false,
+  "remoteDrainExecuted":false,
+  "SSHOrGitExecuted":false,
+  "productFilesModified":false,
+  "infrastructureModified":false,
+  "secretsReadOrPrinted":false
+}

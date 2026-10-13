@@ -11,6 +11,23 @@ def own():
  owner=json.loads((ROOT/'owner.json').read_text())
  assert owner['project']==PROJECT and owner['owner']=='SrEdgarR/MECANET' and owner['base']==BASE and owner['approval']==APPROVAL
  return owner
+
+def publish_drain_proof(name,record):
+ own();assert name in ['drain-started-proof.json','host-end-proof-api1.json']
+ folder=ROOT/'evidence';assert folder.resolve()==folder and not folder.is_symlink()
+ destination=folder/name;assert not destination.is_symlink()
+ data=json.dumps(record).encode();assert len(data)<=262144
+ temporary=folder/('.'+name+'.'+secrets.token_hex(16)+'.tmp');created=False
+ try:
+  fd=os.open(temporary,os.O_WRONLY|os.O_CREAT|os.O_EXCL|os.O_NOFOLLOW,0o600);created=True
+  with os.fdopen(fd,'wb') as stream:
+   stream.write(data);stream.flush();os.fchmod(stream.fileno(),0o400);os.fchown(stream.fileno(),999,999);os.fsync(stream.fileno())
+  os.replace(temporary,destination)
+  directory=os.open(folder,os.O_RDONLY|os.O_DIRECTORY|os.O_NOFOLLOW)
+  try:os.fsync(directory)
+  finally:os.close(directory)
+ finally:
+  if created and temporary.exists():temporary.unlink()
 def facts():
  ids=run('docker','ps','-aq').split()
  template='{"id":{{json .Id}},"name":{{json .Name}},"running":{{json .State.Running}},"image":{{json .Image}},"project":{{json (index .Config.Labels "com.docker.compose.project")}}}'
@@ -155,11 +172,11 @@ def accept_artifact():
  print(json.dumps({'artifactAccepted':True,'codeSha':manifest['codeSha'],'digest':manifest['digest'],'files':len(expected)}))
 
 def own_tool():
- own();assert len(sys.argv)>=3 and sys.argv[2] in ['foundation','migration','sql','integration','recovery-check','corrective','resources-api1','resources-api2','promote','quota','revocation','quota-boundary','quota-growth','read-closure','claim-corrective']
+ own();assert len(sys.argv)>=3 and sys.argv[2] in ['foundation','migration','sql','integration','recovery-check','corrective','resources-api1','resources-api2','promote','quota','revocation','quota-boundary','quota-growth','read-closure','claim-corrective','concurrency']
  action=sys.argv[2];live=any(x['running'] for x in facts() if x['project']==PROJECT and x['name'].endswith(('-api1-1','-api2-1','-web-1')))
  service='probe' if action in ['sql','integration','revocation','recovery-check'] or action=='quota' and (len(sys.argv)<5 or sys.argv[4]!='closed') else 'harness';assert service=='probe' or not live,'HARNESS_RUNTIME_OVERLAP'
  artifact=json.loads((ROOT/'evidence/artifact.json').read_text())
- files={'foundation':'prepare.mjs','migration':'migration-live.mjs','sql':'sql-live.mjs','integration':'integration.mjs','recovery-check':'recovery-check.mjs','corrective':'corrective.mjs','resources-api1':'resource-closure.mjs','resources-api2':'resource-closure.mjs','promote':'promote.mjs','quota':'quota-live.mjs','revocation':'revocation-live.mjs','quota-boundary':'quota-boundary.mjs','quota-growth':'quota-growth-boundary.mjs','read-closure':'read-closure.mjs','claim-corrective':'claim-corrective.mjs'}
+ files={'foundation':'prepare.mjs','migration':'migration-live.mjs','sql':'sql-live.mjs','integration':'integration.mjs','recovery-check':'recovery-check.mjs','corrective':'corrective.mjs','resources-api1':'resource-closure.mjs','resources-api2':'resource-closure.mjs','promote':'promote.mjs','quota':'quota-live.mjs','revocation':'revocation-live.mjs','quota-boundary':'quota-boundary.mjs','quota-growth':'quota-growth-boundary.mjs','read-closure':'read-closure.mjs','claim-corrective':'claim-corrective.mjs','concurrency':'concurrency-live.mjs'}
  args=['run','--rm','--no-deps','-e','QA_CODE_SHA='+artifact['codeSha']]
  if action=='foundation':args+=['-e','QA_STAGE=foundation']
  if action=='quota':
@@ -179,6 +196,7 @@ def own_tool():
    assert sys.argv[3]=='--sku-only';args+=['--sku-only']
  if action=='quota-boundary':
   assert len(sys.argv)==4 and sys.argv[3] in ['tenant','global'];args+=[sys.argv[3]]
+ if action=='concurrency':assert len(sys.argv)==3
  try:print(compose(*args),end='')
  except subprocess.CalledProcessError as error:
   print(error.output,end='');raise SystemExit(error.returncode)
@@ -487,7 +505,9 @@ def drain_control():
  own();request=ROOT/'evidence/drain-request.json';deadline=time.monotonic()+45
  while time.monotonic()<deadline:
   if request.exists():
-   candidate=json.loads(request.read_text())
+   try:candidate=json.loads(request.read_text())
+   except json.JSONDecodeError:
+    time.sleep(.05);continue
    if time.time()-__import__('datetime').datetime.fromisoformat(candidate['requestedAt'].replace('Z','+00:00')).timestamp()<5:break
   time.sleep(.05)
  else:raise AssertionError('DRAIN_FRESH_REQUEST_MISSING')
@@ -499,7 +519,7 @@ def drain_control():
  record=json.loads(run('docker','exec',cid,'cat','/tmp/qa-owner.json'));assert record['owner']==candidate['owner'] and record['generation']==candidate['generation']
  t=time.monotonic();started=__import__('datetime').datetime.now(__import__('datetime').timezone.utc).isoformat();run('docker','kill','--signal','SIGTERM',cid)
  proof={**{k:candidate[k]for k in ['project','sourceSha','generation','instance','owner','operationId','ticketId']},'containerId':cid,'artifactDigest':a['digest'],'signal':'SIGTERM','drainStartedAt':started}
- p=ROOT/'evidence/drain-started-proof.json';p.write_text(json.dumps(proof));os.chmod(p,0o400);os.chown(p,999,999)
+ publish_drain_proof('drain-started-proof.json',proof)
  while time.monotonic()-t<35:
   state=json.loads(run('docker','inspect','--format','{{json .State}}',cid))
   if not state['Running']:break
@@ -509,7 +529,7 @@ def drain_control():
  sql="BEGIN READ ONLY; SELECT json_build_object('absent',NOT EXISTS(SELECT 1 FROM pg_stat_activity WHERE application_name IN ('mecanet-writer:"+record['owner']+"','mecanet-qa-api:"+record['owner']+"')),'operations',(SELECT coalesce(json_agg(json_build_object('tenantId',i.tenant_id,'operationId',i.operation_id,'ticketId',i.ticket_id)),'[]') FROM saas.write_intents i JOIN saas.tickets t ON t.id=i.ticket_id WHERE t.owner='"+record['owner']+"'::uuid AND i.generation='"+record['generation']+"'::uuid)); ROLLBACK;"
  observed=json.loads(run('docker','exec','-i',pg,'sh','-c',command,input=sql).strip());assert observed['absent']
  end={'project':PROJECT,'sourceSha':a['codeSha'],'generation':record['generation'],'instance':'api1','owner':record['owner'],'containerId':cid,'running':False,'exitCode':state['ExitCode'],'containerStoppedAt':state['FinishedAt'],'httpClosed':True,'writerApplicationName':'mecanet-writer:'+record['owner'],'sqlOwnerAbsent':True,'operations':observed['operations']}
- p=ROOT/'evidence/host-end-proof-api1.json';p.write_text(json.dumps(end));os.chmod(p,0o400);os.chown(p,999,999)
+ publish_drain_proof('host-end-proof-api1.json',end)
  print(json.dumps({'ownApi1DrainEnded':True,'sqlOwnerAbsent':True,'elapsedSeconds':round(time.monotonic()-t,3),'containerId':cid}))
 
 def stop_own():
