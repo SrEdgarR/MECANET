@@ -49,7 +49,7 @@ separadamente después del commit y su verificación por el agente principal.
 | `npm audit --prefix server/saas --omit=dev --json` | PASS | 0vulnerabilidades,89dependencias de backend; sin devDependencies en este paquete |
 | `npm audit --prefix client --omit=dev --json` después del nuevo lock | PASS | 0vulnerabilidades en runtime; no cubre tooling |
 | `npm audit --prefix client --json` después del nuevo lock | FAIL | 7paquetes afectados:5high/2moderate; no se silencia ni se eleva umbral |
-| Parser YAML local externo al proyecto | NOT VERIFIED | PyYAML/yaml/js-yaml no disponibles; no se instalaron herramientas para simular validación. Revisión independiente del workflow separada |
+| Workflow YAML/expresiones/actions, validador local | PASS | actionlint1.7.12 Windowsamd64, release/checksum oficial verificados; [workflow-check.json](workflow-check.json). Shellcheck/pyflakes no disponibles y excluidos explícitamente; no ejecución GitHub |
 | Ejecución en GitHub/runner Linux | NOT VERIFIED | No push, PR, CI remoto ni merge efectuados por este agente |
 
 El primer build del runner CI heredó accidentalmente `NODE_ENV=test` y produjo React

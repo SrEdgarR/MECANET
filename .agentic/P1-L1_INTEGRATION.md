@@ -1,33 +1,25 @@
-# P1-L1 — Integration Gate preparado en CP-014
+# P1-L1 — Integration Gate preparado en CP-015
 
-**Borrador local para integración, 2026-10-13.** P1-L1-OUT PASS, ocho cortes COMPLETADA; P1 continúa EN CURSO. No autoriza push, PR, CI remoto, merge, lanzamiento u otro lote. [Auditoría y matriz](../docs/audit/CP-014.md), [registro único](PLANNING_STATE.md).
+**Paquete local,2026-10-13.** Autorización humana actual admite Git/CI bajo condiciones; no deploy. Ocho salidas L1 PASS conservadas. Rama limpia **codex/integrate-p1-l1** desde develop `010aab670c638d168c971df3e3e53b97e72ff443`, código local probado `a89cc2eee43a8f60f3464bea26a6ea4f9ddfc867`. Fuente9fc y PR1 preservados. [Auditoría](../docs/audit/CP-015.md), [registro único](PLANNING_STATE.md).
 
-## Cadena de §8.5
-
-| Paso | Estado | Evidencia / acción pendiente |
+| Paso §8.5 | Estado | Evidencia/límite |
 |---|---|---|
-| Rama y ámbito | PASS | codex/saas-discovery, checkout principal, SrEdgarR/MECANET exclusivamente; base CP-0135624ef0 |
-| Código probado | PASS | Matriz8cortes y pruebas porSHA/componentes; runtimefinalF b0f5e19 / digest5950ae7…; no retagging de pruebas anteriores |
-| Revisión local | PASS | Revisión independiente, fixesmonotónicos y QA, no hallazgo obligatorio L1 abierto; incidentes históricos sin causa mantienen límite |
-| Quality Gate / checkpoint | PASS | qg.json y CP-014; SHA documental resuelto enGit/informe, no autoSHA |
-| PR / review de PR | NOT VERIFIED | No creado/enviado; resolver dependencia histórica PR#1 y destino develop antes de abrir; no reconsultado por esta ejecución |
-| CI PR | NOT VERIFIED | Sin workflow remoto ejecutado; deberá cubrir cadena aprobada del lote y secretos QA propios, no production/legacy |
-| Merge / CI canónica | NOT VERIFIED | Sin merge ni nueva base canónica; requiere autorización y checks anteriores |
-| Baseline / lote siguiente | NOT VERIFIED | No transición automática; aprobar alcance y gates del siguiente trabajo, conservando P0generalPARCIAL |
+| Rama/base/alcance | PASS | Desde develop, sin3deccdf/f5afaa2; expediente/código L1 únicamente |
+| Código y regresión integrada | PASS |73backend/29frontend/3sanitizer/3controller/syntax64/build;104objetos y3assets F exactos |
+| Baseline protegida/checkpoint/revisión local | PASS | SE-002/CP015/review independiente; no approvalGitHub |
+| Seguridad antes de publicar | NOT VERIFIED | Q42:Vercel flags no observables; conservar integraciones, no previews autorizadas |
+| Audit completo / seguridad CI | FAIL | Q43:5high/2moderate tooling; runtime0 no sustituye este gate |
+| PR/review GitHub/CI PR | NOT VERIFIED | No publicado/creado; workflowtests/build/audit propio preparado sin deploy |
+| Merge/CI canónica/base siguiente | NOT VERIFIED | develop010aab no cambia; L1 noTERMINAL, sin next_phase_base_sha |
 
-## Texto preparado para revisión
+## PR preparado, todavía no creado
 
-Título sugerido: **Completar la fundación privada PostgreSQL de Mecanet SaaS y su matriz P1-L1**.
+Título: **Integrar la fundación aislada PostgreSQL de Mecanet SaaS sin despliegues heredados**.
 
-El lote añade el recorrido privado de sesión vigente a empresa autorizada y catálogo ficticio, con credenciales y bases lógicas separadas, admisión durable entre dos procesos Express y productor mínimo de observación. Usa React y Compose propio, independiente de Coolify. La revisión CP-014 corrige emisión de sesión al fallar, presupuestos monotónicos y datos tardíos del cliente; cierra último cupo, incertidumbre, discontinuidad, drenaje y rollback con artefactos identificables.
+El lote incorpora sesión vigente→empresa autorizada→catálogo ficticio, bases/credenciales aisladas, admisión durable entre dos API y observación privada. React/Express/PostgreSQL con Compose propio, independiente de Coolify. La base es develop y no incorpora los commits del PR1Vercel/Coolify. SE-002 conserva la baseline exacta aprobada en una representación portable.
 
-Validación:73pruebas locales sobreD,29frontend/build/navegador15sobreC con componente inalterado, PostgreSQL18.6ARM64 y dosAPI con fallos/carreras/ledger, observación y drenaje reales; rollbackF→A→F conserva sesión/datos/generación sin cambiarPG. TresPASS históricos CP-013 conservados conSHA original, incluido restore físico sintético cerrado. RuntimefinalF `b0f5e199e5df457d7f901ff3a3dca5ab3a8d5701`, artefacto `sha256:5950ae7e519170ebaaf6cf8c99e9187c14b41f32779044e2829e8de5abbac0a6`; controladorcleanup409880a separado. [Manifiesto](../docs/evidence/cp014/runtime-manifest.json).
+Validación local sobre `a89cc2eee43a8f60f3464bea26a6ea4f9ddfc867`:73backend,29SaaS,3sanitizador,3controller,64sintaxis y build. Dos patches selectivos DOMPurify/source-map-js; bundle idéntico al F previamente probado. Evidencia histórica PostgreSQL18.6ARM64/dosAPI/browser/restore/rollback conserva sus SHA y límites; no se presenta como ejecución nueva de CI. Runtimeaudit0; fullaudit FAIL5high/2moderate. CI remoto/reviewGitHub/merge no realizados.
 
-Límite: fixtures y QA privada detenida; no pagos, POSescritor/fiscal, demo comercial, administración completa, Sentryexterno, capacidad/productiveRPO/RTO o lanzamiento. OchoPASS cierran soloP1-L1, noP1global/SaaS. Sin cambios compartidos/proxy/DNS, secretos reales o datos de negocio. Las capturas/fallos previos se conservan en auditoría; ninguna garantía se rebaja para obtenerPASS.
+**Bloqueos:** acreditar Gitsettings Vercel antes de push/PR/merge(Q42) y resolver fullaudit(Q43). Sin waiver, cambio de integración ajena, forcepush, bypass o deploy. QA STOPPED/KEEP y sin recursos nuevos. Pagos/POSescritor/fiscal/demo comercial/panel completo/Sentry externo/capacidad/lanzamiento fuera del lote. El candidato siguiente permanece en la rama fuente de planificación, separado del PR funcional L1.
 
-## Riesgos y continuidad
-
-- El riesgo de retrabajo por dependencias comerciales/fiscales sigue aceptado segúnRG-001; baselines siguientes independientes.
-- La operación propia del lote no aprueba integración deHTTPS pública enproxy compartido; Q-41antes deldiff/remoto correspondiente.
-- Antes de ejecutar CIdeintegración: comprobar objetivos/pruebas/entorno/versiones y su autorización; no trasladar Atlas/.envlegacy/secretos productivos aQA.
-- La reanudación deQA sigue el [runbook](../tests/qa/README.md), no `compose up` indiscriminado sobre la cohorte CP-013cerrada.
+No se vuelve a pedir A/B de L1. P1-L2 necesita su A exacta y B diferenciada/gates; un roadmap o PR mergeado no la concede. [Runbook QA](../tests/qa/README.md) solo si una prueba nueva justifica reanudación y preflight; no abrir QA para estos documentos/Git.

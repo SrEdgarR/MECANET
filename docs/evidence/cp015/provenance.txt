@@ -1,0 +1,1 @@
+{"checkoutCommit":"a89cc2eee43a8f60f3464bea26a6ea4f9ddfc867","worktreeClean":true,"node":"v24.21.0","platform":"win32","architecture":"x64","scope":"local-contracts-and-frontend","postgresIntegration":"NOT RUN","remoteQA":"NOT USED"}

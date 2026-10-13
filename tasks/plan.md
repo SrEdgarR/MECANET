@@ -1,6 +1,6 @@
 # Plan de Mecanet — adopción, especificación y P1 limitado
 
-Estado vigente CP-014: **P1 EN CURSO**, única fase activa; **P1-L1 COMPLETADA**, ocho salidas PASS de la baseline limitada DEC-058. P0 general PARCIAL bajo RG-001 y SaaS general NOT APPROVED. Integración local preparada; PR/CI remoto/merge NOT VERIFIED, sin push o lanzamiento autorizado. Este documento no concede aprobaciones adicionales. Tareas en [todo.md](todo.md); la historia siguiente conserva los estados originales y no gobierna por encima del cierre CP-014.
+Estado vigente CP-015: **P1 EN CURSO**, única fase activa; **P1-L1 COMPLETADA**, ocho salidas PASS de la baseline limitada DEC-058. P0 general PARCIAL bajo RG-001 y SaaS general NOT APPROVED. Rama de integración limpia y CI de verificación local preparados; push/PR/CI remoto/merge autorizados condicionalmente y detenidos por Q-42/Q-43. Candidato siguiente SUGGESTED/NOT APPROVED, sin implementación ni lanzamiento. Este documento no concede aprobaciones adicionales. Tareas en [todo.md](todo.md); la historia siguiente conserva los estados originales y no gobierna por encima de CP-015.
 
 ## Cola histórica CP-012 — PostgreSQL y operación independiente
 
@@ -356,7 +356,7 @@ QA temporal instalada y probada; al cerrar restore permanece fuente detenida/bar
 
 No build en VPS, infraestructura compartida, DNS, datos reales, pago/emisión fiscal, push o merge. La aprobación no convierte gates globales en PASS.
 
-## Cierre vigente CP-014 — P1-L1 COMPLETADA
+## Cierre histórico CP-014 — P1-L1 COMPLETADA
 
 Fuente humana: adjunto7cc3bf6b, continuidad de la baseline exacta DEC-058; base real `5624ef0da489d2285534a942bd6ce9eab22f280d`. Los cinco cortes parciales se cerraron mediante pruebas reales y correcciones dentro del lote, sin otra aprobación por corte. La [auditoría CP-014](../docs/audit/CP-014.md) conserva provenance, SHA/artefacto por resultado, RED→fix→GREEN y límites. Los PASS CP-013 no se presentan como pruebas recién ejecutadas.
 
@@ -376,3 +376,7 @@ Código final F `b0f5e199e5df457d7f901ff3a3dca5ab3a8d5701`; artefacto `sha256:59
 **Siguiente paso habilitado:** revisión e integración local del lote conforme al Integration Gate. PR, CI remoto y merge permanecen NOT VERIFIED; no se ejecutan por extensión. Antes de comenzar otro lote, acreditar su baseline/gates y autorización correspondientes. P1 permanece EN CURSO y P2 no empieza por el cierre de L1.
 
 **QA final:** cinco servicios CP-014 detenidos/KEEP, artefactos/datos/redes privados retenidos, túnel 18443 cerrado y sin URL activa. Los cinco servicios CP-013 siguen detenidos con barrera cerrada; backup/journal/destino conservados. [Inventario final](../docs/evidence/cp014/final-infrastructure.json). [Runbook de reanudación CP-014](../tests/qa/README.md#reanudar-únicamente-la-cohorte-cp-014): preflight/propiedad/recursos/TLS/egreso→solo PG/salud→worker anterior exited y relevo CAS→recrear API1/2 (.3/.4) y web(.2)→readiness/HTTPS privado. Controlador privado actualizado en `409880a513bee1eff909caf68d23325af55e9be4`, sin cambiar el artefacto F. Nunca `up` general sobre cualquiera de las cohortes, downgrade/secretos ajenos o infraestructura compartida.
+
+## CP-015 — Integración limpia y candidato siguiente separado
+
+Integración local codex/integrate-p1-l1 desde develop010aab670; fuente9fcdd954 conservada. Revisión/copia/hash/regresión y CI de verificación propios, sin importar commitsPR1. Publicación/PR/merge detenidos porQ42/Q43; baselinecanónica siguiente no definida. Preparación focal P1-L2v0.1-CP015 en la rama fuente: alta+recepción ficticias para probarwriter/grants/idempotencia/revocación/crecimiento/restore, sinPOSfiscal ni fase nueva. AjusteP1/P2 y A/B pendientes; no implementación. Mantener las doce salidas futuras NOT VERIFIED y los resolve-before existentes.

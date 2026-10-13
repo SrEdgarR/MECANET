@@ -5,31 +5,31 @@
   "active_phase_name": "Fundación aislada y operable",
   "status": "EN CURSO",
   "last_updated": "2026-10-13",
-  "next_gate": "Integration Gate preparado en local para P1-L1; PR, CI remoto, merge y CI canónica NOT VERIFIED y no autorizados en esta ejecución",
+  "next_gate": "Resolver Q-42 seguridad de publicación y Q-43 auditoría completa; después PR/review/CI/merge/CI canónica. P1-L2 solo candidato independiente pendiente de A/B",
   "readiness_scope": "P1-L1 v0.2-CP012/S-18/L-01 APPROVED por DEC-058; Development y Environment acreditados para QA limitada. SaaS general NOT APPROVED",
   "progress_basis": "Estado cualitativo, sin porcentaje. P1-L1 COMPLETADA con ocho salidas PASS y trazabilidad por suite; esto no cierra P1 general ni el SaaS",
   "implementation": "P1-L1 COMPLETADA: ocho cortes privados PostgreSQL/React/Express; P1 general EN CURSO, sin funcionalidad comercial pública",
-  "current_checkpoint": "CP-014",
+  "current_checkpoint": "CP-015",
   "hosting_target": "CONFIRMED DEC-021/SC-005: VPS existente, operación propia independiente de Coolify; PostgreSQL DEC-054. Dominio futuro mecanet.app DEC-059/SC-007",
   "hosting_execution": "Cohorte CP-014 privada instalada y probada con Compose, PostgreSQL18.6 ARM64, dos API, worker y Nginx; sin puertos públicos. Cinco contenedores propios STOPPED al cierre, sin URL activa; aislamiento y diez consumidores ajenos preservados. Inventario/cleanup en auditoría CP-014; fuente CP-013 cerrada y hashes preservados",
   "progress_percent": null,
   "trace": {
-    "base_sha": "5624ef0da489d2285534a942bd6ce9eab22f280d, checkpoint documental CP-013 y HEAD inicial real CP-014",
-    "research_head_sha": "5624ef0da489d2285534a942bd6ce9eab22f280d; baseline humana exacta conservada por separado en approved_head_sha",
-    "tested_code_sha": "Por suite CP-014: auth B7bcf59b/Ce25a9f3/D0257d0d; observación/navegador Ce25a9f3; admisión D0257d0d/Ef10c982; rollback Fb0f5e1/Ae512dce. Código funcional D0257d0d98d0c1444f0897bf4d03a36bb1a846ce2 idéntico en E/F; código final Fb0f5e199e5df457d7f901ff3a3dca5ab3a8d5701. Matriz y digests en CP-014; PASS CP-013 conservan sus SHA históricos",
+    "base_sha": "010aab670c638d168c971df3e3e53b97e72ff443, base limpia de integración; fuente CP-014 9fcdd9540848edbbdef1cfc94667491c9ab2ba92 preservada",
+    "research_head_sha": "9fcdd9540848edbbdef1cfc94667491c9ab2ba92; lectura focalizada sin reinventariar el VPS",
+    "tested_code_sha": "a89cc2eee43a8f60f3464bea26a6ea4f9ddfc867 — regresión local CI de integración; objetos SaaS/arnés y bundle idénticos a CP-014, evidencia PG/ARM64/browser/restore conservada con sus SHA",
     "qa_controller_sha": "409880a513bee1eff909caf68d23325af55e9be4; normalización del inventario ajeno y regresión del controlador QA, sin cambio del artefacto F desplegado/probado",
     "experimental_test_reference": "CP-006/010 históricos no repetidos ni atribuidos a PostgreSQL; las90 pruebas Mongo f5afaa2 no prueban este lote",
-    "HEAD": "Rama local codex/saas-discovery; resolver git rev-parse HEAD. SHA documental final en informe/Git, sin autorreferencia",
-    "checkpoint_sha": "CP-0135624ef0da489d2285534a942bd6ce9eab22f280d conservado; CP-014: commit documental final identificado en informe/Git, sin autorreferencia",
+    "HEAD": "Resolver git rev-parse HEAD en cada worktree; checkpoint final no se escribe en su propio commit",
+    "checkpoint_sha": "CP-014 9fcdd9540848edbbdef1cfc94667491c9ab2ba92; CP-015 documental final identificado en informe externo/Git",
     "approved_head_sha": "3b387b38784907b67e2209a35c3d5f400d70742e, solamente S-18/manifiestoL-01/ocho cortes por DEC-058",
-    "merge_sha": "Ninguno en CP-014; PR#1 histórico no reconsultado ni modificado",
-    "current_main_baseline_sha": "develop:010aab670c638d168c971df3e3e53b97e72ff443, referencia históricaCP-001 sin consulta remota actual",
-    "next_phase_base_sha": "No definido: completar Integration Gate antes de baseline siguiente; el cierre L1 no autoriza P2, otro lote o el SaaS general",
-    "local_branch": "codex/saas-discovery",
-    "remote_branch": "Sin push de esta rama; origen previo codex/deploy-vercel-coolify conservado",
-    "worktree": "Checkout principal MECANET-develop; .kilo/worktrees/majestic-chiller conservado",
-    "integration_target": "develop solo después de resolver dependencia PR#1 y revisión; sin merge",
-    "CI": "PR/CI remoto/merge/CI de rama canónica NOT VERIFIED y no ejecutados; pruebas locales y QA privada son evidencia distinta"
+    "merge_sha": "Ninguno: no push, PR nuevo, merge o CI remoto por safety gate pendiente",
+    "current_main_baseline_sha": "010aab670c638d168c971df3e3e53b97e72ff443 — develop remoto consultado CP-015, sin cambio",
+    "next_phase_base_sha": "No definido: Integration Gate pendiente; a89cc2eee43a8f60f3464bea26a6ea4f9ddfc867 es candidato local, no baseline canónica fusionada",
+    "local_branch": "codex/integrate-p1-l1 preparada en worktree propio; codex/saas-discovery conserva fuente y planificación siguiente",
+    "remote_branch": "Sin rama SaaS publicada; codex/deploy-vercel-coolify y PR #1 intactos",
+    "worktree": "Primario fuente/planning y C:/Users/thede/.codex/worktrees/p1l1-integration/MECANET-develop; .kilo/worktrees/majestic-chiller conservado",
+    "integration_target": "develop 010aab670c638d168c971df3e3e53b97e72ff443; PR exacto L1 preparado localmente, sin candidato siguiente mezclado",
+    "CI": "Workflow propio sin deploy/secrets, regresión local PASS y auditoría runtime PASS; audit frontend completo FAIL por tooling heredado. CI PR/canónica NOT VERIFIED"
   },
   "readiness": [
     {
@@ -72,7 +72,7 @@
       "summary": "Mantener candidato SaaS general y resolver diseños antes de sus módulos; no segunda fase activa",
       "closure": "Gates globales antes de baselines posteriores; aceptar L1 no cierra SaaS general",
       "blockers": "Restos Q-02/11/31/33, proveedores/fiscalidad/servicios en sus resolve-before; Q-36 resuelta por A exacta",
-      "evidence": "CP-014: baseline limitada DEC-058;14 pendientes únicos,0 BLOCKING y14 FUTURE",
+      "evidence": "CP-015: baseline limitada DEC-058 conservada; registro16pendientes únicos,2 BLOCKING y14 FUTURE; no cierre global",
       "document": "../.agentic/PLANNING_STATE.md"
     },
     {
@@ -82,7 +82,7 @@
       "dependencies": "P0-L1-S/D/E acreditados para alcance actual según RG-001",
       "summary": "Conservar fundación P1-L1 verificada y preparar su Integration Gate, sin ampliar el alcance autorizado",
       "closure": "Salida P1-L1 PASS; Integration Gate y garantías restantes de P1 conservan sus criterios, sin cierre global por extensión",
-      "blockers": "Sin bloqueo de L1; PR/CI/merge NOT VERIFIED y no autorizados; baseline/gates antes de otro lote y preflight de cada recurso",
+      "blockers": "Salida funcional L1 PASS; Q-42/43 bloquean integración remota, autorizada solo al acreditarlos; baseline/gates antes de otro lote",
       "evidence": "CP-014: ocho salidas PASS acotadas, QA propia PG18.6 ARM64/dos API/Nginx/worker, matriz por SHA",
       "document": "specs/P1-L1.md"
     },
@@ -222,7 +222,7 @@
       "id": "P1-L1-INT",
       "name": "Integration Gate del lote (§8.5)",
       "status": "NOT VERIFIED",
-      "criterion": "Código probado, revisión y checkpoint locales preparados; PR/review de PR, CI PR, merge y CI canónica no ejecutados ni autorizados. No nueva baseline o fase por extensión"
+      "criterion": "CP-015 rama limpia/revisión local/regresión/CI preparado; PR/review GitHub/CI remoto/merge/canónica no ejecutados por Q-42/43. No nueva baseline o fase por extensión"
     }
   ],
   "screens": [
@@ -638,7 +638,7 @@
       "id": "DEC-058",
       "title": "Aprobación limitada e implementación autónoma P1-L1",
       "status": "APPROVED",
-      "detail": "- Fecha/estado/tipo: 2026-10-12 / APPROVED / baseline y ejecución.\n- Fuente: adjunto humano 5419b9ad-8a81-4c90-b114-d6c23b370d44, §§1/3/4/5. A exacta P1-L1 v0.2-CP012, S-18/L-01/ocho cortes, commit3b387b38784907b67e2209a35c3d5f400d70742e. [Baseline protegida](specs/P1-L1.md).\n- Aprueba los mecanismos SQL/Compose/QA privada de ese alcance y hace efectiva B al acreditar entradas; no otra autorización por corte. Permite crear recursos exclusivos temporales QA con preflight, límites y reversión. DEC-022/023 quedan aprobadas únicamente en su parte incorporada al lote; diseño público restante continúa propuesto.\n- No aprueba SaaS general, DNS/proxy compartido, publicación, datos reales, pagos/fiscalidad funcional, proveedores/gastos, push/merge. RG-001 mantiene dependencias antes de su uso. No transfiere PASS históricos."
+      "detail": "- Fecha/estado/tipo: 2026-10-12 / APPROVED / baseline y ejecución.\n- Fuente: adjunto humano 5419b9ad-8a81-4c90-b114-d6c23b370d44, §§1/3/4/5. A exacta P1-L1 v0.2-CP012, S-18/L-01/ocho cortes, commit3b387b38784907b67e2209a35c3d5f400d70742e. [Baseline protegida](specs/P1-L1.md).\n- Aprueba los mecanismos SQL/Compose/QA privada de ese alcance y hace efectiva B al acreditar entradas; no otra autorización por corte. Permite crear recursos exclusivos temporales QA con preflight, límites y reversión. DEC-022/023 quedan aprobadas únicamente en su parte incorporada al lote; diseño público restante continúa propuesto.\n- No aprueba SaaS general, DNS/proxy compartido, publicación, datos reales, pagos/fiscalidad funcional, proveedores/gastos, push/merge. RG-001 mantiene dependencias antes de su uso. No transfiere PASS históricos.\n\n### SE-002 — Baseline portable y autorización de integración CP-015\n\n**SPEC ERRATA de representación / 2026-10-13 / LOCAL + HUMAN-ASSISTED.** La rama limpia excluye los commits antiguos del PR #1; el Git aprobado3b387b3 queda fuera de su ascendencia. Se conservan snapshots byte exactos de S-18/L-01, DEP-IND y los ocho cortes, con manifiesto fuente/blob/SHA256 en docs/specs/p1-l1-approved. No cambia la aprobación DEC-058, ninguna regla o garantía, ni se aprueba el SaaS general o entrada compartida de DEP-IND-04. La rama fuente se preserva. No nueva decisión de producto ni SC por este traslado.\n\nFuente humana directa actual: adjunto CP-0151c09dd03-5335-4dee-abad-844c36aebdcc, recibido2026-10-13. Autoriza integración Git condicionada y preparación del siguiente lote; sustituye únicamente la prohibición Git de CP-014. No A/B de P1-L2, despliegue, cambios de Vercel/Coolify, contratación, DNS, producción ni migración. Safety Gate remoto no acreditado conserva la operación detenida; sus otras tareas locales continúan."
     },
     {
       "id": "DEC-059",
@@ -648,6 +648,18 @@
     }
   ],
   "pending": [
+    {
+      "id": "Q-42",
+      "title": "evidencia — Seguridad de push/PR/merge sin previews o deploys no autorizados",
+      "priority": "BLOCKING",
+      "resolve_before": "Antes de publicar rama, crear PR o merge; revalidar antes de cada operación remota"
+    },
+    {
+      "id": "Q-43",
+      "title": "evidencia — Auditoría completa de tooling frontend integrada",
+      "priority": "BLOCKING",
+      "resolve_before": "Gate de seguridad/CI antes de merge; antes de depender del tooling afectado"
+    },
     {
       "id": "Q-02",
       "title": "diseño técnico — Arquitectura relacional y operación de módulos restantes",
@@ -972,6 +984,18 @@
       "priority": "BLOCKING",
       "resolve_before": "Condiciones P0-B/C; fundamentos P1, datos P2, pago P3, UX P5; restore/capacidad destino P6",
       "evidence": "DEM-F LOCAL fixture/modelo; 4/6 intercalados exceden último cupo si lectura/incremento separados. Mongo, auth real y expiración física NOT VERIFIED",
+      "status": "OPEN"
+    },
+    {
+      "id": "TD-21",
+      "type": "ERROR/BLOCKER integración",
+      "severity": "Alta en tooling",
+      "description": "Full audit frontend CP-015 conserva5high/2moderate (braces/cadenaTailwind y selector), sin explotación afirmada. Backend/clientruntime0 tras dos patches selectivos",
+      "mitigation": "Mantener audit completo estricto FAIL; no migrar Tailwind3→4 ni cambiar parser major por efecto lateral. Reparación compatible o cambio revisado y regresión; rastrear Q-43",
+      "owner": "Ingeniería/P1",
+      "priority": "BLOCKING",
+      "resolve_before": "Audit/CI e integración antes de merge; revisar alcance antes del uso afectado",
+      "evidence": "docs/evidence/cp015; fuentes primarias y lock exacto",
       "status": "OPEN"
     }
   ],
@@ -3125,6 +3149,176 @@
       "sha": "CP014",
       "date": "2026-10-13",
       "provenance": "HUMAN-ASSISTED alcance + LOCAL"
+    },
+    {
+      "id": "C-216",
+      "name": "Estado Git y autoridad actuales",
+      "status": "PASS",
+      "evidence": "git-preflight.json:cuenta SrEdgarR/develop010aab/fuente9fc/PR1Draft/protecciones/triggers",
+      "environment": "LOCAL + REMOTE",
+      "sha": "fuente9fc / base010aab",
+      "date": "2026-10-13",
+      "provenance": "LOCAL + REMOTE"
+    },
+    {
+      "id": "C-217",
+      "name": "Integración limpia sin cambios antiguos PR1",
+      "status": "PASS",
+      "evidence": "independent-review.json:17de20archivos iguales a develop;3excepciones deliberadas; no ascendencia f5afaa2",
+      "environment": "LOCAL independiente",
+      "sha": "a89cc2eee43a8f60f3464bea26a6ea4f9ddfc867",
+      "date": "2026-10-13",
+      "provenance": "LOCAL"
+    },
+    {
+      "id": "C-218",
+      "name": "Baseline aprobada portable SE-002",
+      "status": "PASS",
+      "evidence": "specs/p1-l1-approved/manifest.json:3fragmentos byte exactos/blob/SHA256; aprobación inalterada3b387b3",
+      "environment": "LOCAL + HUMAN-ASSISTED",
+      "sha": "3b387b3",
+      "date": "2026-10-13",
+      "provenance": "LOCAL"
+    },
+    {
+      "id": "C-219",
+      "name": "Seguridad efectiva de publicación remota",
+      "status": "NOT VERIFIED",
+      "evidence": "git-preflight.json:Vercel flags no expuestos y browserloginrequired; no inferir seguridad por hooks vacíos;Q42",
+      "environment": "REMOTE / límite de herramienta",
+      "sha": "a89cc2eee43a8f60f3464bea26a6ea4f9ddfc867",
+      "date": "2026-10-13",
+      "provenance": "LOCAL + REMOTE"
+    },
+    {
+      "id": "C-220",
+      "name": "Workflow de verificación propio sin despliegue",
+      "status": "PASS",
+      "evidence": "ci-plan.md y revisión independiente:contentsread/accionesSHA/Node24/lista explícita/envDirfalse/audit estricto; ejecución remotaNV",
+      "environment": "LOCAL estático",
+      "sha": "a89cc2eee43a8f60f3464bea26a6ea4f9ddfc867",
+      "date": "2026-10-13",
+      "provenance": "LOCAL"
+    },
+    {
+      "id": "C-221",
+      "name": "Regresión de contratos backend integrada",
+      "status": "PASS",
+      "evidence": "backend.txt/local-verification.json:73tests en15archivos, sin PG real/secretos/QA",
+      "environment": "LOCAL Windowsx64 Node24.21",
+      "sha": "a89cc2eee43a8f60f3464bea26a6ea4f9ddfc867",
+      "date": "2026-10-13",
+      "provenance": "LOCAL"
+    },
+    {
+      "id": "C-222",
+      "name": "Frontend integrado y compilado verificados",
+      "status": "PASS",
+      "evidence": "frontend.txt:29tests/buildproduction; archived-f-identity.json:3assets iguales al F archivado por digest recomputada",
+      "environment": "LOCAL Windowsx64 / bundle",
+      "sha": "a89cc2eee43a8f60f3464bea26a6ea4f9ddfc867",
+      "date": "2026-10-13",
+      "provenance": "LOCAL"
+    },
+    {
+      "id": "C-223",
+      "name": "Correcciones selectivas de dependencias verificadas",
+      "status": "PASS",
+      "evidence": "sanitizer.txt:3tests reales safeDocuments; controller.txt:3; syntax.txt:64; clientlockDOM3.4.16/map1.2.2, sin cambios masivos",
+      "environment": "LOCAL Windowsx64",
+      "sha": "a89cc2eee43a8f60f3464bea26a6ea4f9ddfc867",
+      "date": "2026-10-13",
+      "provenance": "LOCAL"
+    },
+    {
+      "id": "C-224",
+      "name": "Auditoría de runtime backend y cliente",
+      "status": "PASS",
+      "evidence": "backend-runtime-audit.json y frontend-runtime-audit.json:0vulnerabilidades; no toolingPASS por extensión",
+      "environment": "LOCAL + registry npm",
+      "sha": "a89cc2eee43a8f60f3464bea26a6ea4f9ddfc867",
+      "date": "2026-10-13",
+      "provenance": "LOCAL"
+    },
+    {
+      "id": "C-225",
+      "name": "Auditoría completa del frontend incluidas herramientas",
+      "status": "FAIL",
+      "evidence": "frontend-full-audit.json:7paquetes=5high/2moderate, cadenaTailwind/selector;Q43antesCI/merge,sin waiver",
+      "environment": "LOCAL + registry npm",
+      "sha": "a89cc2eee43a8f60f3464bea26a6ea4f9ddfc867",
+      "date": "2026-10-13",
+      "provenance": "LOCAL"
+    },
+    {
+      "id": "C-226",
+      "name": "Garantías históricas conservadas con identidad",
+      "status": "PASS",
+      "evidence": "local-verification.json:104Gitobjetos; archived-f-identity.json:bundleF exacto; CP013/014 retienen SHA/ARM64/2API/browser/restore, no reensayo",
+      "environment": "LOCAL identidad + REPORTED histórico",
+      "sha": "a89cc2eee43a8f60f3464bea26a6ea4f9ddfc867 / F histórico",
+      "date": "2026-10-13",
+      "provenance": "LOCAL"
+    },
+    {
+      "id": "C-227",
+      "name": "Revisión independiente focal de la integración",
+      "status": "PASS",
+      "evidence": "independent-review.json:copia/alcance/snapshots/CI revisados; bloqueos security/fullaudit explícitos, no reviewGitHub",
+      "environment": "LOCAL / agente independiente",
+      "sha": "a89cc2eee43a8f60f3464bea26a6ea4f9ddfc867",
+      "date": "2026-10-13",
+      "provenance": "LOCAL"
+    },
+    {
+      "id": "C-228",
+      "name": "Candidato siguiente concreto y coherencia revisada",
+      "status": "PASS",
+      "evidence": "NEXT_LOT_CANDIDATE/REVIEW de rama fuente:P1-L2v0.1,R1…3cerradosdocumentalmente,12salidasNV; no writer implementado",
+      "environment": "LOCAL documental / fuente planning",
+      "sha": "CP015 documental, no códigoL2",
+      "date": "2026-10-13",
+      "provenance": "LOCAL"
+    },
+    {
+      "id": "C-229",
+      "name": "Aprobación y ejecución del siguiente lote",
+      "status": "NOT VERIFIED",
+      "evidence": "P1-L2A/B y ajusteP1/P2 no aprobados; base/gates/entorno antes de código/recurso; no P2 iniciada",
+      "environment": "HUMAN-ASSISTED límite",
+      "sha": "sin nueva baseline aprobada",
+      "date": "2026-10-13",
+      "provenance": "LOCAL"
+    },
+    {
+      "id": "C-230",
+      "name": "Quality Gate documental y mapa CP-015",
+      "status": "PASS",
+      "evidence": "qg.json:referencias/historia215/hashPrompt/snapshots/16pendientes/59DEC/232criterios/mapa generado--check; no fullauditPASS",
+      "environment": "LOCAL documentación",
+      "sha": "CP015 documental",
+      "date": "2026-10-13",
+      "provenance": "LOCAL"
+    },
+    {
+      "id": "C-231",
+      "name": "Infraestructura preservada sin activar QA",
+      "status": "PASS",
+      "evidence": "CP015:no recursos modificados; solo SELECT/settings/metadatos; STOPPED/KEEP acreditadoCP014 conservado, no nuevo ensayo físico",
+      "environment": "LOCAL + REMOTE lectura / REPORTED CP014",
+      "sha": "runtimeF histórico; sin deploymentnuevo",
+      "date": "2026-10-13",
+      "provenance": "LOCAL + REMOTE"
+    },
+    {
+      "id": "C-232",
+      "name": "Integration Gate remoto y baseline canónica siguiente",
+      "status": "NOT VERIFIED",
+      "evidence": "No push/nuevoPR/reviewGitHub/CI PR/merge/CIcanónica porQ42/Q43; develop010aab intacto, L1noTERMINAL",
+      "environment": "REMOTE operación detenida",
+      "sha": "merge_sha ninguno",
+      "date": "2026-10-13",
+      "provenance": "LOCAL"
     }
   ],
   "feedback": [
@@ -3147,27 +3341,27 @@
   "source_files": [
     {
       "path": "docs/PROJECT_STATE.md",
-      "sha256": "0eaea47449a372c8ef153cf0d17a03b6c384ff5f138b680e4a5fde8ce9d7f983"
+      "sha256": "93ccdf0260a55181aff8c5e015b2f8091c612d1763ebd174bc2993bf35a34fd6"
     },
     {
       "path": "docs/ROADMAP.md",
-      "sha256": "27e644c8b3f1043140d6e4943410890ecfa9d09cca33eacd05eaf3bb5dd5053e"
+      "sha256": "ca2460b7a870c44108878e365b5ef13542ebdf77bc761ece0c3e249e5bc4e407"
     },
     {
       "path": "docs/DECISIONS.md",
-      "sha256": "5c7a81ff44a5362c2799c8037ab991fe8fc4c8d8b9d4a9dd206b15665258f957"
+      "sha256": "b1df1c9117271ef49cc86c368ca90941d214912aecead6c1ae7884291183aaaa"
     },
     {
       "path": "docs/TECH_DEBT.md",
-      "sha256": "b82418d282a345e39eddd8398e637b62fb40ba899fb39417f4eb6bc6b2f3964f"
+      "sha256": "69723de953889d4d0dddd68e7e197c1e498c3daa0c96b45a49d6cd19794638d9"
     },
     {
       "path": "docs/CHECKPOINTS.md",
-      "sha256": "a9a6d8497200004cc06f1d72734c838ad2f54c178a4fdf07a0ffea1a14eebff4"
+      "sha256": "708496455aebf68f705f4438daae8d4b07825d1d39fa4a1c14726c6882aaa847"
     },
     {
       "path": ".agentic/PLANNING_STATE.md",
-      "sha256": "0374bd6982f07ea8ff2f03a942e1c5bd109f94dcb952a3fac6701f815e27d767"
+      "sha256": "30cb87fe23093de78c60adca3bc53e909f1217c870bbada364e2c4753ccb8517"
     },
     {
       "path": ".agentic/METHODOLOGY_FEEDBACK.md",

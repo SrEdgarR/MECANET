@@ -1,0 +1,325 @@
+{
+  "schemaVersion": 1,
+  "checkpoint": "CP-015",
+  "at": "2026-10-13T16:14:02.228465+00:00",
+  "classification": "DETECTED",
+  "reviewer": "/root/cp015_integrate_review",
+  "independence": "Agente diferente del autor del código, del runner CI y del candidato siguiente. Revisión local; no aprobación humana ni GitHub.",
+  "result": "NOT_APPROVED_FOR_REMOTE_INTEGRATION",
+  "technicalReview": "PASS_WITH_LIMITS",
+  "qualityGate": "FAIL: audit completo obligatorio del cliente",
+  "integrationGate": "NOT VERIFIED: Q-42 antes de publicación; CI remoto, PR, aprobación GitHub y merge no ejecutados",
+  "scope": {
+    "repository": "SrEdgarR/MECANET",
+    "integrationBranch": "codex/integrate-p1-l1",
+    "canonicalBase": "010aab670c638d168c971df3e3e53b97e72ff443",
+    "reviewedCodeSha": "a89cc2eee43a8f60f3464bea26a6ea4f9ddfc867",
+    "sourceCheckpoint": "9fcdd9540848edbbdef1cfc94667491c9ab2ba92",
+    "approvedDesignCommit": "3b387b38784907b67e2209a35c3d5f400d70742e",
+    "legacyPr1CodeSha": "f5afaa23c54c968be249231f18e212b2b43a0c82",
+    "newCommitsSinceBase": [
+      "a89cc2eee43a8f60f3464bea26a6ea4f9ddfc867"
+    ],
+    "candidateNextLotOutsideIntegrationPr": true,
+    "workingTreeDocumentation": "Revisada documentación CP-015 y sus correcciones históricas hasta esta lectura; mapa y checkpoint final se validan por el Quality Gate documental del agente principal."
+  },
+  "requiredFindings": [
+    {
+      "id": "Q-42",
+      "priority": "REQUIRED",
+      "state": "NOT VERIFIED",
+      "finding": "La asociación Git de Vercel y sus condiciones actuales de previews/auto-deploy no están acreditadas; el acceso disponible no expone los ajustes y la vista necesita autenticación. No inferir seguridad de previews antiguas o ausencia de flags.",
+      "resolveBefore": "Primer push o creación de PR de la rama nueva, y mantener condición antes de merge",
+      "evidence": "git-preflight.json",
+      "action": "Acreditar ajustes actuales sin modificar integraciones ajenas. Hasta entonces detener solo operaciones remotas."
+    },
+    {
+      "id": "Q-43",
+      "priority": "REQUIRED",
+      "state": "FAIL",
+      "finding": "npm audit completo del cliente conserva siete paquetes afectados (cinco high, dos moderate), derivados de dos avisos en tooling Tailwind3. Runtime omit-dev limpio no sustituye este gate.",
+      "resolveBefore": "PASS del Quality Gate de dependencias y de CI obligatorio, antes de merge",
+      "evidence": "frontend-full-audit.json",
+      "action": "Preparar cambio técnico revisado de dependencias/compatibilidad y SPEC CHANGE cuando afecte el pin Tailwind3.4.18 de L-01. No aplicar audit fix --force, overrides fuera de contrato ni rebajar el gate."
+    }
+  ],
+  "resolvedReviewFindings": [
+    {
+      "id": "CP15-R1",
+      "state": "RESOLVED",
+      "finding": "Baseline dependía de referencia aprobada fuera de la ascendencia limpia. SE-002 incorpora tres fragmentos inmutables con manifiesto fuente/blob/hash, sin nueva aprobación o modificación de requisitos."
+    },
+    {
+      "id": "CP15-R2",
+      "state": "RESOLVED",
+      "finding": "Encabezados CP-014 todavía parecían vigentes. PROJECT_STATE, tasks/plan, PLANNING_STATE y ROADMAP los marcan históricos y el alcance superior CP-015 conserva condiciones Q-42/Q-43."
+    }
+  ],
+  "checks": [
+    {
+      "id": "CODE-PROVENANCE",
+      "result": "PASS",
+      "kind": "Verificación Git independiente",
+      "files": 104,
+      "sameObjects": 104,
+      "mismatches": [],
+      "orderedIdentitySha256": "e96b036160de25d087789df4af751d57d28d3bd50a4bf9012034564bd2bd16ef",
+      "evidence": "local-verification.json sameObjects y recomputación del revisor",
+      "scope": [
+        "server/saas",
+        "client/src/saas",
+        "client/saas.html",
+        "client/vite.saas.config.js",
+        "tests/qa"
+      ]
+    },
+    {
+      "id": "LEGACY-PR-EXCLUSION",
+      "result": "PASS",
+      "kind": "Verificación Git e imports independientes",
+      "legacyCommitIsAncestor": false,
+      "baseUnchangedLegacyPaths": 17,
+      "intentionalMetadataExceptions": [
+        ".gitignore",
+        "DEPLOYMENT.md",
+        "README.md"
+      ],
+      "interpretation": "No se incorpora PR #1. La nueva ruta Express/React/QA usa sus módulos propios y dependencias npm, sin imports a config/http.js, server.js, Settings.jsx o el cliente api heredados."
+    },
+    {
+      "id": "IMMUTABLE-BASELINE",
+      "result": "PASS",
+      "kind": "Byte/hash independiente",
+      "representationErrata": "SE-002",
+      "snapshots": [
+        {
+          "path": "docs/specs/p1-l1-approved/S-18.md",
+          "sourcePath": ".agentic/SPECIFICATION_CANDIDATE.md",
+          "sourceBlob": "c4ee0e1b64aa76aaed51ab632290c5864cbb2983",
+          "sourceSha256": "37feb91a7f4cf6f43a7a0b4d5aa9c4ac41a079ea0ee28bef65c74d9b68cb10f0",
+          "snapshotSha256": "77a3084b937f107b5c00e87dba35e4f8fb47d87cff98ff8596d136442063bec0",
+          "exactSourceFragment": true,
+          "result": "PASS"
+        },
+        {
+          "path": "docs/specs/p1-l1-approved/DEP-IND.md",
+          "sourcePath": ".agentic/ARCHITECTURE_OPTIONS.md",
+          "sourceBlob": "fbe5efaa7e455da874ca01b1949d3744afb870f1",
+          "sourceSha256": "13f3fa44209e57b0ebff34584acede0ba682e8b579252fe6108a44add8257302",
+          "snapshotSha256": "3794a49dcb47141af5a5a4d5649b4ad99508c6308ca5cd5784a9924726c33f33",
+          "exactSourceFragment": true,
+          "result": "PASS"
+        },
+        {
+          "path": "docs/specs/p1-l1-approved/eight-cuts.md",
+          "sourcePath": "tasks/plan.md",
+          "sourceBlob": "572178324cf4907e5655c40a668c07316d07c05f",
+          "sourceSha256": "c26588d4e43ad05ff2d9ba1c60f60639ec2d6636110d22c66f5fa4dd6c4997f9",
+          "snapshotSha256": "4febc9bc5d70e59c4c38adff902a22a0bd2f755c9ed1de25de247a2c30b1e3e3",
+          "exactSourceFragment": true,
+          "result": "PASS"
+        }
+      ],
+      "limits": "La aprobación cubre S-18/L-01 y ocho cortes pertinentes a QA privada. DEP-IND incluye contexto público SUGGESTED: su archivo no aprueba DEP-IND-04/Q-41. Links relativos se interpretan contra la ruta Git fuente del manifiesto. No se reescriben whitespace o enlaces de la copia inmutable."
+    },
+    {
+      "id": "CI-STATIC-REVIEW",
+      "result": "PASS_WITH_LIMITS",
+      "kind": "Revisión manual del workflow y runner, cotejo local actionlint",
+      "workflowSha256": "181841fdea5d03d1be7250f3add04736b4b0f210a1fadb941458596d937ce719",
+      "actionlint": {
+        "result": "PASS",
+        "tool": "actionlint 1.7.12 Windows amd64",
+        "evidence": "workflow-check.json",
+        "testedCodeSha": "a89cc2eee43a8f60f3464bea26a6ea4f9ddfc867",
+        "independentlyMatchedWorkflowHash": true
+      },
+      "observations": [
+        "Actions oficiales fijadas por SHA, permisos contents:read y checkout sin persistir credenciales.",
+        "Node/npm fijados; npm ci --ignore-scripts de backend y client; runner permite solo entorno de soporte y no carga .env ni secretos.",
+        "Tests locales con selección explícita; configuración aislada de sanitizer sin setup/API real legado.",
+        "Build SaaS usa NODE_ENV=production; no servicios de BD, SSH, Docker, VPS o paso de despliegue.",
+        "Audits runtime y completo siguen estrictos; fullaudit usa !cancelled() y no continue-on-error."
+      ],
+      "limits": "Actionlint es evidencia local del principal con checksum publicado por proveedor, no CI Ubuntu ejecutada ni firma independiente. shellcheck/pyflakes desactivados por ausencia. Ningún workflow nuevo se ejecutó en GitHub."
+    },
+    {
+      "id": "LOCAL-REGRESSION-EVIDENCE",
+      "result": "PASS_WITH_SECURITY_FAILURE_SEPARATE",
+      "kind": "Logs del principal sobre commit limpio; revisados sin reensayo físico",
+      "testedCodeSha": "a89cc2eee43a8f60f3464bea26a6ea4f9ddfc867",
+      "provenance": "LOCAL Windowsx64 Node24.21.0/npm11.9.0; no PostgreSQL, browser or QA invoked",
+      "results": {
+        "backendTests": {
+          "pass": 73,
+          "fail": 0
+        },
+        "saasFrontendTests": {
+          "pass": 29,
+          "fail": 0
+        },
+        "safeDocumentsTests": {
+          "pass": 3,
+          "fail": 0
+        },
+        "qaControllerRegressions": {
+          "pass": 3,
+          "fail": 0
+        },
+        "syntaxFiles": 64,
+        "saasProductionBuild": "PASS",
+        "backendRuntimeAudit": "PASS: 0",
+        "frontendRuntimeAudit": "PASS: 0",
+        "frontendFullAudit": "FAIL: 7"
+      },
+      "evidence": [
+        "backend.txt",
+        "frontend.txt",
+        "sanitizer.txt",
+        "controller.txt",
+        "syntax.txt",
+        "local-verification.json"
+      ],
+      "limits": "No PostgreSQL, dos API reales, navegador, ARM64, restore o VPS nuevo en CP-015. No atribuir pruebas históricas a a89cc2."
+    },
+    {
+      "id": "F-BUNDLE-IDENTITY",
+      "result": "PASS",
+      "kind": "Comparación independiente de tres assets con manifiesto F retenido",
+      "historicalCodeSha": "b0f5e199e5df457d7f901ff3a3dca5ab3a8d5701",
+      "historicalArtifact": "sha256:5950ae7e519170ebaaf6cf8c99e9187c14b41f32779044e2829e8de5abbac0a6",
+      "manifestSha256": "e70d5af1e9ede7648391dcdd9268cdbd7f2890e5cc1698dea62e704196cd9591",
+      "entryDigestRecomputed": "sha256:5950ae7e519170ebaaf6cf8c99e9187c14b41f32779044e2829e8de5abbac0a6",
+      "publicBundleEntries": [
+        {
+          "path": "client/dist-saas/assets/saas-DclqrR_W.css",
+          "bytes": 5686,
+          "sha256": "cdb3b3885a4aea0c72204e0c7952eb8ebd7522c2767529eb824b487582d54159"
+        },
+        {
+          "path": "client/dist-saas/assets/saas-DsjAOXZI.js",
+          "bytes": 158150,
+          "sha256": "846991792b1506d97706bca144f265874f79d17bba91d930dec4d45c3b7bbf04"
+        },
+        {
+          "path": "client/dist-saas/saas.html",
+          "bytes": 525,
+          "sha256": "ab3c357852ca07b8f4689fb5b23a8ddb093ab2bb4e0aa2d75ba98012b132ee51"
+        }
+      ],
+      "manifestEntries": 913,
+      "evidence": "archived-f-identity.json",
+      "limits": "Identidad de artefactos conservados y locales, sin lectura/reensayo remoto. Browser C y restantes pruebas físicas conservan sus SHA/entornos históricos; no constituyen nueva prueba en integración."
+    },
+    {
+      "id": "DIFF-HYGIENE",
+      "result": "PASS_WITH_LIMITS",
+      "kind": "Escaneo conservador y revisión de documentos/fixtures/imágenes",
+      "textFilesScanned": 303,
+      "binaryFilesRetained": 16,
+      "actualSecretsDetected": 0,
+      "templateMatches": [
+        {
+          "path": "README.md",
+          "line": 161,
+          "type": "MongoDB URI username/password template",
+          "alreadyIdenticalInDevelop": true
+        }
+      ],
+      "observations": [
+        "No .env, secretos, clave privada, backup o carpeta .qa-private incorporados.",
+        "Experimentos son evidencia histórica aislada; CI no los integra en runtime ni despliegue.",
+        "Notas públicas y fixtures históricos se conservan sanitizados; imágenes iniciales ilustrativas/estado vacío no contienen credenciales.",
+        "La metodología y evidencia histórica se mantienen byte-exactas. Se excluyen del check de whitespace las tres rutas inmutables conocidas: Prompt Maestro, CP-001-vps.txt y snapshot eight-cuts."
+      ],
+      "limits": "Patrones de secretos conservadores y revisión de alcance; no detector exhaustivo ni auditoría externa. La excepción del README es un ejemplo heredado, no credencial real."
+    },
+    {
+      "id": "AUTH-ADMISSION-RECOVERY-UI-COMPOSE",
+      "result": "PASS_WITH_LIMITS",
+      "kind": "Revisión focal del código y reutilización de evidencia por identidad",
+      "observations": [
+        "Autenticación con propósito/contexto/Origin/CSRF, cookie host-only y revocación serializada; no exposición de secretos en errores.",
+        "Admisión conserva ledger/deuda y pruebas positivas para liberar recursos; dos API y negativas tienen evidencia histórica propia.",
+        "Recuperación conserva barrera cerrada, journal/canarios/epoch y credenciales propias; ninguna restauración o migración real ejecutada en esta revisión.",
+        "UI cuadrada, contexto y respuestas tardías protegidos, con evidencia de componente y bundle F igual.",
+        "Compose QA propio, PostgreSQL interno y acceso HTTPS loopback→SSH→socket UNIX; no publicación o gestión Coolify."
+      ],
+      "limits": "Garantías acotadas de P1-L1 bajo DEC-058; no heredar a writers, POS/fiscalidad, suscripciones, soporte excepcional o SaaS completo."
+    }
+  ],
+  "dependencyApplicability": {
+    "reviewer": "/root/cp015_integrate_review/dependency_applicability",
+    "kind": "Revisión independiente estática del lock y grafo/configuración de tooling",
+    "clientLockSha256": "c9b7676314befdd8857fb0272dd5c488805b82e2975f6e51ef60536ba8d7fdc3",
+    "audit": {
+      "info": 0,
+      "low": 0,
+      "moderate": 2,
+      "high": 5,
+      "critical": 0,
+      "total": 7
+    },
+    "advisories": [
+      {
+        "url": "https://github.com/advisories/GHSA-vfj7-8cjw-p6xm",
+        "package": "braces",
+        "patchedVersionRegistered": null
+      },
+      {
+        "url": "https://github.com/advisories/GHSA-rj75-hqrm-r3gf",
+        "package": "postcss-selector-parser",
+        "patchedVersion": "7.1.6"
+      }
+    ],
+    "affectedPackages": [
+      "braces",
+      "chokidar",
+      "micromatch",
+      "fast-glob",
+      "tailwindcss",
+      "postcss-nested",
+      "postcss-selector-parser"
+    ],
+    "allAffectedPackagesDevOnly": true,
+    "soleRootDependency": "tailwindcss 3.4.18",
+    "saasRuntime": "NO REACHABLE PATH FOUND WITH EVIDENCE: bundle graph31modules excludes affected packages",
+    "currentSaasCi": "No route found by static review: inline PostCSS plugins[] prevents lookup of legacy PostCSS config; not a dynamic reachability test.",
+    "legacyBuildDev": "REACHABLE TOOLING PATH FOUND: client/postcss.config→Tailwind. Exploitability NOT VERIFIED.",
+    "recommendation": "Tailwind3 contract cannot be declared audit0 with a routine patch bump; braces has no registered patch, parser7.1.6 is outside dependent6.x ranges. Major tooling migration or reviewed replacement/patch needs impact review and relevant SPEC CHANGE before touching the pin. Never suppress fullaudit.",
+    "migrationSource": "https://tailwindcss.com/docs/upgrade-guide"
+  },
+  "nextLotReview": {
+    "location": "Primary planning branch only: .agentic/NEXT_LOT_REVIEW.md",
+    "candidateSha256": "3cd5368860ad001a602d56cb8aee526053c38394f90eecac398542167016901c",
+    "result": "PASS documental acotado",
+    "approval": "SUGGESTED / NOT APPROVED; A/B pendientes",
+    "initialRequired": [
+      "L2-R1",
+      "L2-R2",
+      "L2-R3"
+    ],
+    "finalRequiredOpen": 0,
+    "functionalCriteria": "12 NOT VERIFIED",
+    "scope": "Minimal fictional product creation/stock receipt writer foundation; proposed P1/P2 adjustment requires approval and RG-001 remains L1 only. No functional L2 diff in integration."
+  },
+  "methodology": {
+    "copySha256": "d2dafd5f75df32aae33e421953fab6e99e723aa88744b918b555562c7b6a550d",
+    "unchangedFromSourceCheckpoint": true,
+    "references": [
+      "§8.3 Design Gate",
+      "§8.5 independent review / Quality Gate",
+      "§27 audit summary"
+    ],
+    "feedbackAdded": false
+  },
+  "resourcesCreatedOrModified": [],
+  "remoteActions": [],
+  "reviewLimits": [
+    "No Git mutations by reviewer.",
+    "No remote GitHub approval, PR, push, CI, merge or canonical next code baseline.",
+    "No independent rerun of product tests: local logs and exact hashes were checked; physical historical evidence reused at its own SHA.",
+    "No mutation testing by reviewer because assigned scope is read-only; historical RED/GREEN evidence retains its own scope.",
+    "No changes to infrastructure, DNS, services, production, Coolify, Nexora, Mecanet-EAK, secrets or the Prompt Maestro."
+  ]
+}

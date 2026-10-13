@@ -1,6 +1,6 @@
 # Checkpoints
 
-Actual: **CP-014**, P1 EN CURSO limitada a P1-L1; P0 general PARCIAL. Salida funcional acotada de los ocho cortes y Quality Gate PASS; Integration Gate NOT VERIFIED. CP-001…013 conservan su evidencia histórica; SaaS general NOT APPROVED.
+Actual: **CP-015**, P1 única fase activa, L1 ocho PASS conservados. Integration Gate NOT VERIFIED por Q-42/Q-43; candidato siguiente SUGGESTED/NOT APPROVED. P0 PARCIAL y SaaS general NOT APPROVED. Historia CP-001…014 intacta.
 
 ## CP-001 — Inventario y adopción documental
 
@@ -445,3 +445,37 @@ Se conservan los fallos históricos de CP-014: carga paralela de login, límites
 | C-215 | Lanzamiento, pagos, fiscalidad y migración reales en esta ejecución | NOT APPLICABLE | Fuera del alcance CP014; ningún DNS/proxy/pago/cobro/migración real/producción/Nexora/EAK modificado; sus gates futuros no eliminados | Ninguno | CP014 | 2026-10-13 | HUMAN-ASSISTED alcance + LOCAL |
 
 Resultado: **23 PASS,0 FAIL,1 NOT VERIFIED,1 NOT APPLICABLE**. C-213 acredita revisión/Quality Gate/mapa; C-214 mantiene el Integration Gate separado. Los FAIL históricos de los ensayos quedan en sus archivos y auditoría, aunque los criterios finales reparados pasen. C-01…190 intactos. Próximo paso habilitado: conservar el checkpoint y usar la [preparación de integración](../.agentic/P1-L1_INTEGRATION.md) conforme al gate de §8.5; push/PR/CI/merge requieren su autorización y verificación posterior. No iniciar automáticamente P2, lanzamiento o cambios compartidos.
+
+## CP-015 — Integración Git limpia y siguiente candidato separado
+
+- Fecha:2026-10-13. Fuente humana adjunto1c09dd03; Git/CI condicionalmente autorizados, no deploy/infra ni B siguiente.
+- Base limpia develop `010aab670c638d168c971df3e3e53b97e72ff443`; fuenteCP014 `9fcdd9540848edbbdef1cfc94667491c9ab2ba92` preservada. Codex/integrate-p1-l1 excluye3deccdf/f5afaa2 y mantiene104objetosSaaS/QA idénticos.
+- tested_code_sha local: `a89cc2eee43a8f60f3464bea26a6ea4f9ddfc867`.73backend/29frontend/3sanitizer/3controller/syntax64/build PASS; runtimeaudit0, fullaudit FAIL7(5high/2moderate). Bundle exacto al F archivado5950ae7…; pruebas físicas históricas conservadas conSHA, no repetidas.
+- Estado:P1únicaactiva EN CURSO, P0PARCIAL, L1ochoPASS; IntegrationGateNV/noTERMINAL, SaaSgeneralNOTAPPROVED. Q42safetyremota/Q43audit bloquean solo operaciones dependientes.16pendientes:2BLOCKING/14FUTURE;4diseños/5evidencias/5humanas/2externas.
+- SE-002 snapshots normativos byte exactos; workflow sin deploy/secrets. Candidato P1-L2 único y review en rama fuente, fueraPRL1; A/B/ajuste/gates pendientes. Ningún código siguiente implementado.
+- Infraestructura creada/modificada:ninguna; QA no despertada. PR1/producción/Nexora/EAK/worktreeprevio yPrompt preservados. Sin push/PRnuevo/merge/CI remoto.
+- Checkpoint/HEAD finales:identificados en Git/informe externo; no commits autorreferenciales. [Auditoría completa](audit/CP-015.md).
+
+## Matriz CP-015
+
+| ID | Criterio | Estado | Evidencia | Entorno | SHA | Fecha | Provenance |
+|---|---|---|---|---|---|---|---|
+| C-216 | Estado Git y autoridad actuales | PASS | git-preflight.json:cuenta SrEdgarR/develop010aab/fuente9fc/PR1Draft/protecciones/triggers | LOCAL + REMOTE | fuente9fc / base010aab | 2026-10-13 | LOCAL + REMOTE |
+| C-217 | Integración limpia sin cambios antiguos PR1 | PASS | independent-review.json:17de20archivos iguales a develop;3excepciones deliberadas; no ascendencia f5afaa2 | LOCAL independiente | a89cc2eee43a8f60f3464bea26a6ea4f9ddfc867 | 2026-10-13 | LOCAL |
+| C-218 | Baseline aprobada portable SE-002 | PASS | specs/p1-l1-approved/manifest.json:3fragmentos byte exactos/blob/SHA256; aprobación inalterada3b387b3 | LOCAL + HUMAN-ASSISTED | 3b387b3 | 2026-10-13 | LOCAL |
+| C-219 | Seguridad efectiva de publicación remota | NOT VERIFIED | git-preflight.json:Vercel flags no expuestos y browserloginrequired; no inferir seguridad por hooks vacíos;Q42 | REMOTE / límite de herramienta | a89cc2eee43a8f60f3464bea26a6ea4f9ddfc867 | 2026-10-13 | LOCAL + REMOTE |
+| C-220 | Workflow de verificación propio sin despliegue | PASS | ci-plan.md y revisión independiente:contentsread/accionesSHA/Node24/lista explícita/envDirfalse/audit estricto; ejecución remotaNV | LOCAL estático | a89cc2eee43a8f60f3464bea26a6ea4f9ddfc867 | 2026-10-13 | LOCAL |
+| C-221 | Regresión de contratos backend integrada | PASS | backend.txt/local-verification.json:73tests en15archivos, sin PG real/secretos/QA | LOCAL Windowsx64 Node24.21 | a89cc2eee43a8f60f3464bea26a6ea4f9ddfc867 | 2026-10-13 | LOCAL |
+| C-222 | Frontend integrado y compilado verificados | PASS | frontend.txt:29tests/buildproduction; archived-f-identity.json:3assets iguales al F archivado por digest recomputada | LOCAL Windowsx64 / bundle | a89cc2eee43a8f60f3464bea26a6ea4f9ddfc867 | 2026-10-13 | LOCAL |
+| C-223 | Correcciones selectivas de dependencias verificadas | PASS | sanitizer.txt:3tests reales safeDocuments; controller.txt:3; syntax.txt:64; clientlockDOM3.4.16/map1.2.2, sin cambios masivos | LOCAL Windowsx64 | a89cc2eee43a8f60f3464bea26a6ea4f9ddfc867 | 2026-10-13 | LOCAL |
+| C-224 | Auditoría de runtime backend y cliente | PASS | backend-runtime-audit.json y frontend-runtime-audit.json:0vulnerabilidades; no toolingPASS por extensión | LOCAL + registry npm | a89cc2eee43a8f60f3464bea26a6ea4f9ddfc867 | 2026-10-13 | LOCAL |
+| C-225 | Auditoría completa del frontend incluidas herramientas | FAIL | frontend-full-audit.json:7paquetes=5high/2moderate, cadenaTailwind/selector;Q43antesCI/merge,sin waiver | LOCAL + registry npm | a89cc2eee43a8f60f3464bea26a6ea4f9ddfc867 | 2026-10-13 | LOCAL |
+| C-226 | Garantías históricas conservadas con identidad | PASS | local-verification.json:104Gitobjetos; archived-f-identity.json:bundleF exacto; CP013/014 retienen SHA/ARM64/2API/browser/restore, no reensayo | LOCAL identidad + REPORTED histórico | a89cc2eee43a8f60f3464bea26a6ea4f9ddfc867 / F histórico | 2026-10-13 | LOCAL |
+| C-227 | Revisión independiente focal de la integración | PASS | independent-review.json:copia/alcance/snapshots/CI revisados; bloqueos security/fullaudit explícitos, no reviewGitHub | LOCAL / agente independiente | a89cc2eee43a8f60f3464bea26a6ea4f9ddfc867 | 2026-10-13 | LOCAL |
+| C-228 | Candidato siguiente concreto y coherencia revisada | PASS | NEXT_LOT_CANDIDATE/REVIEW de rama fuente:P1-L2v0.1,R1…3cerradosdocumentalmente,12salidasNV; no writer implementado | LOCAL documental / fuente planning | CP015 documental, no códigoL2 | 2026-10-13 | LOCAL |
+| C-229 | Aprobación y ejecución del siguiente lote | NOT VERIFIED | P1-L2A/B y ajusteP1/P2 no aprobados; base/gates/entorno antes de código/recurso; no P2 iniciada | HUMAN-ASSISTED límite | sin nueva baseline aprobada | 2026-10-13 | LOCAL |
+| C-230 | Quality Gate documental y mapa CP-015 | PASS | qg.json:referencias/historia215/hashPrompt/snapshots/16pendientes/59DEC/232criterios/mapa generado--check; no fullauditPASS | LOCAL documentación | CP015 documental | 2026-10-13 | LOCAL |
+| C-231 | Infraestructura preservada sin activar QA | PASS | CP015:no recursos modificados; solo SELECT/settings/metadatos; STOPPED/KEEP acreditadoCP014 conservado, no nuevo ensayo físico | LOCAL + REMOTE lectura / REPORTED CP014 | runtimeF histórico; sin deploymentnuevo | 2026-10-13 | LOCAL + REMOTE |
+| C-232 | Integration Gate remoto y baseline canónica siguiente | NOT VERIFIED | No push/nuevoPR/reviewGitHub/CI PR/merge/CIcanónica porQ42/Q43; develop010aab intacto, L1noTERMINAL | REMOTE operación detenida | merge_sha ninguno | 2026-10-13 | LOCAL |
+
+Resultado CP-015: 13 PASS, 3 NOT VERIFIED, 1 FAIL. El Quality Gate documental PASS no oculta fullaudit FAIL/IntegrationGateNV ni aprueba L2. Historia C-001…215 intacta.

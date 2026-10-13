@@ -1,6 +1,6 @@
 # Expediente Mecanet SaaS
 
-Última revisión: **2026-10-13**, zona de referencia America/La_Paz. Estado CP-014: **P1 EN CURSO**, única fase activa; P1-L1 **COMPLETADA con ocho PASS acotados**. P0 general **PARCIAL** bajo RG-001 y SaaS general **NOT APPROVED**. Baseline limitada DEC-058 preservada; Integration Gate preparado en local, PR/CI remoto/merge/CI canónica/baseline siguiente **NOT VERIFIED** y no autorizados en esta ejecución.
+Última revisión: **2026-10-13**, CP-015. P1 única fase activa, L1 conserva ocho PASS y Integration Gate **NOT VERIFIED**. Rama limpia/CI local preparados; remote safety Q-42 y audit completo Q-43 bloquean push/PR/merge. Próximo candidato P1-L2 de la rama fuente sigue SUGGESTED/NOT APPROVED; no implementación. P0 PARCIAL y SaaS general NOT APPROVED.
 
 ## Autoridad
 
@@ -15,9 +15,10 @@
 
 | Documento | Propósito | Estado |
 |---|---|---|
+| [Auditoría CP-015](audit/CP-015.md) | Integración limpia, triggers, CI/regresión y preparación focal siguiente | Vivo; remoto NOT VERIFIED y audit completo FAIL |
 | [PROJECT_STATE](PROJECT_STATE.md) | Fase, readiness, restricciones, trazabilidad | Vivo |
 | [INVENTORY](INVENTORY.md) | Estado real, brechas, infraestructura y fuentes | DETECTED / REPORTED identificados |
-| [CHECKPOINTS](CHECKPOINTS.md) | Adopción, decisiones, diseños y evidencia local | CP-001…013 históricos; CP-014 vivo, cierre L1 acotado e integración local preparada |
+| [CHECKPOINTS](CHECKPOINTS.md) | Adopción, decisiones, diseños y evidencia local | CP-001…014 históricos; CP-015 vivo, integración limpia local y siguiente candidato |
 | [ROADMAP](ROADMAP.md) | Dependencias y gates del trabajo | RG-001 APPROVED para el lote; resto conserva gates |
 | [DECISIONS](DECISIONS.md) | Registro de decisiones independientes | Mezcla explícita APPROVED / PROPOSED |
 | [TECH_DEBT](TECH_DEBT.md) | Riesgos y deuda con resolve-before | Vivo |
@@ -32,7 +33,7 @@
 | [Fuentes externas](evidence/SOURCES.md) | Proveedor, consulta, alcance y revalidación | VENDOR-DOCUMENTATION |
 | [Candidato de especificación](../.agentic/SPECIFICATION_CANDIDATE.md) | Candidato general v0.12-CP012; referencia histórica del fragmento limitado | SaaS general CANDIDATE / NOT APPROVED |
 | [Baseline protegida P1-L1](specs/P1-L1.md) | Versión v0.2-CP012/S-18, manifiesto L-01 y ocho cortes al Git aprobado | APPROVED DEC-058, alcance limitado |
-| [Auditoría CP-014](audit/CP-014.md) | Matriz integrada, negativas, admisión, ciclo, UI, aislamiento y trazabilidad por versión | Viva; ocho PASS L1, Integration Gate local preparado |
+| [Auditoría CP-014](audit/CP-014.md) | Matriz integrada, negativas, admisión, ciclo, UI, aislamiento y trazabilidad por versión | Histórica; ocho PASS L1, Integration Gate local preparado |
 | [Auditoría CP-013](audit/CP-013.md) | A/B/QA, implementación y pendientes de salida de ese checkpoint | Histórica; cierre L1 NOT VERIFIED entonces, restore cerrado conservado |
 | [Auditoría CP-011](audit/CP-011.md) | RG-001 aplicado, S-18 limitado, F14-L1/entorno/A/B separados | Histórico bf28c45; no aprobación del candidato Mongo |
 | [Auditoría CP-010](audit/CP-010.md) | Revisión técnica, QA real acotada y solicitudes | Histórica4b2f272; ochoPASS y límites conservados |

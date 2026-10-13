@@ -1,0 +1,23 @@
+{
+  "date_utc": "2026-10-13T16:09:55.864893+00:00",
+  "classification": "DETECTED",
+  "tool": "actionlint 1.7.12 Windows amd64",
+  "vendor_release": "https://github.com/rhysd/actionlint/releases/tag/v1.7.12",
+  "download": "https://github.com/rhysd/actionlint/releases/download/v1.7.12/actionlint_1.7.12_windows_amd64.zip",
+  "archive_sha256": "6e7241b51e6817ea6a047693d8e6fed13b31819c9a0dd6c5a726e1592d22f6e9",
+  "checksum_source": "https://github.com/rhysd/actionlint/releases/download/v1.7.12/actionlint_1.7.12_checksums.txt",
+  "integrity_limit": "Checksum published by vendor; not independent signature attestation",
+  "version_output": "1.7.12\ninstalled by downloading from release page\nbuilt with go1.26.1 compiler for windows/amd64",
+  "tested_code_sha": "a89cc2eee43a8f60f3464bea26a6ea4f9ddfc867",
+  "workflow_sha256": "181841fdea5d03d1be7250f3add04736b4b0f210a1fadb941458596d937ce719",
+  "arguments": [
+    "-shellcheck=",
+    "-pyflakes=",
+    ".github/workflows/p1-l1-verify.yml"
+  ],
+  "result": "PASS",
+  "exit_code": 0,
+  "stdout": "",
+  "stderr": "",
+  "limits": "Local syntax/expression/action metadata validation only. shellcheck/pyflakes unavailable and explicitly disabled. No GitHub runner, remote CI or deployment executed. Binary kept in ignored private directory."
+}

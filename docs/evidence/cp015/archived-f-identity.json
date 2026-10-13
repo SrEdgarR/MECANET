@@ -1,0 +1,27 @@
+{
+  "result": "PASS",
+  "provenance": "LOCAL archived CP014F manifest with recomputed canonical digest; no remote resources used",
+  "historicalArtifact": "sha256:5950ae7e519170ebaaf6cf8c99e9187c14b41f32779044e2829e8de5abbac0a6",
+  "historicalCodeSha": "b0f5e199e5df457d7f901ff3a3dca5ab3a8d5701",
+  "manifestSha256": "e70d5af1e9ede7648391dcdd9268cdbd7f2890e5cc1698dea62e704196cd9591",
+  "entryDigestRecomputed": "sha256:5950ae7e519170ebaaf6cf8c99e9187c14b41f32779044e2829e8de5abbac0a6",
+  "publicBundleEntries": [
+    {
+      "path": "client/dist-saas/assets/saas-DclqrR_W.css",
+      "bytes": 5686,
+      "sha256": "cdb3b3885a4aea0c72204e0c7952eb8ebd7522c2767529eb824b487582d54159"
+    },
+    {
+      "path": "client/dist-saas/assets/saas-DsjAOXZI.js",
+      "bytes": 158150,
+      "sha256": "846991792b1506d97706bca144f265874f79d17bba91d930dec4d45c3b7bbf04"
+    },
+    {
+      "path": "client/dist-saas/saas.html",
+      "bytes": 525,
+      "sha256": "ab3c357852ca07b8f4689fb5b23a8ddb093ab2bb4e0aa2d75ba98012b132ee51"
+    }
+  ],
+  "integrationCodeSha": "a89cc2eee43a8f60f3464bea26a6ea4f9ddfc867",
+  "interpretation": "Integrated SaaS compiled assets byte-exact to retained F artifact; prior browserC evidence remains component-specific, no new browser or deploy at integration SHA"
+}

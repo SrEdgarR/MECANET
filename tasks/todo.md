@@ -209,3 +209,14 @@ T15/T16 conservan casillas históricas; A/B/entrada ya están resueltas porDEC05
 - [ ] Acreditar baseline, gates y autorización del siguiente lote antes de implementarlo; no empezar otra fase por el cierre de L1.
 
 Verificación: [auditoría CP-014](../docs/audit/CP-014.md), evidencia de `docs/evidence/cp014/` y mapa derivado. Código F `b0f5e199e5df457d7f901ff3a3dca5ab3a8d5701`, artefacto `sha256:5950ae7e519170ebaaf6cf8c99e9187c14b41f32779044e2829e8de5abbac0a6`; cada ensayo conserva su propio SHA, no todos se trasladan a F. Reanudar solo la cohorte CP-014 conforme al [runbook](../tests/qa/README.md#reanudar-únicamente-la-cohorte-cp-014), nunca `up` indiscriminado de CP-013. Sin infraestructura compartida, Coolify gestor, datos reales, pagos/DGII, gasto, push/merge o cambios al Prompt Maestro.
+
+## T-19 — CP-015 integración Git y preparación focal siguiente
+
+- [x] Verificar cuenta/base/ancestry/PR1/triggers/políticas en lectura; conservar trabajo previo.
+- [x] Crear rama local limpia y snapshots normativos byte exactos SE-002, sin commitsPR1.
+- [x] Preparar CI sin deploy/secrets y ejecutar regresiones locales afectadas, patches de dos dependencias y hashes de bundle.
+- [ ] Resolver Q-42/Q-43 antes de push/PR/merge; CI PR/review GitHub/CI canónica NOT VERIFIED.
+- [x] Preparar un solo candidato siguiente y revisión independiente focal; corregir R1…3 antes de presentar A.
+- [ ] Obtener A/B exactas del nuevo alcance, acreditar base/Development/Environment y después implementar; P2 no iniciada.
+
+No despertar QA, cambiar infraestructura/Prompt, integrar PR1 o publicar por efecto lateral. El candidato siguiente permanece fuera del PR funcional L1, en la rama fuente de planificación.

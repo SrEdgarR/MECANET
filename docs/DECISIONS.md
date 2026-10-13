@@ -755,6 +755,12 @@ El texto siguiente documenta la propuesta al commit `4b2f272b197619c87e2dff0cd85
 - Aprueba los mecanismos SQL/Compose/QA privada de ese alcance y hace efectiva B al acreditar entradas; no otra autorización por corte. Permite crear recursos exclusivos temporales QA con preflight, límites y reversión. DEC-022/023 quedan aprobadas únicamente en su parte incorporada al lote; diseño público restante continúa propuesto.
 - No aprueba SaaS general, DNS/proxy compartido, publicación, datos reales, pagos/fiscalidad funcional, proveedores/gastos, push/merge. RG-001 mantiene dependencias antes de su uso. No transfiere PASS históricos.
 
+### SE-002 — Baseline portable y autorización de integración CP-015
+
+**SPEC ERRATA de representación / 2026-10-13 / LOCAL + HUMAN-ASSISTED.** La rama limpia excluye los commits antiguos del PR #1; el Git aprobado3b387b3 queda fuera de su ascendencia. Se conservan snapshots byte exactos de S-18/L-01, DEP-IND y los ocho cortes, con manifiesto fuente/blob/SHA256 en docs/specs/p1-l1-approved. No cambia la aprobación DEC-058, ninguna regla o garantía, ni se aprueba el SaaS general o entrada compartida de DEP-IND-04. La rama fuente se preserva. No nueva decisión de producto ni SC por este traslado.
+
+Fuente humana directa actual: adjunto CP-0151c09dd03-5335-4dee-abad-844c36aebdcc, recibido2026-10-13. Autoriza integración Git condicionada y preparación del siguiente lote; sustituye únicamente la prohibición Git de CP-014. No A/B de P1-L2, despliegue, cambios de Vercel/Coolify, contratación, DNS, producción ni migración. Safety Gate remoto no acreditado conserva la operación detenida; sus otras tareas locales continúan.
+
 ## DEC-059 — Dominio oficial futuro mecanet.app
 
 - Fecha/estado/tipo: 2026-10-12 / APPROVED / destino público; SPEC CHANGE SC-007.
