@@ -20,7 +20,7 @@ const inputs={adminConnection,fixture:qa.fixture,generation:qa.generation,connec
 async function snapshot(){
  const central=await pool('mecanet_control',async p=>{
   const present=(await p.query("SELECT to_regclass('saas.tenant_writer_state') IS NOT NULL AS migrated")).rows[0].migrated;
-  const directories=(await p.query('SELECT id,schema_version,data_epoch,writer_credential_version,writer_secret_ref FROM saas.tenant_directory ORDER BY id')).rows;
+  const directories=(await p.query(present?'SELECT id,purpose,schema_version,data_epoch,writer_credential_version,writer_secret_ref FROM saas.tenant_directory ORDER BY id':'SELECT id,purpose,schema_version,data_epoch,NULL::bigint AS writer_credential_version,NULL::text AS writer_secret_ref FROM saas.tenant_directory ORDER BY id')).rows;
   const states=present?(await p.query('SELECT * FROM saas.tenant_writer_state ORDER BY tenant_id')).rows:[];
   const migrations=present?(await p.query('SELECT version,source_hash,source_commit FROM saas.schema_migrations ORDER BY version')).rows:[];
   const grants=(await p.query('SELECT identity_id,tenant_id,action,status,version FROM saas.action_grants ORDER BY identity_id,tenant_id,action')).rows;

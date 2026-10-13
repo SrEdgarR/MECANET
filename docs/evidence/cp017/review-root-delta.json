@@ -1,0 +1,207 @@
+{
+  "schema": "mecanet-code-review-v1",
+  "reviewer": "/root/l2_ui",
+  "scope": "Revisión independiente del delta app/auth/pools/issuer/composition root y contratos service/coordinator/SQL; el revisor implementó UI, que queda fuera de esta revisión.",
+  "baseline": {
+    "path": ".agentic/NEXT_LOT_CANDIDATE.md",
+    "version": "v0.2-CP016",
+    "sha256": "ca975dc822c0bd5e872d3debe824abc536f662007513170f327727878ff3ac71",
+    "approvalSource": "A/B humanas registradas por root en DEC-061/062; no nueva aprobación por este revisor"
+  },
+  "verdict": "REQUEST_CHANGES",
+  "evidenceClass": "STATIC_SOURCE_REVIEW_AND_LOCAL_HTTP_WITH_FAKE_SQL",
+  "limitations": [
+    "No se ejecutó PostgreSQL real, SSH, infraestructura ni navegador durante esta revisión.",
+    "Los tests de loopback usan middleware real de cookie y SQL simulado; no prueban SHARE/EXCLUSIVE, COMMIT ni separación real de privilegios.",
+    "No hay PASS funcional SQL, aprobación de integración ni cierre de lote implícitos.",
+    "El primer defecto de logout se corrigió por root antes de poder ejecutar un RED de su ruta original. Se conserva evidencia estática; no se atribuye retrospectivamente un RED."
+  ],
+  "findings": [
+    {
+      "id": "CP017-ROOT-R1",
+      "classification": "REQUIRED",
+      "priority": "P1",
+      "file": "server/saas/app.js",
+      "line": 111,
+      "related": [
+        "server/saas/auth/authority.js:30",
+        "server/saas/writes/service.js:130"
+      ],
+      "title": "Logout pendiente no podía reanudar la misma barrera",
+      "trigger": "Primer logout registra LOGOUT durable pero el cierre local todavía espera un escritor y HTTP devuelve503. El segundo logout utilizaba authorize general, que convertía la restricción pendiente en401 antes de volver a consultar su ACK.",
+      "impact": "El cliente L1 trata401 de logout como salida terminada y pasa a login mientras sigue pendiente el cierre. No es evidencia de un efecto posterior a un ACK200: ese ACK200 todavía no se había producido. Es un defecto real de continuidad y de semántica de la recuperación A5.",
+      "requiredFix": "Contexto separado y sin capacidades empresariales que sólo reanuda el logout de su mismo SID/identidad/sessionRef; mantenerse503 hasta ACKNOWLEDGED. Propagar deadline al reemplazo de sesión y revalidar identidad al emitirla.",
+      "status": "CORRECTED_SOURCE_AND_LOCAL_TESTS",
+      "verification": "Root añadió logoutContext y sus usos en logout/login; cinco tests propios PASS. Intercalado real SHARE, primer503, retry pendiente y ACK tras cierre: NOT VERIFIED por este revisor, necesario antes de salida L2-A5."
+    },
+    {
+      "id": "CP017-ROOT-R2",
+      "classification": "REQUIRED",
+      "priority": "P1",
+      "file": "server/saas/app.js",
+      "line": 140,
+      "related": [
+        "server/saas/app.js:165",
+        "server/saas/app.js:169",
+        "server/saas/admission/index.js:61",
+        "server/saas/admission/index.js:74"
+      ],
+      "title": "Consulta de operaciones consumía cuotas de una empresa ajena antes de autorización",
+      "trigger": "Sesión companyA válida solicita operations o operations/:id con UUID tenantB. Sólo se verificaba propósito antes de admit; scopesFor debitaba QH y reservaba QC/Qt B antes del403/404 del servicio.",
+      "impact": "Agotamiento de cuotas de B desde A con un UUID conocido, sin necesitar permiso B ni abrir su DB empresarial. La ausencia de fuga de contenido no resuelve el aislamiento de recursos A8.",
+      "requiredFix": "tenantContext antes de admit y en su revalidate, manteniendo la comprobación de autor/acción original en el servicio.",
+      "status": "CORRECTED_SOURCE",
+      "verification": "Root cambió company(req) por contexto scoped. Negativas con ledger/tickets B inalterados: NOT VERIFIED por este revisor; necesarias antes de salida L2-A8."
+    },
+    {
+      "id": "CP017-ROOT-R3",
+      "classification": "REQUIRED",
+      "priority": "P1",
+      "file": "server/saas/auth/authority.js",
+      "line": 66,
+      "related": [
+        "server/saas/db/migrations/003-control-writers.sql:61"
+      ],
+      "title": "Nuevo contexto de logout consultaba una columna inexistente",
+      "trigger": "La primera versión del fix consultaba x.reason aunque write_restrictions define reason_code.",
+      "impact": "42703 en PostgreSQL real convertido en503, incluida la ruta sin restricción; no podía verificarse logout/login de la composición L2.",
+      "requiredFix": "Usar x.reason_code='LOGOUT'.",
+      "status": "CORRECTED_SOURCE_AND_LOCAL_TESTS",
+      "verification": "RED local4PASS/1FAIL por contrato de columna; tras fix cincoPASS. Compilación/ejecución SQL real permanece NOT VERIFIED por este revisor."
+    },
+    {
+      "id": "CP017-ROOT-R4",
+      "classification": "REQUIRED",
+      "priority": "P2",
+      "file": "server/saas/writes/service.js",
+      "line": 118,
+      "related": [
+        "server/saas/writes/service.js:119",
+        "server/saas/writes/validation.js:49"
+      ],
+      "title": "Filtro concurrente de acción podía declarar agotada una página con operaciones propias pendientes posteriores",
+      "trigger": "limit2; SQL selecciona create1,receive2,create3. Se revoca catalog.create antes de las revalidaciones JS; visible sólo receive2, fitPage produce nextCursor:null, aunque receive4 continúa autorizada después de create3.",
+      "impact": "La recuperación propia tras recarga pierde la continuación de operaciones todavía autorizadas. No permite reejecución ni filtra datos ajenos, pero incumple el recorrido paginado sin saltos.",
+      "requiredFix": "Conservar señal de más selección y escanear de forma acotada hasta prefijo autorizado/limit+1 o agotamiento real. No publicar fin de lista después de filtrar una selección parcial. Cursor público tras última fila incluida; si ninguna visible seguir con cursor interno o devolver503 al deadline, nunca fin inventado.",
+      "status": "OPEN",
+      "verification": "Hallazgo causal estático comunicado a root. Test de cambio de grant entre selección/revalidación con acciones mixtas y continuación: pendiente."
+    }
+  ],
+  "positiveObservations": [
+    "API entry separa readers/writers y no recibe maintenanceEntries/adminConnection/bootstrap; worker privado separa clock y maintenance. No handler público de reconciliación o promoción.",
+    "Entradas canónicas exactas, SQL parametrizado y funciones empresariales fijas. Producto de recepción está ligado al preimage/hash; no cuerpo expandido, identidad o DB elegidos por cliente.",
+    "DTO bigint como cadenas; guardas epoch/version sin Number inseguro en el nuevo protocolo. Timeout/COMMIT incierto conserva intención/reservas y no repite automáticamente el efecto.",
+    "Resultado y lista propios comprueban autor/acción original; empresa sin inventory.read puede disponer de acción escritora sin lectura implícita.",
+    "Cierre local conserva SHARE hasta COMMIT y prueba EXCLUSIVE antes del ACK; reapertura v+2 mantiene incompatibles las guardas antiguas. Esto es lectura de diseño/código, no PASS del intercalado SQL."
+  ],
+  "localTests": {
+    "runtime": "Node24.21.0 privado",
+    "command": "node --test tests/qa/cp017/logout.test.mjs tests/qa/cp017/routes.test.mjs tests/qa/cp017/pools.test.mjs",
+    "result": "PASS",
+    "tests": 10,
+    "failures": 0,
+    "realDatabase": false,
+    "scope": "cinco logout, tres rutas, dos pools; SQL simulado"
+  },
+  "requiredExitEvidence": [
+    {
+      "criterion": "L2-A5",
+      "resolveBefore": "salida del lote",
+      "status": "NOT VERIFIED",
+      "item": "Retry logout pendiente con SHARE real, ACK sólo tras close, owner tardío y no capacidades entregadas"
+    },
+    {
+      "criterion": "L2-A8",
+      "resolveBefore": "salida del lote",
+      "status": "NOT VERIFIED",
+      "item": "GET operations foreign sin ticket/ledger/pool B; fines/reservas bajo incertidumbre"
+    },
+    {
+      "criterion": "L2-A7",
+      "resolveBefore": "salida del lote",
+      "status": "NOT VERIFIED",
+      "item": "Paginación propia con revocación concurrente sin perder continuación autorizada"
+    }
+  ],
+  "infrastructureResourcesCreatedOrModified": 0,
+  "metadata": {
+    "reviewedAt": "2026-10-13T14:56:25.5235345-04:00",
+    "branch": "codex/p1-l2",
+    "sourceState": "uncommitted working tree; hashes identify reviewed inputs, not only HEAD",
+    "inputs": [
+      {
+        "sha256": "78e08a59d7b5712ffbfde90039cf09a7475de18a7ba919ce806198002abb5cc5",
+        "path": "server/saas/app.js"
+      },
+      {
+        "sha256": "97d5d9c1264044824358a5a46efe120d60ca98efcd280008827c1d5094b51ed6",
+        "path": "server/saas/auth/authority.js"
+      },
+      {
+        "sha256": "2d21352f612fea94591141017316d5c2adcf29d81b612f10d85758767cec449e",
+        "path": "server/saas/db/pools.js"
+      },
+      {
+        "sha256": "ce4a25db90432350030ad9d1b4583e8e1f3bc42ab0e0789496448e0380083cff",
+        "path": "tests/qa/issuer.js"
+      },
+      {
+        "sha256": "12de4e46370650177fc2bc7f13ccb0e323d9bbd5eecb72101ff4e49421a233bb",
+        "path": "tests/qa/cp017/entry.mjs"
+      },
+      {
+        "sha256": "9a5e7c3119ea164658ba1b35a9c192368ca5cd19b40b028a73a0e883751e6e1a",
+        "path": "tests/qa/cp017/worker.mjs"
+      },
+      {
+        "sha256": "688cd449152dc3422bc6cc2450e4edd200270f38670260e3c5a7f60a9933e45d",
+        "path": "server/saas/writes/service.js"
+      },
+      {
+        "sha256": "ae14c70b24eefca6a6f30b5981cc2dea56811ee16456fe7b44c03d9484ca39f4",
+        "path": "server/saas/writes/coordinator.js"
+      },
+      {
+        "sha256": "84f6138f357a2e58bb7ddd537dba38c1ec635775ae4a9d927c92a99b48e2bf13",
+        "path": "server/saas/writes/validation.js"
+      },
+      {
+        "sha256": "25f48036e0ba50ce8b7211c7399480b27f5380911c4ed41c4f9b0133bf5967a3",
+        "path": "server/saas/repositories/inventory.js"
+      },
+      {
+        "sha256": "4a4252ec79c5a39ca520d1bb74559a24fc58055d36efe1d40f86d3bdd8c674b2",
+        "path": "server/saas/db/migrations/003-control-writers.sql"
+      },
+      {
+        "sha256": "5fe454b89dbc5f821f742456deb2ebde08b9142048b2eac33ef9352eb87bce06",
+        "path": "server/saas/db/migrations/003-tenant-writers.sql"
+      },
+      {
+        "sha256": "6a29f8481d325256277a19f90132b0b35d1690aa461fb485c3f15330d6da929b",
+        "path": "server/saas/admission/index.js"
+      },
+      {
+        "sha256": "a10c8a37aeb90e952c2105e9142d5b69854ba517f3c25a1f32a4a5dae1fc1502",
+        "path": "server/saas/admission/policy.js"
+      },
+      {
+        "sha256": "b272a5a100648ec68d8d122683c551d24943979f152c6e5a5a5657514a56c704",
+        "path": "tests/qa/cp017/logout.test.mjs"
+      },
+      {
+        "sha256": "23300065ca609c2fbd0843e61734fe18e620d977c894b3b45359578037a32008",
+        "path": "tests/qa/cp017/routes.test.mjs"
+      },
+      {
+        "sha256": "d9ebece0256a09ad455b23d4a07fdc433432511b22a9304d01fdc2ea6e2e9d71",
+        "path": "tests/qa/cp017/pools.test.mjs"
+      },
+      {
+        "sha256": "ca975dc822c0bd5e872d3debe824abc536f662007513170f327727878ff3ac71",
+        "path": ".agentic/NEXT_LOT_CANDIDATE.md"
+      }
+    ],
+    "workingHead": "d609b816284d95320f748701351d789e8d1fcdf1"
+  }
+}

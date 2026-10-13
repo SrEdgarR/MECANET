@@ -81,6 +81,7 @@ export async function applyWriterMigration({adminConnection,fixture,generation,c
   });
   const centralSql=await readFile(new URL('../../../server/saas/db/migrations/003-control-writers.sql',import.meta.url));
   const tenantSql=await readFile(new URL('../../../server/saas/db/migrations/003-tenant-writers.sql',import.meta.url));
+  await checkpoint?.({connections,manifest,stage:'apply-central'});
   manifest.push(await migrateDb(admin,'mecanet_control','saas_owner','central',centralSql,async c=>{
     await c.query('GRANT USAGE ON SCHEMA saas TO saas_writer_maintenance');
     await c.query('GRANT SELECT,INSERT,UPDATE ON saas.tenant_writer_state,saas.write_control_quota,saas.write_intents,saas.write_growth_reservations,saas.write_projections,saas.write_transitions,saas.write_restrictions,saas.write_restriction_tenants TO saas_writer_maintenance');
@@ -102,6 +103,7 @@ export async function applyWriterMigration({adminConnection,fixture,generation,c
   if(failAfter==='central')throw new Error('QA_MIGRATION_FAULT_CENTRAL');
   for(let index=0;index<tenants.length;index++){
     const tenant=tenants[index],suffix=index===0?'a':'b';
+    await checkpoint?.({connections,manifest,stage:`apply-${suffix}`});
     manifest.push(await migrateDb(admin,tenant.dbName,`saas_owner_${suffix}`,'tenant',tenantSql,async c=>{
       await c.query('INSERT INTO inventory.writer_fence VALUES(1,$1,$2,2,1,\'CLOSED\')',[tenant.id,generation]);
       await c.query('INSERT INTO inventory.quota_state VALUES(1,1,(SELECT count(*) FROM catalog.products WHERE status=\'active\'),0,300,536870912)');

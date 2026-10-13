@@ -44,3 +44,35 @@ test('confirmed replay reads a durable result without running the writer',async(
 test('malformed input is rejected without any SQL effect',async()=>{
  const f=fixture();await assert.rejects(()=>f.service.write({...f.input,input:{sku:'A',name:'\u0000'}}),e=>e.code==='INVALID_WRITE'&&e.status===400);assert.equal(f.state().effects,0);assert.equal(f.state().state,'PENDING');
 });
+
+test('pending pagination continues past grants revoked between SQL selection and fresh authorization',async()=>{
+ const ids=[1,2,3,4,5].map(n=>`00000000-0000-4000-8000-${String(n).padStart(12,'0')}`);
+ const rows=ids.map((operation_id,index)=>({operation_id,action:index%2?'inventory.receive':'catalog.create',status:'UNKNOWN',created_at:'2026-10-13T00:00:00Z'}));
+ rows[4].action='inventory.receive';const cursors=[];
+ const controlPool={async connect(){return {release(){},async query(text,values){if(text.includes('own_pending_writes')){cursors.push(values[3]);return {rows:rows.filter(r=>!values[3]||r.operation_id>values[3]).slice(0,values[4])}}return {rows:[]}}}}};
+ const scope={user:{id:actorId},purpose:'company',generation,contextVersion:'1:fixture',descriptor:{tenantId,dataEpoch:'1'}};
+ const authority={tenantContext:async()=>scope,authorize:async({action})=>{if(action==='catalog.create')throw Object.assign(Error('ACCESS_DENIED'),{code:'ACCESS_DENIED',status:403});return scope}};
+ const service=createWriteService({controlPool,authority,ownerId,writerPools:{},readerPools:{}});
+ const reply=await service.listOperations({authorityContext:scope,sid:'x'.repeat(32),query:{cursor:null,limit:2}});
+ assert.deepEqual(reply.items.map(r=>r.operationId),[ids[1],ids[3]]);assert.equal(reply.nextCursor,ids[3]);assert.deepEqual(cursors,[null,ids[2]]);
+});
+
+test('a filtered page cannot claim exhaustion when its finite scan budget was consumed',async()=>{
+ let selected=0;
+ const controlPool={async connect(){return {release(){},async query(text,values){if(!text.includes('own_pending_writes'))return {rows:[]};return {rows:Array.from({length:values[4]},()=>({operation_id:`00000000-0000-4000-8000-${String(++selected).padStart(12,'0')}`,action:'catalog.create',status:'UNKNOWN',created_at:'2026-10-13T00:00:00Z'}))}}}}};
+ const scope={user:{id:actorId},purpose:'company',generation,descriptor:{tenantId,dataEpoch:'1'}};
+ const authority={tenantContext:async()=>scope,authorize:async()=>{throw Object.assign(Error('ACCESS_DENIED'),{code:'ACCESS_DENIED',status:403})}};
+ const service=createWriteService({controlPool,authority,ownerId,writerPools:{},readerPools:{}});
+ await assert.rejects(()=>service.listOperations({authorityContext:scope,sid:'x'.repeat(32),query:{cursor:null,limit:100}}),error=>error.code==='WRITE_UNCERTAIN');assert.equal(selected,404);
+});
+
+test('session-owned logout reentry polls the original durable restriction even after ordinary authority is closed',async()=>{
+ const restrictionId='99999999-9999-4999-8999-999999999999';let acknowledged=false,requests=0,authorizeCalls=0;const polled=[];
+ const controlPool={async connect(){return {release(){},async query(text,values){if(text.includes('request_session_restriction')){requests++;return {rows:[{id:restrictionId,status:'PENDING'}]}}if(text.includes('own_session_restriction')){polled.push(values[0]);return {rows:[{status:acknowledged?'ACKNOWLEDGED':'PENDING'}]}}return {rows:[]}}}}};
+ const authority={authorize:async()=>{authorizeCalls++;throw Object.assign(Error('SESSION_EXPIRED'),{code:'SESSION_EXPIRED',status:401})}};
+ const service=createWriteService({controlPool,authority,ownerId,writerPools:{},readerPools:{}});
+ const ctx={user:{id:actorId},purpose:'company',generation,logoutPending:true};
+ await assert.rejects(()=>service.requestSessionRevocation({sid:'x'.repeat(32),ctx,deadline:performance.now()+12}),error=>error.code==='WRITE_UNCERTAIN');
+ acknowledged=true;assert.equal(await service.requestSessionRevocation({sid:'x'.repeat(32),ctx}),true);
+ assert.equal(requests,2);assert(polled.length>=2);assert(polled.every(id=>id===restrictionId));assert.equal(authorizeCalls,0);
+});
