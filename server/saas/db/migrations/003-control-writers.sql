@@ -438,7 +438,20 @@ BEGIN
  RETURN true;
 END $$;
 
-REVOKE ALL ON ALL FUNCTIONS IN SCHEMA saas FROM PUBLIC;
+-- Other L1 functions have independent owners. Revoke only this migration's
+-- fixed functions; a schema-wide revoke would touch measurement ownership.
+REVOKE ALL ON FUNCTION saas.write_decimal19(bigint),saas.write_tag32(text),saas.write_utc24(timestamptz),
+ saas.write_logical_cost(text,jsonb),saas.write_operation_cost(uuid,uuid),saas.write_barrier_cost(),
+ saas.write_transition(uuid,uuid,uuid,text,text,text),saas.write_guards_immutable(),
+ saas.validate_write_authority(uuid,text,uuid,text,boolean),
+ saas.register_write_intent(uuid,uuid,text,uuid,text,bigint,text,uuid),saas.claim_write_intent(uuid,uuid,text,uuid,uuid),
+ saas.project_write_result(uuid,uuid,uuid,text,text,bigint,bigint),saas.mark_write_unknown(uuid,uuid,uuid),
+ saas.finish_write_resources(uuid,uuid,uuid,uuid,boolean,boolean),saas.settle_closed_write_resources(uuid,uuid,uuid),
+ saas.own_write_intent(uuid,uuid,text,uuid),saas.own_pending_writes(uuid,text,uuid,uuid,integer),
+ saas.own_write_projection(uuid,uuid,text,uuid),saas.writer_readiness(uuid),
+ saas.request_write_restriction(uuid,uuid,uuid,uuid,text,uuid,text),saas.request_session_restriction(text,uuid,uuid,uuid),
+ saas.own_session_restriction(uuid,text,uuid,uuid),saas.lock_issuer_identity(uuid,text,bigint),saas.revoke_session(text,uuid,uuid)
+ FROM PUBLIC;
 REVOKE ALL ON saas.tenant_writer_state,saas.write_control_quota,saas.write_intents,saas.write_growth_reservations,
  saas.write_projections,saas.write_transitions,saas.write_restrictions,saas.write_restriction_tenants FROM PUBLIC;
 GRANT EXECUTE ON FUNCTION saas.register_write_intent(uuid,uuid,text,uuid,text,bigint,text,uuid),

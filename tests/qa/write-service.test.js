@@ -4,7 +4,7 @@ import {createWriteService} from '../../server/saas/writes/service.js';
 
 const tenantId='aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa',actorId='bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb',generation='cccccccc-cccc-4ccc-8ccc-cccccccccccc',operationId='dddddddd-dddd-4ddd-8ddd-dddddddddddd',ownerId='eeeeeeee-eeee-4eee-8eee-eeeeeeeeeeee',ticketId='ffffffff-ffff-4fff-8fff-ffffffffffff';
 const result={operationId,state:'CONFIRMED',productId:actorId,movementId:null,onHand:'0',balanceVersion:'1',dataEpoch:'1'};
-function fixture({uncertain=false,preimagePause=false,projectionFailure=false,replay=false,claimConflict=false}={}){
+function fixture({uncertain=false,preimagePause=false,projectionFailure=false,replay=false,claimConflict=false,expiredBeforeFunction=false,rollbackFailure=false}={}){
  let effects=0,sqlEnded=false,responseEnded=false,state=replay?'CONFIRMED':'PENDING',retained=true;
  const row=()=>({operation_id:operationId,tenant_id:tenantId,actor_id:actorId,generation,data_epoch:'1',writer_version:'1',status:state,owner_id:ownerId,action:'catalog.create',ticket_id:ticketId});
  const control={async connect(){return {async query(text){
@@ -17,10 +17,11 @@ function fixture({uncertain=false,preimagePause=false,projectionFailure=false,re
  const writerPools={async withTenant(_descriptor,callback){return callback({async query(command){const text=typeof command==='string'?command:command.text;
   if(text.includes('inventory.create_product')){effects++;return {rows:[{result,logical_delta:'1024',result_hash:'a'.repeat(64),replay:false}]}}
   if(text==='COMMIT'){sqlEnded=true;if(uncertain)throw Object.assign(new Error('ACK lost'),{code:'08006'})}
+  if(text==='ROLLBACK'&&rollbackFailure)throw Object.assign(new Error('ROLLBACK acknowledgement lost'),{code:'08006'});
   return {rows:[]};}})}};
  const readerPools={async withTenant(_d,callback){return callback({async query(command){const text=typeof command==='string'?command:command.text;return {rows:text.includes('operation_result')?[{result,logical_delta:'1024',result_hash:'a'.repeat(64),replay:true}]:[]}}})}};
  const authorityContext={user:{id:actorId},purpose:'company',generation,descriptor:{tenantId,dataEpoch:1,schemaVersion:2},writerDescriptor:{tenantId,dataEpoch:1,schemaVersion:2}};
- const service=createWriteService({controlPool:control,writerPools,readerPools,authority:{async authorize(){return authorityContext}},ownerId,checkpoint:async name=>{if(preimagePause&&name==='write.beforeTenant')throw new Error('process failed before SQL')}});
+ const service=createWriteService({controlPool:control,writerPools,readerPools,authority:{async authorize(){return authorityContext}},ownerId,checkpoint:async name=>{if(preimagePause&&name==='write.beforeTenant')throw new Error('process failed before SQL');if(expiredBeforeFunction&&name==='write.beforeFunction')throw Object.assign(Error('SESSION_EXPIRED'),{code:'SESSION_EXPIRED',status:401})}});
  const input={authorityContext,sid:'x'.repeat(32),action:'catalog.create',input:{sku:'A',name:'Example'},operationId,dataEpoch:'1',ticketId,deadline:performance.now()+8000};
  return {service,input,setResponseEnded(){responseEnded=true},state:()=>({effects,state,retained})};
 }
@@ -43,6 +44,17 @@ test('confirmed replay reads a durable result without running the writer',async(
 });
 test('malformed input is rejected without any SQL effect',async()=>{
  const f=fixture();await assert.rejects(()=>f.service.write({...f.input,input:{sku:'A',name:'\u0000'}}),e=>e.code==='INVALID_WRITE'&&e.status===400);assert.equal(f.state().effects,0);assert.equal(f.state().state,'PENDING');
+});
+
+test('an unacknowledged rollback cannot turn a session rejection into a positive SQL end',async()=>{
+ const f=fixture({expiredBeforeFunction:true,rollbackFailure:true});
+ await assert.rejects(()=>f.service.write(f.input),error=>error.code==='WRITE_UNCERTAIN'&&error.status===503);
+ assert.deepEqual(f.state(),{effects:0,state:'UNKNOWN',retained:true});
+});
+
+test('a positively rolled back session rejection may retain its sanitized 401',async()=>{
+ const f=fixture({expiredBeforeFunction:true});await assert.rejects(()=>f.service.write(f.input),error=>error.code==='SESSION_EXPIRED'&&error.status===401);
+ assert.deepEqual(f.state(),{effects:0,state:'UNKNOWN',retained:true});
 });
 
 test('pending pagination continues past grants revoked between SQL selection and fresh authorization',async()=>{

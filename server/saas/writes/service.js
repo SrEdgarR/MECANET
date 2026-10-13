@@ -80,7 +80,13 @@ export function createWriteService({controlPool,authority,writerPools,readerPool
      await checkpoint('write.afterFunction',{tenantId:canonical.tenantId,operationId});
      const row=result.rows[0];if(!row)throw failure('WRITE_RESULT_INVALID');validateResult(row.result);
      committing=true;await command('COMMIT');await checkpoint('write.afterTenantCommit',{tenantId:canonical.tenantId,operationId});budget();return row;
-    }catch(error){if(!committing){try{await command('ROLLBACK')}catch{}}throw error}
+    }catch(error){
+     if(!committing){
+      try{await command('ROLLBACK')}
+      catch{throw failure('WRITE_UNCERTAIN')}
+     }
+     throw error;
+    }
    },{deadline});
    const result=validateResult(local.result);
    if(result.operationId!==operationId||result.dataEpoch!==canonical.dataEpoch||typeof local.result_hash!=='string'||!/^[a-f0-9]{64}$/.test(local.result_hash))throw failure('WRITE_RESULT_INVALID');

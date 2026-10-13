@@ -4,7 +4,7 @@ import {randomUUID} from 'node:crypto';
 import {setTimeout as sleep} from 'node:timers/promises';
 const uuid=/^[0-9a-f-]{36}$/;
 const instances=new Set(['api1','api2','worker']);
-const stages=new Set(['write.intentDurable','write.beforeTenant','write.beforeFunction','write.afterFunction','write.afterTenantCommit','write.projected','restriction.centralClosed','restriction.localClosed','restriction.intentResolved','restriction.effectsClosed','restriction.beforeReopen','restriction.localOpened','restriction.localReopened','restriction.acknowledged','admission.started','admission.bytes']);
+const stages=new Set(['write.intentDurable','write.beforeTenant','write.beforeFunction','write.afterFunction','write.afterTenantCommit','write.projected','restriction.centralClosed','restriction.localClosed','restriction.intentResolved','restriction.effectsClosed','restriction.beforeReopen','restriction.localOpened','restriction.localReopened','restriction.resourcesSettled','restriction.operationalResumed','restriction.acknowledged','admission.started','admission.bytes']);
 const folder=instance=>{if(!instances.has(instance))throw Error('QA_FAULT_TARGET_REJECTED');return '/run/qa-faults/'+instance};
 async function json(file){try{return JSON.parse(await readFile(file,'utf8'))}catch(e){if(e.code==='ENOENT')return null;throw Error('QA_FAULT_CONTROL_INVALID')}}
 export function createQaFaults({instance,owner}){

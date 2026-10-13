@@ -1,5 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import {readFile} from 'node:fs/promises';
 import { applyWriterMigration } from './migrate.mjs';
 // Deliberately synthetic placeholders; rejected before any connection or role.
 const connection={host:'postgres',port:5432,database:'postgres',user:'qa_bootstrap',password:'fiction-only-not-a-credential',ssl:{ca:'fiction-only-ca',rejectUnauthorized:true}};
@@ -14,4 +15,12 @@ test('writer migrator requires the exact synthetic A/B cohort rather than arbitr
 });
 test('unknown fault modes, generation and provenance reject before a network operation',async()=>{
  for(const override of [{failAfter:'truncate'},{generation:'not-a-generation'},{sourceCommit:'not-a-sha'}])await assert.rejects(applyWriterMigration({...inputs,...override}),/WRITER_MIGRATION_PREFLIGHT_REQUIRED/);
+});
+test('writer migration revokes only its declared functions and preserves the foreign L1 measurement owner',async()=>{
+ const sql=await readFile(new URL('../../../server/saas/db/migrations/003-control-writers.sql',import.meta.url),'utf8');
+ assert.equal(/REVOKE\s+ALL\s+ON\s+ALL\s+FUNCTIONS/i.test(sql),false,'No schema-wide revocation may touch an independent L1 owner');
+ const declared=[...sql.matchAll(/CREATE (?:OR REPLACE )?FUNCTION (saas\.[a-z_]+)\(([^)]*)\)/g)].map(([,name,args])=>`${name}(${args.split(',').filter(Boolean).map(a=>a.trim().split(/\s+/).at(-1)).join(',')})`);
+ const revoked=[...sql.matchAll(/REVOKE ALL ON FUNCTION ([\s\S]*?) FROM PUBLIC;/g)].flatMap(([,body])=>[...body.matchAll(/saas\.[a-z_]+\([^)]*\)/g)].map(([signature])=>signature.replace(/\s/g,'')));
+ assert.deepEqual([...new Set(revoked)].sort(),declared.sort());
+ assert(!revoked.some(signature=>signature.startsWith('saas.measure_database_sizes(')));
 });
