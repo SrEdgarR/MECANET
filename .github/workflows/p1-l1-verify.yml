@@ -45,9 +45,6 @@ jobs:
       - name: Install locked backend dependencies without lifecycle scripts
         run: npm ci --prefix server/saas --ignore-scripts --no-audit --no-fund
 
-      - name: Install locked frontend dependencies without lifecycle scripts
-        run: npm ci --prefix client --ignore-scripts --no-audit --no-fund
-
       - name: Check JavaScript syntax
         run: node scripts/ci/p1-l1.mjs syntax
 
@@ -57,18 +54,18 @@ jobs:
       - name: Check pure QA controller regressions
         run: python3 -X utf8 tests/qa/cp014/host-regression.py
 
-      - name: Verify the isolated SaaS frontend
-        run: node scripts/ci/p1-l1.mjs frontend
+      - name: Verify the SaaS lane boundaries and tooling isolation negatives
+        run: node --test scripts/ci/saas-toolchain.test.mjs scripts/ci/tooling-isolation.test.mjs
 
-      - name: Verify the existing receipt sanitizer after its dependency fix
-        run: node scripts/ci/p1-l1.mjs sanitizer
+      - name: Verify locked SaaS lane, guarded tests, build and complete dependency audit
+        run: node scripts/ci/saas-toolchain.mjs verify
+
+      - name: Compare the compiled SaaS assets with the archived verified release
+        run: node scripts/ci/p1-l1.mjs assets
 
       - name: Audit backend runtime dependencies
         run: npm audit --prefix server/saas --omit=dev
 
-      - name: Audit frontend runtime dependencies
-        run: npm audit --prefix client --omit=dev
-
-      - name: Audit frontend tooling dependencies as well
+      - name: Audit all backend dependencies as well
         if: ${{ !cancelled() }}
-        run: npm audit --prefix client
+        run: npm audit --prefix server/saas

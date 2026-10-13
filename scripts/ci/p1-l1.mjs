@@ -1,5 +1,7 @@
 // P1-L1 local contracts only. This runner never loads .env or QA connection files.
-import { readdirSync } from 'node:fs';
+import { readFileSync, readdirSync } from 'node:fs';
+import assert from 'node:assert/strict';
+import { createHash } from 'node:crypto';
 import { resolve, relative } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { spawnSync } from 'node:child_process';
@@ -71,12 +73,29 @@ switch (mode) {
     run(['--test', '--test-reporter=spec', ...tests]);
     break;
   case 'frontend':
-    run(['client/node_modules/vitest/vitest.mjs', 'run', '--config', 'client/vite.saas.config.js']);
-    run(['client/node_modules/vite/bin/vite.js', 'build', '--config', 'client/vite.saas.config.js'], { NODE_ENV: 'production' });
-    break;
   case 'sanitizer':
-    run(['client/node_modules/vitest/vitest.mjs', 'run', '--config', 'scripts/ci/safe-documents.vitest.config.mjs']);
+    // DEC-060 / SC-008: both entry points use the locked SaaS lane, never the
+    // legacy client toolchain. Verification includes tests, build and full audit.
+    run(['scripts/ci/saas-toolchain.mjs', 'verify']);
     break;
+  case 'assets': {
+    const oracle = JSON.parse(readFileSync(resolve(root, 'docs/evidence/cp015/archived-f-identity.json'), 'utf8'));
+    const allowed = new Set([
+      'client/dist-saas/saas.html',
+      'client/dist-saas/assets/saas-DsjAOXZI.js',
+      'client/dist-saas/assets/saas-DclqrR_W.css',
+    ]);
+    assert.equal(oracle.publicBundleEntries.length, allowed.size);
+    assert.equal(oracle.entryDigestRecomputed, oracle.historicalArtifact);
+    for (const entry of oracle.publicBundleEntries) {
+      assert.equal(allowed.delete(entry.path), true, 'archived asset path must be unique and allowlisted');
+      const actual = createHash('sha256').update(readFileSync(resolve(root, entry.path))).digest('hex');
+      assert.equal(actual, entry.sha256, `SaaS build differs from archived F: ${entry.path}`);
+    }
+    assert.equal(allowed.size, 0);
+    console.log('PASS: three compiled SaaS assets equal archived F; no new PostgreSQL/browser/restore run');
+    break;
+  }
   default:
-    throw new Error('USE_PROVENANCE_SYNTAX_TEST_FRONTEND_OR_SANITIZER');
+    throw new Error('USE_PROVENANCE_SYNTAX_TEST_FRONTEND_SANITIZER_OR_ASSETS');
 }

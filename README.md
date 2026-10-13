@@ -2,6 +2,10 @@
 
 Sistema de punto de venta (POS) para talleres mecánicos y tiendas de autopartes. Incluye facturación, inventario, clientes, proveedores, caja, cotizaciones, devoluciones, compras, reportes y administración de usuarios.
 
+La fundación privada **Mecanet SaaS P1-L1** utiliza PostgreSQL, React/Express y Docker Compose propio, independiente de Coolify. Su [baseline](docs/specs/P1-L1.md) limita el alcance; la descripción POS y los comandos Mongo de este README corresponden al producto heredado.
+
+Para verificar y compilar el frontend SaaS con Node24.21.0/npm11.9.0: `node scripts/ci/saas-toolchain.mjs verify`. SC-008 usa un lock propio, fuentes copiadas por allowlist, pruebas y auditoría completa estricta; genera `client/dist-saas`. La auditoría del tooling del cliente heredado permanece FAIL y debe resolverse antes de utilizar esos comandos en ese recorrido. No arranca servicios, carga .env o despliega.
+
 ## ✨ Características
 
 - 💰 **Punto de venta y caja** con descuentos, impuestos y varios métodos de pago

@@ -121,11 +121,15 @@ Las pruebas locales sin DB se identifican por la lista exacta registrada en
 `docs/evidence/cp013/local-tests-final.txt`; frontend aislado:
 
 ```powershell
-npm --prefix client run test:run -- src/saas
+node scripts/ci/saas-toolchain.mjs verify
 ```
 
 El runtime y npm exactos deben estar acreditados; no usar estos comandos como
 autorización para instalar herramientas globales o apuntar a otro entorno.
+SC-008/DEC-060 usa manifiesto/lock propios y fuentes versionadas por allowlist;
+incluye 29 pruebas SaaS, tres del sanitizador, build y auditoría completa estricta,
+sin .env o servicios QA. El cliente heredado y su audit FAIL permanecen separados;
+no usar su tooling como fallback. Los PASS históricos conservan su SHA original.
 
 `infra/bootstrap-host.py` exige destino nuevo y propiedad exacta; no es un reset.
 `prepare.mjs` crea únicamente la fixture vacía autorizada una vez.
