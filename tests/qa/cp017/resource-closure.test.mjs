@@ -1,9 +1,14 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {validateHostEndProof} from './resource-closure.mjs';
+import {validateHostEndProof,OWN_RESOURCE_ROW_SQL} from './resource-closure.mjs';
 const generation='aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa',sourceSha='a'.repeat(40),owner='bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb';
 const context={closureSourceSha:sourceSha,generation,instance:'api1',acceptedArtifacts:[{codeSha:sourceSha,digest:'a'.repeat(64)}]};
 const proof={project:'mecanet-qa-p1l2-cp017',sourceSha,generation,instance:'api1',owner,containerId:'c'.repeat(64),running:false,exitCode:0,containerStoppedAt:new Date().toISOString(),httpClosed:true,writerApplicationName:`mecanet-writer:${owner}`,sqlOwnerAbsent:true,operations:[{tenantId:'11111111-1111-4111-8111-111111111111',operationId:'dddddddd-dddd-4ddd-8ddd-dddddddddddd',ticketId:'eeeeeeee-eeee-4eee-8eee-eeeeeeeeeeee'}]};
+test('resource lookup binds the reservation to the intent explicitly after the ticket join',()=>{
+ assert.match(OWN_RESOURCE_ROW_SQL,/JOIN saas\.write_growth_reservations r ON r\.tenant_id=i\.tenant_id AND r\.operation_id=i\.operation_id/);
+ assert.doesNotMatch(OWN_RESOURCE_ROW_SQL,/\bUSING\s*\(/i);
+ assert.match(OWN_RESOURCE_ROW_SQL,/WHERE i\.tenant_id=\$1 AND i\.operation_id=\$2 AND i\.ticket_id=\$3$/);
+});
 test('host proof preserves exact own cohort, process, generation, source and operation/ticket association',()=>{
  assert.equal(validateHostEndProof(proof,context),proof);
  assert.equal(validateHostEndProof({...proof,instance:'api2'},{...context,instance:'api2'}).instance,'api2');

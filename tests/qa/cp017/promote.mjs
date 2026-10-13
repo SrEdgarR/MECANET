@@ -32,7 +32,7 @@ const coordinator=createRestrictiveCoordinator({controlPool:pool,maintenancePool
    const central=(await pool.query('SELECT w.*,d.writer_secret_ref,d.writer_credential_version,d.schema_version,d.data_epoch AS directory_epoch FROM saas.tenant_writer_state w JOIN saas.tenant_directory d ON d.id=w.tenant_id WHERE w.tenant_id=$1',[guard.tenant_id])).rows[0];
    assert.equal(central.state,'CLOSED');assert.equal(central.generation,generation);assert.equal(central.data_epoch,String(descriptor(guard).dataEpoch));assert.equal(central.directory_epoch,central.data_epoch);assert.equal(central.schema_version,2);
    const writer=qa.writerEntries[central.writer_secret_ref];assert(writer);assert.equal(writer.credentialVersion,String(central.writer_credential_version));assert.equal(writer.dataEpoch,central.data_epoch);
-   const debt=(await pool.query("SELECT count(*)::int AS n FROM saas.write_growth_reservations WHERE tenant_id=$1 AND status<>'RELEASED'",[guard.tenant_id])).rows[0];assert.equal(debt.n,0);
+   const debt=(await pool.query("SELECT count(*)::int AS n FROM saas.write_growth_reservations WHERE tenant_id=$1 AND status<>'SETTLED'",[guard.tenant_id])).rows[0];assert.equal(debt.n,0);
    await inspectTenant(guard.tenant_id,async client=>{
     const rows=(await client.query('SELECT source_hash FROM catalog.schema_migrations WHERE version=4')).rows;assert.equal(rows[0]?.source_hash,fixedHash);
     const local=(await client.query('SELECT f.*,q.logical_bytes,inventory.logical_usage() AS actual FROM inventory.writer_fence f JOIN inventory.quota_state q USING(id)')).rows[0];
