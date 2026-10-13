@@ -1,0 +1,17 @@
+{"sha":"2cd4494c9b48e65864784a6af7c110dc7d410c0e","at":"2026-10-13T12:35:02.014Z","node":"v24.21.0","environment":"LOCAL Windows x64; SQL projection double","exitCode":0}
+✔ projection is an explicit allowlist; business content and secrets cannot survive (1.5741ms)
+✔ unavailable measurement has null value, never fictitious zero (0.1375ms)
+✔ scope/metric/source/quality/cardinality and tenant CPU attribution are denied (0.2797ms)
+✔ buffer is finite during publisher failure and records coverage loss (0.7855ms)
+✔ flush is bounded and serial; uncertain delivery reuses the same batch identity (0.4183ms)
+✔ only one asynchronous sample can run and stop prevents new collection (0.2353ms)
+✔ a new process sampler marks its first CPU and RSS samples as a discontinuity (0.6178ms)
+✔ projection readers distinguish a restarted producer from its preceding generation (0.3219ms)
+ℹ tests 8
+ℹ suites 0
+ℹ pass 8
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 72.8219

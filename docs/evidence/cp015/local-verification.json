@@ -1,0 +1,622 @@
+{
+  "checkpoint": "CP-015",
+  "at": "2026-10-13T15:57:59.542648+00:00",
+  "provenance": "LOCAL Windowsx64 Node24.21.0/npm11.9.0; no PostgreSQL, browser or QA invoked",
+  "testedCodeSha": "a89cc2eee43a8f60f3464bea26a6ea4f9ddfc867",
+  "sourceCheckpoint": "9fcdd9540848edbbdef1cfc94667491c9ab2ba92",
+  "checks": [
+    {
+      "id": "provenance",
+      "exitCode": 0,
+      "state": "PASS",
+      "testedCodeSha": "a89cc2eee43a8f60f3464bea26a6ea4f9ddfc867",
+      "evidence": "provenance.txt"
+    },
+    {
+      "id": "backend",
+      "exitCode": 0,
+      "state": "PASS",
+      "testedCodeSha": "a89cc2eee43a8f60f3464bea26a6ea4f9ddfc867",
+      "evidence": "backend.txt"
+    },
+    {
+      "id": "syntax",
+      "exitCode": 0,
+      "state": "PASS",
+      "testedCodeSha": "a89cc2eee43a8f60f3464bea26a6ea4f9ddfc867",
+      "evidence": "syntax.txt"
+    },
+    {
+      "id": "frontend",
+      "exitCode": 0,
+      "state": "PASS",
+      "testedCodeSha": "a89cc2eee43a8f60f3464bea26a6ea4f9ddfc867",
+      "evidence": "frontend.txt"
+    },
+    {
+      "id": "sanitizer",
+      "exitCode": 0,
+      "state": "PASS",
+      "testedCodeSha": "a89cc2eee43a8f60f3464bea26a6ea4f9ddfc867",
+      "evidence": "sanitizer.txt"
+    },
+    {
+      "id": "controller",
+      "exitCode": 0,
+      "state": "PASS",
+      "testedCodeSha": "a89cc2eee43a8f60f3464bea26a6ea4f9ddfc867",
+      "evidence": "controller.txt"
+    },
+    {
+      "id": "backend-runtime-audit",
+      "exitCode": 0,
+      "state": "PASS",
+      "testedCodeSha": "a89cc2eee43a8f60f3464bea26a6ea4f9ddfc867",
+      "evidence": "backend-runtime-audit.json"
+    },
+    {
+      "id": "frontend-runtime-audit",
+      "exitCode": 0,
+      "state": "PASS",
+      "testedCodeSha": "a89cc2eee43a8f60f3464bea26a6ea4f9ddfc867",
+      "evidence": "frontend-runtime-audit.json"
+    },
+    {
+      "id": "frontend-full-audit",
+      "exitCode": 1,
+      "state": "FAIL",
+      "testedCodeSha": "a89cc2eee43a8f60f3464bea26a6ea4f9ddfc867",
+      "evidence": "frontend-full-audit.json"
+    }
+  ],
+  "sameObjects": [
+    {
+      "path": "client/saas.html",
+      "sourceBlob": "75bfaae011080b7f7c54d4a853a55de2d0f9340f",
+      "integrationBlob": "75bfaae011080b7f7c54d4a853a55de2d0f9340f"
+    },
+    {
+      "path": "client/src/saas/Catalog.jsx",
+      "sourceBlob": "47bd2a19e70bafc26d1f2ad9a5e5bab47f11d5f5",
+      "integrationBlob": "47bd2a19e70bafc26d1f2ad9a5e5bab47f11d5f5"
+    },
+    {
+      "path": "client/src/saas/LoginForm.jsx",
+      "sourceBlob": "268cc4b609ac48abbd3dfb29dd5cf791a7209c58",
+      "integrationBlob": "268cc4b609ac48abbd3dfb29dd5cf791a7209c58"
+    },
+    {
+      "path": "client/src/saas/RetryAccess.jsx",
+      "sourceBlob": "a6dc2a0c88026f5e7899e8c99334cb54963de849",
+      "integrationBlob": "a6dc2a0c88026f5e7899e8c99334cb54963de849"
+    },
+    {
+      "path": "client/src/saas/RetryAccess.test.jsx",
+      "sourceBlob": "8c7a14644b809c300eb88b54b794d6bbef3c0c8f",
+      "integrationBlob": "8c7a14644b809c300eb88b54b794d6bbef3c0c8f"
+    },
+    {
+      "path": "client/src/saas/SaasApp.jsx",
+      "sourceBlob": "0217824635829395604cabc40b2eee207055ca76",
+      "integrationBlob": "0217824635829395604cabc40b2eee207055ca76"
+    },
+    {
+      "path": "client/src/saas/SaasApp.test.jsx",
+      "sourceBlob": "c7f3fe4c45a09435399b0d37de73efd884d57392",
+      "integrationBlob": "c7f3fe4c45a09435399b0d37de73efd884d57392"
+    },
+    {
+      "path": "client/src/saas/client.js",
+      "sourceBlob": "e926726d063d64f3c7ec883ffe26d9e98f7c81b1",
+      "integrationBlob": "e926726d063d64f3c7ec883ffe26d9e98f7c81b1"
+    },
+    {
+      "path": "client/src/saas/client.test.js",
+      "sourceBlob": "75c2c1a14f9bf7e87d562f55d7749fce704ea1d6",
+      "integrationBlob": "75c2c1a14f9bf7e87d562f55d7749fce704ea1d6"
+    },
+    {
+      "path": "client/src/saas/main.jsx",
+      "sourceBlob": "3c08b6dd07d4bc614c53d1d15836267072db3c67",
+      "integrationBlob": "3c08b6dd07d4bc614c53d1d15836267072db3c67"
+    },
+    {
+      "path": "client/src/saas/retry.test.js",
+      "sourceBlob": "dfb5337e5bbc9ef1f5a6a53088f305919822093f",
+      "integrationBlob": "dfb5337e5bbc9ef1f5a6a53088f305919822093f"
+    },
+    {
+      "path": "client/src/saas/styles.css",
+      "sourceBlob": "64fa0b556645f7c68c3e5390a0005817d064f024",
+      "integrationBlob": "64fa0b556645f7c68c3e5390a0005817d064f024"
+    },
+    {
+      "path": "client/src/saas/test-setup.js",
+      "sourceBlob": "2e9621ee634a8db2e737c4d95b5ab1e48a6151eb",
+      "integrationBlob": "2e9621ee634a8db2e737c4d95b5ab1e48a6151eb"
+    },
+    {
+      "path": "client/vite.saas.config.js",
+      "sourceBlob": "2c3ee723653ffd38f053c8f88d1ca481f92aa307",
+      "integrationBlob": "2c3ee723653ffd38f053c8f88d1ca481f92aa307"
+    },
+    {
+      "path": "server/saas/admission/clock.js",
+      "sourceBlob": "4026f9c0b5825b7ed2109f109f27b4533a15c8ae",
+      "integrationBlob": "4026f9c0b5825b7ed2109f109f27b4533a15c8ae"
+    },
+    {
+      "path": "server/saas/admission/diagnostics.js",
+      "sourceBlob": "2a6ed3f29d138f209f1ef7962c7b6c84bfe3922f",
+      "integrationBlob": "2a6ed3f29d138f209f1ef7962c7b6c84bfe3922f"
+    },
+    {
+      "path": "server/saas/admission/index.js",
+      "sourceBlob": "445c9290071ac8141b9083ec29c62f892dfaeeb4",
+      "integrationBlob": "445c9290071ac8141b9083ec29c62f892dfaeeb4"
+    },
+    {
+      "path": "server/saas/admission/maintenance.js",
+      "sourceBlob": "55cf3263a61aa072772511c8dfae9c7c4ee3739a",
+      "integrationBlob": "55cf3263a61aa072772511c8dfae9c7c4ee3739a"
+    },
+    {
+      "path": "server/saas/admission/maintenance.sql",
+      "sourceBlob": "4a2eb920d881f6dd61840b7c81dad17709d10703",
+      "integrationBlob": "4a2eb920d881f6dd61840b7c81dad17709d10703"
+    },
+    {
+      "path": "server/saas/admission/policy-admin.js",
+      "sourceBlob": "7e278424de06c1c6c104deccd9901173305e81cc",
+      "integrationBlob": "7e278424de06c1c6c104deccd9901173305e81cc"
+    },
+    {
+      "path": "server/saas/admission/policy.js",
+      "sourceBlob": "c2d829d178d2732a7562b8967c1216f18dc45bcc",
+      "integrationBlob": "c2d829d178d2732a7562b8967c1216f18dc45bcc"
+    },
+    {
+      "path": "server/saas/admission/schema.sql",
+      "sourceBlob": "647877cf09925acf4821b4ab61834a6250e32ed0",
+      "integrationBlob": "647877cf09925acf4821b4ab61834a6250e32ed0"
+    },
+    {
+      "path": "server/saas/admission/transaction.js",
+      "sourceBlob": "45f7a4d3cacdc85b908ddbb22913b1c949c80087",
+      "integrationBlob": "45f7a4d3cacdc85b908ddbb22913b1c949c80087"
+    },
+    {
+      "path": "server/saas/admission/transfer.js",
+      "sourceBlob": "931b195264bed3f5e418b78118f132c88c50f054",
+      "integrationBlob": "931b195264bed3f5e418b78118f132c88c50f054"
+    },
+    {
+      "path": "server/saas/app.js",
+      "sourceBlob": "c4d7dcf1731f8349032afffd0a64f85f766c5fca",
+      "integrationBlob": "c4d7dcf1731f8349032afffd0a64f85f766c5fca"
+    },
+    {
+      "path": "server/saas/auth/authority.js",
+      "sourceBlob": "035e7be6955617fdc36ada1ae832417f38517780",
+      "integrationBlob": "035e7be6955617fdc36ada1ae832417f38517780"
+    },
+    {
+      "path": "server/saas/auth/sessions.js",
+      "sourceBlob": "46ca9bdbba1244ae7ea35f229a3dc9362dcce3eb",
+      "integrationBlob": "46ca9bdbba1244ae7ea35f229a3dc9362dcce3eb"
+    },
+    {
+      "path": "server/saas/auth/validation.js",
+      "sourceBlob": "e2c0539a9cc5f38987908ca597c4f8e643c777bd",
+      "integrationBlob": "e2c0539a9cc5f38987908ca597c4f8e643c777bd"
+    },
+    {
+      "path": "server/saas/db/migrations/001-control.sql",
+      "sourceBlob": "c4547a105fec7eefee3605372599ee4ed17bc39c",
+      "integrationBlob": "c4547a105fec7eefee3605372599ee4ed17bc39c"
+    },
+    {
+      "path": "server/saas/db/migrations/002-tenant.sql",
+      "sourceBlob": "ac60b79bd59ef2cb6d947de28243979314e1ad51",
+      "integrationBlob": "ac60b79bd59ef2cb6d947de28243979314e1ad51"
+    },
+    {
+      "path": "server/saas/db/pools.js",
+      "sourceBlob": "836ccf319ea29ad9272814935fe13c99dd8ff61b",
+      "integrationBlob": "836ccf319ea29ad9272814935fe13c99dd8ff61b"
+    },
+    {
+      "path": "server/saas/observability/producer.js",
+      "sourceBlob": "cbe2d27b0984f52d3585672e8f43362d002f9b30",
+      "integrationBlob": "cbe2d27b0984f52d3585672e8f43362d002f9b30"
+    },
+    {
+      "path": "server/saas/observability/repository.js",
+      "sourceBlob": "56d22cce036c77182dcf21021271ce160af774da",
+      "integrationBlob": "56d22cce036c77182dcf21021271ce160af774da"
+    },
+    {
+      "path": "server/saas/observability/schema.sql",
+      "sourceBlob": "22f432daaa69e94c0835e6d2f85e6f08315f141c",
+      "integrationBlob": "22f432daaa69e94c0835e6d2f85e6f08315f141c"
+    },
+    {
+      "path": "server/saas/package-lock.json",
+      "sourceBlob": "442513ab26c7568926db6b42117f4e46d71dae88",
+      "integrationBlob": "442513ab26c7568926db6b42117f4e46d71dae88"
+    },
+    {
+      "path": "server/saas/package.json",
+      "sourceBlob": "37271d9c92b0f9fb1d9c3b6438d42f7c8f0efce9",
+      "integrationBlob": "37271d9c92b0f9fb1d9c3b6438d42f7c8f0efce9"
+    },
+    {
+      "path": "server/saas/repositories/catalog.js",
+      "sourceBlob": "8daa146089f9546bc857dc25b509f3d0bdb26346",
+      "integrationBlob": "8daa146089f9546bc857dc25b509f3d0bdb26346"
+    },
+    {
+      "path": "tests/qa/README.md",
+      "sourceBlob": "15879dbfe447e33e1848b8537c0d12d5e2f80949",
+      "integrationBlob": "15879dbfe447e33e1848b8537c0d12d5e2f80949"
+    },
+    {
+      "path": "tests/qa/admission-boundaries-integration.test.js",
+      "sourceBlob": "e97d91152bc040fde6fcd8b2cda2ffa22c507038",
+      "integrationBlob": "e97d91152bc040fde6fcd8b2cda2ffa22c507038"
+    },
+    {
+      "path": "tests/qa/admission-clock.unit.test.js",
+      "sourceBlob": "6b1b39efe4a0b554c07571286858e3279c208afc",
+      "integrationBlob": "6b1b39efe4a0b554c07571286858e3279c208afc"
+    },
+    {
+      "path": "tests/qa/admission-fixture-upgrade.sql",
+      "sourceBlob": "16212efd61a426b2ff69f80c1f677cfe38b12108",
+      "integrationBlob": "16212efd61a426b2ff69f80c1f677cfe38b12108"
+    },
+    {
+      "path": "tests/qa/admission-fixture.js",
+      "sourceBlob": "1a9721bd6e74396fbba3d7ed86513810f53bfe98",
+      "integrationBlob": "1a9721bd6e74396fbba3d7ed86513810f53bfe98"
+    },
+    {
+      "path": "tests/qa/admission-integration.test.js",
+      "sourceBlob": "70a2a1e5e72827aae53709a5bd50f58f89bbf458",
+      "integrationBlob": "70a2a1e5e72827aae53709a5bd50f58f89bbf458"
+    },
+    {
+      "path": "tests/qa/admission-maintenance.unit.test.js",
+      "sourceBlob": "e55a27e79fd643a289dc0085a2688519a4d24f61",
+      "integrationBlob": "e55a27e79fd643a289dc0085a2688519a4d24f61"
+    },
+    {
+      "path": "tests/qa/admission-transfer.unit.test.js",
+      "sourceBlob": "fa35a6752cba3a795f464bb8fa8ed88fc11e8c91",
+      "integrationBlob": "fa35a6752cba3a795f464bb8fa8ed88fc11e8c91"
+    },
+    {
+      "path": "tests/qa/admission.unit.test.js",
+      "sourceBlob": "a3e4657fa6d73bb830d627c23191f14d8a198167",
+      "integrationBlob": "a3e4657fa6d73bb830d627c23191f14d8a198167"
+    },
+    {
+      "path": "tests/qa/app-deadline.test.js",
+      "sourceBlob": "6562e8a9f637bacb52d7d0cf595100d64896d804",
+      "integrationBlob": "6562e8a9f637bacb52d7d0cf595100d64896d804"
+    },
+    {
+      "path": "tests/qa/auth-integration.test.js",
+      "sourceBlob": "a47af7b6d753ed13a304dd152514034e11238ce0",
+      "integrationBlob": "a47af7b6d753ed13a304dd152514034e11238ce0"
+    },
+    {
+      "path": "tests/qa/auth.test.js",
+      "sourceBlob": "8c3a25b9cf6c6d5c8ea55cc74a65d53bffff5a1e",
+      "integrationBlob": "8c3a25b9cf6c6d5c8ea55cc74a65d53bffff5a1e"
+    },
+    {
+      "path": "tests/qa/browser-layout.mjs",
+      "sourceBlob": "dc2f499f429ed859d32672cb2ce7e36113151698",
+      "integrationBlob": "dc2f499f429ed859d32672cb2ce7e36113151698"
+    },
+    {
+      "path": "tests/qa/browser.mjs",
+      "sourceBlob": "779a292e4cb692b19939b1ea13800328fee7d1a6",
+      "integrationBlob": "779a292e4cb692b19939b1ea13800328fee7d1a6"
+    },
+    {
+      "path": "tests/qa/cp014/admission-diagnostics.test.mjs",
+      "sourceBlob": "8925423a254aae4250de95eac16a2dbc7399ea62",
+      "integrationBlob": "8925423a254aae4250de95eac16a2dbc7399ea62"
+    },
+    {
+      "path": "tests/qa/cp014/admission-host.py",
+      "sourceBlob": "52a6d7feb3e4f9f99e82212d6fa69f5566a7366a",
+      "integrationBlob": "52a6d7feb3e4f9f99e82212d6fa69f5566a7366a"
+    },
+    {
+      "path": "tests/qa/cp014/admission-http.mjs",
+      "sourceBlob": "dc955672e1b4257567c7235a1bd65e9d86eb2845",
+      "integrationBlob": "dc955672e1b4257567c7235a1bd65e9d86eb2845"
+    },
+    {
+      "path": "tests/qa/cp014/admission-probe.mjs",
+      "sourceBlob": "fb34cecaa8c35c625548d7f61376abac4039f061",
+      "integrationBlob": "fb34cecaa8c35c625548d7f61376abac4039f061"
+    },
+    {
+      "path": "tests/qa/cp014/admission-probe.test.mjs",
+      "sourceBlob": "3c46ee38d32d49fe860e9d5edbb7f54a6f218581",
+      "integrationBlob": "3c46ee38d32d49fe860e9d5edbb7f54a6f218581"
+    },
+    {
+      "path": "tests/qa/cp014/artifact.mjs",
+      "sourceBlob": "02d82afb984189381728e5bf3c3492454ce9c60c",
+      "integrationBlob": "02d82afb984189381728e5bf3c3492454ce9c60c"
+    },
+    {
+      "path": "tests/qa/cp014/auth-http.test.mjs",
+      "sourceBlob": "5800ee89e366e14417bbffa5cf4ce3a6a13a7e20",
+      "integrationBlob": "5800ee89e366e14417bbffa5cf4ce3a6a13a7e20"
+    },
+    {
+      "path": "tests/qa/cp014/auth-login-failure.test.mjs",
+      "sourceBlob": "fd620a739aa71cc38973df18fbb14c88fc70cc64",
+      "integrationBlob": "fd620a739aa71cc38973df18fbb14c88fc70cc64"
+    },
+    {
+      "path": "tests/qa/cp014/deadlines.test.mjs",
+      "sourceBlob": "daaf3db9cca81e360c96a51b54bfc83eb3f66e07",
+      "integrationBlob": "daaf3db9cca81e360c96a51b54bfc83eb3f66e07"
+    },
+    {
+      "path": "tests/qa/cp014/faults.mjs",
+      "sourceBlob": "aff08c9c518dc86fa88d05bf48c1bcc19c04b466",
+      "integrationBlob": "aff08c9c518dc86fa88d05bf48c1bcc19c04b466"
+    },
+    {
+      "path": "tests/qa/cp014/host-regression.py",
+      "sourceBlob": "e4a77817c293f9da6218a313a2fc7d780a07eda6",
+      "integrationBlob": "e4a77817c293f9da6218a313a2fc7d780a07eda6"
+    },
+    {
+      "path": "tests/qa/cp014/host.py",
+      "sourceBlob": "c2efe137d383c55a63ed5f64ce063c2c10d3f2f8",
+      "integrationBlob": "c2efe137d383c55a63ed5f64ce063c2c10d3f2f8"
+    },
+    {
+      "path": "tests/qa/cp014/http-client.mjs",
+      "sourceBlob": "17f6db497d1e71313e9722efe92ecdeee0f95701",
+      "integrationBlob": "17f6db497d1e71313e9722efe92ecdeee0f95701"
+    },
+    {
+      "path": "tests/qa/cp014/lifecycle-host.py",
+      "sourceBlob": "9ec78c3ba268f2a59f74c4cef79e2878b6860a00",
+      "integrationBlob": "9ec78c3ba268f2a59f74c4cef79e2878b6860a00"
+    },
+    {
+      "path": "tests/qa/cp014/lifecycle-live.mjs",
+      "sourceBlob": "931e654c7cd76aea13782763d9b28c31e659840a",
+      "integrationBlob": "931e654c7cd76aea13782763d9b28c31e659840a"
+    },
+    {
+      "path": "tests/qa/cp014/observability-live.mjs",
+      "sourceBlob": "51278ca825ec22865c88e9a23ee01e01d8a8daf3",
+      "integrationBlob": "51278ca825ec22865c88e9a23ee01e01d8a8daf3"
+    },
+    {
+      "path": "tests/qa/cp014/postgres-restart.py",
+      "sourceBlob": "b7a49e038d76f2ed698c2d3e3898fe67a321a331",
+      "integrationBlob": "b7a49e038d76f2ed698c2d3e3898fe67a321a331"
+    },
+    {
+      "path": "tests/qa/cp014/rollback-live.mjs",
+      "sourceBlob": "0b33aaae9f42afee25a2aeed6021fb4b1ff1e198",
+      "integrationBlob": "0b33aaae9f42afee25a2aeed6021fb4b1ff1e198"
+    },
+    {
+      "path": "tests/qa/cp014/settle.mjs",
+      "sourceBlob": "a19c85ba937ef518fb535677a01226cf1a4dc23a",
+      "integrationBlob": "a19c85ba937ef518fb535677a01226cf1a4dc23a"
+    },
+    {
+      "path": "tests/qa/db-fixture.test.js",
+      "sourceBlob": "72f3103bef3076f85b76d3969c93f01143bb77fc",
+      "integrationBlob": "72f3103bef3076f85b76d3969c93f01143bb77fc"
+    },
+    {
+      "path": "tests/qa/db-integration.test.js",
+      "sourceBlob": "cfaa721d6c5b9a74aa777b5062f1d7e4a8bb8b32",
+      "integrationBlob": "cfaa721d6c5b9a74aa777b5062f1d7e4a8bb8b32"
+    },
+    {
+      "path": "tests/qa/db-pools.test.js",
+      "sourceBlob": "90ee8daecb4805fd94d10e4798989888c8871e73",
+      "integrationBlob": "90ee8daecb4805fd94d10e4798989888c8871e73"
+    },
+    {
+      "path": "tests/qa/entry.mjs",
+      "sourceBlob": "fdea8faf0cadfaf5a12f6af9bb763958a0fa5918",
+      "integrationBlob": "fdea8faf0cadfaf5a12f6af9bb763958a0fa5918"
+    },
+    {
+      "path": "tests/qa/http.test.mjs",
+      "sourceBlob": "3edb82a2fced755ea34bdf3e6f0b1decd7eb8ad8",
+      "integrationBlob": "3edb82a2fced755ea34bdf3e6f0b1decd7eb8ad8"
+    },
+    {
+      "path": "tests/qa/infra/apply-maintenance.mjs",
+      "sourceBlob": "e6a36c80f450d74d1ab316c0237a413e67ae2ad5",
+      "integrationBlob": "e6a36c80f450d74d1ab316c0237a413e67ae2ad5"
+    },
+    {
+      "path": "tests/qa/infra/bootstrap-host.py",
+      "sourceBlob": "43b22ce70f20c41b29b25a50f7162c5424be9651",
+      "integrationBlob": "43b22ce70f20c41b29b25a50f7162c5424be9651"
+    },
+    {
+      "path": "tests/qa/infra/compose.yaml",
+      "sourceBlob": "4a7193b037cdbef4ee323350bd026d7cd4834225",
+      "integrationBlob": "4a7193b037cdbef4ee323350bd026d7cd4834225"
+    },
+    {
+      "path": "tests/qa/infra/lifecycle.py",
+      "sourceBlob": "0264babb1fd125cc10ab660ea9ef819470f9bbd1",
+      "integrationBlob": "0264babb1fd125cc10ab660ea9ef819470f9bbd1"
+    },
+    {
+      "path": "tests/qa/infra/nginx.conf",
+      "sourceBlob": "7cf2e790027ccb2c605239f058a94db816762196",
+      "integrationBlob": "7cf2e790027ccb2c605239f058a94db816762196"
+    },
+    {
+      "path": "tests/qa/infra/pg_hba.conf",
+      "sourceBlob": "0ec87cdca5a5f11055a96a62cbab50d33461a41f",
+      "integrationBlob": "0ec87cdca5a5f11055a96a62cbab50d33461a41f"
+    },
+    {
+      "path": "tests/qa/infra/pool-test.compose.yaml",
+      "sourceBlob": "8fe85d8e587e44223abff95536ef17fb59676257",
+      "integrationBlob": "8fe85d8e587e44223abff95536ef17fb59676257"
+    },
+    {
+      "path": "tests/qa/infra/postgresql.conf",
+      "sourceBlob": "d5bf08e1a15681ee704d57170d024011a6abe793",
+      "integrationBlob": "d5bf08e1a15681ee704d57170d024011a6abe793"
+    },
+    {
+      "path": "tests/qa/infra/preflight.js",
+      "sourceBlob": "936d143e91643fc9e81c17883be48685e9e67131",
+      "integrationBlob": "936d143e91643fc9e81c17883be48685e9e67131"
+    },
+    {
+      "path": "tests/qa/infra/recovery.compose.yaml",
+      "sourceBlob": "d9f901dd1edd668888143b047b6ed2694d610b9c",
+      "integrationBlob": "d9f901dd1edd668888143b047b6ed2694d610b9c"
+    },
+    {
+      "path": "tests/qa/infra/restore-only.compose.yaml",
+      "sourceBlob": "e8aa20bc32a76124ae497dd04770a7f525ee6fa1",
+      "integrationBlob": "e8aa20bc32a76124ae497dd04770a7f525ee6fa1"
+    },
+    {
+      "path": "tests/qa/infra/transfer-worker.py",
+      "sourceBlob": "148e9203dac9ca5b6190904e4f98818204535fba",
+      "integrationBlob": "148e9203dac9ca5b6190904e4f98818204535fba"
+    },
+    {
+      "path": "tests/qa/infra/verify-isolation.py",
+      "sourceBlob": "f3ddcdcb20ca0e0f4a875d8447579730705b91e1",
+      "integrationBlob": "f3ddcdcb20ca0e0f4a875d8447579730705b91e1"
+    },
+    {
+      "path": "tests/qa/issuer.js",
+      "sourceBlob": "f84ba60fcefb8bd53d5ee5f127179f06da1c6d4a",
+      "integrationBlob": "f84ba60fcefb8bd53d5ee5f127179f06da1c6d4a"
+    },
+    {
+      "path": "tests/qa/observability-integration.test.js",
+      "sourceBlob": "10c9b4efbe1e9becc03102d165fffbcf4cc84342",
+      "integrationBlob": "10c9b4efbe1e9becc03102d165fffbcf4cc84342"
+    },
+    {
+      "path": "tests/qa/observability.unit.test.js",
+      "sourceBlob": "002f293d7e4873cb710161cd3854ee290d72b269",
+      "integrationBlob": "002f293d7e4873cb710161cd3854ee290d72b269"
+    },
+    {
+      "path": "tests/qa/pools-process-helper.mjs",
+      "sourceBlob": "80f05ae115b85aa7387e8cb713493989ac5123b4",
+      "integrationBlob": "80f05ae115b85aa7387e8cb713493989ac5123b4"
+    },
+    {
+      "path": "tests/qa/pools-two-process-integration.test.js",
+      "sourceBlob": "b3733461b8c0e00039bd876d47fa984a035fa972",
+      "integrationBlob": "b3733461b8c0e00039bd876d47fa984a035fa972"
+    },
+    {
+      "path": "tests/qa/preflight.test.js",
+      "sourceBlob": "809bac6123d913cab3aa86b1963c59082b5d43aa",
+      "integrationBlob": "809bac6123d913cab3aa86b1963c59082b5d43aa"
+    },
+    {
+      "path": "tests/qa/prepare.mjs",
+      "sourceBlob": "2fe3e29e2553d77b049b3283c88d0cf922e6755d",
+      "integrationBlob": "2fe3e29e2553d77b049b3283c88d0cf922e6755d"
+    },
+    {
+      "path": "tests/qa/recovery.test.js",
+      "sourceBlob": "ee1484949e0d0665cf4f136df603a20abd6751fa",
+      "integrationBlob": "ee1484949e0d0665cf4f136df603a20abd6751fa"
+    },
+    {
+      "path": "tests/qa/recovery/README.md",
+      "sourceBlob": "82d41df7f966ce24dd7973ea6914ae9bf82aef38",
+      "integrationBlob": "82d41df7f966ce24dd7973ea6914ae9bf82aef38"
+    },
+    {
+      "path": "tests/qa/recovery/coordinator.js",
+      "sourceBlob": "cb206c8f23d8fe80e66978665b9d1b202f84307c",
+      "integrationBlob": "cb206c8f23d8fe80e66978665b9d1b202f84307c"
+    },
+    {
+      "path": "tests/qa/recovery/host.py",
+      "sourceBlob": "9569c9701c4c813fc1101e384a770db34387750f",
+      "integrationBlob": "9569c9701c4c813fc1101e384a770db34387750f"
+    },
+    {
+      "path": "tests/qa/recovery/journal.js",
+      "sourceBlob": "b246da9b4f8fa582ff8bdc756e41d6a0c46307ae",
+      "integrationBlob": "b246da9b4f8fa582ff8bdc756e41d6a0c46307ae"
+    },
+    {
+      "path": "tests/qa/recovery/run.mjs",
+      "sourceBlob": "8427c90293df55367a2adf77995cf508e4ddf07a",
+      "integrationBlob": "8427c90293df55367a2adf77995cf508e4ddf07a"
+    },
+    {
+      "path": "tests/qa/recovery/schema.sql",
+      "sourceBlob": "4fb67dfc072722c55c7edd5acd2d618fe805f112",
+      "integrationBlob": "4fb67dfc072722c55c7edd5acd2d618fe805f112"
+    },
+    {
+      "path": "tests/qa/schema/fixture.js",
+      "sourceBlob": "71d0b22924c2c01b435b4bb90ee40cdedf011571",
+      "integrationBlob": "71d0b22924c2c01b435b4bb90ee40cdedf011571"
+    },
+    {
+      "path": "tests/qa/worker.mjs",
+      "sourceBlob": "efa321ffd1670d043ef87331f1ebfab447960dee",
+      "integrationBlob": "efa321ffd1670d043ef87331f1ebfab447960dee"
+    }
+  ],
+  "bundle": [
+    {
+      "path": "assets/saas-DclqrR_W.css",
+      "sha256": "cdb3b3885a4aea0c72204e0c7952eb8ebd7522c2767529eb824b487582d54159",
+      "historicalBundleEqual": true
+    },
+    {
+      "path": "assets/saas-DsjAOXZI.js",
+      "sha256": "846991792b1506d97706bca144f265874f79d17bba91d930dec4d45c3b7bbf04",
+      "historicalBundleEqual": true
+    },
+    {
+      "path": "saas.html",
+      "sha256": "ab3c357852ca07b8f4689fb5b23a8ddb093ab2bb4e0aa2d75ba98012b132ee51",
+      "historicalBundleEqual": true
+    }
+  ],
+  "counts": {
+    "backend": 73,
+    "frontend": 29,
+    "sanitizer": 3,
+    "controller": 3,
+    "syntaxFiles": 64
+  },
+  "historicalGuarantees": "CP-013/014 PG18.6ARM64/twoAPI/browser15/physicalrestore/rollback retained with original SHA/digests, not new tests at integration SHA",
+  "overallSecurity": "FAIL full frontend audit; runtime0 does not override tooling",
+  "remoteCI": "NOT VERIFIED",
+  "qaResourcesUsed": 0
+}

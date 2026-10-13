@@ -1,0 +1,231 @@
+{
+  "checkpoint": "CP-014",
+  "createdAt": "2026-10-13T14:17:25.826777+00:00",
+  "baseline": "3b387b38784907b67e2209a35c3d5f400d70742e",
+  "baseCheckpoint": "5624ef0da489d2285534a942bd6ce9eab22f280d",
+  "versions": {
+    "A": "e512dce7dcdecec9ce202ca9a7f7b78486259383",
+    "B": "7bcf59b01d375a9d91981e384369b9fd17c33e33",
+    "C": "e25a9f30937b516dca74985344e37fe686a1d567",
+    "D": "0257d0d98d0c1444f0897bf4d03a36bb1a846ce2",
+    "E": "f10c9826403261eb69718ed8f768ac166971a1b0",
+    "F": "b0f5e199e5df457d7f901ff3a3dca5ab3a8d5701"
+  },
+  "runtimeFinal": {
+    "codeSha": "b0f5e199e5df457d7f901ff3a3dca5ab3a8d5701",
+    "digest": "sha256:5950ae7e519170ebaaf6cf8c99e9187c14b41f32779044e2829e8de5abbac0a6",
+    "files": 913,
+    "bytes": 3950708,
+    "architecture": "linux/arm64",
+    "runtime": {
+      "node": "sha256:ba6b7d0ee561d9d49deb99e2b93c98632cc287b6cca1a6b18d66127054efa4dc",
+      "postgres": "sha256:67ba68a22dc7d5af3627b7e0f33d10bbefad07562ff9703b3a6c2de247649129",
+      "nginx": "sha256:3abad30db61dfb2a339ea21acc9f3e6bbe78e291fcff2f835f4510c8fdfcbd83"
+    }
+  },
+  "artifacts": [
+    {
+      "digest": "sha256:59993e482b4db11e745edb08e088731c9f601ac75d9649d46caac3bcd1838ce2",
+      "codeSha": "f10c9826403261eb69718ed8f768ac166971a1b0",
+      "files": 913,
+      "verified": true,
+      "runtime": {
+        "node": "sha256:ba6b7d0ee561d9d49deb99e2b93c98632cc287b6cca1a6b18d66127054efa4dc",
+        "postgres": "sha256:67ba68a22dc7d5af3627b7e0f33d10bbefad07562ff9703b3a6c2de247649129",
+        "nginx": "sha256:3abad30db61dfb2a339ea21acc9f3e6bbe78e291fcff2f835f4510c8fdfcbd83"
+      }
+    },
+    {
+      "digest": "sha256:05a28e4473e5717ce888e67fe16da0e119d61fcc6b79a4ec503d108ce971352d",
+      "codeSha": "e512dce7dcdecec9ce202ca9a7f7b78486259383",
+      "files": 908,
+      "verified": true,
+      "runtime": {
+        "node": "sha256:ba6b7d0ee561d9d49deb99e2b93c98632cc287b6cca1a6b18d66127054efa4dc",
+        "postgres": "sha256:67ba68a22dc7d5af3627b7e0f33d10bbefad07562ff9703b3a6c2de247649129",
+        "nginx": "sha256:3abad30db61dfb2a339ea21acc9f3e6bbe78e291fcff2f835f4510c8fdfcbd83"
+      }
+    },
+    {
+      "digest": "sha256:837cdc6eb4f2591824a27283b4cc5714101ea4ea8c6ebcd7415363698bf100e3",
+      "codeSha": "e25a9f30937b516dca74985344e37fe686a1d567",
+      "files": 912,
+      "verified": true,
+      "runtime": {
+        "node": "sha256:ba6b7d0ee561d9d49deb99e2b93c98632cc287b6cca1a6b18d66127054efa4dc",
+        "postgres": "sha256:67ba68a22dc7d5af3627b7e0f33d10bbefad07562ff9703b3a6c2de247649129",
+        "nginx": "sha256:3abad30db61dfb2a339ea21acc9f3e6bbe78e291fcff2f835f4510c8fdfcbd83"
+      }
+    },
+    {
+      "digest": "sha256:fa6f167df4e777e56d218396b3a4a9f53ac02c5531cdf8def37665da89930177",
+      "codeSha": "0257d0d98d0c1444f0897bf4d03a36bb1a846ce2",
+      "files": 913,
+      "verified": true,
+      "runtime": {
+        "node": "sha256:ba6b7d0ee561d9d49deb99e2b93c98632cc287b6cca1a6b18d66127054efa4dc",
+        "postgres": "sha256:67ba68a22dc7d5af3627b7e0f33d10bbefad07562ff9703b3a6c2de247649129",
+        "nginx": "sha256:3abad30db61dfb2a339ea21acc9f3e6bbe78e291fcff2f835f4510c8fdfcbd83"
+      }
+    },
+    {
+      "digest": "sha256:db5527919b94f8f4127a20619fd32acb00289340f3ac21a6923d394b89f192fe",
+      "codeSha": "7bcf59b01d375a9d91981e384369b9fd17c33e33",
+      "files": 912,
+      "verified": true,
+      "runtime": {
+        "node": "sha256:ba6b7d0ee561d9d49deb99e2b93c98632cc287b6cca1a6b18d66127054efa4dc",
+        "postgres": "sha256:67ba68a22dc7d5af3627b7e0f33d10bbefad07562ff9703b3a6c2de247649129",
+        "nginx": "sha256:3abad30db61dfb2a339ea21acc9f3e6bbe78e291fcff2f835f4510c8fdfcbd83"
+      }
+    },
+    {
+      "digest": "sha256:d7bd665789ae6740428356934524220000df5b648b62554d5973a3f97fab2114",
+      "codeSha": "ef474a71cbc1c1e19d99d8cbdf10bc30a5fa2192",
+      "files": 908,
+      "verified": true,
+      "runtime": {
+        "node": "sha256:ba6b7d0ee561d9d49deb99e2b93c98632cc287b6cca1a6b18d66127054efa4dc",
+        "postgres": "sha256:67ba68a22dc7d5af3627b7e0f33d10bbefad07562ff9703b3a6c2de247649129",
+        "nginx": "sha256:3abad30db61dfb2a339ea21acc9f3e6bbe78e291fcff2f835f4510c8fdfcbd83"
+      }
+    },
+    {
+      "digest": "sha256:5950ae7e519170ebaaf6cf8c99e9187c14b41f32779044e2829e8de5abbac0a6",
+      "codeSha": "b0f5e199e5df457d7f901ff3a3dca5ab3a8d5701",
+      "files": 913,
+      "verified": true,
+      "runtime": {
+        "node": "sha256:ba6b7d0ee561d9d49deb99e2b93c98632cc287b6cca1a6b18d66127054efa4dc",
+        "postgres": "sha256:67ba68a22dc7d5af3627b7e0f33d10bbefad07562ff9703b3a6c2de247649129",
+        "nginx": "sha256:3abad30db61dfb2a339ea21acc9f3e6bbe78e291fcff2f835f4510c8fdfcbd83"
+      }
+    }
+  ],
+  "componentIdentity": {
+    "server/saas": {
+      "gitObjects": {
+        "A": "241326c1e1c7f8295f35e2c187bfea702087aae9",
+        "B": "91485df0079a210b6783181a2254a190c76814e8",
+        "C": "b00f0354d4655cedcbd82aee6e7b94f4e1f5f954",
+        "D": "3cbab92f1f419ce273cf0008f283242ef3bbc688",
+        "E": "3cbab92f1f419ce273cf0008f283242ef3bbc688",
+        "F": "3cbab92f1f419ce273cf0008f283242ef3bbc688"
+      },
+      "D_E_F_identical": true,
+      "C_D_E_F_identical": false,
+      "B_D_E_F_identical": false
+    },
+    "server/saas/auth": {
+      "gitObjects": {
+        "A": "4d6de9c1360cbfd3d3cb31f2a8023d8e4744fd6a",
+        "B": "4d6de9c1360cbfd3d3cb31f2a8023d8e4744fd6a",
+        "C": "4d6de9c1360cbfd3d3cb31f2a8023d8e4744fd6a",
+        "D": "4d6de9c1360cbfd3d3cb31f2a8023d8e4744fd6a",
+        "E": "4d6de9c1360cbfd3d3cb31f2a8023d8e4744fd6a",
+        "F": "4d6de9c1360cbfd3d3cb31f2a8023d8e4744fd6a"
+      },
+      "D_E_F_identical": true,
+      "C_D_E_F_identical": true,
+      "B_D_E_F_identical": true
+    },
+    "server/saas/observability": {
+      "gitObjects": {
+        "A": "65fb7b268568c0a8005e9175318f03f9486f34c5",
+        "B": "65fb7b268568c0a8005e9175318f03f9486f34c5",
+        "C": "65fb7b268568c0a8005e9175318f03f9486f34c5",
+        "D": "65fb7b268568c0a8005e9175318f03f9486f34c5",
+        "E": "65fb7b268568c0a8005e9175318f03f9486f34c5",
+        "F": "65fb7b268568c0a8005e9175318f03f9486f34c5"
+      },
+      "D_E_F_identical": true,
+      "C_D_E_F_identical": true,
+      "B_D_E_F_identical": true
+    },
+    "server/saas/db/migrations": {
+      "gitObjects": {
+        "A": "826de0237c3aee9e06ed90143a9f9fb263406b28",
+        "B": "826de0237c3aee9e06ed90143a9f9fb263406b28",
+        "C": "826de0237c3aee9e06ed90143a9f9fb263406b28",
+        "D": "826de0237c3aee9e06ed90143a9f9fb263406b28",
+        "E": "826de0237c3aee9e06ed90143a9f9fb263406b28",
+        "F": "826de0237c3aee9e06ed90143a9f9fb263406b28"
+      },
+      "D_E_F_identical": true,
+      "C_D_E_F_identical": true,
+      "B_D_E_F_identical": true
+    },
+    "client/src/saas": {
+      "gitObjects": {
+        "A": "8a0d687030086aac2a41ede5b1deff87d736c71c",
+        "B": "6b70b0f4a1672913c7134a471c8bfa0cdc23193e",
+        "C": "32cee6efaa9b33ef0f584eb9b9f3fd38d02dbfb2",
+        "D": "32cee6efaa9b33ef0f584eb9b9f3fd38d02dbfb2",
+        "E": "32cee6efaa9b33ef0f584eb9b9f3fd38d02dbfb2",
+        "F": "32cee6efaa9b33ef0f584eb9b9f3fd38d02dbfb2"
+      },
+      "D_E_F_identical": true,
+      "C_D_E_F_identical": true,
+      "B_D_E_F_identical": false
+    },
+    "tests/qa/worker.mjs": {
+      "gitObjects": {
+        "A": "efa321ffd1670d043ef87331f1ebfab447960dee",
+        "B": "efa321ffd1670d043ef87331f1ebfab447960dee",
+        "C": "efa321ffd1670d043ef87331f1ebfab447960dee",
+        "D": "efa321ffd1670d043ef87331f1ebfab447960dee",
+        "E": "efa321ffd1670d043ef87331f1ebfab447960dee",
+        "F": "efa321ffd1670d043ef87331f1ebfab447960dee"
+      },
+      "D_E_F_identical": true,
+      "C_D_E_F_identical": true,
+      "B_D_E_F_identical": true
+    },
+    "tests/qa/schema/fixture.js": {
+      "gitObjects": {
+        "A": "71d0b22924c2c01b435b4bb90ee40cdedf011571",
+        "B": "71d0b22924c2c01b435b4bb90ee40cdedf011571",
+        "C": "71d0b22924c2c01b435b4bb90ee40cdedf011571",
+        "D": "71d0b22924c2c01b435b4bb90ee40cdedf011571",
+        "E": "71d0b22924c2c01b435b4bb90ee40cdedf011571",
+        "F": "71d0b22924c2c01b435b4bb90ee40cdedf011571"
+      },
+      "D_E_F_identical": true,
+      "C_D_E_F_identical": true,
+      "B_D_E_F_identical": true
+    },
+    "server/saas/db/pools.js": {
+      "gitObjects": {
+        "A": "fe50f2df2a6faa261cca9ac8ca968d13de26dc24",
+        "B": "29faad8557482ee883bb48ef4872547a312239c6",
+        "C": "5153131867602afbdbfda1c70001b57975ea6e10",
+        "D": "836ccf319ea29ad9272814935fe13c99dd8ff61b",
+        "E": "836ccf319ea29ad9272814935fe13c99dd8ff61b",
+        "F": "836ccf319ea29ad9272814935fe13c99dd8ff61b"
+      },
+      "D_E_F_identical": true,
+      "C_D_E_F_identical": false,
+      "B_D_E_F_identical": false
+    },
+    "server/saas/repositories/catalog.js": {
+      "gitObjects": {
+        "A": null,
+        "B": "765b4427826a892e71530946b70f96afc225420a",
+        "C": "8daa146089f9546bc857dc25b509f3d0bdb26346",
+        "D": "8daa146089f9546bc857dc25b509f3d0bdb26346",
+        "E": "8daa146089f9546bc857dc25b509f3d0bdb26346",
+        "F": "8daa146089f9546bc857dc25b509f3d0bdb26346"
+      },
+      "D_E_F_identical": true,
+      "C_D_E_F_identical": true,
+      "B_D_E_F_identical": false
+    }
+  },
+  "cleanupController": "409880a513bee1eff909caf68d23325af55e9be4",
+  "controllerRegression": "0bb4b9b8028d6fe6db07129b36c333b3db715286",
+  "qaProject": "mecanet-qa-p1l1-cp014",
+  "generation": "47557dab-4f7d-49a3-80d2-1003d3a46159",
+  "systemIdentifier": "7696135932287279131",
+  "state": "STOPPED_KEEP",
+  "evidence": "remote-safe-evidence.json contains selection identity proofs; no private session/config exports"
+}

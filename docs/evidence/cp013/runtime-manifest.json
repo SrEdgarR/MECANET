@@ -1,0 +1,465 @@
+{
+  "sourceCheckpoint": "2cd4494c9b48e65864784a6af7c110dc7d410c0e",
+  "createdAt": "2026-10-13T12:36:43.852Z",
+  "scope": "Final local source manifest; not a claim every file was deployed or every suite rerun at this SHA",
+  "runtime": "Linux ARM64 / Node24.21.0 / PostgreSQL18.6 / Nginx1.30.5",
+  "images": {
+    "node": "sha256:ba6b7d0ee561d9d49deb99e2b93c98632cc287b6cca1a6b18d66127054efa4dc",
+    "postgres": "sha256:67ba68a22dc7d5af3627b7e0f33d10bbefad07562ff9703b3a6c2de247649129",
+    "nginx": "sha256:3abad30db61dfb2a339ea21acc9f3e6bbe78e291fcff2f835f4510c8fdfcbd83"
+  },
+  "files": [
+    {
+      "path": "client/saas.html",
+      "gitBlob": "75bfaae011080b7f7c54d4a853a55de2d0f9340f",
+      "sha256": "651249635f2964a74b72b4fbc26eba804c9824e73b877e50da4021df345d2f0f"
+    },
+    {
+      "path": "client/src/saas/Catalog.jsx",
+      "gitBlob": "47bd2a19e70bafc26d1f2ad9a5e5bab47f11d5f5",
+      "sha256": "14eb65dbefc4d5961bd983333e0a6ffb1515b8eb568881b19aa4f0afc5c32bb9"
+    },
+    {
+      "path": "client/src/saas/LoginForm.jsx",
+      "gitBlob": "268cc4b609ac48abbd3dfb29dd5cf791a7209c58",
+      "sha256": "6b9cb9f512c7b3043d4dfe726611dc9ec362323934225ace32fba319477c72e7"
+    },
+    {
+      "path": "client/src/saas/RetryAccess.jsx",
+      "gitBlob": "a6dc2a0c88026f5e7899e8c99334cb54963de849",
+      "sha256": "159572f78c8fc1cd6a2dae19df9ce7cc2d19331e8d5d475b624c443069d7f779"
+    },
+    {
+      "path": "client/src/saas/RetryAccess.test.jsx",
+      "gitBlob": "8c7a14644b809c300eb88b54b794d6bbef3c0c8f",
+      "sha256": "0dcf17b4fdf80be465b0c5f7504cefec229eabad2a863abe14377dc28e29346a"
+    },
+    {
+      "path": "client/src/saas/SaasApp.jsx",
+      "gitBlob": "0217824635829395604cabc40b2eee207055ca76",
+      "sha256": "50f08546dd926c5dfc3d74e21933411ae2f997c4864919a639167c00a6dc246b"
+    },
+    {
+      "path": "client/src/saas/SaasApp.test.jsx",
+      "gitBlob": "c7f3fe4c45a09435399b0d37de73efd884d57392",
+      "sha256": "8f5073ff753840fb7ca5e68d95f562c53e83cec88a6f1282d0ad9702424b70b4"
+    },
+    {
+      "path": "client/src/saas/client.js",
+      "gitBlob": "94660b58dcb73ef07c0741a298c60ef49113aaa8",
+      "sha256": "25dbd9794a4da4219cb857c48f5c5ab19cb4fef20a1f53c65782c8a3eb61032d"
+    },
+    {
+      "path": "client/src/saas/client.test.js",
+      "gitBlob": "a341e3d03d4bf0222af1ce06fbffc480768f27e6",
+      "sha256": "daccb95d59b95e99573e76a95924cd09d27bc04f8bffac1fe63eba16bef4aa70"
+    },
+    {
+      "path": "client/src/saas/main.jsx",
+      "gitBlob": "3c08b6dd07d4bc614c53d1d15836267072db3c67",
+      "sha256": "7666102af616cdacb91bef5a5f0d338d1880b7012eccb8c27a5e379bcf885fc4"
+    },
+    {
+      "path": "client/src/saas/styles.css",
+      "gitBlob": "64fa0b556645f7c68c3e5390a0005817d064f024",
+      "sha256": "ba3334608b5baa80e3657f92f6a887304b1c5ae1537b0a001ef05342e5d14b2a"
+    },
+    {
+      "path": "client/src/saas/test-setup.js",
+      "gitBlob": "2e9621ee634a8db2e737c4d95b5ab1e48a6151eb",
+      "sha256": "d308f094eadcc6dbc208d02202cf3aaf5d46b5c09466969436922368cb011d9a"
+    },
+    {
+      "path": "client/vite.saas.config.js",
+      "gitBlob": "2c3ee723653ffd38f053c8f88d1ca481f92aa307",
+      "sha256": "448256233972059a3b5bc1717717fc789166e28d3be9678bdc027f112c2bb1c8"
+    },
+    {
+      "path": "server/saas/admission/clock.js",
+      "gitBlob": "4026f9c0b5825b7ed2109f109f27b4533a15c8ae",
+      "sha256": "08e9d880a2445e5daf3a034d6e00c03f535e278c37a2a549f84f8b1cb98aa0d9"
+    },
+    {
+      "path": "server/saas/admission/index.js",
+      "gitBlob": "445c9290071ac8141b9083ec29c62f892dfaeeb4",
+      "sha256": "04457b5494ccc032b556bfd302a8ce528488042480491ffd99ad606563039edb"
+    },
+    {
+      "path": "server/saas/admission/maintenance.js",
+      "gitBlob": "55cf3263a61aa072772511c8dfae9c7c4ee3739a",
+      "sha256": "e037cfe6333e7cc8fe75ff23a7e3d9ebb7f5895595a1ff91f025e2fb44e43357"
+    },
+    {
+      "path": "server/saas/admission/maintenance.sql",
+      "gitBlob": "4a2eb920d881f6dd61840b7c81dad17709d10703",
+      "sha256": "7e38da11081ffa019ea75a120efda6c52b46eda952a991e2499816c63cdcf248"
+    },
+    {
+      "path": "server/saas/admission/policy-admin.js",
+      "gitBlob": "7e278424de06c1c6c104deccd9901173305e81cc",
+      "sha256": "5af6731099a45203106541964360a3da652db9bf03c5502d04b73a114dca8a80"
+    },
+    {
+      "path": "server/saas/admission/policy.js",
+      "gitBlob": "c2d829d178d2732a7562b8967c1216f18dc45bcc",
+      "sha256": "a10c8a37aeb90e952c2105e9142d5b69854ba517f3c25a1f32a4a5dae1fc1502"
+    },
+    {
+      "path": "server/saas/admission/schema.sql",
+      "gitBlob": "647877cf09925acf4821b4ab61834a6250e32ed0",
+      "sha256": "b36e56873acce071f825a41c95dbc14cc1acdde0ccb9279ffe3e261b5c610541"
+    },
+    {
+      "path": "server/saas/admission/transaction.js",
+      "gitBlob": "45f7a4d3cacdc85b908ddbb22913b1c949c80087",
+      "sha256": "5f8176ec4ef20af51f4d443ed498a078a245ed11ba78b9d04321d2b0b52f46fc"
+    },
+    {
+      "path": "server/saas/admission/transfer.js",
+      "gitBlob": "931b195264bed3f5e418b78118f132c88c50f054",
+      "sha256": "4b28e40ad72792f5314e1ccbb7c37a7f2cb9210bef573a102e3955795b4782e8"
+    },
+    {
+      "path": "server/saas/app.js",
+      "gitBlob": "71a5eac6bf0da20d25a9c68b60210c53275c8c17",
+      "sha256": "66c1657b53304b7c08d0d660d132b0a98254c2277aca07dad727326eda1d9bbd"
+    },
+    {
+      "path": "server/saas/auth/authority.js",
+      "gitBlob": "035e7be6955617fdc36ada1ae832417f38517780",
+      "sha256": "4f322bed27e4412ac510fb1f4e497e371a6b2641628619ab68b175c495cc6029"
+    },
+    {
+      "path": "server/saas/auth/sessions.js",
+      "gitBlob": "46ca9bdbba1244ae7ea35f229a3dc9362dcce3eb",
+      "sha256": "7b5274e9e8c1c5227ffd086c48e5482f6bfd0a22970893d3ce17a647c2ca03f5"
+    },
+    {
+      "path": "server/saas/auth/validation.js",
+      "gitBlob": "e2c0539a9cc5f38987908ca597c4f8e643c777bd",
+      "sha256": "76c621d5030b0d2e275cb8898bafe3c656da91bbff26cc8db22589e8ea570b64"
+    },
+    {
+      "path": "server/saas/db/migrations/001-control.sql",
+      "gitBlob": "c4547a105fec7eefee3605372599ee4ed17bc39c",
+      "sha256": "0e139cb8f3896e00100cb17a990d03073cdc0c564afd54177da5e14246dc504c"
+    },
+    {
+      "path": "server/saas/db/migrations/002-tenant.sql",
+      "gitBlob": "ac60b79bd59ef2cb6d947de28243979314e1ad51",
+      "sha256": "2777e63d4ab4a9d02308e2f5a917b8e5fdacbe08eb1c015e505ba43fc45d2a6a"
+    },
+    {
+      "path": "server/saas/db/pools.js",
+      "gitBlob": "fe50f2df2a6faa261cca9ac8ca968d13de26dc24",
+      "sha256": "943dd8d7a3b63fabd36b3013a82f3882f237210b59c54d4c3a007ff8b5b3a562"
+    },
+    {
+      "path": "server/saas/observability/producer.js",
+      "gitBlob": "cbe2d27b0984f52d3585672e8f43362d002f9b30",
+      "sha256": "b40548c7876dfe911cb7787bd22e744175157efed025ef2a6860238ba479beeb"
+    },
+    {
+      "path": "server/saas/observability/repository.js",
+      "gitBlob": "56d22cce036c77182dcf21021271ce160af774da",
+      "sha256": "0c33cf2ce53151cf323e95d9bd3132a8daf5613366847de4fe276d5256a13e0f"
+    },
+    {
+      "path": "server/saas/observability/schema.sql",
+      "gitBlob": "22f432daaa69e94c0835e6d2f85e6f08315f141c",
+      "sha256": "53df0fcb417ceed189bb9729dcc981e947a8302fa631b72a4963b07b9022aaaa"
+    },
+    {
+      "path": "server/saas/package-lock.json",
+      "gitBlob": "442513ab26c7568926db6b42117f4e46d71dae88",
+      "sha256": "ee71de65fed14da54be916f00d239388d32cca896d6577870db619ad17bb80e0"
+    },
+    {
+      "path": "server/saas/package.json",
+      "gitBlob": "37271d9c92b0f9fb1d9c3b6438d42f7c8f0efce9",
+      "sha256": "81bae24ed651002ebeabb2c8d234583fc051c413d0eb54d793b289affce1b65e"
+    },
+    {
+      "path": "tests/qa/README.md",
+      "gitBlob": "b80a37ff157a47df4e08b7ba10a08ed48880c524",
+      "sha256": "39b2dfc28d7f3bd93f28cb6db46e095bc9ae146faa1e8f83c316d25e17fae047"
+    },
+    {
+      "path": "tests/qa/admission-boundaries-integration.test.js",
+      "gitBlob": "e97d91152bc040fde6fcd8b2cda2ffa22c507038",
+      "sha256": "86353dcc886c5d889200c439efba41135739050497a48c68268a2c5108e9799a"
+    },
+    {
+      "path": "tests/qa/admission-clock.unit.test.js",
+      "gitBlob": "6b1b39efe4a0b554c07571286858e3279c208afc",
+      "sha256": "206d6f7c6c09a949836b48c593420c409dfda5f0eb7953c9e55aadd26cbde30b"
+    },
+    {
+      "path": "tests/qa/admission-fixture-upgrade.sql",
+      "gitBlob": "16212efd61a426b2ff69f80c1f677cfe38b12108",
+      "sha256": "794e00d412ab98ee35c342bcec1eb5696f41881ee4e6fcfc558a5bc781242f21"
+    },
+    {
+      "path": "tests/qa/admission-fixture.js",
+      "gitBlob": "1a9721bd6e74396fbba3d7ed86513810f53bfe98",
+      "sha256": "e534f8d6fcc4f0f7af96a185d6144c38bea2d258909c8db45151bd12813095be"
+    },
+    {
+      "path": "tests/qa/admission-integration.test.js",
+      "gitBlob": "70a2a1e5e72827aae53709a5bd50f58f89bbf458",
+      "sha256": "0dba8c66710f7bac9e2a4df3b7daad21e7b51af2989066047a95d241aeae8cd8"
+    },
+    {
+      "path": "tests/qa/admission-maintenance.unit.test.js",
+      "gitBlob": "e55a27e79fd643a289dc0085a2688519a4d24f61",
+      "sha256": "8d6535bd94feb0dd65b6c5e838ad5ff29e0a1be685e5d66d1f5aaa2b96c7dee9"
+    },
+    {
+      "path": "tests/qa/admission-transfer.unit.test.js",
+      "gitBlob": "fa35a6752cba3a795f464bb8fa8ed88fc11e8c91",
+      "sha256": "e613a746eba049030e1fcbd3d34e85062dc9811c5903de6ab441be7a2fdef13b"
+    },
+    {
+      "path": "tests/qa/admission.unit.test.js",
+      "gitBlob": "a3e4657fa6d73bb830d627c23191f14d8a198167",
+      "sha256": "345bef8bb7ebe67fb93d2902cc083f9cec6990cafa423bf00fd14435da5c00e1"
+    },
+    {
+      "path": "tests/qa/app-deadline.test.js",
+      "gitBlob": "6562e8a9f637bacb52d7d0cf595100d64896d804",
+      "sha256": "fe30a2bcb3e3646ea789f11e6a95df02df25e4feab0da9e3d3ccc32b3e454b8c"
+    },
+    {
+      "path": "tests/qa/auth-integration.test.js",
+      "gitBlob": "a47af7b6d753ed13a304dd152514034e11238ce0",
+      "sha256": "dd0c1101edaecbe4c8900a4904a9fc280739dbbc5c3035896b9b5316cacbe2c8"
+    },
+    {
+      "path": "tests/qa/auth.test.js",
+      "gitBlob": "8c3a25b9cf6c6d5c8ea55cc74a65d53bffff5a1e",
+      "sha256": "133d3af018d1e486fd583d5b25ae2abdedb3abad540bb3054468506f5153d417"
+    },
+    {
+      "path": "tests/qa/browser-layout.mjs",
+      "gitBlob": "dc2f499f429ed859d32672cb2ce7e36113151698",
+      "sha256": "f1c8f689e439c3033f97b33d951e58cfc5d5c1a2e577a71cacebc18ec48fb8a2"
+    },
+    {
+      "path": "tests/qa/browser.mjs",
+      "gitBlob": "779a292e4cb692b19939b1ea13800328fee7d1a6",
+      "sha256": "2547edf88522578f3968cb6241ff96fce8cb32eb3dadc8217cc55a86c8c54f29"
+    },
+    {
+      "path": "tests/qa/db-fixture.test.js",
+      "gitBlob": "dff2d5ba4d210d0d23473f8c45c625e8e92be68a",
+      "sha256": "03b03c9b2558ad596e7a196960e36ea801b1552b48823c89d653cf2fead74e9c"
+    },
+    {
+      "path": "tests/qa/db-integration.test.js",
+      "gitBlob": "cfaa721d6c5b9a74aa777b5062f1d7e4a8bb8b32",
+      "sha256": "e68ad212d0d29318891624b0846fa596a5a7476cab054f35548853076c51f455"
+    },
+    {
+      "path": "tests/qa/db-pools.test.js",
+      "gitBlob": "90ee8daecb4805fd94d10e4798989888c8871e73",
+      "sha256": "22446165472ed73de15ef5cbe153845b4b495a096fc985205759e60c4f8b9b6c"
+    },
+    {
+      "path": "tests/qa/entry.mjs",
+      "gitBlob": "3a548a13e2c0dc4fc3d56bc63e98c7615516801f",
+      "sha256": "2731fc2984f64c7103be4df2dca319c983ef447b7061bc9b329e843a201416bd"
+    },
+    {
+      "path": "tests/qa/http.test.mjs",
+      "gitBlob": "3edb82a2fced755ea34bdf3e6f0b1decd7eb8ad8",
+      "sha256": "2f43fdef531919c512a325ae6a3dc4f6f5566591c91d3215c89af2fa148c3702"
+    },
+    {
+      "path": "tests/qa/infra/apply-maintenance.mjs",
+      "gitBlob": "e6a36c80f450d74d1ab316c0237a413e67ae2ad5",
+      "sha256": "9dd5e8669b705ca2f21fe4d4623e17b1399b2ea34ac36563102c173f139178e5"
+    },
+    {
+      "path": "tests/qa/infra/bootstrap-host.py",
+      "gitBlob": "43b22ce70f20c41b29b25a50f7162c5424be9651",
+      "sha256": "43ce5de5d3bc0e0705c24d9634e51d88952f026d2fe9260b193201f2ca4ab97c"
+    },
+    {
+      "path": "tests/qa/infra/compose.yaml",
+      "gitBlob": "4a7193b037cdbef4ee323350bd026d7cd4834225",
+      "sha256": "6ab2d47a8dd56704aa2f628eeb18cea23755a1233f659b30f792982ba3e866e9"
+    },
+    {
+      "path": "tests/qa/infra/lifecycle.py",
+      "gitBlob": "0264babb1fd125cc10ab660ea9ef819470f9bbd1",
+      "sha256": "3c69d10cb4140f6506c928ac57d979a1c1d12f4174d899a10681d1ad6524f188"
+    },
+    {
+      "path": "tests/qa/infra/nginx.conf",
+      "gitBlob": "7cf2e790027ccb2c605239f058a94db816762196",
+      "sha256": "f0e4e7b80d096573e93510bf05c563c6d640445b1f54b7fdca56bbe0fb6b5790"
+    },
+    {
+      "path": "tests/qa/infra/pg_hba.conf",
+      "gitBlob": "0ec87cdca5a5f11055a96a62cbab50d33461a41f",
+      "sha256": "87a52321b7f11edc9b26cb2a1e73ccea9a63d9f304756435f5d65ab5d0d7e8e2"
+    },
+    {
+      "path": "tests/qa/infra/pool-test.compose.yaml",
+      "gitBlob": "8fe85d8e587e44223abff95536ef17fb59676257",
+      "sha256": "c952e534736df5c1cd91147eba9307784c77b6e372b66e4ae8a1fdd476c1b197"
+    },
+    {
+      "path": "tests/qa/infra/postgresql.conf",
+      "gitBlob": "d5bf08e1a15681ee704d57170d024011a6abe793",
+      "sha256": "fc19e11f8f40bfbd8bd3cec2bdae70165cadd0f709127e4a81733714b21c468c"
+    },
+    {
+      "path": "tests/qa/infra/preflight.js",
+      "gitBlob": "936d143e91643fc9e81c17883be48685e9e67131",
+      "sha256": "dc844586e1682d807710d04d5f3aaf57cf34085dd0d6340484a5f474e77a297b"
+    },
+    {
+      "path": "tests/qa/infra/recovery.compose.yaml",
+      "gitBlob": "d9f901dd1edd668888143b047b6ed2694d610b9c",
+      "sha256": "6c841568cbdbf37e9e4c55903ad5c81f389a7cc1ed7846de587fe0ab3c2f2ac3"
+    },
+    {
+      "path": "tests/qa/infra/restore-only.compose.yaml",
+      "gitBlob": "e8aa20bc32a76124ae497dd04770a7f525ee6fa1",
+      "sha256": "69ddba68d4fe50e43bb943f4d0e12065749b6f73ee05923538bc2126dca59b73"
+    },
+    {
+      "path": "tests/qa/infra/transfer-worker.py",
+      "gitBlob": "148e9203dac9ca5b6190904e4f98818204535fba",
+      "sha256": "57d2cff61df15fc21d28112ca4edad3a2014898532319407c34b84703d8df40f"
+    },
+    {
+      "path": "tests/qa/infra/verify-isolation.py",
+      "gitBlob": "f3ddcdcb20ca0e0f4a875d8447579730705b91e1",
+      "sha256": "6e31290e838abc53f4021bea04f06b4cd8fb7699f55871ce836c02c8203ae874"
+    },
+    {
+      "path": "tests/qa/issuer.js",
+      "gitBlob": "f84ba60fcefb8bd53d5ee5f127179f06da1c6d4a",
+      "sha256": "2023eaff3f1ee019fef815def31545776f9ad726eb2dd14017c62e417e6822c4"
+    },
+    {
+      "path": "tests/qa/observability-integration.test.js",
+      "gitBlob": "10c9b4efbe1e9becc03102d165fffbcf4cc84342",
+      "sha256": "a6d06b71ebd5c6c22a2dc8b8f44161a76fc36dc01688775305698a4ea180bda1"
+    },
+    {
+      "path": "tests/qa/observability.unit.test.js",
+      "gitBlob": "002f293d7e4873cb710161cd3854ee290d72b269",
+      "sha256": "ab1c7be49a8b25d4cec9d55d908dca70374fe6700ff4a1e3c665d2ade9ae3e24"
+    },
+    {
+      "path": "tests/qa/pools-process-helper.mjs",
+      "gitBlob": "80f05ae115b85aa7387e8cb713493989ac5123b4",
+      "sha256": "96570d9f8ae64d7b56300351c3c16c63068a15f4eab8de51c58767568f827bf3"
+    },
+    {
+      "path": "tests/qa/pools-two-process-integration.test.js",
+      "gitBlob": "b3733461b8c0e00039bd876d47fa984a035fa972",
+      "sha256": "faa3d6cc6aa064ac585fbd68fa2cb55213b2f9d8748560ab4276e43e8e912cb9"
+    },
+    {
+      "path": "tests/qa/preflight.test.js",
+      "gitBlob": "809bac6123d913cab3aa86b1963c59082b5d43aa",
+      "sha256": "768c7a45eeab152f9853045268f332e396c67b1c14d58e7feed1348ccf365f4f"
+    },
+    {
+      "path": "tests/qa/prepare.mjs",
+      "gitBlob": "8f601b40b5cdd520eb585d1b2c38b29bbb6c3c48",
+      "sha256": "75f2e40beec71d0eea9f072404b56b9a05598a6751a8a4e8da24fe9e8809850b"
+    },
+    {
+      "path": "tests/qa/recovery.test.js",
+      "gitBlob": "ee1484949e0d0665cf4f136df603a20abd6751fa",
+      "sha256": "f38efad64c3b068ab0a7b6cd5774b4a4ba7ae5c25f98b3ffbb1a7d6dd20788ea"
+    },
+    {
+      "path": "tests/qa/recovery/README.md",
+      "gitBlob": "82d41df7f966ce24dd7973ea6914ae9bf82aef38",
+      "sha256": "d875ddc3c60f454e7dd19b06164b5a09c03a6b54777b83247848ae24ec37b621"
+    },
+    {
+      "path": "tests/qa/recovery/coordinator.js",
+      "gitBlob": "cb206c8f23d8fe80e66978665b9d1b202f84307c",
+      "sha256": "8e5ece9e3ca6e6f176b1ae783326016ac93665b8d211c2939c4da33575730410"
+    },
+    {
+      "path": "tests/qa/recovery/host.py",
+      "gitBlob": "9569c9701c4c813fc1101e384a770db34387750f",
+      "sha256": "f2338a7e08d0992ac4aa2c931a6dd2f6d8350718f0dcb18b77695f71e760994f"
+    },
+    {
+      "path": "tests/qa/recovery/journal.js",
+      "gitBlob": "b246da9b4f8fa582ff8bdc756e41d6a0c46307ae",
+      "sha256": "56f8c7a9dca488bb283edbc4cfe80ca789394283cd2e7d6285c14c5ed0e31ca3"
+    },
+    {
+      "path": "tests/qa/recovery/run.mjs",
+      "gitBlob": "8427c90293df55367a2adf77995cf508e4ddf07a",
+      "sha256": "bc9aa156813ccae656396a3f33ae977a5a23ea5887f250ad8ca406f8374a4868"
+    },
+    {
+      "path": "tests/qa/recovery/schema.sql",
+      "gitBlob": "4fb67dfc072722c55c7edd5acd2d618fe805f112",
+      "sha256": "57ff056fdbb03f62d5ac2528e37e035aa069b838a87260a3fa037638e543cb8d"
+    },
+    {
+      "path": "tests/qa/schema/fixture.js",
+      "gitBlob": "28aa67a58bbd7a10f07432c730286bc86df5d0df",
+      "sha256": "eaed6f283be4aa29e711cff00552c9ecf9d79325f5943c16e9631283fd5d0bd4"
+    },
+    {
+      "path": "tests/qa/worker.mjs",
+      "gitBlob": "33e46a7ae5674913fbc1be2eca4676b644277509",
+      "sha256": "bfe52143d077f23d9a164d432ed904f6aa1a766f83b5380def22f6fb89e8b42d"
+    }
+  ],
+  "bundle": [
+    {
+      "path": "client/dist-saas/assets/saas-DBUSuHcq.js",
+      "sha256": "68c6197d7edd5ef088a4124000b2d760d7265d804e19a77835c491cef408704a"
+    },
+    {
+      "path": "client/dist-saas/assets/saas-DclqrR_W.css",
+      "sha256": "cdb3b3885a4aea0c72204e0c7952eb8ebd7522c2767529eb824b487582d54159"
+    },
+    {
+      "path": "client/dist-saas/saas.html",
+      "sha256": "e80fbbaf9f639b5466c2ae8ce56b22678512ed7a420f6682d21d245dde712f9c"
+    }
+  ],
+  "remoteRuntimeCode": "1a4e57858b8b08d6e043a1f6efe2ba4867bd4c1e; recovery controller/run later updated through b7ed0bf; observability delta2cd4494 NOT DEPLOYED",
+  "testProvenance": [
+    {
+      "evidence": "local-tests.txt/postgres-tests.txt/frontend.txt/build.txt/http-tests.txt/browser.json",
+      "code": "86a31efb794a7d149ef82094a70bf5cfc6f33379",
+      "limit": "Initial suites; no attribution to later modifications"
+    },
+    {
+      "evidence": "admission-boundaries.txt/lifecycle.json",
+      "code": "main86a31ef with helpers later committed1a4e578",
+      "limit": "Uncommitted helper evidence linked by identical source now committed; not run at1a4e578"
+    },
+    {
+      "evidence": "pools-two-process.txt/http-after-deadline-fix.txt/browser-after-deadline-fix.json",
+      "code": "1a4e57858b8b08d6e043a1f6efe2ba4867bd4c1e",
+      "limit": "Browser repeated later; app+UI unchanged, recovery-only helper commits in between"
+    },
+    {
+      "evidence": "local-tests-final.txt/recovery-*.json and recovery phase outputs",
+      "code": "b7ed0bf1f7aca9e9bc23c60fcaf32d542d3fd34d",
+      "limit": "prepare at a3c07bf; host barrier fix tested worktree then committedb7; rest onb7 same controller"
+    },
+    {
+      "evidence": "observability-final.txt",
+      "code": "2cd4494c9b48e65864784a6af7c110dc7d410c0e",
+      "limit": "LOCAL only; SQL double, not deployed"
+    }
+  ]
+}

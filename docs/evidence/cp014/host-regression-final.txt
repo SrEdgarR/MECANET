@@ -1,0 +1,3 @@
+PASS: equivalent absent labels; five identity/state/ownership mutations rejected
+PASS: canonical configure data, front -> web.2/api1.3/api2.4
+PASS: canonical configure front, data -> web.2/api1.3/api2.4

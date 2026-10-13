@@ -1,0 +1,785 @@
+{
+  "checkpoint": "CP-012",
+  "observed_date": "2026-10-12",
+  "timezone": "America/La_Paz",
+  "base_sha": "bf28c4538d9a511a79f3c297d7dffb207879f2ea",
+  "provenance": "REMOTE read-only over SSH with existing authorized key; commands projected metadata only, no .env, credentials, DB queries or backup contents",
+  "limitations": [
+    "Instantaneous resource snapshot; not representative capacity or load test.",
+    "No OCI NSG/security list, external port scan, disk quota, disaster recovery, certificate or application functional verification.",
+    "Mecanet-EAK not conclusively mapped to a resource; every existing resource protected.",
+    "Metadata existence of persistence/backups is not recovery verification."
+  ],
+  "host": {
+    "address": "193.122.135.72",
+    "architecture": "aarch64",
+    "kernel": "7.0.0-1011-oracle",
+    "os": "Ubuntu 24.04.5 LTS",
+    "cpus": 2,
+    "memory_mib": {
+      "total": 11925,
+      "available": 8397,
+      "swap": 0
+    },
+    "root_disk_gib": {
+      "total": 145,
+      "used": 12,
+      "available": 133
+    },
+    "load_average": [
+      "0.52",
+      "0.43",
+      "0.43"
+    ]
+  },
+  "engine": {
+    "Platform": {
+      "Name": "Docker Engine - Community"
+    },
+    "Version": "29.8.1",
+    "ApiVersion": "1.56",
+    "MinAPIVersion": "1.40",
+    "Os": "linux",
+    "Arch": "arm64",
+    "Components": [
+      {
+        "Name": "Engine",
+        "Version": "29.8.1",
+        "Details": {
+          "ApiVersion": "1.56",
+          "Arch": "arm64",
+          "BuildTime": "Tue Sep 15 16:25:13 2026",
+          "Experimental": "false",
+          "GitCommit": "464cd50",
+          "GoVersion": "go1.26.8",
+          "KernelVersion": "7.0.0-1011-oracle",
+          "MinAPIVersion": "1.40",
+          "Module": "github.com/moby/moby/v2",
+          "ModuleVersion": "v2.0.0+unknown",
+          "Os": "linux"
+        }
+      },
+      {
+        "Name": "containerd",
+        "Version": "v2.3.6",
+        "Details": {
+          "GitCommit": "ee2735368117d2eb259779949d5e75cdafec9761"
+        }
+      },
+      {
+        "Name": "runc",
+        "Version": "1.5.1",
+        "Details": {
+          "GitCommit": "v1.5.1-0-g8f2685a4"
+        }
+      },
+      {
+        "Name": "docker-init",
+        "Version": "0.19.0",
+        "Details": {
+          "GitCommit": "de40ad0"
+        }
+      }
+    ],
+    "GitCommit": "464cd50",
+    "GoVersion": "go1.26.8",
+    "KernelVersion": "7.0.0-1011-oracle",
+    "BuildTime": "2026-09-15T16:25:13.000000000+00:00"
+  },
+  "compose": "5.5.1",
+  "containers": [
+    {
+      "name": "coolify",
+      "image": "coollabsio/coolify:4.4.6",
+      "ports": "8000/tcp, 8443/tcp, 0.0.0.0:6001-6002->6001-6002/tcp, [::]:6001-6002->6001-6002/tcp, 9000/tcp, 0.0.0.0:8000->8080/tcp, [::]:8000->8080/tcp",
+      "status": "Up 2 days (healthy)"
+    },
+    {
+      "name": "coolify-db",
+      "image": "postgres:15-alpine",
+      "ports": "5432/tcp",
+      "status": "Up 2 days (healthy)"
+    },
+    {
+      "name": "coolify-redis",
+      "image": "redis:7-alpine",
+      "ports": "6379/tcp",
+      "status": "Up 2 days (healthy)"
+    },
+    {
+      "name": "anxlw7yetk0ocvbyzwbpjint-163548116612",
+      "image": "anxlw7yetk0ocvbyzwbpjint:f5afaa23c54c968be249231f18e212b2b43a0c82",
+      "ports": "5000/tcp",
+      "status": "Up 5 days (healthy)"
+    },
+    {
+      "name": "7lr48ioylpn4uwuwmzdr84xv",
+      "image": "mongo:7",
+      "ports": "27017/tcp",
+      "status": "Up 5 days (healthy)"
+    },
+    {
+      "name": "tofxqwcillfystizcppgwefs-152517892574",
+      "image": "tofxqwcillfystizcppgwefs:bbb54177c8397b3ccccd7cbf1c287d9c57801e7b",
+      "ports": "3001/tcp",
+      "status": "Up 5 days (healthy)"
+    },
+    {
+      "name": "coolify-sentinel",
+      "image": "coollabsio/sentinel:1.0.2",
+      "ports": "",
+      "status": "Up 5 days (healthy)"
+    },
+    {
+      "name": "kwbztz6s0wntvtw7wc3n6sv4",
+      "image": "9854f7139445",
+      "ports": "27017/tcp",
+      "status": "Up 13 days (healthy)"
+    },
+    {
+      "name": "l5xb1i1sv6xmndnradzxzlhz",
+      "image": "9854f7139445",
+      "ports": "27017/tcp",
+      "status": "Up 2 weeks (healthy)"
+    },
+    {
+      "name": "coolify-proxy",
+      "image": "traefik:v3.6",
+      "ports": "0.0.0.0:80->80/tcp, [::]:80->80/tcp, 0.0.0.0:443->443/tcp, [::]:443->443/tcp, 0.0.0.0:8080->8080/tcp, [::]:8080->8080/tcp, 0.0.0.0:443->443/udp, [::]:443->443/udp",
+      "status": "Up 2 weeks (healthy)"
+    }
+  ],
+  "container_metadata": [
+    {
+      "name": "coolify",
+      "image": "docker.io/coollabsio/coolify:4.4.6",
+      "project": "source",
+      "restart": {
+        "MaximumRetryCount": 0,
+        "Name": "always"
+      },
+      "limits": {
+        "memory_bytes": 0,
+        "nano_cpus": 0,
+        "pids": null
+      },
+      "networks": [
+        "coolify"
+      ],
+      "mounts": [
+        {
+          "type": "bind",
+          "target": "/var/www/html/.env",
+          "source": "/data/coolify/source/.env",
+          "read_write": false
+        },
+        {
+          "type": "bind",
+          "target": "/var/www/html/storage/app/applications",
+          "source": "/data/coolify/applications",
+          "read_write": true
+        },
+        {
+          "type": "bind",
+          "target": "/var/www/html/storage/app/backups",
+          "source": "/data/coolify/backups",
+          "read_write": true
+        },
+        {
+          "type": "bind",
+          "target": "/var/www/html/storage/app/databases",
+          "source": "/data/coolify/databases",
+          "read_write": true
+        },
+        {
+          "type": "bind",
+          "target": "/var/www/html/storage/app/images",
+          "source": "/data/coolify/images",
+          "read_write": true
+        },
+        {
+          "type": "bind",
+          "target": "/var/www/html/storage/app/services",
+          "source": "/data/coolify/services",
+          "read_write": true
+        },
+        {
+          "type": "bind",
+          "target": "/var/www/html/storage/app/ssh",
+          "source": "/data/coolify/ssh",
+          "read_write": true
+        }
+      ]
+    },
+    {
+      "name": "coolify-db",
+      "image": "postgres:15-alpine",
+      "project": "source",
+      "restart": {
+        "MaximumRetryCount": 0,
+        "Name": "always"
+      },
+      "limits": {
+        "memory_bytes": 0,
+        "nano_cpus": 0,
+        "pids": null
+      },
+      "networks": [
+        "coolify"
+      ],
+      "mounts": [
+        {
+          "type": "volume",
+          "target": "/var/lib/postgresql/data",
+          "source": "coolify-db",
+          "read_write": true
+        }
+      ]
+    },
+    {
+      "name": "coolify-redis",
+      "image": "redis:7-alpine",
+      "project": "source",
+      "restart": {
+        "MaximumRetryCount": 0,
+        "Name": "always"
+      },
+      "limits": {
+        "memory_bytes": 0,
+        "nano_cpus": 0,
+        "pids": null
+      },
+      "networks": [
+        "coolify"
+      ],
+      "mounts": [
+        {
+          "type": "volume",
+          "target": "/data",
+          "source": "coolify-redis",
+          "read_write": true
+        }
+      ]
+    },
+    {
+      "name": "anxlw7yetk0ocvbyzwbpjint-163548116612",
+      "image": "anxlw7yetk0ocvbyzwbpjint:f5afaa23c54c968be249231f18e212b2b43a0c82",
+      "project": "anxlw7yetk0ocvbyzwbpjint",
+      "restart": {
+        "MaximumRetryCount": 0,
+        "Name": "unless-stopped"
+      },
+      "limits": {
+        "memory_bytes": 0,
+        "nano_cpus": 0,
+        "pids": null
+      },
+      "networks": [
+        "coolify"
+      ],
+      "mounts": []
+    },
+    {
+      "name": "7lr48ioylpn4uwuwmzdr84xv",
+      "image": "mongo:7",
+      "project": "7lr48ioylpn4uwuwmzdr84xv",
+      "restart": {
+        "MaximumRetryCount": 0,
+        "Name": "unless-stopped"
+      },
+      "limits": {
+        "memory_bytes": 1073741824,
+        "nano_cpus": 0,
+        "pids": null
+      },
+      "networks": [
+        "coolify"
+      ],
+      "mounts": [
+        {
+          "type": "bind",
+          "target": "/docker-entrypoint-initdb.d",
+          "source": "/data/coolify/databases/7lr48ioylpn4uwuwmzdr84xv/docker-entrypoint-initdb.d",
+          "read_write": false
+        },
+        {
+          "type": "volume",
+          "target": "/data/configdb",
+          "source": "mongodb-configdb-7lr48ioylpn4uwuwmzdr84xv",
+          "read_write": true
+        },
+        {
+          "type": "volume",
+          "target": "/data/db",
+          "source": "mongodb-db-7lr48ioylpn4uwuwmzdr84xv",
+          "read_write": true
+        },
+        {
+          "type": "bind",
+          "target": "/etc/mongo/mongod.conf",
+          "source": "/data/coolify/databases/7lr48ioylpn4uwuwmzdr84xv/mongod.conf",
+          "read_write": false
+        }
+      ]
+    },
+    {
+      "name": "tofxqwcillfystizcppgwefs-152517892574",
+      "image": "tofxqwcillfystizcppgwefs:bbb54177c8397b3ccccd7cbf1c287d9c57801e7b",
+      "project": "tofxqwcillfystizcppgwefs",
+      "restart": {
+        "MaximumRetryCount": 0,
+        "Name": "unless-stopped"
+      },
+      "limits": {
+        "memory_bytes": 0,
+        "nano_cpus": 0,
+        "pids": null
+      },
+      "networks": [
+        "coolify"
+      ],
+      "mounts": []
+    },
+    {
+      "name": "coolify-sentinel",
+      "image": "docker.io/coollabsio/sentinel:1.0.2",
+      "project": null,
+      "restart": {
+        "MaximumRetryCount": 0,
+        "Name": "no"
+      },
+      "limits": {
+        "memory_bytes": 0,
+        "nano_cpus": 0,
+        "pids": null
+      },
+      "networks": [
+        "coolify"
+      ],
+      "mounts": [
+        {
+          "type": "bind",
+          "target": "/app/db",
+          "source": "/data/coolify/sentinel",
+          "read_write": true
+        },
+        {
+          "type": "bind",
+          "target": "/var/run/docker.sock",
+          "source": "/var/run/docker.sock",
+          "read_write": true
+        }
+      ]
+    },
+    {
+      "name": "kwbztz6s0wntvtw7wc3n6sv4",
+      "image": "mongo:7",
+      "project": "kwbztz6s0wntvtw7wc3n6sv4",
+      "restart": {
+        "MaximumRetryCount": 0,
+        "Name": "unless-stopped"
+      },
+      "limits": {
+        "memory_bytes": 0,
+        "nano_cpus": 0,
+        "pids": null
+      },
+      "networks": [
+        "coolify"
+      ],
+      "mounts": [
+        {
+          "type": "bind",
+          "target": "/docker-entrypoint-initdb.d",
+          "source": "/data/coolify/databases/kwbztz6s0wntvtw7wc3n6sv4/docker-entrypoint-initdb.d",
+          "read_write": false
+        },
+        {
+          "type": "volume",
+          "target": "/data/configdb",
+          "source": "mongodb-configdb-kwbztz6s0wntvtw7wc3n6sv4",
+          "read_write": true
+        },
+        {
+          "type": "volume",
+          "target": "/data/db",
+          "source": "mongodb-db-kwbztz6s0wntvtw7wc3n6sv4",
+          "read_write": true
+        }
+      ]
+    },
+    {
+      "name": "l5xb1i1sv6xmndnradzxzlhz",
+      "image": "mongo:7",
+      "project": "l5xb1i1sv6xmndnradzxzlhz",
+      "restart": {
+        "MaximumRetryCount": 0,
+        "Name": "unless-stopped"
+      },
+      "limits": {
+        "memory_bytes": 0,
+        "nano_cpus": 0,
+        "pids": null
+      },
+      "networks": [
+        "coolify"
+      ],
+      "mounts": [
+        {
+          "type": "bind",
+          "target": "/docker-entrypoint-initdb.d",
+          "source": "/data/coolify/databases/l5xb1i1sv6xmndnradzxzlhz/docker-entrypoint-initdb.d",
+          "read_write": false
+        },
+        {
+          "type": "volume",
+          "target": "/data/configdb",
+          "source": "mongodb-configdb-l5xb1i1sv6xmndnradzxzlhz",
+          "read_write": true
+        },
+        {
+          "type": "volume",
+          "target": "/data/db",
+          "source": "mongodb-db-l5xb1i1sv6xmndnradzxzlhz",
+          "read_write": true
+        }
+      ]
+    },
+    {
+      "name": "coolify-proxy",
+      "image": "traefik:v3.6",
+      "project": "coolify-proxy",
+      "restart": {
+        "MaximumRetryCount": 0,
+        "Name": "unless-stopped"
+      },
+      "limits": {
+        "memory_bytes": 0,
+        "nano_cpus": 0,
+        "pids": null
+      },
+      "networks": [
+        "coolify"
+      ],
+      "mounts": [
+        {
+          "type": "bind",
+          "target": "/traefik",
+          "source": "/data/coolify/proxy",
+          "read_write": true
+        },
+        {
+          "type": "bind",
+          "target": "/var/run/docker.sock",
+          "source": "/var/run/docker.sock",
+          "read_write": false
+        }
+      ]
+    }
+  ],
+  "networks": [
+    {
+      "name": "coolify",
+      "internal": false,
+      "ipv6": true,
+      "ipam": [
+        {
+          "Subnet": "10.0.2.0/24",
+          "Gateway": "10.0.2.1"
+        },
+        {
+          "Subnet": "fdfa:9c72:863e::/64",
+          "Gateway": "fdfa:9c72:863e::1"
+        }
+      ]
+    },
+    {
+      "name": "bridge",
+      "internal": false,
+      "ipv6": false,
+      "ipam": [
+        {
+          "Subnet": "10.0.1.0/24",
+          "Gateway": "10.0.1.1"
+        }
+      ]
+    }
+  ],
+  "volumes": [
+    "331bf824caeb7f050818558a3be4ce1f5cdd47fcdda28c637e41dd0662e51b04",
+    "757885c35739f72d156bdbe11df235b0f5ab48f66e463e179e6210fad1986fb2",
+    "coolify-db",
+    "coolify-redis",
+    "e59537bc881dfde02d65a850c65d3c8040785eef368e9c413795d2476ba0172f",
+    "ec824496991168ea59081dea2f9d490e908ac734daf634527d2aa87289ae1233",
+    "mongodb-configdb-7lr48ioylpn4uwuwmzdr84xv",
+    "mongodb-configdb-kwbztz6s0wntvtw7wc3n6sv4",
+    "mongodb-configdb-l5xb1i1sv6xmndnradzxzlhz",
+    "mongodb-db-7lr48ioylpn4uwuwmzdr84xv",
+    "mongodb-db-kwbztz6s0wntvtw7wc3n6sv4",
+    "mongodb-db-l5xb1i1sv6xmndnradzxzlhz"
+  ],
+  "proxy": {
+    "name": "coolify-proxy",
+    "flags": [
+      "--entrypoints.http.address=:80",
+      "--entrypoints.https.address=:443",
+      "--entrypoints.http.http.encodequerysemicolons=true",
+      "--entryPoints.http.http2.maxConcurrentStreams=250",
+      "--entrypoints.https.http.encodequerysemicolons=true",
+      "--entryPoints.https.http2.maxConcurrentStreams=250",
+      "--entrypoints.https.http3",
+      "--providers.file.directory=/traefik/dynamic/",
+      "--providers.file.watch=true",
+      "--certificatesresolvers.letsencrypt.acme.httpchallenge=true",
+      "--certificatesresolvers.letsencrypt.acme.httpchallenge.entrypoint=http",
+      "--certificatesresolvers.letsencrypt.acme.storage=/traefik/acme.json",
+      "--providers.docker.exposedbydefault=false"
+    ],
+    "host_rules": "/coolify resource=\n\n/coolify-db resource=\n\n/coolify-redis resource=\n\n/anxlw7yetk0ocvbyzwbpjint-163548116612 resource=anxlw7yetk0ocvbyzwbpjint\ntraefik.http.routers.http-0-anxlw7yetk0ocvbyzwbpjint.rule=Host(`api.mecanet.site`) && PathPrefix(`/`)\ntraefik.http.routers.https-0-anxlw7yetk0ocvbyzwbpjint.rule=Host(`api.mecanet.site`) && PathPrefix(`/`)\n\n/7lr48ioylpn4uwuwmzdr84xv resource=\n\n/tofxqwcillfystizcppgwefs-152517892574 resource=tofxqwcillfystizcppgwefs\ntraefik.http.routers.http-0-tofxqwcillfystizcppgwefs.rule=Host(`nexora-api.193.122.135.72.sslip.io`) && PathPrefix(`/`)\ntraefik.http.routers.https-0-tofxqwcillfystizcppgwefs.rule=Host(`nexora-api.193.122.135.72.sslip.io`) && PathPrefix(`/`)\n\n/coolify-sentinel resource=\n\n/kwbztz6s0wntvtw7wc3n6sv4 resource=\n\n/l5xb1i1sv6xmndnradzxzlhz resource=\n\n/coolify-proxy resource=",
+    "dynamic": [
+      {
+        "file": "coolify.yaml",
+        "routers": {
+          "coolify-http": {
+            "rule": "Host(`coolify.193.122.135.72.sslip.io`)",
+            "entryPoints": [
+              "http"
+            ],
+            "service": "coolify",
+            "middlewares": [
+              "redirect-to-https"
+            ]
+          },
+          "coolify-reverb-ws": {
+            "rule": "Host(`coolify.193.122.135.72.sslip.io`) && PathPrefix(`/app`)",
+            "entryPoints": [
+              "http"
+            ],
+            "service": "coolify-reverb"
+          },
+          "coolify-reverb-api": {
+            "rule": "Host(`coolify.193.122.135.72.sslip.io`) && PathPrefix(`/apps`)",
+            "entryPoints": [
+              "http"
+            ],
+            "service": "coolify-reverb"
+          },
+          "coolify-terminal-ws": {
+            "rule": "Host(`coolify.193.122.135.72.sslip.io`) && PathPrefix(`/terminal/ws`)",
+            "entryPoints": [
+              "http"
+            ],
+            "service": "coolify-terminal"
+          },
+          "coolify-https": {
+            "rule": "Host(`coolify.193.122.135.72.sslip.io`)",
+            "entryPoints": [
+              "https"
+            ],
+            "service": "coolify",
+            "tls": {
+              "certresolver": "letsencrypt"
+            },
+            "middlewares": [
+              "gzip"
+            ]
+          },
+          "coolify-reverb-wss": {
+            "rule": "Host(`coolify.193.122.135.72.sslip.io`) && PathPrefix(`/app`)",
+            "entryPoints": [
+              "https"
+            ],
+            "service": "coolify-reverb",
+            "tls": {
+              "certresolver": "letsencrypt"
+            }
+          },
+          "coolify-reverb-api-https": {
+            "rule": "Host(`coolify.193.122.135.72.sslip.io`) && PathPrefix(`/apps`)",
+            "entryPoints": [
+              "https"
+            ],
+            "service": "coolify-reverb",
+            "tls": {
+              "certresolver": "letsencrypt"
+            }
+          },
+          "coolify-terminal-wss": {
+            "rule": "Host(`coolify.193.122.135.72.sslip.io`) && PathPrefix(`/terminal/ws`)",
+            "entryPoints": [
+              "https"
+            ],
+            "service": "coolify-terminal",
+            "tls": {
+              "certresolver": "letsencrypt"
+            }
+          }
+        },
+        "services": {
+          "coolify": {
+            "servers": [
+              "http://coolify:8080"
+            ]
+          },
+          "coolify-reverb": {
+            "servers": [
+              "http://coolify:6001"
+            ]
+          },
+          "coolify-terminal": {
+            "servers": [
+              "http://coolify:6002"
+            ]
+          }
+        },
+        "middleware_names": [
+          "redirect-to-https",
+          "gzip"
+        ]
+      },
+      {
+        "file": "default_redirect_503.yaml",
+        "routers": {
+          "catchall": {
+            "rule": "PathPrefix(`/`)",
+            "entryPoints": [
+              "http",
+              "https"
+            ],
+            "service": "noop",
+            "tls": {
+              "certResolver": "letsencrypt"
+            },
+            "priority": -1000
+          }
+        },
+        "services": {
+          "noop": {
+            "servers": []
+          }
+        },
+        "middleware_names": []
+      }
+    ]
+  },
+  "listeners": {
+    "bound_all_tcp": [
+      22,
+      80,
+      111,
+      443,
+      6001,
+      6002,
+      8000,
+      8080
+    ],
+    "bound_all_udp": [
+      111,
+      443
+    ],
+    "loopback_dns": 53,
+    "postgres_host_published": false,
+    "mongo_host_published": false,
+    "remote_qa_loopback_port_18443_observed_free": true,
+    "external_reachability": "NOT VERIFIED"
+  },
+  "firewall": {
+    "ufw": "not installed",
+    "ipv4_filter": "-P INPUT ACCEPT\n-P FORWARD DROP\n-P OUTPUT ACCEPT\n-N DOCKER\n-N DOCKER-BRIDGE\n-N DOCKER-CT\n-N DOCKER-FORWARD\n-N DOCKER-INTERNAL\n-N DOCKER-USER\n-N InstanceServices\n-A INPUT -m state --state RELATED,ESTABLISHED -j ACCEPT\n-A INPUT -p icmp -j ACCEPT\n-A INPUT -i lo -j ACCEPT\n-A INPUT -p tcp -m state --state NEW -m tcp --dport 22 -j ACCEPT\n-A INPUT -s <ADMIN_IPV4_REDACTED>/32 -p tcp -m tcp --dport 6002 -j ACCEPT\n-A INPUT -s <ADMIN_IPV4_REDACTED>/32 -p tcp -m tcp --dport 6001 -j ACCEPT\n-A INPUT -s <ADMIN_IPV4_REDACTED>/32 -p tcp -m tcp --dport 8000 -j ACCEPT\n-A INPUT -p tcp -m tcp --dport 443 -j ACCEPT\n-A INPUT -p tcp -m tcp --dport 80 -j ACCEPT\n-A INPUT -j REJECT --reject-with icmp-host-prohibited\n-A FORWARD -j DOCKER-USER\n-A FORWARD -j DOCKER-FORWARD\n-A FORWARD -s <ADMIN_IPV4_REDACTED>/32 -p tcp -m tcp --dport 6002 -j ACCEPT\n-A FORWARD -s <ADMIN_IPV4_REDACTED>/32 -p tcp -m tcp --dport 6001 -j ACCEPT\n-A FORWARD -s <ADMIN_IPV4_REDACTED>/32 -p tcp -m tcp --dport 8000 -j ACCEPT\n-A FORWARD -p tcp -m tcp --dport 443 -j ACCEPT\n-A FORWARD -p tcp -m tcp --dport 80 -j ACCEPT\n-A FORWARD -j REJECT --reject-with icmp-host-prohibited\n-A OUTPUT -d 169.254.0.0/16 -j InstanceServices\n-A DOCKER -d 10.0.2.4/32 ! -i br-dd1bd9cd3e25 -o br-dd1bd9cd3e25 -p tcp -m tcp --dport 8080 -j ACCEPT\n-A DOCKER -d 10.0.2.4/32 ! -i br-dd1bd9cd3e25 -o br-dd1bd9cd3e25 -p tcp -m tcp --dport 6002 -j ACCEPT\n-A DOCKER -d 10.0.2.4/32 ! -i br-dd1bd9cd3e25 -o br-dd1bd9cd3e25 -p tcp -m tcp --dport 6001 -j ACCEPT\n-A DOCKER -d 10.0.2.7/32 ! -i br-dd1bd9cd3e25 -o br-dd1bd9cd3e25 -p tcp -m tcp --dport 8080 -j ACCEPT\n-A DOCKER -d 10.0.2.7/32 ! -i br-dd1bd9cd3e25 -o br-dd1bd9cd3e25 -p udp -m udp --dport 443 -j ACCEPT\n-A DOCKER -d 10.0.2.7/32 ! -i br-dd1bd9cd3e25 -o br-dd1bd9cd3e25 -p tcp -m tcp --dport 443 -j ACCEPT\n-A DOCKER -d 10.0.2.7/32 ! -i br-dd1bd9cd3e25 -o br-dd1bd9cd3e25 -p tcp -m tcp --dport 80 -j ACCEPT\n-A DOCKER ! -i docker0 -o docker0 -j DROP\n-A DOCKER ! -i br-dd1bd9cd3e25 -o br-dd1bd9cd3e25 -j DROP\n-A DOCKER-BRIDGE -o docker0 -j DOCKER\n-A DOCKER-BRIDGE -o br-dd1bd9cd3e25 -j DOCKER\n-A DOCKER-CT -o docker0 -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT\n-A DOCKER-CT -o br-dd1bd9cd3e25 -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT\n-A DOCKER-FORWARD -j DOCKER-CT\n-A DOCKER-FORWARD -j DOCKER-INTERNAL\n-A DOCKER-FORWARD -j DOCKER-BRIDGE\n-A DOCKER-FORWARD -i docker0 -j ACCEPT\n-A DOCKER-FORWARD -i br-dd1bd9cd3e25 -j ACCEPT\n-A InstanceServices -d 169.254.0.2/32 -p tcp -m owner --uid-owner 0 -m tcp --dport 3260 -m comment --comment \"See the Oracle-Provided Images section in the Oracle Cloud Infrastructure documentation for security impact of modifying or removing this rule\" -j ACCEPT\n-A InstanceServices -d 169.254.2.0/24 -p tcp -m owner --uid-owner 0 -m tcp --dport 3260 -m comment --comment \"See the Oracle-Provided Images section in the Oracle Cloud Infrastructure documentation for security impact of modifying or removing this rule\" -j ACCEPT\n-A InstanceServices -d 169.254.4.0/24 -p tcp -m owner --uid-owner 0 -m tcp --dport 3260 -m comment --comment \"See the Oracle-Provided Images section in the Oracle Cloud Infrastructure documentation for security impact of modifying or removing this rule\" -j ACCEPT\n-A InstanceServices -d 169.254.5.0/24 -p tcp -m owner --uid-owner 0 -m tcp --dport 3260 -m comment --comment \"See the Oracle-Provided Images section in the Oracle Cloud Infrastructure documentation for security impact of modifying or removing this rule\" -j ACCEPT\n-A InstanceServices -d 169.254.0.2/32 -p tcp -m tcp --dport 80 -m comment --comment \"See the Oracle-Provided Images section in the Oracle Cloud Infrastructure documentation for security impact of modifying or removing this rule\" -j ACCEPT\n-A InstanceServices -d 169.254.169.254/32 -p udp -m udp --dport 53 -m comment --comment \"See the Oracle-Provided Images section in the Oracle Cloud Infrastructure documentation for security impact of modifying or removing this rule\" -j ACCEPT\n-A InstanceServices -d 169.254.169.254/32 -p tcp -m tcp --dport 53 -m comment --comment \"See the Oracle-Provided Images section in the Oracle Cloud Infrastructure documentation for security impact of modifying or removing this rule\" -j ACCEPT\n-A InstanceServices -d 169.254.0.3/32 -p tcp -m owner --uid-owner 0 -m tcp --dport 80 -m comment --comment \"See the Oracle-Provided Images section in the Oracle Cloud Infrastructure documentation for security impact of modifying or removing this rule\" -j ACCEPT\n-A InstanceServices -d 169.254.0.4/32 -p tcp -m tcp --dport 80 -m comment --comment \"See the Oracle-Provided Images section in the Oracle Cloud Infrastructure documentation for security impact of modifying or removing this rule\" -j ACCEPT\n-A InstanceServices -d 169.254.169.254/32 -p tcp -m tcp --dport 80 -m comment --comment \"See the Oracle-Provided Images section in the Oracle Cloud Infrastructure documentation for security impact of modifying or removing this rule\" -j ACCEPT\n-A InstanceServices -d 169.254.169.254/32 -p udp -m udp --dport 67 -m comment --comment \"See the Oracle-Provided Images section in the Oracle Cloud Infrastructure documentation for security impact of modifying or removing this rule\" -j ACCEPT\n-A InstanceServices -d 169.254.169.254/32 -p udp -m udp --dport 69 -m comment --comment \"See the Oracle-Provided Images section in the Oracle Cloud Infrastructure documentation for security impact of modifying or removing this rule\" -j ACCEPT\n-A InstanceServices -d 169.254.169.254/32 -p udp -m udp --dport 123 -m comment --comment \"See the Oracle-Provided Images section in the Oracle Cloud Infrastructure documentation for security impact of modifying or removing this rule\" -j ACCEPT\n-A InstanceServices -d 169.254.0.0/16 -p tcp -m tcp -m comment --comment \"See the Oracle-Provided Images section in the Oracle Cloud Infrastructure documentation for security impact of modifying or removing this rule\" -j REJECT --reject-with tcp-reset\n-A InstanceServices -d 169.254.0.0/16 -p udp -m udp -m comment --comment \"See the Oracle-Provided Images section in the Oracle Cloud Infrastructure documentation for security impact of modifying or removing this rule\" -j REJECT --reject-with icmp-port-unreachable",
+    "ipv4_nat": "-P PREROUTING ACCEPT\n-P INPUT ACCEPT\n-P OUTPUT ACCEPT\n-P POSTROUTING ACCEPT\n-N DOCKER\n-A PREROUTING -m addrtype --dst-type LOCAL -j DOCKER\n-A OUTPUT ! -d 127.0.0.0/8 -m addrtype --dst-type LOCAL -j DOCKER\n-A POSTROUTING -s 10.0.2.0/24 ! -o br-dd1bd9cd3e25 -j MASQUERADE\n-A POSTROUTING -s 10.0.1.0/24 ! -o docker0 -j MASQUERADE\n-A DOCKER ! -i br-dd1bd9cd3e25 -p tcp -m tcp --dport 80 -j DNAT --to-destination 10.0.2.7:80\n-A DOCKER ! -i br-dd1bd9cd3e25 -p tcp -m tcp --dport 443 -j DNAT --to-destination 10.0.2.7:443\n-A DOCKER ! -i br-dd1bd9cd3e25 -p udp -m udp --dport 443 -j DNAT --to-destination 10.0.2.7:443\n-A DOCKER ! -i br-dd1bd9cd3e25 -p tcp -m tcp --dport 8080 -j DNAT --to-destination 10.0.2.7:8080\n-A DOCKER ! -i br-dd1bd9cd3e25 -p tcp -m tcp --dport 6001 -j DNAT --to-destination 10.0.2.4:6001\n-A DOCKER ! -i br-dd1bd9cd3e25 -p tcp -m tcp --dport 6002 -j DNAT --to-destination 10.0.2.4:6002\n-A DOCKER ! -i br-dd1bd9cd3e25 -p tcp -m tcp --dport 8000 -j DNAT --to-destination 10.0.2.4:8080",
+    "ipv6_filter": "-P INPUT ACCEPT\n-P FORWARD DROP\n-P OUTPUT ACCEPT\n-N DOCKER\n-N DOCKER-BRIDGE\n-N DOCKER-CT\n-N DOCKER-FORWARD\n-N DOCKER-INTERNAL\n-N DOCKER-USER\n-A FORWARD -j DOCKER-USER\n-A FORWARD -j DOCKER-FORWARD\n-A DOCKER -d fdfa:9c72:863e::4/128 ! -i br-dd1bd9cd3e25 -o br-dd1bd9cd3e25 -p tcp -m tcp --dport 8080 -j ACCEPT\n-A DOCKER -d fdfa:9c72:863e::4/128 ! -i br-dd1bd9cd3e25 -o br-dd1bd9cd3e25 -p tcp -m tcp --dport 6002 -j ACCEPT\n-A DOCKER -d fdfa:9c72:863e::4/128 ! -i br-dd1bd9cd3e25 -o br-dd1bd9cd3e25 -p tcp -m tcp --dport 6001 -j ACCEPT\n-A DOCKER -d fdfa:9c72:863e::7/128 ! -i br-dd1bd9cd3e25 -o br-dd1bd9cd3e25 -p tcp -m tcp --dport 8080 -j ACCEPT\n-A DOCKER -d fdfa:9c72:863e::7/128 ! -i br-dd1bd9cd3e25 -o br-dd1bd9cd3e25 -p udp -m udp --dport 443 -j ACCEPT\n-A DOCKER -d fdfa:9c72:863e::7/128 ! -i br-dd1bd9cd3e25 -o br-dd1bd9cd3e25 -p tcp -m tcp --dport 443 -j ACCEPT\n-A DOCKER -d fdfa:9c72:863e::7/128 ! -i br-dd1bd9cd3e25 -o br-dd1bd9cd3e25 -p tcp -m tcp --dport 80 -j ACCEPT\n-A DOCKER ! -i br-dd1bd9cd3e25 -o br-dd1bd9cd3e25 -j DROP\n-A DOCKER-BRIDGE -o br-dd1bd9cd3e25 -j DOCKER\n-A DOCKER-CT -o br-dd1bd9cd3e25 -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT\n-A DOCKER-FORWARD -j DOCKER-CT\n-A DOCKER-FORWARD -j DOCKER-INTERNAL\n-A DOCKER-FORWARD -j DOCKER-BRIDGE\n-A DOCKER-FORWARD -i br-dd1bd9cd3e25 -j ACCEPT",
+    "warning": "Docker forwarding chains precede manual FORWARD accept/reject rules; INPUT/absence UFW alone does not prove published-port restriction. IPv6 INPUT ACCEPT. No changes made."
+  },
+  "persistence": {
+    "docker_and_netfilter_persistent_enabled": "enabled\nenabled",
+    "backups": {
+      "directory_exists": true,
+      "top_level_directories": 2,
+      "contents_not_read": true
+    },
+    "restore": "NOT VERIFIED",
+    "new_mecanet_root_exists": false
+  },
+  "instantaneous_container_stats": [
+    {
+      "name": "coolify",
+      "cpu": "0.23%",
+      "memory": "384.4MiB / 11.65GiB",
+      "pids": "31"
+    },
+    {
+      "name": "coolify-db",
+      "cpu": "2.44%",
+      "memory": "33MiB / 11.65GiB",
+      "pids": "7"
+    },
+    {
+      "name": "coolify-redis",
+      "cpu": "0.53%",
+      "memory": "7.391MiB / 11.65GiB",
+      "pids": "7"
+    },
+    {
+      "name": "anxlw7yetk0ocvbyzwbpjint-163548116612",
+      "cpu": "0.09%",
+      "memory": "86.34MiB / 11.65GiB",
+      "pids": "11"
+    },
+    {
+      "name": "7lr48ioylpn4uwuwmzdr84xv",
+      "cpu": "0.45%",
+      "memory": "102MiB / 1GiB",
+      "pids": "78"
+    },
+    {
+      "name": "tofxqwcillfystizcppgwefs-152517892574",
+      "cpu": "0.07%",
+      "memory": "80.2MiB / 11.65GiB",
+      "pids": "11"
+    },
+    {
+      "name": "coolify-sentinel",
+      "cpu": "0.03%",
+      "memory": "5.727MiB / 11.65GiB",
+      "pids": "3"
+    },
+    {
+      "name": "kwbztz6s0wntvtw7wc3n6sv4",
+      "cpu": "0.80%",
+      "memory": "1.244GiB / 11.65GiB",
+      "pids": "149"
+    },
+    {
+      "name": "l5xb1i1sv6xmndnradzxzlhz",
+      "cpu": "0.44%",
+      "memory": "684MiB / 11.65GiB",
+      "pids": "88"
+    },
+    {
+      "name": "coolify-proxy",
+      "cpu": "0.65%",
+      "memory": "65.04MiB / 11.65GiB",
+      "pids": "11"
+    }
+  ],
+  "local": {
+    "provenance": "LOCAL directed metadata check 2026-10-12",
+    "node": "24.14.0",
+    "docker_path": null,
+    "docker_known_locations_present": false,
+    "wsl_installed": false,
+    "psql_path": null,
+    "postgres_default_install_directory_present": false,
+    "limitation": "Targeted inspection, not exhaustive disk inventory; no installation, acceptance, restart or native Mongo experiment."
+  },
+  "actions": {
+    "resources_created": [],
+    "resources_modified": [],
+    "new_qa_installed": false,
+    "builds": 0,
+    "load_tests": 0,
+    "database_connections": 0,
+    "cleanup_required": false
+  }
+}

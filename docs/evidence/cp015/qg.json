@@ -1,0 +1,406 @@
+{
+  "checkpoint": "CP-015",
+  "at_utc": "2026-10-13T16:17:23.541951+00:00",
+  "classification": "DETECTED",
+  "tested_code_sha": "a89cc2eee43a8f60f3464bea26a6ea4f9ddfc867",
+  "result": "PASS",
+  "checks": [
+    {
+      "id": "planning:prompt-immutable",
+      "result": "PASS",
+      "evidence": "d2dafd5f75df32aae33e421953fab6e99e723aa88744b918b555562c7b6a550d"
+    },
+    {
+      "id": "planning:criteria-history",
+      "result": "PASS",
+      "evidence": "C-01…215 text exact to CP-014"
+    },
+    {
+      "id": "planning:checkpoint-history",
+      "result": "PASS",
+      "evidence": "CP-001…014 sections preserved"
+    },
+    {
+      "id": "planning:criteria-unique",
+      "result": "PASS",
+      "evidence": "232 sequential criteria; CP-015 17 new rows"
+    },
+    {
+      "id": "planning:matrix-states",
+      "result": "PASS",
+      "evidence": {
+        "PASS": 13,
+        "NOT VERIFIED": 3,
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "planning:canonical-table-shapes",
+      "result": "PASS",
+      "evidence": {
+        "expected_columns": {
+          "criteria": 8,
+          "pending": 8,
+          "phases": 9
+        },
+        "wrong_widths": []
+      }
+    },
+    {
+      "id": "planning:decision-identities",
+      "result": "PASS",
+      "evidence": "59 decisions; SE-002 representation only"
+    },
+    {
+      "id": "planning:pending-registry",
+      "result": "PASS",
+      "evidence": {
+        "priorities": {
+          "BLOCKING": 2,
+          "FUTURE": 14
+        },
+        "types": {
+          "evidencia": 5,
+          "diseño técnico": 4,
+          "dependencia externa": 2,
+          "decisión humana": 5
+        }
+      }
+    },
+    {
+      "id": "planning:pending-history",
+      "result": "PASS",
+      "evidence": "14 earlier pending rows preserved verbatim"
+    },
+    {
+      "id": "planning:approved-snapshots",
+      "result": "PASS",
+      "evidence": [
+        {
+          "source": ".agentic/SPECIFICATION_CANDIDATE.md",
+          "snapshot": "docs/specs/p1-l1-approved/S-18.md",
+          "matches": true
+        },
+        {
+          "source": ".agentic/ARCHITECTURE_OPTIONS.md",
+          "snapshot": "docs/specs/p1-l1-approved/DEP-IND.md",
+          "matches": true
+        },
+        {
+          "source": "tasks/plan.md",
+          "snapshot": "docs/specs/p1-l1-approved/eight-cuts.md",
+          "matches": true
+        }
+      ]
+    },
+    {
+      "id": "planning:audit-fail-visible",
+      "result": "PASS",
+      "evidence": "Full audit remains FAIL; runtime PASS is separate"
+    },
+    {
+      "id": "planning:workflow-local",
+      "result": "PASS",
+      "evidence": "actionlint1.7.12; no remote run; shellcheck/pyflakes excluded"
+    },
+    {
+      "id": "planning:references",
+      "result": "PASS",
+      "evidence": {
+        "checked_file_references": 149,
+        "new_unresolved": [],
+        "historical_missing": [],
+        "limits": "Existence check; no remote availability or fragment-anchor validation. Exact snapshots use original sourcePath context; ci-plan uses integration worktree context."
+      }
+    },
+    {
+      "id": "planning:current-diff-documentation",
+      "result": "PASS",
+      "evidence": [
+        ".agentic/P1-L1_INTEGRATION.md",
+        ".agentic/PLANNING_STATE.md",
+        ".gitattributes",
+        "AGENTS.md",
+        "docs/CHECKPOINTS.md",
+        "docs/DECISIONS.md",
+        "docs/PROJECT_MAP_DATA.json",
+        "docs/PROJECT_STATE.md",
+        "docs/README.md",
+        "docs/ROADMAP.md",
+        "docs/TECH_DEBT.md",
+        "docs/project-map/index.html",
+        "docs/specs/P1-L1.md",
+        "tasks/plan.md",
+        "tasks/todo.md"
+      ]
+    },
+    {
+      "id": "planning:current-whitespace",
+      "result": "PASS",
+      "evidence": {
+        "exit": 0,
+        "new_errors": "",
+        "explicit_exceptions": [
+          "docs/specs/p1-l1-approved/eight-cuts.md",
+          "docs/evidence/cp015/sanitizer.txt"
+        ],
+        "reason": "Byte-exact approved snapshot and verbatim test stdout retain blank EOF. No whitespace suppression for code or living documents."
+      }
+    },
+    {
+      "id": "planning:map-generation-check",
+      "result": "PASS",
+      "evidence": "Generated local map: 8 phases, 59 decisions, 232 criteria; progress is qualitative.\nVerified local map: 8 phases, 59 decisions, 232 criteria; progress is qualitative."
+    },
+    {
+      "id": "planning:map-states",
+      "result": "PASS",
+      "evidence": {
+        "active": [
+          "P1"
+        ],
+        "criteria": 232,
+        "decisions": 59,
+        "pending": 16
+      }
+    },
+    {
+      "id": "integration:prompt-immutable",
+      "result": "PASS",
+      "evidence": "d2dafd5f75df32aae33e421953fab6e99e723aa88744b918b555562c7b6a550d"
+    },
+    {
+      "id": "integration:criteria-history",
+      "result": "PASS",
+      "evidence": "C-01…215 text exact to CP-014"
+    },
+    {
+      "id": "integration:checkpoint-history",
+      "result": "PASS",
+      "evidence": "CP-001…014 sections preserved"
+    },
+    {
+      "id": "integration:criteria-unique",
+      "result": "PASS",
+      "evidence": "232 sequential criteria; CP-015 17 new rows"
+    },
+    {
+      "id": "integration:matrix-states",
+      "result": "PASS",
+      "evidence": {
+        "PASS": 13,
+        "NOT VERIFIED": 3,
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "integration:canonical-table-shapes",
+      "result": "PASS",
+      "evidence": {
+        "expected_columns": {
+          "criteria": 8,
+          "pending": 8,
+          "phases": 9
+        },
+        "wrong_widths": []
+      }
+    },
+    {
+      "id": "integration:decision-identities",
+      "result": "PASS",
+      "evidence": "59 decisions; SE-002 representation only"
+    },
+    {
+      "id": "integration:pending-registry",
+      "result": "PASS",
+      "evidence": {
+        "priorities": {
+          "BLOCKING": 2,
+          "FUTURE": 14
+        },
+        "types": {
+          "evidencia": 5,
+          "diseño técnico": 4,
+          "dependencia externa": 2,
+          "decisión humana": 5
+        }
+      }
+    },
+    {
+      "id": "integration:pending-history",
+      "result": "PASS",
+      "evidence": "14 earlier pending rows preserved verbatim"
+    },
+    {
+      "id": "integration:approved-snapshots",
+      "result": "PASS",
+      "evidence": [
+        {
+          "source": ".agentic/SPECIFICATION_CANDIDATE.md",
+          "snapshot": "docs/specs/p1-l1-approved/S-18.md",
+          "matches": true
+        },
+        {
+          "source": ".agentic/ARCHITECTURE_OPTIONS.md",
+          "snapshot": "docs/specs/p1-l1-approved/DEP-IND.md",
+          "matches": true
+        },
+        {
+          "source": "tasks/plan.md",
+          "snapshot": "docs/specs/p1-l1-approved/eight-cuts.md",
+          "matches": true
+        }
+      ]
+    },
+    {
+      "id": "integration:audit-fail-visible",
+      "result": "PASS",
+      "evidence": "Full audit remains FAIL; runtime PASS is separate"
+    },
+    {
+      "id": "integration:workflow-local",
+      "result": "PASS",
+      "evidence": "actionlint1.7.12; no remote run; shellcheck/pyflakes excluded"
+    },
+    {
+      "id": "integration:references",
+      "result": "PASS",
+      "evidence": {
+        "checked_file_references": 144,
+        "new_unresolved": [],
+        "historical_missing": [],
+        "limits": "Existence check; no remote availability or fragment-anchor validation. Exact snapshots use original sourcePath context; ci-plan uses integration worktree context."
+      }
+    },
+    {
+      "id": "integration:current-diff-documentation",
+      "result": "PASS",
+      "evidence": [
+        ".agentic/P1-L1_INTEGRATION.md",
+        ".agentic/PLANNING_STATE.md",
+        "AGENTS.md",
+        "docs/CHECKPOINTS.md",
+        "docs/DECISIONS.md",
+        "docs/PROJECT_MAP_DATA.json",
+        "docs/PROJECT_STATE.md",
+        "docs/README.md",
+        "docs/ROADMAP.md",
+        "docs/TECH_DEBT.md",
+        "docs/audit/CP-015.md",
+        "docs/evidence/cp015/archived-f-identity.json",
+        "docs/evidence/cp015/backend-runtime-audit.json",
+        "docs/evidence/cp015/backend.txt",
+        "docs/evidence/cp015/ci-plan.md",
+        "docs/evidence/cp015/controller.txt",
+        "docs/evidence/cp015/frontend-full-audit.json",
+        "docs/evidence/cp015/frontend-runtime-audit.json",
+        "docs/evidence/cp015/frontend.txt",
+        "docs/evidence/cp015/independent-review.json",
+        "docs/evidence/cp015/local-verification.json",
+        "docs/evidence/cp015/provenance.txt",
+        "docs/evidence/cp015/qg.json",
+        "docs/evidence/cp015/sanitizer.txt",
+        "docs/evidence/cp015/syntax.txt",
+        "docs/evidence/cp015/workflow-check.json",
+        "docs/project-map/index.html",
+        "tasks/plan.md",
+        "tasks/todo.md"
+      ]
+    },
+    {
+      "id": "integration:current-whitespace",
+      "result": "PASS",
+      "evidence": {
+        "exit": 0,
+        "new_errors": "",
+        "explicit_exceptions": [
+          "docs/specs/p1-l1-approved/eight-cuts.md",
+          "docs/evidence/cp015/sanitizer.txt"
+        ],
+        "reason": "Byte-exact approved snapshot and verbatim test stdout retain blank EOF. No whitespace suppression for code or living documents."
+      }
+    },
+    {
+      "id": "integration:map-generation-check",
+      "result": "PASS",
+      "evidence": "Generated local map: 8 phases, 59 decisions, 232 criteria; progress is qualitative.\nVerified local map: 8 phases, 59 decisions, 232 criteria; progress is qualitative."
+    },
+    {
+      "id": "integration:map-states",
+      "result": "PASS",
+      "evidence": {
+        "active": [
+          "P1"
+        ],
+        "criteria": 232,
+        "decisions": 59,
+        "pending": 16
+      }
+    },
+    {
+      "id": "original-prompt-immutable",
+      "result": "PASS",
+      "evidence": "Original remains untracked and unchanged"
+    },
+    {
+      "id": "next-lot-reviewed-object",
+      "result": "PASS",
+      "evidence": {
+        "candidate_sha256": "3cd5368860ad001a602d56cb8aee526053c38394f90eecac398542167016901c",
+        "functional_tests": "NOT VERIFIED",
+        "A/B": "NOT APPROVED"
+      }
+    },
+    {
+      "id": "client-lock-selective",
+      "result": "PASS",
+      "evidence": [
+        "",
+        "node_modules/dompurify",
+        "node_modules/source-map-js"
+      ]
+    },
+    {
+      "id": "functional-object-identity",
+      "result": "PASS",
+      "evidence": {
+        "objects": 104,
+        "differences": [],
+        "source": "9fcdd9540848edbbdef1cfc94667491c9ab2ba92",
+        "integration": "a89cc2eee43a8f60f3464bea26a6ea4f9ddfc867"
+      }
+    },
+    {
+      "id": "f-public-assets-identity",
+      "result": "PASS",
+      "evidence": {
+        "assets": 3,
+        "historical_artifact": "sha256:5950ae7e519170ebaaf6cf8c99e9187c14b41f32779044e2829e8de5abbac0a6",
+        "limits": "No current PostgreSQL/browser/physical-restore run"
+      }
+    },
+    {
+      "id": "integration-import-whitespace",
+      "result": "PASS",
+      "evidence": {
+        "excluded_immutable_paths": [
+          "docs/methodology/Prompt_Maestro_v2.0.md",
+          "docs/evidence/CP-001-vps.txt",
+          "docs/specs/p1-l1-approved/eight-cuts.md"
+        ],
+        "reason": "Original hard breaks/tab/blank EOF retained byte-exact; exception explicit, not global suppression",
+        "other_errors": ""
+      }
+    },
+    {
+      "id": "independent-integration-report",
+      "result": "PASS",
+      "evidence": {
+        "path": "C:\\Users\\thede\\.codex\\worktrees\\p1l1-integration\\MECANET-develop\\docs\\evidence\\cp015\\independent-review.json",
+        "limit": "Independent local agent review; not GitHub approval"
+      }
+    }
+  ],
+  "failed": [],
+  "limits": "Documentation/coherence/identity quality gate only. Does not convert full dependency audit FAIL, Vercel publication NOT VERIFIED, remote CI NOT VERIFIED or candidate A/B NOT APPROVED into PASS."
+}

@@ -1,0 +1,43 @@
+ Container mecanet-qa-p1l1-cp014-web-1 Stopping
+ Container mecanet-qa-p1l1-cp014-api1-1 Stopping
+ Container mecanet-qa-p1l1-cp014-api2-1 Stopping
+ Container mecanet-qa-p1l1-cp014-web-1 Stopped
+ Container mecanet-qa-p1l1-cp014-api1-1 Stopped
+ Container mecanet-qa-p1l1-cp014-api2-1 Stopped
+ Container mecanet-qa-p1l1-cp014-api1-1 Recreate
+ Container mecanet-qa-p1l1-cp014-api2-1 Recreate
+ Container mecanet-qa-p1l1-cp014-api1-1 Recreated
+ Container mecanet-qa-p1l1-cp014-api2-1 Recreated
+ Container mecanet-qa-p1l1-cp014-api1-1 Starting
+ Container mecanet-qa-p1l1-cp014-api2-1 Starting
+ Container mecanet-qa-p1l1-cp014-api1-1 Started
+ Container mecanet-qa-p1l1-cp014-api2-1 Started
+ Container mecanet-qa-p1l1-cp014-web-1 Recreate
+ Container mecanet-qa-p1l1-cp014-web-1 Recreated
+ Container mecanet-qa-p1l1-cp014-web-1 Starting
+ Container mecanet-qa-p1l1-cp014-web-1 Started
+ Container mecanet-qa-p1l1-cp014-worker-1 Stopping
+ Container mecanet-qa-p1l1-cp014-worker-1 Stopped
+ Container mecanet-qa-p1l1-cp014-worker-1 Recreate
+ Container mecanet-qa-p1l1-cp014-worker-1 Recreated
+ Container mecanet-qa-p1l1-cp014-worker-1 Starting
+ Container mecanet-qa-p1l1-cp014-worker-1 Started
+{"workerTransferRequested": true, "mode": "full", "previousProcessProvenExited": true, "newOwnerRequiresCAS": true}
+{"selectedArtifact": "sha256:fa6f167df4e777e56d218396b3a4a9f53ac02c5531cdf8def37665da89930177", "codeSha": "0257d0d98d0c1444f0897bf4d03a36bb1a846ce2", "postgresUntouched": true}
+ Container mecanet-qa-p1l1-cp014-probe-run-2566deff8b16 Creating
+ Container mecanet-qa-p1l1-cp014-probe-run-2566deff8b16 Created
+▶ CP014 boundaries: real two-process authentication and purpose boundaries
+  ✔ Company/demo/operator use real signed host-only Secure HttpOnly cookies and standard stores (534.022731ms)
+  ✔ Valid identities cannot cross company/demo/operator boundaries; denial precedes every tenant-pool acquisition (1005.948343ms)
+  ✔ Forged paths, headers, bodies and query overrides cannot expose another company (3769.335553ms)
+  ✔ Logout COMMIT on API2 survives a deliberately delayed standard-store save from API1 (1802.373666ms)
+  ✔ Concurrent rotations through both API processes reject the old SID after each confirmed response (6696.951344ms)
+✔ CP014 boundaries: real two-process authentication and purpose boundaries (24298.694043ms)
+ℹ tests 6
+ℹ suites 0
+ℹ pass 6
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 26897.247908

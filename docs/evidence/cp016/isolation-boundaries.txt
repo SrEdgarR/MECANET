@@ -1,0 +1,29 @@
+✔ relative path boundary rejects traversal, absolute paths and ambiguous separators (11.6964ms)
+✔ materialization copies bytes exactly and excludes environment/unlisted files (54.241ms)
+✔ provenance rejects changed staged input instead of executing it (43.5684ms)
+✔ provenance rejects changed canonical source during a run (36.1441ms)
+✔ source junction cannot cross into an unlisted directory (8.0178ms)
+✔ oversize or nonregular source is refused (8.9665ms)
+✔ subprocesses receive explicit support only and private empty npm config/home (45.5906ms)
+✔ cleanup refuses a foreign ownership token without deleting contents (41.9458ms)
+✔ cleanup refuses a junction before any deletion and preserves the external target (51.3561ms)
+✔ cleanup deletes only its fresh owned stage, preserving a neighboring directory (35.4927ms)
+✔ promotion verifies three assets and preserves unrelated existing files (95.547ms)
+✔ unexpected build output cannot be promoted (46.4028ms)
+✔ promotion refuses a destination junction and leaves its target untouched (51.6192ms)
+✔ a previous result hardlink cannot overwrite another file (10.8636ms)
+✔ checked result writing preserves file identity and verifies the result bytes (15.966ms)
+✔ npm resolution selects a regular JS CLI with exact package identity from PATH (18.3368ms)
+✔ npm resolution rejects an incorrect package version instead of running it (12.5675ms)
+✔ guard identifies standalone and nested package paths without prefix collisions (1.4728ms)
+✔ benign deliberate ESM and CommonJS loads are rejected before package execution (87.4387ms)
+✔ unhandled deliberate ESM import fails closed with the isolation error (78.3365ms)
+✔ a benign dependency outside the isolated root is rejected before fallback (92.5425ms)
+ℹ tests 21
+ℹ suites 0
+ℹ pass 21
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 690.3706

@@ -1,0 +1,9 @@
+{
+  "targetContainerRemoved": "1d6be4db6a3bd9be44d8a037b7ca1c7606efcb73a8324d2142edbf1196524dc8",
+  "targetNetworkRemoved": "c85dff95ca646afb042ed2663882a76005c90694d21c0ada7b11a10ef86ae280",
+  "bindDataPreserved": true,
+  "backupPreserved": true,
+  "journalPreserved": true,
+  "sourceStopped": true,
+  "observedAt": 1791894681.567082
+}

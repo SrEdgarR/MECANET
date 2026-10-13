@@ -1,0 +1,50 @@
+ Container mecanet-qa-p1l1-cp014-api1-1 Stopping
+ Container mecanet-qa-p1l1-cp014-api2-1 Stopping
+ Container mecanet-qa-p1l1-cp014-api1-1 Stopped
+ Container mecanet-qa-p1l1-cp014-api2-1 Stopped
+{"phase": "prove-api-end", "status": "PASS", "ownApiContainersExited": 2, "oldApiBackends": 0, "tenantBackends": 0, "sharedResourcesChanged": 0}
+ Container mecanet-qa-p1l1-cp014-worker-1 Stopping
+ Container mecanet-qa-p1l1-cp014-worker-1 Stopped
+ Container mecanet-qa-p1l1-cp014-probe-run-3335c5a6f296 Creating
+ Container mecanet-qa-p1l1-cp014-probe-run-3335c5a6f296 Created
+{"result":"PASS","at":"2026-10-13T13:36:07.689Z","reconciled":1,"unprovenEndDenied":1,"consumptionPreserved":true,"oldRunnersEnded":2,"tenantBackends":0}
+{"artifact": "sha256:837cdc6eb4f2591824a27283b4cc5714101ea4ea8c6ebcd7415363698bf100e3", "codeSha": "e25a9f30937b516dca74985344e37fe686a1d567", "files": 912, "verified": true}
+ Container mecanet-qa-p1l1-cp014-web-1 Stopping
+ Container mecanet-qa-p1l1-cp014-api1-1 Stopping
+ Container mecanet-qa-p1l1-cp014-api2-1 Stopping
+ Container mecanet-qa-p1l1-cp014-api1-1 Stopped
+ Container mecanet-qa-p1l1-cp014-api2-1 Stopped
+ Container mecanet-qa-p1l1-cp014-web-1 Stopped
+ Container mecanet-qa-p1l1-cp014-api1-1 Recreate
+ Container mecanet-qa-p1l1-cp014-web-1 Recreate
+ Container mecanet-qa-p1l1-cp014-api2-1 Recreate
+ Container mecanet-qa-p1l1-cp014-api1-1 Recreated
+ Container mecanet-qa-p1l1-cp014-api2-1 Recreated
+ Container mecanet-qa-p1l1-cp014-web-1 Recreated
+ Container mecanet-qa-p1l1-cp014-api2-1 Starting
+ Container mecanet-qa-p1l1-cp014-web-1 Starting
+ Container mecanet-qa-p1l1-cp014-api1-1 Starting
+ Container mecanet-qa-p1l1-cp014-api2-1 Started
+ Container mecanet-qa-p1l1-cp014-web-1 Started
+ Container mecanet-qa-p1l1-cp014-api1-1 Started
+ Container mecanet-qa-p1l1-cp014-worker-1 Stopping
+ Container mecanet-qa-p1l1-cp014-worker-1 Stopped
+ Container mecanet-qa-p1l1-cp014-worker-1 Recreate
+ Container mecanet-qa-p1l1-cp014-worker-1 Recreated
+ Container mecanet-qa-p1l1-cp014-worker-1 Starting
+ Container mecanet-qa-p1l1-cp014-worker-1 Started
+{"workerTransferRequested": true, "mode": "full", "previousProcessProvenExited": true, "newOwnerRequiresCAS": true}
+{"selectedArtifact": "sha256:837cdc6eb4f2591824a27283b4cc5714101ea4ea8c6ebcd7415363698bf100e3", "codeSha": "e25a9f30937b516dca74985344e37fe686a1d567", "postgresUntouched": true}
+ Container mecanet-qa-p1l1-cp014-probe-run-d5401a222735 Creating
+ Container mecanet-qa-p1l1-cp014-probe-run-d5401a222735 Created
+▶ CP014 lost: real two-process authentication and purpose boundaries
+  ✔ Response lost after authoritative rotation COMMIT cannot return authority to its old cookie (3138.942875ms)
+✔ CP014 lost: real two-process authentication and purpose boundaries (6903.091454ms)
+ℹ tests 2
+ℹ suites 0
+ℹ pass 2
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 9602.315833

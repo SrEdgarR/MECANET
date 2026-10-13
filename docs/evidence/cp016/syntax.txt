@@ -1,0 +1,1 @@
+PASS: JavaScript syntax (69 files; JSX parsed by the frontend build)

@@ -1,0 +1,131 @@
+{
+  "classification": "SUGGESTED",
+  "notProductImplementation": true,
+  "fixtureRelativePath": ".qa-private\\cp016-tooling\\isolated-client",
+  "manifest": {
+    "name": "mecanet-saas-toolchain-fixture",
+    "version": "0.0.0",
+    "private": true,
+    "type": "module",
+    "engines": {
+      "node": ">=22.12.0"
+    },
+    "dependencies": {
+      "react": "18.3.1",
+      "react-dom": "18.3.1"
+    },
+    "devDependencies": {
+      "dompurify": "3.4.16",
+      "@vitejs/plugin-react": "4.7.0",
+      "@testing-library/react": "16.3.0",
+      "@testing-library/jest-dom": "6.9.1",
+      "@testing-library/user-event": "14.6.1",
+      "jsdom": "27.0.0",
+      "vite": "6.4.3",
+      "vitest": "4.1.11"
+    }
+  },
+  "sourceCodeSha": "44e55714b30dca776bc6a7fe65cb389b67343738",
+  "copiedFiles": [
+    {
+      "path": "client/src/saas/Catalog.jsx",
+      "sha256": "14eb65dbefc4d5961bd983333e0a6ffb1515b8eb568881b19aa4f0afc5c32bb9",
+      "copiedExact": true
+    },
+    {
+      "path": "client/src/saas/client.js",
+      "sha256": "d9777789de4273947625fa57a8daf406d38717e4c736b5e375782875cd1fc447",
+      "copiedExact": true
+    },
+    {
+      "path": "client/src/saas/client.test.js",
+      "sha256": "7295a04a61b2e9f215a4ca8e2c8f150b892cccdc14d7207589525d677f8cd5b9",
+      "copiedExact": true
+    },
+    {
+      "path": "client/src/saas/LoginForm.jsx",
+      "sha256": "6b9cb9f512c7b3043d4dfe726611dc9ec362323934225ace32fba319477c72e7",
+      "copiedExact": true
+    },
+    {
+      "path": "client/src/saas/main.jsx",
+      "sha256": "7666102af616cdacb91bef5a5f0d338d1880b7012eccb8c27a5e379bcf885fc4",
+      "copiedExact": true
+    },
+    {
+      "path": "client/src/saas/retry.test.js",
+      "sha256": "421a3267120c365ff16da65fae41eacdf68d2e843789c6677d4ba4c9a93ff04d",
+      "copiedExact": true
+    },
+    {
+      "path": "client/src/saas/RetryAccess.jsx",
+      "sha256": "159572f78c8fc1cd6a2dae19df9ce7cc2d19331e8d5d475b624c443069d7f779",
+      "copiedExact": true
+    },
+    {
+      "path": "client/src/saas/RetryAccess.test.jsx",
+      "sha256": "0dcf17b4fdf80be465b0c5f7504cefec229eabad2a863abe14377dc28e29346a",
+      "copiedExact": true
+    },
+    {
+      "path": "client/src/saas/SaasApp.jsx",
+      "sha256": "50f08546dd926c5dfc3d74e21933411ae2f997c4864919a639167c00a6dc246b",
+      "copiedExact": true
+    },
+    {
+      "path": "client/src/saas/SaasApp.test.jsx",
+      "sha256": "8f5073ff753840fb7ca5e68d95f562c53e83cec88a6f1282d0ad9702424b70b4",
+      "copiedExact": true
+    },
+    {
+      "path": "client/src/saas/styles.css",
+      "sha256": "ba3334608b5baa80e3657f92f6a887304b1c5ae1537b0a001ef05342e5d14b2a",
+      "copiedExact": true
+    },
+    {
+      "path": "client/src/saas/test-setup.js",
+      "sha256": "d308f094eadcc6dbc208d02202cf3aaf5d46b5c09466969436922368cb011d9a",
+      "copiedExact": true
+    },
+    {
+      "path": "client/saas.html",
+      "sha256": "651249635f2964a74b72b4fbc26eba804c9824e73b877e50da4021df345d2f0f",
+      "copiedExact": true
+    },
+    {
+      "path": "client/vite.saas.config.js",
+      "sha256": "448256233972059a3b5bc1717717fc789166e28d3be9678bdc027f112c2bb1c8",
+      "copiedExact": true
+    },
+    {
+      "path": "client/src/utils/safeDocuments.js",
+      "sha256": "901538e97e8bec7ec4eb53675a84e0af1e269e4cdfe6e86e2871b29539f9db81",
+      "copiedExact": true
+    },
+    {
+      "path": "client/src/__tests__/unit/safeDocuments.test.js",
+      "sha256": "3103f8bd0df38e438f64b4a8ab70713a9bdefde9f770b062588ab3ea88d72a0a",
+      "copiedExact": true
+    },
+    {
+      "path": "scripts/ci/safe-documents.vitest.config.mjs",
+      "sha256": "6e35b6fee589c44f9c0203820b62fb4fadcf3659396d53cf56dda8190e3ce6ef",
+      "copiedExact": true
+    },
+    {
+      "path": "scripts/ci/tooling-isolation.mjs",
+      "sha256": "917d6bf61ff4d0cf2cd5c25fdf752f2cb0e4b7f22d4e834c40ba5efb4d55f3b3",
+      "copiedExact": true
+    },
+    {
+      "path": "scripts/ci/tooling-isolation.test.mjs",
+      "sha256": "c411c064420e2e27d94d396afd3064b4e1d5155fd828ff513c75bf5b7406253b",
+      "copiedExact": true
+    },
+    {
+      "path": "scripts/ci/tooling-isolation-check.mjs",
+      "sha256": "4abde249a9880886d6c8b604e9920d328456aca6954fb5ecf48524e97a8e234e",
+      "copiedExact": true
+    }
+  ]
+}

@@ -1,0 +1,16 @@
+ Container mecanet-qa-p1l1-cp014-probe-run-7e9ac7c4d467 Creating
+ Container mecanet-qa-p1l1-cp014-probe-run-7e9ac7c4d467 Created
+{"criterion":"HTTP_TIMEOUT_RETAINS_UNCERTAIN_DEBT","status":"PASS","owner":"01aa8c9b-341a-4e5c-8dab-caeff3ff8b8c","reservedQt":1048576,"lastCupDenied":true,"prematureRelease":false}
+ Container mecanet-qa-p1l1-cp014-probe-run-221150f01a3b Creating
+ Container mecanet-qa-p1l1-cp014-probe-run-221150f01a3b Created
+{"criterion":"HTTP_LOST_RESPONSE_RETAINS_UNCERTAIN_DEBT","status":"PASS","owner":"ea208cea-19ba-4924-b6eb-4f5a1160d8c2","reservedQt":1048124,"lastCupDenied":true,"prematureRelease":false}
+ Container mecanet-qa-p1l1-cp014-api1-1 Stopping
+ Container mecanet-qa-p1l1-cp014-api2-1 Stopping
+ Container mecanet-qa-p1l1-cp014-api1-1 Stopped
+ Container mecanet-qa-p1l1-cp014-api2-1 Stopped
+{"phase": "prove-api-end", "status": "PASS", "ownApiContainersExited": 2, "oldApiBackends": 0, "tenantBackends": 0, "sharedResourcesChanged": 0}
+ Container mecanet-qa-p1l1-cp014-worker-1 Stopping
+ Container mecanet-qa-p1l1-cp014-worker-1 Stopped
+ Container mecanet-qa-p1l1-cp014-probe-run-399816ef8dbf Creating
+ Container mecanet-qa-p1l1-cp014-probe-run-399816ef8dbf Created
+{"phase":"reconcile","stage":"reconcile.setup","status":"FAIL","code":"ERR_ASSERTION","assertion":"Proven cleanup cannot refund admitted HTTP or executed operations"}

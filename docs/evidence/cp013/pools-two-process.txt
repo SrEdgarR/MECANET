@@ -1,0 +1,17 @@
+ Container mecanet-qa-p1l1-harness-run-5017651c233e Creating
+ Container mecanet-qa-p1l1-harness-run-5017651c233e Created
+▶ two Node processes enforce real PostgreSQL pool quotas, rotation and idle-only eviction without fallback
+  ✔ default maxPerPool=2 is enforced in each real process and four total TLS backends are visible (896.827836ms)
+  ✔ small cache refuses to evict an active tenant, then replaces only an idle pool (288.208341ms)
+  ✔ descriptor rotation drains current leases before replacement without doubling connections (204.858135ms)
+  ✔ unknown secret, forged database, wrong epoch and invalid purpose open no pool or fallback (94.501455ms)
+✔ two Node processes enforce real PostgreSQL pool quotas, rotation and idle-only eviction without fallback (4195.452475ms)
+ℹ {"kind":"two-real-process-pool-evidence","node":"24.21.0","processes":[25,26],"highWaterTenantConnections":4,"bootstrapObservers":1,"configuration":{"canonicalPerPool":2,"reducedEvictionTestMaxPools":1,"reducedEvictionTestMaxPerPool":1},"canonicalFourPoolLogicEvidence":"tests/qa/db-pools.test.js: full cache refuses a fifth borrowed tenant and evicts only idle pools","rotationScope":"synthetic descriptor/version/epoch and actual pool replacement; same SQL password, no central directory mutation","measurements":[{"label":"preflight: no other tenant consumers","connections":0,"pids":[],"databases":[]},{"label":"canonical: two concurrent leases per process","connections":4,"pids":[1070,1071,1072,1073],"databases":["mecanet_tenant_a"]},{"label":"canonical: overflow did not open another connection","connections":4,"pids":[1070,1071,1072,1073],"databases":["mecanet_tenant_a"]},{"label":"canonical pools closed","connections":0,"pids":[],"databases":[]},{"label":"eviction: A active in two processes","connections":2,"pids":[1075,1076],"databases":["mecanet_tenant_a"]},{"label":"eviction: active backends retained","connections":2,"pids":[1075,1076],"databases":["mecanet_tenant_a"]},{"label":"eviction: idle A replaced by B","connections":2,"pids":[1077,1078],"databases":["mecanet_tenant_b"]},{"label":"eviction pools closed","connections":0,"pids":[],"databases":[]},{"label":"rotation: only old active backends","connections":2,"pids":[1079,1080],"databases":["mecanet_tenant_a"]},{"label":"rotation: old backends fully drained","connections":0,"pids":[],"databases":[]},{"label":"rotation: replacement backends only","connections":2,"pids":[1081,1082],"databases":["mecanet_tenant_a"]},{"label":"rotation pools closed","connections":0,"pids":[],"databases":[]},{"label":"fallback rejected: unknown","connections":0,"pids":[],"databases":[]},{"label":"fallback rejected: forgedDatabase","connections":0,"pids":[],"databases":[]},{"label":"fallback rejected: wrongEpoch","connections":0,"pids":[],"databases":[]},{"label":"fallback rejected: blocked","connections":0,"pids":[],"databases":[]},{"label":"fallback rejected: demo","connections":0,"pids":[],"databases":[]}]}
+ℹ tests 5
+ℹ suites 0
+ℹ pass 5
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 10706.576075

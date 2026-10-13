@@ -1,0 +1,12 @@
+✔ guard identifies standalone and nested package paths without prefix collisions (0.8379ms)
+✔ benign deliberate ESM and CommonJS loads are rejected before package execution (59.5872ms)
+✔ unhandled deliberate ESM import fails closed with the isolation error (56.612ms)
+✔ a benign dependency outside the isolated root is rejected before fallback (62.009ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 4
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 266.6163

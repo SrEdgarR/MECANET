@@ -1,0 +1,20 @@
+ Container mecanet-qa-p1l1-cp014-probe-run-84f11ca26f85 Creating
+ Container mecanet-qa-p1l1-cp014-probe-run-84f11ca26f85 Created
+{"result":"PASS","stage":"upgrade","artifact":"sha256:db5527919b94f8f4127a20619fd32acb00289340f3ac21a6923d394b89f192fe","time":"2026-10-13T13:27:42.113Z","sameSession":true,"dataHash":"1fb6c0b53c31175ff5aace47c540bc46f02d01764dc2f76a0a27f9fa2c5b3efd","generation":"47557dab-4f7d-49a3-80d2-1003d3a46159","bothReady":true,"postgresChanged":false}
+ Container mecanet-qa-p1l1-cp014-probe-run-44d314a28125 Creating
+ Container mecanet-qa-p1l1-cp014-probe-run-44d314a28125 Created
+▶ CP014 boundaries: real two-process authentication and purpose boundaries
+  ✔ Company/demo/operator use real signed host-only Secure HttpOnly cookies and standard stores (498.468186ms)
+  ✔ Valid identities cannot cross company/demo/operator boundaries; denial precedes every tenant-pool acquisition (926.478354ms)
+  ✔ Forged paths, headers, bodies and query overrides cannot expose another company (3874.06033ms)
+  ✔ Logout COMMIT on API2 survives a deliberately delayed standard-store save from API1 (1604.744188ms)
+  ✔ Concurrent rotations through both API processes reject the old SID after each confirmed response (6615.112788ms)
+✔ CP014 boundaries: real two-process authentication and purpose boundaries (23816.668508ms)
+ℹ tests 6
+ℹ suites 0
+ℹ pass 6
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 26498.738002

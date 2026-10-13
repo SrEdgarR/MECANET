@@ -1,0 +1,16 @@
+ Container mecanet-qa-p1l1-cp014-probe-run-75d9c89bee80 Creating
+ Container mecanet-qa-p1l1-cp014-probe-run-75d9c89bee80 Created
+{"criterion":"WORKER_TRANSFER_BASELINE_CAPTURED","status":"PASS","tick":"27592","generation":"47557dab-4f7d-49a3-80d2-1003d3a46159"}
+ Container mecanet-qa-p1l1-cp014-worker-1 Stopping
+ Container mecanet-qa-p1l1-cp014-worker-1 Stopped
+ Container mecanet-qa-p1l1-cp014-worker-1 Recreate
+ Container mecanet-qa-p1l1-cp014-worker-1 Recreated
+ Container mecanet-qa-p1l1-cp014-worker-1 Starting
+ Container mecanet-qa-p1l1-cp014-worker-1 Started
+{"workerTransferRequested": true, "mode": "full", "previousProcessProvenExited": true, "newOwnerRequiresCAS": true}
+ Container mecanet-qa-p1l1-cp014-probe-run-6effd8ff6a48 Creating
+ Container mecanet-qa-p1l1-cp014-probe-run-6effd8ff6a48 Created
+{"criterion":"WORKER_RELAY_PRESERVES_TICKS_GENERATION_AND_COUNTERS","status":"PASS","oldOwnerExitedProofRequired":true,"generationPreserved":true,"tickNotReset":true,"ledgerNotReset":true,"twoReadyApi":true}
+ Container mecanet-qa-p1l1-cp014-probe-run-e05cbe26e212 Creating
+ Container mecanet-qa-p1l1-cp014-probe-run-e05cbe26e212 Created
+{"criterion":"BOUNDED_REAL_TRANSACTION_COST_AND_CONFLICT_MEASURE","status":"PASS","samples":936,"conflicts":73,"p50Ms":7.235,"p95Ms":78.14,"maxMs":366.179,"outcomes":{"COMMIT":855,"ROLLBACK":81,"DISCARDED":0,"RELEASED_WITHOUT_COMMIT":0},"excludesPoolWait":true,"capacityClaim":false}

@@ -1,0 +1,16 @@
+✔ journal persists intent before result, verifies chain and resumes at exact anchor (23.604ms)
+✔ journal rejects competing writer, unknown result, excessive target and changed anchor (8.9668ms)
+✔ tampering, sequence holes, truncated records and dropped tail block verification (10.5403ms)
+✔ an unresolved durable intent is replayed restrictively and replay failure stays closed (8.5861ms)
+✔ physical restore keeps system ID but requires distinct destination and closed source (0.7248ms)
+✔ credential candidate contains exactly the private login roles with distinct 32-byte secrets (0.6997ms)
+✔ credential rotation rejects incomplete, extra or unsafe candidates before opening SQL (0.6731ms)
+✔ credential rotation applies the supplied custody candidate exactly and returns no secrets (0.3804ms)
+ℹ tests 8
+ℹ suites 0
+ℹ pass 8
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 139.151

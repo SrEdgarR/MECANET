@@ -1,0 +1,83 @@
+{
+  "date": "2026-10-07",
+  "provenance": "LOCAL",
+  "testedCodeSha": "f5afaa23c54c968be249231f18e212b2b43a0c82",
+  "method": "Import models without connecting to MongoDB; Model.schema.indexes().length plus one collection and one _id index per model",
+  "connectionReadyState": 0,
+  "models": [
+    {
+      "model": "AuditLog",
+      "declaredIndexes": 7,
+      "estimatedUnits": 9
+    },
+    {
+      "model": "CashierSession",
+      "declaredIndexes": 2,
+      "estimatedUnits": 4
+    },
+    {
+      "model": "CashWithdrawal",
+      "declaredIndexes": 1,
+      "estimatedUnits": 3
+    },
+    {
+      "model": "Customer",
+      "declaredIndexes": 3,
+      "estimatedUnits": 5
+    },
+    {
+      "model": "Log",
+      "declaredIndexes": 6,
+      "estimatedUnits": 8
+    },
+    {
+      "model": "Product",
+      "declaredIndexes": 1,
+      "estimatedUnits": 3
+    },
+    {
+      "model": "PurchaseOrder",
+      "declaredIndexes": 1,
+      "estimatedUnits": 3
+    },
+    {
+      "model": "Quotation",
+      "declaredIndexes": 6,
+      "estimatedUnits": 8
+    },
+    {
+      "model": "Return",
+      "declaredIndexes": 4,
+      "estimatedUnits": 6
+    },
+    {
+      "model": "RoleSectionAccess",
+      "declaredIndexes": 1,
+      "estimatedUnits": 3
+    },
+    {
+      "model": "Sale",
+      "declaredIndexes": 1,
+      "estimatedUnits": 3
+    },
+    {
+      "model": "Settings",
+      "declaredIndexes": 0,
+      "estimatedUnits": 2
+    },
+    {
+      "model": "Supplier",
+      "declaredIndexes": 1,
+      "estimatedUnits": 3
+    },
+    {
+      "model": "User",
+      "declaredIndexes": 1,
+      "estimatedUnits": 3
+    }
+  ],
+  "modelCount": 14,
+  "totalDeclaredIndexes": 35,
+  "estimatedUnitsPerFullCopy": 63,
+  "limit": "Schema projection only; not observed files, RAM use or a MongoDB hard limit"
+}

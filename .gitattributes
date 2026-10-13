@@ -57,3 +57,21 @@ README.md text eol=lf
 *.mov binary
 *.avi binary
 *.webm binary
+
+# Reproducible local documentation and byte-exact adopted methodology
+docs/project-map/*.mjs text eol=lf
+docs/methodology/Prompt_Maestro_v2.0.md -text
+
+# Keep CP-006 experimental script hashes reproducible across checkouts
+.agentic/experiments/cp006/*.mjs text eol=lf
+.agentic/experiments/cp006/*.cjs text eol=lf
+
+# Keep CP-010 local Mongo harness hash reproducible across checkouts
+.agentic/experiments/cp010/*.cjs text eol=lf
+
+# Immutable approved fragments exported directly from Git in CP-015
+docs/specs/p1-l1-approved/*.md -text
+
+# Reproduce CI module text and preserve raw CP-016 evidence file hashes.
+scripts/ci/*.mjs text eol=lf
+docs/evidence/cp016/** -text whitespace=trailing-space,space-before-tab,cr-at-eol

@@ -1,0 +1,49 @@
+
+ RUN  v4.1.11 C:/Users/thede/Desktop/Proyectos de programacion/MECANET-develop/client
+
+ ❯ src/saas/retry.test.js (10 tests | 1 failed) 24ms
+     × rejects a parsed response at or after the deadline even when the timer has not run 6ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/saas/retry.test.js > approved bounded HTTP read retries > rejects a parsed response at or after the deadline even when the timer has not run
+AssertionError: expected { phase: 'catalog', …(9) } to match object { phase: 'unavailable', …(2) }
+(9 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+-   "items": [],
+-   "phase": "unavailable",
+-   "tenant": null,
++   "items": [
++     {
++       "id": "product",
++       "name": "Only A",
++       "sku": "A",
++     },
++   ],
++   "phase": "catalog",
++   "tenant": {
++     "dataEpoch": "1",
++     "id": "aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa",
++     "name": "A",
++   },
+  }
+
+ ❯ src/saas/retry.test.js:108:36
+    106|       }));
+    107|       await client.start(); await client.selectTenant(A.id, false);
+    108|       expect(client.getSnapshot()).toMatchObject({ phase: 'unavailable…
+       |                                    ^
+    109|       expect(reads()).toHaveLength(1);
+    110|       await vi.advanceTimersByTimeAsync(20000); expect(reads()).toHave…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 9 passed (10)
+   Start at  09:32:53
+   Duration  899ms (transform 42ms, setup 169ms, import 49ms, tests 24ms, environment 506ms)

@@ -1,0 +1,17 @@
+{
+  "environment": "private QA via loopback tunnel; real API",
+  "startedAt": "2026-10-13T13:44:08.294Z",
+  "node": "v24.21.0",
+  "checks": [
+    {
+      "name": "TLS: exact QA CA, hostname and SPKI validated by Node",
+      "result": "FAIL",
+      "errorType": "Error",
+      "errorCode": "ECONNREFUSED"
+    }
+  ],
+  "screenshots": [],
+  "result": "FAIL",
+  "finishedAt": "2026-10-13T13:44:08.312Z",
+  "httpCounts": {}
+}

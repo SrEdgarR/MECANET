@@ -1,0 +1,48 @@
+✔ failed login at store after registry commit cannot auto-save an authenticated cookie in a 503 response (38.8076ms)
+✖ failed login at accounting after registry commit cannot auto-save an authenticated cookie in a 503 response (5.9668ms)
+✖ failed login at deadline after registry commit cannot auto-save an authenticated cookie in a 503 response (8156.4292ms)
+ℹ tests 3
+ℹ suites 0
+ℹ pass 1
+ℹ fail 2
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 8387.1074
+
+✖ failing tests:
+
+test at tests\qa\cp014\auth-login-failure.test.mjs:9:54
+✖ failed login at accounting after registry commit cannot auto-save an authenticated cookie in a 503 response (5.9668ms)
+  AssertionError [ERR_ASSERTION]: An error after registry COMMIT must not deliver an authenticated cookie
+
+  1 !== 0
+
+      at TestContext.<anonymous> (file:///C:/Users/thede/Desktop/Proyectos%20de%20programacion/MECANET-develop/tests/qa/cp014/auth-login-failure.test.mjs:32:10)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 1,
+    expected: 0,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests\qa\cp014\auth-login-failure.test.mjs:9:54
+✖ failed login at deadline after registry commit cannot auto-save an authenticated cookie in a 503 response (8156.4292ms)
+  AssertionError [ERR_ASSERTION]: An error after registry COMMIT must not deliver an authenticated cookie
+
+  1 !== 0
+
+      at TestContext.<anonymous> (file:///C:/Users/thede/Desktop/Proyectos%20de%20programacion/MECANET-develop/tests/qa/cp014/auth-login-failure.test.mjs:32:10)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 1,
+    expected: 0,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

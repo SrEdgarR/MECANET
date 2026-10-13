@@ -1,0 +1,14 @@
+✔ private transaction costs and conflicts are sanitized and retain driver semantics (2.2432ms)
+✔ transaction tracing is bounded and rejects a path or identity outside exclusive QA (21.406ms)
+✔ expired pool wait retains a pending lease until the late real client is discarded (36.853ms)
+✔ an expired query retains its lease until SQL returns and discards the client (35.2807ms)
+✔ read-only SQL and all three server timeouts shrink to the actual remaining budget (0.8987ms)
+✔ exhausted read budget sends no SQL (0.199ms)
+ℹ tests 6
+ℹ suites 0
+ℹ pass 6
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 146.6563

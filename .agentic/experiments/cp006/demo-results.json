@@ -1,0 +1,62 @@
+{
+  "experiment": "DEM-EXP-01",
+  "date": "2026-10-08",
+  "runtime": "v24.14.0",
+  "platform": "win32",
+  "arch": "x64",
+  "productBase": "fcd93a809d907e06e2ce514f71437827c993c74a",
+  "scriptSha256": "2b73ea8b4d1fddc0c01301ed7c689d5f00dd1e09e891f6af1896b213aacc52c1",
+  "fixtureSha256": "c4fd72581b52b63efb5abcba174bb6b4302261fa7ff65acdfcd3e92e9e3a8249",
+  "scope": "Fixture y modelo abstracto offline. No prueba producto, Mongo, UI, carga ni aislamiento real.",
+  "checks": [
+    {
+      "name": "20 productos, 5 clientes y 60 ventas ficticias precargadas",
+      "status": "PASS"
+    },
+    {
+      "name": "referencias, importes enteros y stock reconstruible",
+      "status": "PASS"
+    },
+    {
+      "name": "gráficas con 30 días, 6 vacíos, 3 medios y top 5; mismo total",
+      "status": "PASS"
+    },
+    {
+      "name": "precarga no consume ninguna de las tres cuotas de sesión",
+      "status": "PASS"
+    },
+    {
+      "name": "contraejemplo: comprobar e incrementar por separado supera el cupo",
+      "status": "PASS"
+    },
+    {
+      "name": "contrato atómico abstracto: último cupo, reintento y caducidad",
+      "status": "PASS"
+    },
+    {
+      "name": "peso acotado y plazo del ensayo",
+      "status": "PASS"
+    }
+  ],
+  "scenarios": {
+    "nonAtomicInterleavings": 6,
+    "violatingSchedules": 4,
+    "atomicOrders": 2
+  },
+  "summary": {
+    "products": 20,
+    "customers": 5,
+    "preloadedSales": 60,
+    "days": 30,
+    "emptyDays": 6,
+    "totalMinor": 18877500,
+    "bytes": 42706
+  },
+  "elapsedMs": 20.456,
+  "resources": {
+    "network": false,
+    "database": false,
+    "processesLeft": 0,
+    "files": "KEEP"
+  }
+}

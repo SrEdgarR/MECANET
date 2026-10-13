@@ -1,0 +1,11 @@
+✔ failed login at store after registry commit cannot auto-save an authenticated cookie in a 503 response (38.0338ms)
+✔ failed login at accounting after registry commit cannot auto-save an authenticated cookie in a 503 response (5.2628ms)
+✔ failed login at deadline after registry commit cannot auto-save an authenticated cookie in a 503 response (8154.8102ms)
+ℹ tests 3
+ℹ suites 0
+ℹ pass 3
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 8383.9799

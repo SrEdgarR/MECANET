@@ -1,0 +1,1266 @@
+{
+  "checkpoint": "CP-016",
+  "classification": "DETECTED",
+  "sourceCodeSha": "44e55714b30dca776bc6a7fe65cb389b67343738",
+  "scope": "V8 function invocation counts for three known benign commands; not a proof of universal non-exposure",
+  "environment": "Windowsx64 Node24.21.0",
+  "runs": [
+    {
+      "command": [
+        "node",
+        "--max-old-space-size=512",
+        "--import",
+        "<isolated-guard>",
+        "client/node_modules/vite/bin/vite.js",
+        "build",
+        "--config",
+        "client/vite.saas.config.js"
+      ],
+      "id": "bundled-build",
+      "exitCode": 0,
+      "at": "2026-10-13T17:01:27.892424+00:00",
+      "elapsedSeconds": 2.636971,
+      "log": "bundled-build.txt",
+      "chunks": [
+        {
+          "path": "client\\node_modules\\vite\\dist\\node\\chunks\\dep-Dm0c1Wj2.js",
+          "sha256": "88f9adf5652dc907fa20c9bf936a91fbe1c1328ca3624c39c649692eccb301e6",
+          "profileScripts": 1,
+          "functions": [
+            {
+              "function": "arrify$1",
+              "startLine": 20033,
+              "endLine": 20033,
+              "count": 0
+            },
+            {
+              "function": "createPattern",
+              "startLine": 20040,
+              "endLine": 20052,
+              "count": 0
+            },
+            {
+              "function": "matchPatterns",
+              "startLine": 20061,
+              "endLine": 20086,
+              "count": 0
+            },
+            {
+              "function": "anymatch$1",
+              "startLine": 20094,
+              "endLine": 20119,
+              "count": 0
+            },
+            {
+              "function": "isExtglob",
+              "startLine": 20133,
+              "endLine": 20145,
+              "count": 0
+            },
+            {
+              "function": "strictCheck",
+              "startLine": 20156,
+              "endLine": 20245,
+              "count": 0
+            },
+            {
+              "function": "relaxedCheck",
+              "startLine": 20247,
+              "endLine": 20277,
+              "count": 0
+            },
+            {
+              "function": "isGlob",
+              "startLine": 20279,
+              "endLine": 20296,
+              "count": 0
+            },
+            {
+              "function": "globParent",
+              "startLine": 20314,
+              "endLine": 20337,
+              "count": 0
+            },
+            {
+              "function": "",
+              "startLine": 20341,
+              "endLine": 20463,
+              "count": 1
+            },
+            {
+              "function": "exports.isInteger",
+              "startLine": 20343,
+              "endLine": 20351,
+              "count": 0
+            },
+            {
+              "function": "exports.find",
+              "startLine": 20357,
+              "endLine": 20357,
+              "count": 0
+            },
+            {
+              "function": "exports.exceedsLimit",
+              "startLine": 20363,
+              "endLine": 20367,
+              "count": 0
+            },
+            {
+              "function": "exports.escapeNode",
+              "startLine": 20373,
+              "endLine": 20383,
+              "count": 0
+            },
+            {
+              "function": "exports.encloseBrace",
+              "startLine": 20389,
+              "endLine": 20396,
+              "count": 0
+            },
+            {
+              "function": "exports.isInvalidBrace",
+              "startLine": 20402,
+              "endLine": 20414,
+              "count": 0
+            },
+            {
+              "function": "exports.isOpenOrClose",
+              "startLine": 20420,
+              "endLine": 20425,
+              "count": 0
+            },
+            {
+              "function": "exports.reduce",
+              "startLine": 20431,
+              "endLine": 20435,
+              "count": 0
+            },
+            {
+              "function": "exports.flatten",
+              "startLine": 20441,
+              "endLine": 20462,
+              "count": 0
+            },
+            {
+              "function": "stringify$4",
+              "startLine": 20467,
+              "endLine": 20493,
+              "count": 0
+            },
+            {
+              "function": "isNumber$2",
+              "startLine": 20502,
+              "endLine": 20510,
+              "count": 0
+            },
+            {
+              "function": "toRegexRange$1",
+              "startLine": 20521,
+              "endLine": 20595,
+              "count": 0
+            },
+            {
+              "function": "collatePatterns",
+              "startLine": 20597,
+              "endLine": 20603,
+              "count": 0
+            },
+            {
+              "function": "splitToRanges",
+              "startLine": 20605,
+              "endLine": 20629,
+              "count": 0
+            },
+            {
+              "function": "rangeToPattern",
+              "startLine": 20638,
+              "endLine": 20667,
+              "count": 0
+            },
+            {
+              "function": "splitToPatterns",
+              "startLine": 20669,
+              "endLine": 20702,
+              "count": 0
+            },
+            {
+              "function": "filterPatterns",
+              "startLine": 20704,
+              "endLine": 20721,
+              "count": 0
+            },
+            {
+              "function": "zip",
+              "startLine": 20727,
+              "endLine": 20731,
+              "count": 0
+            },
+            {
+              "function": "compare",
+              "startLine": 20733,
+              "endLine": 20735,
+              "count": 0
+            },
+            {
+              "function": "contains",
+              "startLine": 20737,
+              "endLine": 20739,
+              "count": 0
+            },
+            {
+              "function": "countNines",
+              "startLine": 20741,
+              "endLine": 20743,
+              "count": 0
+            },
+            {
+              "function": "countZeros",
+              "startLine": 20745,
+              "endLine": 20747,
+              "count": 0
+            },
+            {
+              "function": "toQuantifier",
+              "startLine": 20749,
+              "endLine": 20755,
+              "count": 0
+            },
+            {
+              "function": "toCharacterClass",
+              "startLine": 20757,
+              "endLine": 20759,
+              "count": 0
+            },
+            {
+              "function": "hasPadding",
+              "startLine": 20761,
+              "endLine": 20763,
+              "count": 0
+            },
+            {
+              "function": "padZeros",
+              "startLine": 20765,
+              "endLine": 20784,
+              "count": 0
+            },
+            {
+              "function": "toRegexRange$1.clearCache",
+              "startLine": 20791,
+              "endLine": 20791,
+              "count": 0
+            },
+            {
+              "function": "isObject",
+              "startLine": 20809,
+              "endLine": 20809,
+              "count": 0
+            },
+            {
+              "function": "transform",
+              "startLine": 20811,
+              "endLine": 20813,
+              "count": 0
+            },
+            {
+              "function": "isValidValue",
+              "startLine": 20815,
+              "endLine": 20817,
+              "count": 0
+            },
+            {
+              "function": "isNumber",
+              "startLine": 20819,
+              "endLine": 20819,
+              "count": 0
+            },
+            {
+              "function": "zeros",
+              "startLine": 20821,
+              "endLine": 20828,
+              "count": 0
+            },
+            {
+              "function": "stringify$3",
+              "startLine": 20830,
+              "endLine": 20835,
+              "count": 0
+            },
+            {
+              "function": "pad",
+              "startLine": 20837,
+              "endLine": 20847,
+              "count": 0
+            },
+            {
+              "function": "toMaxLen",
+              "startLine": 20849,
+              "endLine": 20857,
+              "count": 0
+            },
+            {
+              "function": "toSequence",
+              "startLine": 20859,
+              "endLine": 20887,
+              "count": 0
+            },
+            {
+              "function": "toRange",
+              "startLine": 20889,
+              "endLine": 20899,
+              "count": 0
+            },
+            {
+              "function": "toRegex",
+              "startLine": 20901,
+              "endLine": 20908,
+              "count": 0
+            },
+            {
+              "function": "rangeError",
+              "startLine": 20910,
+              "endLine": 20912,
+              "count": 0
+            },
+            {
+              "function": "invalidRange",
+              "startLine": 20914,
+              "endLine": 20917,
+              "count": 0
+            },
+            {
+              "function": "invalidStep",
+              "startLine": 20919,
+              "endLine": 20924,
+              "count": 0
+            },
+            {
+              "function": "fillNumbers",
+              "startLine": 20926,
+              "endLine": 20976,
+              "count": 0
+            },
+            {
+              "function": "fillLetters",
+              "startLine": 20978,
+              "endLine": 21009,
+              "count": 0
+            },
+            {
+              "function": "fill$2",
+              "startLine": 21011,
+              "endLine": 21042,
+              "count": 0
+            },
+            {
+              "function": "compile$1",
+              "startLine": 21049,
+              "endLine": 21101,
+              "count": 0
+            },
+            {
+              "function": "append",
+              "startLine": 21109,
+              "endLine": 21133,
+              "count": 0
+            },
+            {
+              "function": "expand$1",
+              "startLine": 21135,
+              "endLine": 21213,
+              "count": 0
+            },
+            {
+              "function": "parse$8",
+              "startLine": 21265,
+              "endLine": 21563,
+              "count": 0
+            },
+            {
+              "function": "braces$1",
+              "startLine": 21586,
+              "endLine": 21606,
+              "count": 0
+            },
+            {
+              "function": "braces$1.parse",
+              "startLine": 21622,
+              "endLine": 21622,
+              "count": 0
+            },
+            {
+              "function": "braces$1.stringify",
+              "startLine": 21638,
+              "endLine": 21643,
+              "count": 0
+            },
+            {
+              "function": "braces$1.compile",
+              "startLine": 21660,
+              "endLine": 21665,
+              "count": 0
+            },
+            {
+              "function": "braces$1.expand",
+              "startLine": 21684,
+              "endLine": 21702,
+              "count": 0
+            },
+            {
+              "function": "braces$1.create",
+              "startLine": 21720,
+              "endLine": 21728,
+              "count": 0
+            },
+            {
+              "function": "getDirParts",
+              "startLine": 23504,
+              "endLine": 23512,
+              "count": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "command": [
+        "node",
+        "--max-old-space-size=512",
+        "--import",
+        "<isolated-guard>",
+        "client/node_modules/vitest/vitest.mjs",
+        "run",
+        "--maxWorkers=1",
+        "--config",
+        "client/vite.saas.config.js"
+      ],
+      "id": "bundled-saas-tests",
+      "exitCode": 0,
+      "at": "2026-10-13T17:01:30.529698+00:00",
+      "elapsedSeconds": 15.198487,
+      "log": "bundled-saas-tests.txt",
+      "chunks": [
+        {
+          "path": "client\\node_modules\\vite\\dist\\node\\chunks\\dep-Dm0c1Wj2.js",
+          "sha256": "88f9adf5652dc907fa20c9bf936a91fbe1c1328ca3624c39c649692eccb301e6",
+          "profileScripts": 1,
+          "functions": [
+            {
+              "function": "arrify$1",
+              "startLine": 20033,
+              "endLine": 20033,
+              "count": 0
+            },
+            {
+              "function": "createPattern",
+              "startLine": 20040,
+              "endLine": 20052,
+              "count": 0
+            },
+            {
+              "function": "matchPatterns",
+              "startLine": 20061,
+              "endLine": 20086,
+              "count": 0
+            },
+            {
+              "function": "anymatch$1",
+              "startLine": 20094,
+              "endLine": 20119,
+              "count": 0
+            },
+            {
+              "function": "isExtglob",
+              "startLine": 20133,
+              "endLine": 20145,
+              "count": 0
+            },
+            {
+              "function": "strictCheck",
+              "startLine": 20156,
+              "endLine": 20245,
+              "count": 0
+            },
+            {
+              "function": "relaxedCheck",
+              "startLine": 20247,
+              "endLine": 20277,
+              "count": 0
+            },
+            {
+              "function": "isGlob",
+              "startLine": 20279,
+              "endLine": 20296,
+              "count": 0
+            },
+            {
+              "function": "globParent",
+              "startLine": 20314,
+              "endLine": 20337,
+              "count": 0
+            },
+            {
+              "function": "",
+              "startLine": 20341,
+              "endLine": 20463,
+              "count": 1
+            },
+            {
+              "function": "exports.isInteger",
+              "startLine": 20343,
+              "endLine": 20351,
+              "count": 0
+            },
+            {
+              "function": "exports.find",
+              "startLine": 20357,
+              "endLine": 20357,
+              "count": 0
+            },
+            {
+              "function": "exports.exceedsLimit",
+              "startLine": 20363,
+              "endLine": 20367,
+              "count": 0
+            },
+            {
+              "function": "exports.escapeNode",
+              "startLine": 20373,
+              "endLine": 20383,
+              "count": 0
+            },
+            {
+              "function": "exports.encloseBrace",
+              "startLine": 20389,
+              "endLine": 20396,
+              "count": 0
+            },
+            {
+              "function": "exports.isInvalidBrace",
+              "startLine": 20402,
+              "endLine": 20414,
+              "count": 0
+            },
+            {
+              "function": "exports.isOpenOrClose",
+              "startLine": 20420,
+              "endLine": 20425,
+              "count": 0
+            },
+            {
+              "function": "exports.reduce",
+              "startLine": 20431,
+              "endLine": 20435,
+              "count": 0
+            },
+            {
+              "function": "exports.flatten",
+              "startLine": 20441,
+              "endLine": 20462,
+              "count": 0
+            },
+            {
+              "function": "stringify$4",
+              "startLine": 20467,
+              "endLine": 20493,
+              "count": 0
+            },
+            {
+              "function": "isNumber$2",
+              "startLine": 20502,
+              "endLine": 20510,
+              "count": 0
+            },
+            {
+              "function": "toRegexRange$1",
+              "startLine": 20521,
+              "endLine": 20595,
+              "count": 0
+            },
+            {
+              "function": "collatePatterns",
+              "startLine": 20597,
+              "endLine": 20603,
+              "count": 0
+            },
+            {
+              "function": "splitToRanges",
+              "startLine": 20605,
+              "endLine": 20629,
+              "count": 0
+            },
+            {
+              "function": "rangeToPattern",
+              "startLine": 20638,
+              "endLine": 20667,
+              "count": 0
+            },
+            {
+              "function": "splitToPatterns",
+              "startLine": 20669,
+              "endLine": 20702,
+              "count": 0
+            },
+            {
+              "function": "filterPatterns",
+              "startLine": 20704,
+              "endLine": 20721,
+              "count": 0
+            },
+            {
+              "function": "zip",
+              "startLine": 20727,
+              "endLine": 20731,
+              "count": 0
+            },
+            {
+              "function": "compare",
+              "startLine": 20733,
+              "endLine": 20735,
+              "count": 0
+            },
+            {
+              "function": "contains",
+              "startLine": 20737,
+              "endLine": 20739,
+              "count": 0
+            },
+            {
+              "function": "countNines",
+              "startLine": 20741,
+              "endLine": 20743,
+              "count": 0
+            },
+            {
+              "function": "countZeros",
+              "startLine": 20745,
+              "endLine": 20747,
+              "count": 0
+            },
+            {
+              "function": "toQuantifier",
+              "startLine": 20749,
+              "endLine": 20755,
+              "count": 0
+            },
+            {
+              "function": "toCharacterClass",
+              "startLine": 20757,
+              "endLine": 20759,
+              "count": 0
+            },
+            {
+              "function": "hasPadding",
+              "startLine": 20761,
+              "endLine": 20763,
+              "count": 0
+            },
+            {
+              "function": "padZeros",
+              "startLine": 20765,
+              "endLine": 20784,
+              "count": 0
+            },
+            {
+              "function": "toRegexRange$1.clearCache",
+              "startLine": 20791,
+              "endLine": 20791,
+              "count": 0
+            },
+            {
+              "function": "isObject",
+              "startLine": 20809,
+              "endLine": 20809,
+              "count": 0
+            },
+            {
+              "function": "transform",
+              "startLine": 20811,
+              "endLine": 20813,
+              "count": 0
+            },
+            {
+              "function": "isValidValue",
+              "startLine": 20815,
+              "endLine": 20817,
+              "count": 0
+            },
+            {
+              "function": "isNumber",
+              "startLine": 20819,
+              "endLine": 20819,
+              "count": 0
+            },
+            {
+              "function": "zeros",
+              "startLine": 20821,
+              "endLine": 20828,
+              "count": 0
+            },
+            {
+              "function": "stringify$3",
+              "startLine": 20830,
+              "endLine": 20835,
+              "count": 0
+            },
+            {
+              "function": "pad",
+              "startLine": 20837,
+              "endLine": 20847,
+              "count": 0
+            },
+            {
+              "function": "toMaxLen",
+              "startLine": 20849,
+              "endLine": 20857,
+              "count": 0
+            },
+            {
+              "function": "toSequence",
+              "startLine": 20859,
+              "endLine": 20887,
+              "count": 0
+            },
+            {
+              "function": "toRange",
+              "startLine": 20889,
+              "endLine": 20899,
+              "count": 0
+            },
+            {
+              "function": "toRegex",
+              "startLine": 20901,
+              "endLine": 20908,
+              "count": 0
+            },
+            {
+              "function": "rangeError",
+              "startLine": 20910,
+              "endLine": 20912,
+              "count": 0
+            },
+            {
+              "function": "invalidRange",
+              "startLine": 20914,
+              "endLine": 20917,
+              "count": 0
+            },
+            {
+              "function": "invalidStep",
+              "startLine": 20919,
+              "endLine": 20924,
+              "count": 0
+            },
+            {
+              "function": "fillNumbers",
+              "startLine": 20926,
+              "endLine": 20976,
+              "count": 0
+            },
+            {
+              "function": "fillLetters",
+              "startLine": 20978,
+              "endLine": 21009,
+              "count": 0
+            },
+            {
+              "function": "fill$2",
+              "startLine": 21011,
+              "endLine": 21042,
+              "count": 0
+            },
+            {
+              "function": "compile$1",
+              "startLine": 21049,
+              "endLine": 21101,
+              "count": 0
+            },
+            {
+              "function": "append",
+              "startLine": 21109,
+              "endLine": 21133,
+              "count": 0
+            },
+            {
+              "function": "expand$1",
+              "startLine": 21135,
+              "endLine": 21213,
+              "count": 0
+            },
+            {
+              "function": "parse$8",
+              "startLine": 21265,
+              "endLine": 21563,
+              "count": 0
+            },
+            {
+              "function": "braces$1",
+              "startLine": 21586,
+              "endLine": 21606,
+              "count": 0
+            },
+            {
+              "function": "braces$1.parse",
+              "startLine": 21622,
+              "endLine": 21622,
+              "count": 0
+            },
+            {
+              "function": "braces$1.stringify",
+              "startLine": 21638,
+              "endLine": 21643,
+              "count": 0
+            },
+            {
+              "function": "braces$1.compile",
+              "startLine": 21660,
+              "endLine": 21665,
+              "count": 0
+            },
+            {
+              "function": "braces$1.expand",
+              "startLine": 21684,
+              "endLine": 21702,
+              "count": 0
+            },
+            {
+              "function": "braces$1.create",
+              "startLine": 21720,
+              "endLine": 21728,
+              "count": 0
+            },
+            {
+              "function": "getDirParts",
+              "startLine": 23504,
+              "endLine": 23512,
+              "count": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "command": [
+        "node",
+        "--max-old-space-size=512",
+        "--import",
+        "<isolated-guard>",
+        "client/node_modules/vitest/vitest.mjs",
+        "run",
+        "--maxWorkers=1",
+        "--config",
+        "scripts/ci/safe-documents.vitest.config.mjs"
+      ],
+      "id": "bundled-sanitizer-tests",
+      "exitCode": 0,
+      "at": "2026-10-13T17:01:45.728761+00:00",
+      "elapsedSeconds": 4.728599,
+      "log": "bundled-sanitizer-tests.txt",
+      "chunks": [
+        {
+          "path": "client\\node_modules\\vite\\dist\\node\\chunks\\dep-Dm0c1Wj2.js",
+          "sha256": "88f9adf5652dc907fa20c9bf936a91fbe1c1328ca3624c39c649692eccb301e6",
+          "profileScripts": 1,
+          "functions": [
+            {
+              "function": "arrify$1",
+              "startLine": 20033,
+              "endLine": 20033,
+              "count": 0
+            },
+            {
+              "function": "createPattern",
+              "startLine": 20040,
+              "endLine": 20052,
+              "count": 0
+            },
+            {
+              "function": "matchPatterns",
+              "startLine": 20061,
+              "endLine": 20086,
+              "count": 0
+            },
+            {
+              "function": "anymatch$1",
+              "startLine": 20094,
+              "endLine": 20119,
+              "count": 0
+            },
+            {
+              "function": "isExtglob",
+              "startLine": 20133,
+              "endLine": 20145,
+              "count": 0
+            },
+            {
+              "function": "strictCheck",
+              "startLine": 20156,
+              "endLine": 20245,
+              "count": 0
+            },
+            {
+              "function": "relaxedCheck",
+              "startLine": 20247,
+              "endLine": 20277,
+              "count": 0
+            },
+            {
+              "function": "isGlob",
+              "startLine": 20279,
+              "endLine": 20296,
+              "count": 0
+            },
+            {
+              "function": "globParent",
+              "startLine": 20314,
+              "endLine": 20337,
+              "count": 0
+            },
+            {
+              "function": "",
+              "startLine": 20341,
+              "endLine": 20463,
+              "count": 1
+            },
+            {
+              "function": "exports.isInteger",
+              "startLine": 20343,
+              "endLine": 20351,
+              "count": 0
+            },
+            {
+              "function": "exports.find",
+              "startLine": 20357,
+              "endLine": 20357,
+              "count": 0
+            },
+            {
+              "function": "exports.exceedsLimit",
+              "startLine": 20363,
+              "endLine": 20367,
+              "count": 0
+            },
+            {
+              "function": "exports.escapeNode",
+              "startLine": 20373,
+              "endLine": 20383,
+              "count": 0
+            },
+            {
+              "function": "exports.encloseBrace",
+              "startLine": 20389,
+              "endLine": 20396,
+              "count": 0
+            },
+            {
+              "function": "exports.isInvalidBrace",
+              "startLine": 20402,
+              "endLine": 20414,
+              "count": 0
+            },
+            {
+              "function": "exports.isOpenOrClose",
+              "startLine": 20420,
+              "endLine": 20425,
+              "count": 0
+            },
+            {
+              "function": "exports.reduce",
+              "startLine": 20431,
+              "endLine": 20435,
+              "count": 0
+            },
+            {
+              "function": "exports.flatten",
+              "startLine": 20441,
+              "endLine": 20462,
+              "count": 0
+            },
+            {
+              "function": "stringify$4",
+              "startLine": 20467,
+              "endLine": 20493,
+              "count": 0
+            },
+            {
+              "function": "isNumber$2",
+              "startLine": 20502,
+              "endLine": 20510,
+              "count": 0
+            },
+            {
+              "function": "toRegexRange$1",
+              "startLine": 20521,
+              "endLine": 20595,
+              "count": 0
+            },
+            {
+              "function": "collatePatterns",
+              "startLine": 20597,
+              "endLine": 20603,
+              "count": 0
+            },
+            {
+              "function": "splitToRanges",
+              "startLine": 20605,
+              "endLine": 20629,
+              "count": 0
+            },
+            {
+              "function": "rangeToPattern",
+              "startLine": 20638,
+              "endLine": 20667,
+              "count": 0
+            },
+            {
+              "function": "splitToPatterns",
+              "startLine": 20669,
+              "endLine": 20702,
+              "count": 0
+            },
+            {
+              "function": "filterPatterns",
+              "startLine": 20704,
+              "endLine": 20721,
+              "count": 0
+            },
+            {
+              "function": "zip",
+              "startLine": 20727,
+              "endLine": 20731,
+              "count": 0
+            },
+            {
+              "function": "compare",
+              "startLine": 20733,
+              "endLine": 20735,
+              "count": 0
+            },
+            {
+              "function": "contains",
+              "startLine": 20737,
+              "endLine": 20739,
+              "count": 0
+            },
+            {
+              "function": "countNines",
+              "startLine": 20741,
+              "endLine": 20743,
+              "count": 0
+            },
+            {
+              "function": "countZeros",
+              "startLine": 20745,
+              "endLine": 20747,
+              "count": 0
+            },
+            {
+              "function": "toQuantifier",
+              "startLine": 20749,
+              "endLine": 20755,
+              "count": 0
+            },
+            {
+              "function": "toCharacterClass",
+              "startLine": 20757,
+              "endLine": 20759,
+              "count": 0
+            },
+            {
+              "function": "hasPadding",
+              "startLine": 20761,
+              "endLine": 20763,
+              "count": 0
+            },
+            {
+              "function": "padZeros",
+              "startLine": 20765,
+              "endLine": 20784,
+              "count": 0
+            },
+            {
+              "function": "toRegexRange$1.clearCache",
+              "startLine": 20791,
+              "endLine": 20791,
+              "count": 0
+            },
+            {
+              "function": "isObject",
+              "startLine": 20809,
+              "endLine": 20809,
+              "count": 0
+            },
+            {
+              "function": "transform",
+              "startLine": 20811,
+              "endLine": 20813,
+              "count": 0
+            },
+            {
+              "function": "isValidValue",
+              "startLine": 20815,
+              "endLine": 20817,
+              "count": 0
+            },
+            {
+              "function": "isNumber",
+              "startLine": 20819,
+              "endLine": 20819,
+              "count": 0
+            },
+            {
+              "function": "zeros",
+              "startLine": 20821,
+              "endLine": 20828,
+              "count": 0
+            },
+            {
+              "function": "stringify$3",
+              "startLine": 20830,
+              "endLine": 20835,
+              "count": 0
+            },
+            {
+              "function": "pad",
+              "startLine": 20837,
+              "endLine": 20847,
+              "count": 0
+            },
+            {
+              "function": "toMaxLen",
+              "startLine": 20849,
+              "endLine": 20857,
+              "count": 0
+            },
+            {
+              "function": "toSequence",
+              "startLine": 20859,
+              "endLine": 20887,
+              "count": 0
+            },
+            {
+              "function": "toRange",
+              "startLine": 20889,
+              "endLine": 20899,
+              "count": 0
+            },
+            {
+              "function": "toRegex",
+              "startLine": 20901,
+              "endLine": 20908,
+              "count": 0
+            },
+            {
+              "function": "rangeError",
+              "startLine": 20910,
+              "endLine": 20912,
+              "count": 0
+            },
+            {
+              "function": "invalidRange",
+              "startLine": 20914,
+              "endLine": 20917,
+              "count": 0
+            },
+            {
+              "function": "invalidStep",
+              "startLine": 20919,
+              "endLine": 20924,
+              "count": 0
+            },
+            {
+              "function": "fillNumbers",
+              "startLine": 20926,
+              "endLine": 20976,
+              "count": 0
+            },
+            {
+              "function": "fillLetters",
+              "startLine": 20978,
+              "endLine": 21009,
+              "count": 0
+            },
+            {
+              "function": "fill$2",
+              "startLine": 21011,
+              "endLine": 21042,
+              "count": 0
+            },
+            {
+              "function": "compile$1",
+              "startLine": 21049,
+              "endLine": 21101,
+              "count": 0
+            },
+            {
+              "function": "append",
+              "startLine": 21109,
+              "endLine": 21133,
+              "count": 0
+            },
+            {
+              "function": "expand$1",
+              "startLine": 21135,
+              "endLine": 21213,
+              "count": 0
+            },
+            {
+              "function": "parse$8",
+              "startLine": 21265,
+              "endLine": 21563,
+              "count": 0
+            },
+            {
+              "function": "braces$1",
+              "startLine": 21586,
+              "endLine": 21606,
+              "count": 0
+            },
+            {
+              "function": "braces$1.parse",
+              "startLine": 21622,
+              "endLine": 21622,
+              "count": 0
+            },
+            {
+              "function": "braces$1.stringify",
+              "startLine": 21638,
+              "endLine": 21643,
+              "count": 0
+            },
+            {
+              "function": "braces$1.compile",
+              "startLine": 21660,
+              "endLine": 21665,
+              "count": 0
+            },
+            {
+              "function": "braces$1.expand",
+              "startLine": 21684,
+              "endLine": 21702,
+              "count": 0
+            },
+            {
+              "function": "braces$1.create",
+              "startLine": 21720,
+              "endLine": 21728,
+              "count": 0
+            },
+            {
+              "function": "getDirParts",
+              "startLine": 23504,
+              "endLine": 23512,
+              "count": 0
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "inputs": "Only exact copied/versioned source/config/CSS, no tenant/API input or public dev server",
+  "limits": [
+    "Bundled code remains present and vulnerable implementation is not patched",
+    "Counters0 apply only to measured command/input; not arbitrary legacy/build/dev/PR/plugin",
+    "No OS-level sandbox or exhaustive malicious input analysis claimed"
+  ],
+  "cleanup": "KEEP ignored/private coverage for independent reproduction; only filtered counts exported"
+}

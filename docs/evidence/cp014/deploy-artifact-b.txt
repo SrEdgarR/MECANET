@@ -1,0 +1,27 @@
+{"artifact": "sha256:db5527919b94f8f4127a20619fd32acb00289340f3ac21a6923d394b89f192fe", "codeSha": "7bcf59b01d375a9d91981e384369b9fd17c33e33", "files": 912, "verified": true}
+ Container mecanet-qa-p1l1-cp014-web-1 Stopping
+ Container mecanet-qa-p1l1-cp014-api1-1 Stopping
+ Container mecanet-qa-p1l1-cp014-api2-1 Stopping
+ Container mecanet-qa-p1l1-cp014-api1-1 Stopped
+ Container mecanet-qa-p1l1-cp014-api2-1 Stopped
+ Container mecanet-qa-p1l1-cp014-web-1 Stopped
+ Container mecanet-qa-p1l1-cp014-api1-1 Recreate
+ Container mecanet-qa-p1l1-cp014-api2-1 Recreate
+ Container mecanet-qa-p1l1-cp014-web-1 Recreate
+ Container mecanet-qa-p1l1-cp014-api2-1 Recreated
+ Container mecanet-qa-p1l1-cp014-api1-1 Recreated
+ Container mecanet-qa-p1l1-cp014-web-1 Recreated
+ Container mecanet-qa-p1l1-cp014-web-1 Starting
+ Container mecanet-qa-p1l1-cp014-api1-1 Starting
+ Container mecanet-qa-p1l1-cp014-api2-1 Starting
+ Container mecanet-qa-p1l1-cp014-web-1 Started
+ Container mecanet-qa-p1l1-cp014-api1-1 Started
+ Container mecanet-qa-p1l1-cp014-api2-1 Started
+ Container mecanet-qa-p1l1-cp014-worker-1 Stopping
+ Container mecanet-qa-p1l1-cp014-worker-1 Stopped
+ Container mecanet-qa-p1l1-cp014-worker-1 Recreate
+ Container mecanet-qa-p1l1-cp014-worker-1 Recreated
+ Container mecanet-qa-p1l1-cp014-worker-1 Starting
+ Container mecanet-qa-p1l1-cp014-worker-1 Started
+{"workerTransferRequested": true, "mode": "full", "previousProcessProvenExited": true, "newOwnerRequiresCAS": true}
+{"selectedArtifact": "sha256:db5527919b94f8f4127a20619fd32acb00289340f3ac21a6923d394b89f192fe", "codeSha": "7bcf59b01d375a9d91981e384369b9fd17c33e33", "postgresUntouched": true}

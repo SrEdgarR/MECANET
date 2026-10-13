@@ -1,0 +1,3 @@
+ Container mecanet-qa-p1l1-harness-run-9a8102e05fa1 Creating
+ Container mecanet-qa-p1l1-harness-run-9a8102e05fa1 Created
+{"restoreVerified":true,"postBackupCanaries":2,"credentialRotation":true,"barrier":true,"applicationReopened":false,"secretsPrinted":false}

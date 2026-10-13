@@ -1,0 +1,75 @@
+ Container mecanet-qa-p1l1-cp014-probe-run-1da4a23836cb Creating
+ Container mecanet-qa-p1l1-cp014-probe-run-1da4a23836cb Created
+{"archivedAssertionHistory":true,"previousDebtsFinished":true,"databaseReset":false,"quotaChanged":false}
+{"artifact": "sha256:59993e482b4db11e745edb08e088731c9f601ac75d9649d46caac3bcd1838ce2", "codeSha": "f10c9826403261eb69718ed8f768ac166971a1b0", "files": 913, "verified": true}
+ Container mecanet-qa-p1l1-cp014-web-1 Stopping
+ Container mecanet-qa-p1l1-cp014-api1-1 Stopping
+ Container mecanet-qa-p1l1-cp014-api2-1 Stopping
+ Container mecanet-qa-p1l1-cp014-web-1 Stopped
+ Container mecanet-qa-p1l1-cp014-api2-1 Stopped
+ Container mecanet-qa-p1l1-cp014-api1-1 Stopped
+ Container mecanet-qa-p1l1-cp014-api1-1 Recreate
+ Container mecanet-qa-p1l1-cp014-api2-1 Recreate
+ Container mecanet-qa-p1l1-cp014-api2-1 Recreated
+ Container mecanet-qa-p1l1-cp014-api1-1 Recreated
+ Container mecanet-qa-p1l1-cp014-api2-1 Starting
+ Container mecanet-qa-p1l1-cp014-api1-1 Starting
+ Container mecanet-qa-p1l1-cp014-api2-1 Started
+ Container mecanet-qa-p1l1-cp014-api1-1 Started
+ Container mecanet-qa-p1l1-cp014-web-1 Recreate
+ Container mecanet-qa-p1l1-cp014-web-1 Recreated
+ Container mecanet-qa-p1l1-cp014-web-1 Starting
+ Container mecanet-qa-p1l1-cp014-web-1 Started
+ Container mecanet-qa-p1l1-cp014-worker-1 Stopping
+ Container mecanet-qa-p1l1-cp014-worker-1 Stopped
+ Container mecanet-qa-p1l1-cp014-worker-1 Recreate
+ Container mecanet-qa-p1l1-cp014-worker-1 Recreated
+ Container mecanet-qa-p1l1-cp014-worker-1 Starting
+ Container mecanet-qa-p1l1-cp014-worker-1 Started
+{"workerTransferRequested": true, "mode": "full", "previousProcessProvenExited": true, "newOwnerRequiresCAS": true}
+{"selectedArtifact": "sha256:59993e482b4db11e745edb08e088731c9f601ac75d9649d46caac3bcd1838ce2", "codeSha": "f10c9826403261eb69718ed8f768ac166971a1b0", "postgresUntouched": true}
+ Container mecanet-qa-p1l1-cp014-probe-run-2e112c3b50d2 Creating
+ Container mecanet-qa-p1l1-cp014-probe-run-2e112c3b50d2 Created
+{"criterion":"HTTP_TIMEOUT_RETAINS_UNCERTAIN_DEBT","status":"PASS","owner":"480f53e3-5c81-4859-8cdd-54bf1b4e8a80","reservedQt":1048576,"lastCupDenied":true,"prematureRelease":false}
+ Container mecanet-qa-p1l1-cp014-probe-run-3c174a6b9428 Creating
+ Container mecanet-qa-p1l1-cp014-probe-run-3c174a6b9428 Created
+{"criterion":"HTTP_LOST_RESPONSE_RETAINS_UNCERTAIN_DEBT","status":"PASS","owner":"7f10cf21-58f9-484c-83b8-00efceb20164","reservedQt":1048124,"lastCupDenied":true,"prematureRelease":false}
+ Container mecanet-qa-p1l1-cp014-api2-1 Stopping
+ Container mecanet-qa-p1l1-cp014-api1-1 Stopping
+ Container mecanet-qa-p1l1-cp014-api1-1 Stopped
+ Container mecanet-qa-p1l1-cp014-api2-1 Stopped
+{"phase": "prove-api-end", "status": "PASS", "ownApiContainersExited": 2, "oldApiBackends": 0, "tenantBackends": 0, "sharedResourcesChanged": 0}
+ Container mecanet-qa-p1l1-cp014-worker-1 Stopping
+ Container mecanet-qa-p1l1-cp014-worker-1 Stopped
+ Container mecanet-qa-p1l1-cp014-probe-run-dcb051b55ece Creating
+ Container mecanet-qa-p1l1-cp014-probe-run-dcb051b55ece Created
+{"type":"qa-reconcile-ledger","stage":"reconcile.current-ledger-baselines","ticketId":"2c2f05aa-19f0-497f-b238-3a4f53a92b8b","tenantId":"11111111-1111-4111-8111-111111111111","original":{"global":{"qh":1,"qc":1,"qt":0},"lane:ordinary":{"qh":1,"qc":1,"qt":0},"tenant:11111111-1111-4111-8111-111111111111":{"qh":1,"qc":1,"qt":0},"tenant:11111111-1111-4111-8111-111111111111:ordinary":{"qh":1,"qc":1,"qt":0}},"before":{"global":{"qh":2,"qc":2,"qt":452},"lane:ordinary":{"qh":2,"qc":2,"qt":452},"tenant:11111111-1111-4111-8111-111111111111":{"qh":1,"qc":1,"qt":0},"tenant:11111111-1111-4111-8111-111111111111:ordinary":{"qh":1,"qc":1,"qt":0}}}
+{"type":"qa-reconcile-ledger","stage":"reconcile.current-ledger-baselines","ticketId":"b6548fce-77a1-4f5e-a9c5-d6ed384f1be5","tenantId":"22222222-2222-4222-8222-222222222222","original":{"global":{"qh":1,"qc":1,"qt":452},"lane:ordinary":{"qh":1,"qc":1,"qt":452},"tenant:22222222-2222-4222-8222-222222222222":{"qh":1,"qc":1,"qt":452},"tenant:22222222-2222-4222-8222-222222222222:ordinary":{"qh":1,"qc":1,"qt":452}},"before":{"global":{"qh":1,"qc":1,"qt":452},"lane:ordinary":{"qh":1,"qc":1,"qt":452},"tenant:22222222-2222-4222-8222-222222222222":{"qh":1,"qc":1,"qt":452},"tenant:22222222-2222-4222-8222-222222222222:ordinary":{"qh":1,"qc":1,"qt":452}}}
+{"type":"qa-reconcile-ledger","stage":"reconcile.unproven-end-denied","ticketId":"2c2f05aa-19f0-497f-b238-3a4f53a92b8b","tenantId":"11111111-1111-4111-8111-111111111111","before":{"global":{"qh":2,"qc":2,"qt":452},"lane:ordinary":{"qh":2,"qc":2,"qt":452},"tenant:11111111-1111-4111-8111-111111111111":{"qh":1,"qc":1,"qt":0},"tenant:11111111-1111-4111-8111-111111111111:ordinary":{"qh":1,"qc":1,"qt":0}},"after":{"global":{"qh":2,"qc":2,"qt":452},"lane:ordinary":{"qh":2,"qc":2,"qt":452},"tenant:11111111-1111-4111-8111-111111111111":{"qh":1,"qc":1,"qt":0},"tenant:11111111-1111-4111-8111-111111111111:ordinary":{"qh":1,"qc":1,"qt":0}}}
+{"type":"qa-reconcile-ledger","stage":"reconcile.proven-end","ticketId":"2c2f05aa-19f0-497f-b238-3a4f53a92b8b","tenantId":"11111111-1111-4111-8111-111111111111","before":{"global":{"qh":2,"qc":2,"qt":452},"lane:ordinary":{"qh":2,"qc":2,"qt":452},"tenant:11111111-1111-4111-8111-111111111111":{"qh":1,"qc":1,"qt":0},"tenant:11111111-1111-4111-8111-111111111111:ordinary":{"qh":1,"qc":1,"qt":0}},"after":{"global":{"qh":2,"qc":2,"qt":452},"lane:ordinary":{"qh":2,"qc":2,"qt":452},"tenant:11111111-1111-4111-8111-111111111111":{"qh":1,"qc":1,"qt":0},"tenant:11111111-1111-4111-8111-111111111111:ordinary":{"qh":1,"qc":1,"qt":0}},"state":"FINISHED","reservedQc":0,"reservedQt":0}
+{"type":"qa-reconcile-ledger","stage":"reconcile.unproven-end-denied","ticketId":"b6548fce-77a1-4f5e-a9c5-d6ed384f1be5","tenantId":"22222222-2222-4222-8222-222222222222","before":{"global":{"qh":1,"qc":1,"qt":452},"lane:ordinary":{"qh":1,"qc":1,"qt":452},"tenant:22222222-2222-4222-8222-222222222222":{"qh":1,"qc":1,"qt":452},"tenant:22222222-2222-4222-8222-222222222222:ordinary":{"qh":1,"qc":1,"qt":452}},"after":{"global":{"qh":1,"qc":1,"qt":452},"lane:ordinary":{"qh":1,"qc":1,"qt":452},"tenant:22222222-2222-4222-8222-222222222222":{"qh":1,"qc":1,"qt":452},"tenant:22222222-2222-4222-8222-222222222222:ordinary":{"qh":1,"qc":1,"qt":452}}}
+{"type":"qa-reconcile-ledger","stage":"reconcile.proven-end","ticketId":"b6548fce-77a1-4f5e-a9c5-d6ed384f1be5","tenantId":"22222222-2222-4222-8222-222222222222","before":{"global":{"qh":1,"qc":1,"qt":452},"lane:ordinary":{"qh":1,"qc":1,"qt":452},"tenant:22222222-2222-4222-8222-222222222222":{"qh":1,"qc":1,"qt":452},"tenant:22222222-2222-4222-8222-222222222222:ordinary":{"qh":1,"qc":1,"qt":452}},"after":{"global":{"qh":1,"qc":1,"qt":452},"lane:ordinary":{"qh":1,"qc":1,"qt":452},"tenant:22222222-2222-4222-8222-222222222222":{"qh":1,"qc":1,"qt":452},"tenant:22222222-2222-4222-8222-222222222222:ordinary":{"qh":1,"qc":1,"qt":452}},"state":"FINISHED","reservedQc":0,"reservedQt":0}
+{"criterion":"UNCERTAIN_RELEASE_REQUIRES_ACTUAL_PROCESS_SQL_RESPONSE_END","status":"PASS","reconciled":2,"noProofDenied":2,"qhQcRefunded":false,"qtRefunded":false,"actualLedgerBaselinesUnchanged":true,"chargedScopes":4}
+ Container mecanet-qa-p1l1-cp014-worker-1 Stopping
+ Container mecanet-qa-p1l1-cp014-worker-1 Stopped
+ Container mecanet-qa-p1l1-cp014-worker-1 Recreate
+ Container mecanet-qa-p1l1-cp014-worker-1 Recreated
+ Container mecanet-qa-p1l1-cp014-worker-1 Starting
+ Container mecanet-qa-p1l1-cp014-worker-1 Started
+{"workerTransferRequested": true, "mode": "full", "previousProcessProvenExited": true, "newOwnerRequiresCAS": true}
+ Container mecanet-qa-p1l1-cp014-api1-1 Recreate
+ Container mecanet-qa-p1l1-cp014-api2-1 Recreate
+ Container mecanet-qa-p1l1-cp014-api1-1 Recreated
+ Container mecanet-qa-p1l1-cp014-api2-1 Recreated
+ Container mecanet-qa-p1l1-cp014-api2-1 Starting
+ Container mecanet-qa-p1l1-cp014-api1-1 Starting
+ Container mecanet-qa-p1l1-cp014-api2-1 Started
+ Container mecanet-qa-p1l1-cp014-api1-1 Started
+ Container mecanet-qa-p1l1-cp014-web-1 Recreate
+ Container mecanet-qa-p1l1-cp014-web-1 Recreated
+ Container mecanet-qa-p1l1-cp014-web-1 Starting
+ Container mecanet-qa-p1l1-cp014-web-1 Started
+{"phase": "restart-api", "restartRequested": true, "onlyServices": ["api1", "api2", "web"], "privateUpstreamsRefreshed": true, "sharedResourcesChanged": 0}
+ Container mecanet-qa-p1l1-cp014-probe-run-071310011923 Creating
+ Container mecanet-qa-p1l1-cp014-probe-run-071310011923 Created
+{"phase":"post-api-restart","stage":"post-api-restart.setup","status":"FAIL","code":"ERR_ASSERTION","assertion":"Expected HTTP 200, received 503/SERVICE_UNAVAILABLE"}

@@ -1,0 +1,4 @@
+# Private two-process test only; API/web must be stopped before running.
+services:
+  harness:
+    mem_limit: 256m

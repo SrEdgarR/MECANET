@@ -1,0 +1,50 @@
+{
+  "checkpoint": "CP-016",
+  "at_utc": "2026-10-13 16:48:38 UTC",
+  "human_source": {
+    "classification": "CONFIRMED",
+    "source": "Mensaje directo de esta ejecución",
+    "statement": "El usuario desconectó manualmente de GitHub mecanet-app y mecanet-web; afirma verificación anterior por ChatGPT y que Nexora permanece conectado. No se atribuye aquella consulta anterior a esta ejecución."
+  },
+  "platform_observation": {
+    "classification": "DETECTED",
+    "teamId": "team_1Gnpg9ve2yCJNH2rTIjmIhOi",
+    "operation": "list_projects(repoUrl=https://github.com/SrEdgarR/MECANET,limit=100)",
+    "result": {
+      "projects": [],
+      "pagination": {
+        "count": 0
+      }
+    },
+    "existing_projects": [
+      {
+        "id": "prj_AmqUp7XKTMSsFIq3UkIoQTKuFJRI",
+        "name": "mecanet-app",
+        "accountId": "team_1Gnpg9ve2yCJNH2rTIjmIhOi",
+        "updatedAt": 1791909379916
+      },
+      {
+        "id": "prj_ghCUd1AXSS6YAB3SUs2QPMeCVlwZ",
+        "name": "mecanet-web",
+        "accountId": "team_1Gnpg9ve2yCJNH2rTIjmIhOi",
+        "updatedAt": 1791909417593
+      }
+    ],
+    "all_project_identifiers": [
+      {
+        "id": "prj_ghCUd1AXSS6YAB3SUs2QPMeCVlwZ",
+        "name": "mecanet-web"
+      },
+      {
+        "id": "prj_AmqUp7XKTMSsFIq3UkIoQTKuFJRI",
+        "name": "mecanet-app"
+      },
+      {
+        "id": "prj_8zaPTeuC9CF39CalJJzJnWEvQNEf",
+        "name": "nexora"
+      }
+    ],
+    "limits": "get_project filtra campos Git; la consulta por repo y la fuente humana son evidencias complementarias. Existencia de Nexora observada; no nueva verificación de su Git link ni cambios allí."
+  },
+  "mutations": []
+}

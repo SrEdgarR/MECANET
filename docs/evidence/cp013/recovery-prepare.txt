@@ -1,0 +1,3 @@
+ Container mecanet-qa-p1l1-harness-run-8eac6effa52b Creating
+ Container mecanet-qa-p1l1-harness-run-8eac6effa52b Created
+{"barrier":true,"cohortId":"b6c1ad37-7012-4b87-bce7-22339dbe9d41","sampleSessions":4,"phase":"prepared","reopen":false}

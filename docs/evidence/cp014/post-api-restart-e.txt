@@ -1,0 +1,6 @@
+MECANET_PRIVATE_QA_STARTED
+{"type":"qa-api-error","requestId":"a9b35a98-5f9d-4233-8087-0181a342ac4c","code":"ADMISSION_BUSY","status":503,"errorType":"Error","location":"server/saas/admission/transaction.js:55:69"}
+MECANET_PRIVATE_QA_STARTED
+ Container mecanet-qa-p1l1-cp014-probe-run-8dfee56fb6f3 Creating
+ Container mecanet-qa-p1l1-cp014-probe-run-8dfee56fb6f3 Created
+{"criterion":"API_RESTART_PRESERVES_LEDGER_AND_RECONCILED_HISTORY","status":"PASS","twoNewOwners":2,"historicalDebtsFinished":2,"catalogHttp200":2}

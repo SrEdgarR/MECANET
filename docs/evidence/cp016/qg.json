@@ -1,0 +1,738 @@
+{
+  "checkpoint": "CP-016",
+  "at_utc": "2026-10-13T17:37:25.281643+00:00",
+  "classification": "DETECTED",
+  "stage": "premerge",
+  "tested_code_sha": "0d8285cef117d6174a6053f18ceaac180f8aa1c5",
+  "historical_tested_code_sha": "a89cc2eee43a8f60f3464bea26a6ea4f9ddfc867",
+  "source_primary_sha": "a541f7bcab88f289fa2bc89f6c9c9d004283cff2",
+  "source_integration_sha": "44e55714b30dca776bc6a7fe65cb389b67343738",
+  "pending_count_expected": 14,
+  "result": "PASS",
+  "checks": [
+    {
+      "id": "planning:prompt-immutable",
+      "result": "PASS",
+      "evidence": "d2dafd5f75df32aae33e421953fab6e99e723aa88744b918b555562c7b6a550d"
+    },
+    {
+      "id": "planning:criteria-history",
+      "result": "PASS",
+      "evidence": "C-001…232 text exact to own CP-015 base; canonical Git LF/EOL representation"
+    },
+    {
+      "id": "planning:checkpoint-history",
+      "result": "PASS",
+      "evidence": "CP-001…015 canonical bytes unchanged; only separator before appended CP-016 may be new"
+    },
+    {
+      "id": "planning:criteria-unique",
+      "result": "PASS",
+      "evidence": "248 sequential IDs,16new CP-016"
+    },
+    {
+      "id": "planning:matrix-states",
+      "result": "PASS",
+      "evidence": {
+        "stage": "premerge",
+        "expected": {
+          "PASS": 12,
+          "FAIL": 1,
+          "NOT VERIFIED": 3
+        },
+        "actual": {
+          "PASS": 12,
+          "FAIL": 1,
+          "NOT VERIFIED": 3
+        },
+        "only_legacy_audit_may_fail": true
+      }
+    },
+    {
+      "id": "planning:audits-history",
+      "result": "PASS",
+      "evidence": {
+        "files": 15,
+        "changed": [],
+        "EOL": "Canonical Git blob bytes; no content normalization beyond tracked clean filters"
+      }
+    },
+    {
+      "id": "planning:decision-identities",
+      "result": "PASS",
+      "evidence": {
+        "IDs": 60,
+        "unique": 60,
+        "old59_preserved": true
+      }
+    },
+    {
+      "id": "planning:decision-states",
+      "result": "PASS",
+      "evidence": {
+        "APPROVED": 55,
+        "SUPERSEDED": 3,
+        "PROPOSED": 2
+      }
+    },
+    {
+      "id": "planning:sc008-authority",
+      "result": "PASS",
+      "evidence": "DEC-060 is bounded approvedSC-008, not risk acceptance or L2A/B"
+    },
+    {
+      "id": "planning:pending-registry",
+      "result": "PASS",
+      "evidence": {
+        "IDs": [
+          "Q-02",
+          "Q-03",
+          "Q-08",
+          "Q-11",
+          "Q-18",
+          "Q-23",
+          "Q-31",
+          "Q-32",
+          "Q-33",
+          "Q-34",
+          "Q-35",
+          "Q-38",
+          "Q-39",
+          "Q-41"
+        ],
+        "priorities": {
+          "FUTURE": 14
+        },
+        "types": {
+          "diseño técnico": 4,
+          "dependencia externa": 2,
+          "decisión humana": 5,
+          "evidencia": 3
+        },
+        "Q42_removed": true
+      }
+    },
+    {
+      "id": "planning:future-constraints-preserved",
+      "result": "PASS",
+      "evidence": {
+        "scope": "14future IDs/priority/resolve-before/type; current evidence wording may legitimately evolve",
+        "differences": []
+      }
+    },
+    {
+      "id": "planning:canonical-table-shapes",
+      "result": "PASS",
+      "evidence": []
+    },
+    {
+      "id": "planning:approved-snapshots",
+      "result": "PASS",
+      "evidence": [
+        {
+          "snapshot": "docs/specs/p1-l1-approved/S-18.md",
+          "source": ".agentic/SPECIFICATION_CANDIDATE.md",
+          "matches": true
+        },
+        {
+          "snapshot": "docs/specs/p1-l1-approved/DEP-IND.md",
+          "source": ".agentic/ARCHITECTURE_OPTIONS.md",
+          "matches": true
+        },
+        {
+          "snapshot": "docs/specs/p1-l1-approved/eight-cuts.md",
+          "source": "tasks/plan.md",
+          "matches": true
+        }
+      ]
+    },
+    {
+      "id": "planning:evidence-json",
+      "result": "PASS",
+      "evidence": {
+        "files": 26,
+        "invalid": []
+      }
+    },
+    {
+      "id": "planning:source-provenance-hashes",
+      "result": "PASS",
+      "evidence": []
+    },
+    {
+      "id": "planning:legacy-fail-visible",
+      "result": "PASS",
+      "evidence": {
+        "source": "existing-client-full-audit.json",
+        "counts": {
+          "info": 0,
+          "low": 0,
+          "moderate": 2,
+          "high": 5,
+          "critical": 0,
+          "total": 7
+        },
+        "notAwaiver": true
+      }
+    },
+    {
+      "id": "planning:historical-tested-sha-separate",
+      "result": "PASS",
+      "evidence": {
+        "historic": "a89cc2eee43a8f60f3464bea26a6ea4f9ddfc867",
+        "new": "0d8285cef117d6174a6053f18ceaac180f8aa1c5",
+        "limits": "Historical PASS retains own SHA; no new physicalDB/browser/restore"
+      }
+    },
+    {
+      "id": "planning:new-tested-sha-provenance",
+      "result": "PASS",
+      "evidence": {
+        "source": "local-verification.json",
+        "expected": "0d8285cef117d6174a6053f18ceaac180f8aa1c5",
+        "observed": "0d8285cef117d6174a6053f18ceaac180f8aa1c5",
+        "limit": "Commit-fixed local regression must name exact tested SHA; precommit characterization stays separate"
+      }
+    },
+    {
+      "id": "planning:approved-lane-native-audit",
+      "result": "PASS",
+      "evidence": {
+        "reports": [
+          {
+            "path": "C:\\Users\\thede\\Desktop\\Proyectos de programacion\\MECANET-develop\\docs\\evidence\\cp016\\backend-full-audit.json",
+            "valid": true,
+            "sha256": "3c7ae0a219896eba54d5f6be5e9931b4de8b25097cb7b6279f26aff264946171",
+            "counts": {
+              "info": 0,
+              "low": 0,
+              "moderate": 0,
+              "high": 0,
+              "critical": 0,
+              "total": 0
+            }
+          },
+          {
+            "path": "C:\\Users\\thede\\Desktop\\Proyectos de programacion\\MECANET-develop\\docs\\evidence\\cp016\\implemented-full-audit.json",
+            "valid": true,
+            "sha256": "bbc00d0009d8e09d4618bf9d5179370f560231acb684e436f2a9486f0b73600c",
+            "counts": {
+              "info": 0,
+              "low": 0,
+              "moderate": 0,
+              "high": 0,
+              "critical": 0,
+              "total": 0
+            }
+          }
+        ],
+        "required": "Native npm fullaudit of approved installed lane; characterize/audit runtime is insufficient"
+      }
+    },
+    {
+      "id": "planning:implemented-input-provenance",
+      "result": "PASS",
+      "evidence": {
+        "source": "implemented-toolchain-verification.json",
+        "inputs": 22,
+        "mismatch": [],
+        "context": "Actual integration worktree, including evidence copies in planning"
+      }
+    },
+    {
+      "id": "planning:affected-references",
+      "result": "PASS",
+      "evidence": {
+        "checked": 154,
+        "broken": [],
+        "limits": "Local file existence; no remoteURL/all-anchor check. Exact snapshots use manifest sourcePath. No generic suppression of broken historical links."
+      }
+    },
+    {
+      "id": "planning:approved-diff-scope",
+      "result": "PASS",
+      "evidence": {
+        "unauthorized": [],
+        "approved_code_paths": [
+          ".github/workflows/p1-l1-verify.yml",
+          "scripts/ci/p1-l1.mjs",
+          "scripts/ci/saas-toolchain.mjs",
+          "scripts/ci/saas-toolchain.test.mjs",
+          "scripts/ci/saas-toolchain/package-lock.json",
+          "scripts/ci/saas-toolchain/package.json",
+          "scripts/ci/tooling-isolation-check.mjs",
+          "scripts/ci/tooling-isolation.mjs",
+          "scripts/ci/tooling-isolation.test.mjs"
+        ],
+        "testedDiff": []
+      }
+    },
+    {
+      "id": "planning:whitespace-current",
+      "result": "PASS",
+      "evidence": {
+        "scope": "current",
+        "exit": 0,
+        "exceptions": [],
+        "unexpected": []
+      }
+    },
+    {
+      "id": "planning:map-generation-check",
+      "result": "PASS",
+      "evidence": {
+        "generateExit": 0,
+        "checkExit": 0,
+        "output": "Generated local map: 8 phases, 60 decisions, 248 criteria; progress is qualitative.\nVerified local map: 8 phases, 60 decisions, 248 criteria; progress is qualitative."
+      }
+    },
+    {
+      "id": "planning:map-states",
+      "result": "PASS",
+      "evidence": {
+        "active": [
+          "P1"
+        ],
+        "P0": "PARCIAL",
+        "checkpoint": "CP-016",
+        "decisions": 60,
+        "pending": 14,
+        "criteria": 248,
+        "INT": "NOT VERIFIED",
+        "expectedINT": "NOT VERIFIED",
+        "noSaaSReady": true
+      }
+    },
+    {
+      "id": "planning:map-seven-source-hashes",
+      "result": "PASS",
+      "evidence": {
+        "sources": 7,
+        "mismatches": []
+      }
+    },
+    {
+      "id": "integration:prompt-immutable",
+      "result": "PASS",
+      "evidence": "d2dafd5f75df32aae33e421953fab6e99e723aa88744b918b555562c7b6a550d"
+    },
+    {
+      "id": "integration:criteria-history",
+      "result": "PASS",
+      "evidence": "C-001…232 text exact to own CP-015 base; canonical Git LF/EOL representation"
+    },
+    {
+      "id": "integration:checkpoint-history",
+      "result": "PASS",
+      "evidence": "CP-001…015 canonical bytes unchanged; only separator before appended CP-016 may be new"
+    },
+    {
+      "id": "integration:criteria-unique",
+      "result": "PASS",
+      "evidence": "248 sequential IDs,16new CP-016"
+    },
+    {
+      "id": "integration:matrix-states",
+      "result": "PASS",
+      "evidence": {
+        "stage": "premerge",
+        "expected": {
+          "PASS": 12,
+          "FAIL": 1,
+          "NOT VERIFIED": 3
+        },
+        "actual": {
+          "PASS": 12,
+          "FAIL": 1,
+          "NOT VERIFIED": 3
+        },
+        "only_legacy_audit_may_fail": true
+      }
+    },
+    {
+      "id": "integration:audits-history",
+      "result": "PASS",
+      "evidence": {
+        "files": 15,
+        "changed": [],
+        "EOL": "Canonical Git blob bytes; no content normalization beyond tracked clean filters"
+      }
+    },
+    {
+      "id": "integration:decision-identities",
+      "result": "PASS",
+      "evidence": {
+        "IDs": 60,
+        "unique": 60,
+        "old59_preserved": true
+      }
+    },
+    {
+      "id": "integration:decision-states",
+      "result": "PASS",
+      "evidence": {
+        "APPROVED": 55,
+        "SUPERSEDED": 3,
+        "PROPOSED": 2
+      }
+    },
+    {
+      "id": "integration:sc008-authority",
+      "result": "PASS",
+      "evidence": "DEC-060 is bounded approvedSC-008, not risk acceptance or L2A/B"
+    },
+    {
+      "id": "integration:pending-registry",
+      "result": "PASS",
+      "evidence": {
+        "IDs": [
+          "Q-02",
+          "Q-03",
+          "Q-08",
+          "Q-11",
+          "Q-18",
+          "Q-23",
+          "Q-31",
+          "Q-32",
+          "Q-33",
+          "Q-34",
+          "Q-35",
+          "Q-38",
+          "Q-39",
+          "Q-41"
+        ],
+        "priorities": {
+          "FUTURE": 14
+        },
+        "types": {
+          "diseño técnico": 4,
+          "dependencia externa": 2,
+          "decisión humana": 5,
+          "evidencia": 3
+        },
+        "Q42_removed": true
+      }
+    },
+    {
+      "id": "integration:future-constraints-preserved",
+      "result": "PASS",
+      "evidence": {
+        "scope": "14future IDs/priority/resolve-before/type; current evidence wording may legitimately evolve",
+        "differences": []
+      }
+    },
+    {
+      "id": "integration:canonical-table-shapes",
+      "result": "PASS",
+      "evidence": []
+    },
+    {
+      "id": "integration:approved-snapshots",
+      "result": "PASS",
+      "evidence": [
+        {
+          "snapshot": "docs/specs/p1-l1-approved/S-18.md",
+          "source": ".agentic/SPECIFICATION_CANDIDATE.md",
+          "matches": true
+        },
+        {
+          "snapshot": "docs/specs/p1-l1-approved/DEP-IND.md",
+          "source": ".agentic/ARCHITECTURE_OPTIONS.md",
+          "matches": true
+        },
+        {
+          "snapshot": "docs/specs/p1-l1-approved/eight-cuts.md",
+          "source": "tasks/plan.md",
+          "matches": true
+        }
+      ]
+    },
+    {
+      "id": "integration:evidence-json",
+      "result": "PASS",
+      "evidence": {
+        "files": 26,
+        "invalid": []
+      }
+    },
+    {
+      "id": "integration:source-provenance-hashes",
+      "result": "PASS",
+      "evidence": []
+    },
+    {
+      "id": "integration:legacy-fail-visible",
+      "result": "PASS",
+      "evidence": {
+        "source": "existing-client-full-audit.json",
+        "counts": {
+          "info": 0,
+          "low": 0,
+          "moderate": 2,
+          "high": 5,
+          "critical": 0,
+          "total": 7
+        },
+        "notAwaiver": true
+      }
+    },
+    {
+      "id": "integration:historical-tested-sha-separate",
+      "result": "PASS",
+      "evidence": {
+        "historic": "a89cc2eee43a8f60f3464bea26a6ea4f9ddfc867",
+        "new": "0d8285cef117d6174a6053f18ceaac180f8aa1c5",
+        "limits": "Historical PASS retains own SHA; no new physicalDB/browser/restore"
+      }
+    },
+    {
+      "id": "integration:new-tested-sha-provenance",
+      "result": "PASS",
+      "evidence": {
+        "source": "local-verification.json",
+        "expected": "0d8285cef117d6174a6053f18ceaac180f8aa1c5",
+        "observed": "0d8285cef117d6174a6053f18ceaac180f8aa1c5",
+        "limit": "Commit-fixed local regression must name exact tested SHA; precommit characterization stays separate"
+      }
+    },
+    {
+      "id": "integration:approved-lane-native-audit",
+      "result": "PASS",
+      "evidence": {
+        "reports": [
+          {
+            "path": "C:\\Users\\thede\\.codex\\worktrees\\p1l1-integration\\MECANET-develop\\docs\\evidence\\cp016\\backend-full-audit.json",
+            "valid": true,
+            "sha256": "3c7ae0a219896eba54d5f6be5e9931b4de8b25097cb7b6279f26aff264946171",
+            "counts": {
+              "info": 0,
+              "low": 0,
+              "moderate": 0,
+              "high": 0,
+              "critical": 0,
+              "total": 0
+            }
+          },
+          {
+            "path": "C:\\Users\\thede\\.codex\\worktrees\\p1l1-integration\\MECANET-develop\\docs\\evidence\\cp016\\implemented-full-audit.json",
+            "valid": true,
+            "sha256": "bbc00d0009d8e09d4618bf9d5179370f560231acb684e436f2a9486f0b73600c",
+            "counts": {
+              "info": 0,
+              "low": 0,
+              "moderate": 0,
+              "high": 0,
+              "critical": 0,
+              "total": 0
+            }
+          }
+        ],
+        "required": "Native npm fullaudit of approved installed lane; characterize/audit runtime is insufficient"
+      }
+    },
+    {
+      "id": "integration:implemented-input-provenance",
+      "result": "PASS",
+      "evidence": {
+        "source": "implemented-toolchain-verification.json",
+        "inputs": 22,
+        "mismatch": [],
+        "context": "Actual integration worktree, including evidence copies in planning"
+      }
+    },
+    {
+      "id": "integration:affected-references",
+      "result": "PASS",
+      "evidence": {
+        "checked": 148,
+        "broken": [],
+        "limits": "Local file existence; no remoteURL/all-anchor check. Exact snapshots use manifest sourcePath. No generic suppression of broken historical links."
+      }
+    },
+    {
+      "id": "integration:next-lot-not-in-functional-pr",
+      "result": "PASS",
+      "evidence": "L2 candidate lives only in planning; integration audit refers by Git/hash text, no broken relative candidate link"
+    },
+    {
+      "id": "integration:approved-diff-scope",
+      "result": "PASS",
+      "evidence": {
+        "unauthorized": [],
+        "approved_code_paths": [
+          ".github/workflows/p1-l1-verify.yml",
+          "scripts/ci/p1-l1.mjs",
+          "scripts/ci/saas-toolchain.mjs",
+          "scripts/ci/saas-toolchain.test.mjs",
+          "scripts/ci/saas-toolchain/package-lock.json",
+          "scripts/ci/saas-toolchain/package.json",
+          "scripts/ci/tooling-isolation-check.mjs",
+          "scripts/ci/tooling-isolation.mjs",
+          "scripts/ci/tooling-isolation.test.mjs"
+        ],
+        "testedDiff": [
+          ".github/workflows/p1-l1-verify.yml",
+          "DEPLOYMENT.md",
+          "README.md",
+          "docs/DECISIONS.md",
+          "docs/specs/P1-L1.md",
+          "scripts/ci/p1-l1.mjs",
+          "scripts/ci/saas-toolchain.mjs",
+          "scripts/ci/saas-toolchain.test.mjs",
+          "scripts/ci/saas-toolchain/package-lock.json",
+          "scripts/ci/saas-toolchain/package.json",
+          "scripts/ci/tooling-isolation-check.mjs",
+          "scripts/ci/tooling-isolation.mjs",
+          "scripts/ci/tooling-isolation.test.mjs",
+          "tests/qa/README.md"
+        ]
+      }
+    },
+    {
+      "id": "integration:whitespace-current",
+      "result": "PASS",
+      "evidence": {
+        "scope": "current",
+        "exit": 0,
+        "exceptions": [],
+        "unexpected": []
+      }
+    },
+    {
+      "id": "integration:whitespace-checkpoint",
+      "result": "PASS",
+      "evidence": {
+        "scope": "checkpoint",
+        "exit": 0,
+        "exceptions": [],
+        "unexpected": []
+      }
+    },
+    {
+      "id": "integration:map-generation-check",
+      "result": "PASS",
+      "evidence": {
+        "generateExit": 0,
+        "checkExit": 0,
+        "output": "Generated local map: 8 phases, 60 decisions, 248 criteria; progress is qualitative.\nVerified local map: 8 phases, 60 decisions, 248 criteria; progress is qualitative."
+      }
+    },
+    {
+      "id": "integration:map-states",
+      "result": "PASS",
+      "evidence": {
+        "active": [
+          "P1"
+        ],
+        "P0": "PARCIAL",
+        "checkpoint": "CP-016",
+        "decisions": 60,
+        "pending": 14,
+        "criteria": 248,
+        "INT": "NOT VERIFIED",
+        "expectedINT": "NOT VERIFIED",
+        "noSaaSReady": true
+      }
+    },
+    {
+      "id": "integration:map-seven-source-hashes",
+      "result": "PASS",
+      "evidence": {
+        "sources": 7,
+        "mismatches": []
+      }
+    },
+    {
+      "id": "original-prompt-immutable",
+      "result": "PASS",
+      "evidence": "Original preserved, no Prompt edits"
+    },
+    {
+      "id": "l2-exact-reviewed-candidate",
+      "result": "PASS",
+      "evidence": {
+        "candidateSha256": "ca975dc822c0bd5e872d3debe824abc536f662007513170f327727878ff3ac71",
+        "independent": "PASS documental acotado",
+        "A/B": "PENDING",
+        "functional": "12 NOT VERIFIED"
+      }
+    },
+    {
+      "id": "l2-pure-proof",
+      "result": "PASS",
+      "evidence": {
+        "checks": 15,
+        "vectorBytes": 142,
+        "vectorHash": "d2e92c64f9ba7e2f55b29389879e86e99caeb2d62ac5afebeb0269b93c3f4b5b",
+        "limit": "Document/constant calculation only, never SQL/API/restore PASS"
+      }
+    },
+    {
+      "id": "product-object-identity",
+      "result": "PASS",
+      "evidence": {
+        "objects": 104,
+        "identical": 103,
+        "documentedException": [
+          "tests/qa/README.md"
+        ],
+        "source": "44e55714b30dca776bc6a7fe65cb389b67343738",
+        "tested": "0d8285cef117d6174a6053f18ceaac180f8aa1c5",
+        "approved": "SC008 tooling plus explicit README QA documentary caller update; functional sources unchanged"
+      }
+    },
+    {
+      "id": "legacy-unchanged:client/package.json",
+      "result": "PASS",
+      "evidence": "SC008 preserves legacy manifests/config; no Tailwind major update"
+    },
+    {
+      "id": "legacy-unchanged:client/package-lock.json",
+      "result": "PASS",
+      "evidence": "SC008 preserves legacy manifests/config; no Tailwind major update"
+    },
+    {
+      "id": "legacy-unchanged:client/postcss.config.js",
+      "result": "PASS",
+      "evidence": "SC008 preserves legacy manifests/config; no Tailwind major update"
+    },
+    {
+      "id": "legacy-unchanged:client/tailwind.config.js",
+      "result": "PASS",
+      "evidence": "SC008 preserves legacy manifests/config; no Tailwind major update"
+    },
+    {
+      "id": "approved-lane-lock-no-seven-packages",
+      "result": "PASS",
+      "evidence": {
+        "badPackages": [],
+        "lockPackages": 212,
+        "limit": "Does not inspect vendoredVite internal functions"
+      }
+    },
+    {
+      "id": "f-assets-identity",
+      "result": "PASS",
+      "evidence": {
+        "assets": [
+          {
+            "path": "client/dist-saas/assets/saas-DclqrR_W.css",
+            "matches": true
+          },
+          {
+            "path": "client/dist-saas/assets/saas-DsjAOXZI.js",
+            "matches": true
+          },
+          {
+            "path": "client/dist-saas/saas.html",
+            "matches": true
+          }
+        ],
+        "artifactF": "sha256:5950ae7e519170ebaaf6cf8c99e9187c14b41f32779044e2829e8de5abbac0a6",
+        "limit": "No current PostgreSQL/browser/physicalrestore run"
+      }
+    }
+  ],
+  "failed": [],
+  "limits": "Quality Gate documental/identidad/coherencia. No prueba CI alojada, política de plataforma, PostgreSQL, capacidad, browser o restore; no convierte auditlegacyFAIL, aprobaciónL2pendiente o un fixtureaudit0 en PASS de producto. Git solo lectura. Mapa/QG son derivados locales."
+}

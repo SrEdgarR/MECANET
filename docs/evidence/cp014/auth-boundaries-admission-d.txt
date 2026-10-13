@@ -1,0 +1,36 @@
+{"artifact": "sha256:fa6f167df4e777e56d218396b3a4a9f53ac02c5531cdf8def37665da89930177", "codeSha": "0257d0d98d0c1444f0897bf4d03a36bb1a846ce2", "files": 913, "verified": true}
+ Container mecanet-qa-p1l1-cp014-web-1 Stopping
+ Container mecanet-qa-p1l1-cp014-api1-1 Stopping
+ Container mecanet-qa-p1l1-cp014-api2-1 Stopping
+ Container mecanet-qa-p1l1-cp014-web-1 Stopped
+ Container mecanet-qa-p1l1-cp014-api2-1 Stopped
+ Container mecanet-qa-p1l1-cp014-api1-1 Stopped
+ Container mecanet-qa-p1l1-cp014-api1-1 Recreate
+ Container mecanet-qa-p1l1-cp014-api2-1 Recreate
+ Container mecanet-qa-p1l1-cp014-web-1 Recreate
+ Container mecanet-qa-p1l1-cp014-api1-1 Recreated
+ Container mecanet-qa-p1l1-cp014-api2-1 Recreated
+ Container mecanet-qa-p1l1-cp014-web-1 Recreated
+ Container mecanet-qa-p1l1-cp014-api1-1 Starting
+ Container mecanet-qa-p1l1-cp014-api2-1 Starting
+ Container mecanet-qa-p1l1-cp014-web-1 Starting
+ Container mecanet-qa-p1l1-cp014-api1-1 Started
+ Container mecanet-qa-p1l1-cp014-api2-1 Started
+Error response from daemon: failed to set up container networking: Address already in use
+Traceback (most recent call last):
+  File "/home/ubuntu/mecanet-cp014-host.py", line 219, in <module>
+    {'bootstrap':bootstrap,'configure':configure,'finish-config':finish_config,'preserve-check':preserve_check,'transfer':transfer,'system-id':system_id,'first-worker':first_worker,'accept-artifact':accept_artifact,'select-artifact':select_artifact,'isolation':isolation}[sys.argv[1]]()
+  File "/home/ubuntu/mecanet-cp014-host.py", line 205, in select_artifact
+    compose('up','-d','--no-deps','--force-recreate','api1','api2','web')
+  File "/home/ubuntu/mecanet-cp014-host.py", line 13, in compose
+    return run('docker','compose','-f',str(ROOT/'compose.yaml'),*args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/mecanet-cp014-host.py", line 10, in run
+    return subprocess.check_output(args, text=True, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/subprocess.py", line 466, in check_output
+    return run(*popenargs, stdout=PIPE, timeout=timeout, check=True,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/subprocess.py", line 571, in run
+    raise CalledProcessError(retcode, process.args,
+subprocess.CalledProcessError: Command '('docker', 'compose', '-f', '/opt/mecanet-qa-p1l1-cp014/compose.yaml', 'up', '-d', '--no-deps', '--force-recreate', 'api1', 'api2', 'web')' returned non-zero exit status 1.

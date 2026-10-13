@@ -1,0 +1,38 @@
+{
+  "schemaVersion": 1,
+  "sourceCommit": "3b387b38784907b67e2209a35c3d5f400d70742e",
+  "approval": "DEC-058 / attachment5419b9ad / received2026-10-12",
+  "representationErrata": "SE-002 CP-015: self-contained normative snapshots on clean integration branch; no content or approval change",
+  "items": [
+    {
+      "sourcePath": ".agentic/SPECIFICATION_CANDIDATE.md",
+      "sourceBlob": "c4ee0e1b64aa76aaed51ab632290c5864cbb2983",
+      "sourceSha256": "37feb91a7f4cf6f43a7a0b4d5aa9c4ac41a079ea0ee28bef65c74d9b68cb10f0",
+      "beginHeading": "## S-18",
+      "endHeadingExclusive": null,
+      "snapshotPath": "docs/specs/p1-l1-approved/S-18.md",
+      "snapshotSha256": "77a3084b937f107b5c00e87dba35e4f8fb47d87cff98ff8596d136442063bec0",
+      "scope": "DEC-058 normative fragment only; historical SUGGESTED words governed by explicit human approval; no general SaaS approval"
+    },
+    {
+      "sourcePath": ".agentic/ARCHITECTURE_OPTIONS.md",
+      "sourceBlob": "fbe5efaa7e455da874ca01b1949d3744afb870f1",
+      "sourceSha256": "13f3fa44209e57b0ebff34584acede0ba682e8b579252fe6108a44add8257302",
+      "beginHeading": "## DEP-IND",
+      "endHeadingExclusive": null,
+      "snapshotPath": "docs/specs/p1-l1-approved/DEP-IND.md",
+      "snapshotSha256": "3794a49dcb47141af5a5a4d5649b4ad99508c6308ca5cd5784a9924726c33f33",
+      "scope": "DEC-058 normative fragment only; historical SUGGESTED words governed by explicit human approval; no general SaaS approval"
+    },
+    {
+      "sourcePath": "tasks/plan.md",
+      "sourceBlob": "572178324cf4907e5655c40a668c07316d07c05f",
+      "sourceSha256": "c26588d4e43ad05ff2d9ba1c60f60639ec2d6636110d22c66f5fa4dd6c4997f9",
+      "beginHeading": "## Primer lote de implementaci\u00f3n preparado",
+      "endHeadingExclusive": "## Punto de reanudaci\u00f3n vigente CP-012",
+      "snapshotPath": "docs/specs/p1-l1-approved/eight-cuts.md",
+      "snapshotSha256": "4febc9bc5d70e59c4c38adff902a22a0bd2f755c9ed1de25de247a2c30b1e3e3",
+      "scope": "DEC-058 normative fragment only; historical SUGGESTED words governed by explicit human approval; no general SaaS approval"
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+ Container mecanet-qa-p1l1-harness-run-fc616eee377f Creating
+ Container mecanet-qa-p1l1-harness-run-fc616eee377f Created
+✔ 601 real committed ticks expire consumption while an active ticket keeps capacity and byte reservation (63904.131656ms)
+ℹ Real clock delta=602; elapsed_ms=63386; no synthetic tick advance
+✔ real PostgreSQL deadlock yields 40P01 and bounded serializable retry without business effects (184.263421ms)
+ℹ PostgreSQL40P01 observed; attempts=2; central no-op values unchanged
+ℹ tests 2
+ℹ suites 0
+ℹ pass 2
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 64417.109616

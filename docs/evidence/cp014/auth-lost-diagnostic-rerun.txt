@@ -1,0 +1,26 @@
+ Container mecanet-qa-p1l1-cp014-probe-run-87f072eb8a3e Creating
+ Container mecanet-qa-p1l1-cp014-probe-run-87f072eb8a3e Created
+▶ CP014 lost: real two-process authentication and purpose boundaries
+  ✖ Response lost after authoritative rotation COMMIT cannot return authority to its old cookie (2200.513813ms)
+✖ CP014 lost: real two-process authentication and purpose boundaries (5600.842667ms)
+ℹ tests 2
+ℹ suites 0
+ℹ pass 0
+ℹ fail 2
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 10516.638665
+
+✖ failing tests:
+
+test at [eval1]:114:28
+✖ Response lost after authoritative rotation COMMIT cannot return authority to its old cookie (2200.513813ms)
+  Error: QA_LOGIN_ENDED_BEFORE_CHECKPOINT:200:NO_PUBLIC_CODE
+      at file:///workspace/[eval1]:117:71
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async TestContext.<anonymous> (file:///workspace/[eval1]:117:8)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async TestContext.<anonymous> (file:///workspace/[eval1]:114:20)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3)

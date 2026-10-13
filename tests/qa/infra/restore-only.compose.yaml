@@ -1,0 +1,4 @@
+services:
+  harness:
+    # Compose >=2.24.4; do not merge the source network into the restore helper.
+    networks: !override [restore]

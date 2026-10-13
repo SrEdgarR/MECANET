@@ -1,0 +1,13 @@
+ Container mecanet-qa-p1l1-cp014-probe-run-ca698ec972be Creating
+ Container mecanet-qa-p1l1-cp014-probe-run-ca698ec972be Created
+▶ CP014 lost: real two-process authentication and purpose boundaries
+  ✔ Response lost after authoritative rotation COMMIT cannot return authority to its old cookie (2963.479023ms)
+✔ CP014 lost: real two-process authentication and purpose boundaries (6497.636947ms)
+ℹ tests 2
+ℹ suites 0
+ℹ pass 2
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 6600.267498

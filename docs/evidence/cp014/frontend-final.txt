@@ -1,0 +1,8 @@
+
+ RUN  v4.1.11 C:/Users/thede/Desktop/Proyectos de programacion/MECANET-develop/client
+
+
+ Test Files  4 passed (4)
+      Tests  29 passed (29)
+   Start at  09:35:17
+   Duration  1.61s (transform 196ms, setup 706ms, import 356ms, tests 749ms, environment 2.45s)

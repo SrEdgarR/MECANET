@@ -1,0 +1,56 @@
+# Mecanet — protocolo de trabajo
+
+Responder en español. Esta es una adopción de un producto existente, no un proyecto nuevo.
+
+## Antes de trabajar
+
+1. Leer `docs/README.md`, `docs/PROJECT_STATE.md`, `docs/ROADMAP.md`, el último checkpoint y `.agentic/PLANNING_STATE.md`.
+2. Aplicar `docs/methodology/Prompt_Maestro_v2.0.md`, adoptado expresamente por el usuario el 2026-10-07. No editar esa copia ni el original; registrar problemas en `.agentic/METHODOLOGY_FEEDBACK.md`.
+3. Verificar Git, base, cambios ajenos y alcance autorizado. GitHub permitido: **SrEdgarR/MECANET** exclusivamente.
+4. Consultar las decisiones aprobadas; no convertir propuestas ni comportamiento heredado en requisitos.
+
+## Fase y límites actuales
+
+- CP-016: **P1 EN CURSO**, única fase activa. L1 ocho PASS; Q-42 resuelta y Q-43 local PASS por SC-008/DEC-060 APPROVED, fullaudit SaaS/backend estricto0, legacy FAIL preservado/TD-21. Código 0d8285cef117d6174a6053f18ceaac180f8aa1c5. Git/CI/merge condicionales habilitados bajo recheck, sin despliegues; Integration Gate aún NOT VERIFIED hasta CI/merge/canónica. L2 v0.2 candidato revisado con A/B pendientes, sin implementación/P2.
+- CP-006 amplía solo la evidencia local: fixtures, simulaciones y caracterización acotada en .agentic/experiments/cp006, con plan previo, destinos locales acreditados, límites y cleanup. No cargar .env ni integrar experimentos en producto/deploy. Delegación por archivos permitida; no preguntas durante la ejecución autónoma solicitada. Esto no autoriza implementación SaaS.
+- Alcance confirmado: concentrarse en SaaS. Mantener compatibilidad comercial local no es requisito del MVP; esta decisión no autoriza borrar instalaciones, datos o código heredado sin un cambio revisado.
+- DEC-058: A **APPROVED** exacta de P1-L1 v0.2-CP012/S-18/manifiesto L-01 y ocho cortes al commit `3b387b38784907b67e2209a35c3d5f400d70742e`, protegida en `docs/specs/P1-L1.md`. B y QA temporal propia autorizadas expresamente, sin nueva aprobación por corte. Los gates de entrada del alcance limitado están acreditados; cada recurso nuevo conserva su preflight y cada salida sus pruebas. No extender esta aprobación a otros módulos.
+- Una sola fase activa. El mapa documental no es una nueva función del producto ni se publica en producción.
+- No ejecutar `seed`, `setup-client`, `reset-db`, importaciones, limpiezas o migraciones contra bases existentes durante el levantamiento.
+- No leer/imprimir secretos ni registrar `.env`, tokens, credenciales o backups. No copiar credenciales de producción a QA.
+- Conservar `nexora.mecanet.site`, otros subdominios, Mecanet-EAK, producción, todos los recursos actuales del VPS y `.kilo/worktrees/majestic-chiller`.
+- DEC-021/SC-005: Mecanet tiene despliegue y operación independientes de Coolify. Coolify conserva sus recursos existentes; no registrar ni operar el nuevo Mecanet o su PostgreSQL allí. Compose propio aprobado únicamente en la baseline limitada DEC-058. No reiniciar/cambiar kernel/proxy/redes compartidas sin autorización específica.
+- DEC-021 / SC-005: frontend y backend en VPS existente con mecanismo propio y portable. Vercel y recursos legacy se conservan. DEC-012/054/SC-006: PostgreSQL, central + DB lógica/credencial por empresa y proceso privado; mecanismos relacionales aprobados solo para P1-L1. No reutilizar PostgreSQL de Coolify ni evidencia Mongo como PASS del objetivo.
+- CP-006 aprueba tres planes DOP (DEC-018/019), 15% sobre doce mensualidades y prepago (DEC-026), demo registrada con condiciones exactas (DEC-027), alcance operador/cuotas (DEC-013/028), cajas/cierres inmutables (DEC-029), crédito por devoluciones POS (DEC-030), activación tras pago (DEC-031), suscripciones sin reembolsos ordinarios (DEC-032) y existencia de lifecycle (DEC-033). No extender aprobación a USD, impuestos, retenciones, plazos, soporte, reservas físicas, gastos o mecanismos técnicos.
+- CP-007 (2026-10-08): DEC-028 confirma cuotas operativas y límites globales sin reservas físicas CPU/RAM individuales; 120/240/360 req/min,2/3/4 ops y512MiB/2GiB/5GiB aceptados solo para ensayo. DEC-034: siete días de gracia de renovación sin reset por intentos, no alta inicial. DEC-035: crédito para ficha individual tenant, devolución anónima sin reescribir venta/cierre. Datos/prueba de derecho, anclas y acceso posgracia no aprobados por extensión. Lista única PLANNING_STATE; T-10 completada, no repetir ensayos sin incertidumbre nueva. CP-007 solo documental, F14 preparatorio/P1 no iniciada.
+- CP-008 histórico: DEC-036 impide extender recurrentemente la suscripción por pagos tardíos; DEC-037 aprueba acceso posgracia acotado sin POS ordinario, pago verificado/readiness sin levantar seguridad. DEC-038/SC-004 sustituye DEC-030/035 solo en saldo futuro: cambio inmediato durable, sin billetera/ficha/PIN exclusivos del saldo. Q-20 resuelta; Q-26/27/29 retiradas por alcance, no PASS funcional. Q-02/11/31 candidatos completos para revisión; demás condiciones humanas por separado. Historia CP-006/007 conservada, no reabrir lo ya aprobado.
+- CP-009 histórico: respuestas actuales incorporadas en DEC existentes y039…052. CatálogoUSD/conteo, AUTO mensual/anual, calendario postgracia período−7d una vez, plan nuevo directo suspendido, demo verificada3inicios/cuenta24h, POS sinusar/buenestado, delegaciónporacción, Sentry/retenciones y objetivos/custodia aprobados. AZUL es sugerencia; copias externasOracle, destino y presupuesto tras costes pendientes. Candidato .agentic/SPECIFICATION_CANDIDATE.md v0.9-CP009 y F14 revisado PARCIAL;17IDs cerrados,14pendientes únicos. No reabrir respuestas ni interpretar aprobaciónproducto como baseline/implementación/gasto. Fuentes públicas no acreditan cuenta/contrato ni volumen real.
+- CP-010 histórico: Q-02/11/31 revisados, candidato v0.10-CP010 sigue NOT APPROVED. QA-EXP-02 acredita réplica temporal Mongo8.3.11Windowsx64/auth/A-B/transacciones, cleanup PASS; no Mongo7/LinuxARM64/dosAPI/restore. DEC-053/RG-001 PROPOSED/Q-40 opcional; gates CP-009 siguen vigentes.15pendientes, seis condicionesQ-38 y dos mensajes preparados NO enviados. No repetir prueba nativa sin carencia nueva; cadena Linux/ARM64 aún por acreditar.
+- CP-011 histórico: DEC-053/RG-001 APPROVED/aplicado, Q40resuelta; riesgo de retrabajo aceptado. Revisar solo P1-L1 v0.1-CP011/S-18/manifiesto, contenedor v0.11. Candidato NOT APPROVED; A especificación y B implementación separadas pendientes. Q02/11/31 solo fragmentos, no quince pantallas; comerciales/externos antes del primer trabajo dependiente. F14-L1 coherencia distinto de entorno/A/B/global. WSL/Docker siguen sin acreditar; no repetir QA-EXP-02 o inventar bypass para tenants reales. P0EN CURSO/P1NO INICIADA.
+- CP-012 histórico (2026-10-12): decisión humana entonces corrige hosting SC-005 y motor SC-006; UI totalmente cuadrada DEC-055 y NCF/e-CF DEC-056 confirmados sin reabrirlos. S-18 P1-L1 v0.2-CP012 reemplaza candidato Mongo y entonces seguía NOT APPROVED. B autorizada condicionalmente DEC-057; A y gates/entorno pendientes entonces. Lectura remota permitida; QA propia posible al acreditar requisitos, sin exigir WSL como única ruta. Proxy compartido requiere permiso específico; ningún lanzamiento/migración/producción autorizado. No transferir PASS Mongo/Coolify. Registro único en PLANNING_STATE.
+- CP-013 histórico (2026-10-13): DEC-058 acredita A/B/QA; QA propia PostgreSQL 18.6 ARM64, dos API, Nginx y worker (cinco contenedores) bajo Compose independiente. Entrada HTTPS local `127.0.0.1:18443` → SSH → socket UNIX exclusivo, redes internas aisladas y sin listener TCP remoto. No cargar `.env` legacy. La entrada QA está acreditada; el cierre L1 seguía **NOT VERIFIED** por matriz integrada, negativas concurrentes, ciclo y delta de observación pendientes de cierre; restore sintético cerrado ya verificado. Q-36 resuelta; Q-02/11/31 conservan solo alcances futuros, Q-32 capas posteriores. Registro de ese checkpoint: 14 pendientes, 1 BLOCKING (Q-35, evidencia de salida) y 13 FUTURE; 4 diseños, 3 evidencias, 5 decisiones humanas y 2 externas.
+- CP-014 (2026-10-13): ocho cortes L1 PASS; auth B/C/D, observación/navegador C, admisión D/E y rollback F/A/F con SHA/digests propios. Código funcional D `0257d0d98d0c1444f0897bf4d03a36bb1a846ce2` idéntico en E/F; artefacto final F `b0f5e199e5df457d7f901ff3a3dca5ab3a8d5701`; controlador QA final `409880a513bee1eff909caf68d23325af55e9be4`, sin cambio del artefacto F. La evidencia fixture/roles/restore cerrada CP-013 conserva su alcance histórico, sin reensayo completo atribuido a F. QA CP-014 propia termina con cinco contenedores STOPPED y sin URL activa; cohorte CP-013 cerrada y diez consumidores ajenos preservados. Q-35 resuelve solo el fragmento L1 y queda FUTURE para garantías posteriores: 14 pendientes,0 BLOCKING y14 FUTURE;4 diseños,3 evidencias,5 decisiones humanas y2 externas;59 DEC intactas. Evidencia y matriz: `docs/audit/CP-014.md`.
+- DEC-045: reautenticación para acciones sensibles en los últimos cinco minutos pendiente antes del primer handler operador/P4 DG-ADMIN. Las negativas de propósito/MFA fixture de L1 no implementan ni verifican ese requisito futuro.
+- DEC-059/SC-007: dominio `mecanet.app` comprado, destino público futuro confirmado. Distribución landing/app/API **propuesta**, sin DNS ni publicación autorizados; mantener `mecanet.site` y sus subdominios existentes.
+- CP-015 autoriza push/PR/CI/merge únicamente tras acreditar seguridad, políticas y checks; detener solo la operación no acreditada. No baseline siguiente aprobada, lanzamiento público ni migración de datos reales por extensión. La rama productiva actual y el PR #1 se registran en el estado; no fusionarlos como efecto lateral de esta adopción.
+
+## Pruebas conocidas sin base real
+
+```powershell
+node --test scripts/http.test.js scripts/security.test.js scripts/localSetup.test.js scripts/setup-client.test.js
+$env:VITEST_REAL_API='false'; $env:REAL_API='false'
+npm --prefix client run test:run -- src/__tests__/unit src/__tests__/integration
+```
+
+Estas pruebas no sustituyen integración Mongo real, E2E, aislamiento entre empresas, pagos, restore ni pruebas de carga. Los tests E2E existentes necesitan revisión/entorno aislado antes de usarse. La configuración local de Atlas no es QA SaaS.
+
+## Documentación y evidencia
+
+- La especificación protegida solo cambia con decisión aprobada, SPEC CHANGE o SPEC ERRATA; los borradores de planificación permanecen en `.agentic/`.
+- Usar estados de información CONFIRMED / DETECTED / SUGGESTED / TO DEFINE / DISCARDED.
+- Matrices: PASS / FAIL / NOT VERIFIED / NOT APPLICABLE, con fuente, entorno, fecha y SHA.
+- Registrar por separado código probado, checkpoint documental, HEAD, merge y base siguiente. No crear commits autorreferenciales.
+- Actualizar estado, checkpoint y mapa ante hitos; el mapa deriva de documentos canónicos, no los reemplaza.
+- El cierre de cada ejecución importante incluye RESUMEN PARA AUDITORÍA, con límites, pendientes y gate siguiente. No declarar SaaS listo por tener HTTP 200 o un build exitoso.
+
+Las instrucciones antiguas de `.github/copilot-instructions.md` son contexto histórico: sus comandos y nombres de variables deben contrastarse con el código actual.

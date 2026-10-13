@@ -1,0 +1,20 @@
+✖ Private QA HTTP authority journey (real HTTPS and API) (68.2346ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 0
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 139.0274
+
+✖ failing tests:
+
+test at tests\qa\http.test.mjs:11:1
+✖ Private QA HTTP authority journey (real HTTPS and API) (68.2346ms)
+  Error: read ECONNRESET
+      at TLSWrap.onStreamRead (node:internal/stream_base_commons:216:20) {
+    errno: -4077,
+    code: 'ECONNRESET',
+    syscall: 'read'
+  }

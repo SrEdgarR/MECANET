@@ -1,0 +1,283 @@
+{
+  "scope": "SC-008 complete isolated SaaS toolchain; no deployment or database",
+  "sourceCodeSha": "44e55714b30dca776bc6a7fe65cb389b67343738",
+  "node": "v24.21.0",
+  "platform": "win32",
+  "architecture": "x64",
+  "inputs": [
+    {
+      "source": "client/src/saas/Catalog.jsx",
+      "target": "client/src/saas/Catalog.jsx",
+      "bytes": 1395,
+      "sha256": "14eb65dbefc4d5961bd983333e0a6ffb1515b8eb568881b19aa4f0afc5c32bb9"
+    },
+    {
+      "source": "client/src/saas/client.js",
+      "target": "client/src/saas/client.js",
+      "bytes": 12548,
+      "sha256": "d9777789de4273947625fa57a8daf406d38717e4c736b5e375782875cd1fc447"
+    },
+    {
+      "source": "client/src/saas/client.test.js",
+      "target": "client/src/saas/client.test.js",
+      "bytes": 10101,
+      "sha256": "7295a04a61b2e9f215a4ca8e2c8f150b892cccdc14d7207589525d677f8cd5b9"
+    },
+    {
+      "source": "client/src/saas/LoginForm.jsx",
+      "target": "client/src/saas/LoginForm.jsx",
+      "bytes": 1520,
+      "sha256": "6b9cb9f512c7b3043d4dfe726611dc9ec362323934225ace32fba319477c72e7"
+    },
+    {
+      "source": "client/src/saas/main.jsx",
+      "target": "client/src/saas/main.jsx",
+      "bytes": 204,
+      "sha256": "7666102af616cdacb91bef5a5f0d338d1880b7012eccb8c27a5e379bcf885fc4"
+    },
+    {
+      "source": "client/src/saas/retry.test.js",
+      "target": "client/src/saas/retry.test.js",
+      "bytes": 9703,
+      "sha256": "421a3267120c365ff16da65fae41eacdf68d2e843789c6677d4ba4c9a93ff04d"
+    },
+    {
+      "source": "client/src/saas/RetryAccess.jsx",
+      "target": "client/src/saas/RetryAccess.jsx",
+      "bytes": 675,
+      "sha256": "159572f78c8fc1cd6a2dae19df9ce7cc2d19331e8d5d475b624c443069d7f779"
+    },
+    {
+      "source": "client/src/saas/RetryAccess.test.jsx",
+      "target": "client/src/saas/RetryAccess.test.jsx",
+      "bytes": 865,
+      "sha256": "0dcf17b4fdf80be465b0c5f7504cefec229eabad2a863abe14377dc28e29346a"
+    },
+    {
+      "source": "client/src/saas/SaasApp.jsx",
+      "target": "client/src/saas/SaasApp.jsx",
+      "bytes": 5218,
+      "sha256": "50f08546dd926c5dfc3d74e21933411ae2f997c4864919a639167c00a6dc246b"
+    },
+    {
+      "source": "client/src/saas/SaasApp.test.jsx",
+      "target": "client/src/saas/SaasApp.test.jsx",
+      "bytes": 5157,
+      "sha256": "8f5073ff753840fb7ca5e68d95f562c53e83cec88a6f1282d0ad9702424b70b4"
+    },
+    {
+      "source": "client/src/saas/styles.css",
+      "target": "client/src/saas/styles.css",
+      "bytes": 6534,
+      "sha256": "ba3334608b5baa80e3657f92f6a887304b1c5ae1537b0a001ef05342e5d14b2a"
+    },
+    {
+      "source": "client/src/saas/test-setup.js",
+      "target": "client/src/saas/test-setup.js",
+      "bytes": 312,
+      "sha256": "d308f094eadcc6dbc208d02202cf3aaf5d46b5c09466969436922368cb011d9a"
+    },
+    {
+      "source": "client/saas.html",
+      "target": "client/saas.html",
+      "bytes": 434,
+      "sha256": "651249635f2964a74b72b4fbc26eba804c9824e73b877e50da4021df345d2f0f"
+    },
+    {
+      "source": "client/vite.saas.config.js",
+      "target": "client/vite.saas.config.js",
+      "bytes": 729,
+      "sha256": "448256233972059a3b5bc1717717fc789166e28d3be9678bdc027f112c2bb1c8"
+    },
+    {
+      "source": "client/src/utils/safeDocuments.js",
+      "target": "client/src/utils/safeDocuments.js",
+      "bytes": 739,
+      "sha256": "901538e97e8bec7ec4eb53675a84e0af1e269e4cdfe6e86e2871b29539f9db81"
+    },
+    {
+      "source": "client/src/__tests__/unit/safeDocuments.test.js",
+      "target": "client/src/__tests__/unit/safeDocuments.test.js",
+      "bytes": 960,
+      "sha256": "3103f8bd0df38e438f64b4a8ab70713a9bdefde9f770b062588ab3ea88d72a0a"
+    },
+    {
+      "source": "scripts/ci/safe-documents.vitest.config.mjs",
+      "target": "scripts/ci/safe-documents.vitest.config.mjs",
+      "bytes": 484,
+      "sha256": "6e35b6fee589c44f9c0203820b62fb4fadcf3659396d53cf56dda8190e3ce6ef"
+    },
+    {
+      "source": "scripts/ci/tooling-isolation.mjs",
+      "target": "scripts/ci/tooling-isolation.mjs",
+      "bytes": 2549,
+      "sha256": "917d6bf61ff4d0cf2cd5c25fdf752f2cb0e4b7f22d4e834c40ba5efb4d55f3b3"
+    },
+    {
+      "source": "scripts/ci/tooling-isolation.test.mjs",
+      "target": "scripts/ci/tooling-isolation.test.mjs",
+      "bytes": 5346,
+      "sha256": "c411c064420e2e27d94d396afd3064b4e1d5155fd828ff513c75bf5b7406253b"
+    },
+    {
+      "source": "scripts/ci/tooling-isolation-check.mjs",
+      "target": "scripts/ci/tooling-isolation-check.mjs",
+      "bytes": 5363,
+      "sha256": "4abde249a9880886d6c8b604e9920d328456aca6954fb5ecf48524e97a8e234e"
+    },
+    {
+      "source": "scripts/ci/saas-toolchain/package.json",
+      "target": "client/package.json",
+      "bytes": 527,
+      "sha256": "6e49afa96eb1845f63d5eb9fc236dd90a4277bbcbf13236b184c05173abca994"
+    },
+    {
+      "source": "scripts/ci/saas-toolchain/package-lock.json",
+      "target": "client/package-lock.json",
+      "bytes": 108537,
+      "sha256": "0c28b577fd2fc4334059a8d12b1ee1db07fd403d0718e858425533a935db8fb6"
+    }
+  ],
+  "checks": [
+    {
+      "command": [
+        "node",
+        "C:\\Program Files\\nodejs\\node_modules\\npm\\bin\\npm-cli.js",
+        "--version"
+      ],
+      "exitCode": 0,
+      "signal": null
+    },
+    {
+      "command": [
+        "node",
+        "C:\\Program Files\\nodejs\\node_modules\\npm\\bin\\npm-cli.js",
+        "ci",
+        "--prefix",
+        "client",
+        "--ignore-scripts",
+        "--bin-links=false",
+        "--no-audit",
+        "--no-fund"
+      ],
+      "exitCode": 0,
+      "signal": null
+    },
+    {
+      "command": [
+        "node",
+        "C:\\Program Files\\nodejs\\node_modules\\npm\\bin\\npm-cli.js",
+        "audit",
+        "--prefix",
+        "client",
+        "--json"
+      ],
+      "exitCode": 0,
+      "signal": null
+    },
+    {
+      "command": [
+        "node",
+        "C:\\Program Files\\nodejs\\node_modules\\npm\\bin\\npm-cli.js",
+        "audit",
+        "--prefix",
+        "client",
+        "--json",
+        "--omit=dev"
+      ],
+      "exitCode": 0,
+      "signal": null
+    },
+    {
+      "command": [
+        "node",
+        "--max-old-space-size=512",
+        "--test",
+        "scripts/ci/tooling-isolation.test.mjs"
+      ],
+      "exitCode": 0,
+      "signal": null
+    },
+    {
+      "command": [
+        "node",
+        "--max-old-space-size=512",
+        "scripts/ci/tooling-isolation-check.mjs"
+      ],
+      "exitCode": 0,
+      "signal": null
+    }
+  ],
+  "fullAudit": "PASS",
+  "runtimeAudit": "PASS",
+  "cleanup": "PASS",
+  "assets": [
+    {
+      "path": "client/dist-saas/saas.html",
+      "sha256": "ab3c357852ca07b8f4689fb5b23a8ddb093ab2bb4e0aa2d75ba98012b132ee51",
+      "bytes": 525
+    },
+    {
+      "path": "client/dist-saas/assets/saas-DclqrR_W.css",
+      "sha256": "cdb3b3885a4aea0c72204e0c7952eb8ebd7522c2767529eb824b487582d54159",
+      "bytes": 5686
+    },
+    {
+      "path": "client/dist-saas/assets/saas-DsjAOXZI.js",
+      "sha256": "846991792b1506d97706bca144f265874f79d17bba91d930dec4d45c3b7bbf04",
+      "bytes": 158150
+    }
+  ],
+  "legacyClientAudit": "NOT RUN: legacy tooling not installed or used; CP-016 report retains its FAIL",
+  "limitations": [
+    "Vite bundled internals remain; build inputs are versioned sources, no public dev server or tenant/HTTP inputs",
+    "Not an OS sandbox or protection against malicious code submitted by a repository author"
+  ],
+  "npmCliSha256": "3ce7cba6f5128dd5f54c98b6a5036b0f850496878cc2e21044b675fe3c594e3e",
+  "inputFingerprintSha256": "4a10d68f3740f4a87afdce9f70e194116890c67bfc696a4c4cd8bc765aabfddd",
+  "result": "PASS",
+  "verificationAt": "2026-10-13T17:16:58.620388+00:00",
+  "authority": {
+    "decision": "DEC-060",
+    "specChange": "SC-008",
+    "state": "APPROVED",
+    "source": "docs/DECISIONS.md: human current response approves exact isolated SaaS toolchain implementation",
+    "notL2Authorization": true
+  },
+  "testedWorktree": "Uncommitted SC-008 code at sourceCodeSha; exact files pinned below; committed rerun is recorded separately by integration controller",
+  "deltaFiles": {
+    "scripts/ci/saas-toolchain.mjs": "22f681f8db965f283199b49c39d0c2f171a11faa1f45a552bd81f19921ebbd08",
+    "scripts/ci/saas-toolchain.test.mjs": "6a68cd25f10c962c21e60ec18835bb357e227b85c457a3e7d82215f989b28794",
+    "scripts/ci/saas-toolchain/package.json": "6e49afa96eb1845f63d5eb9fc236dd90a4277bbcbf13236b184c05173abca994",
+    "scripts/ci/saas-toolchain/package-lock.json": "0c28b577fd2fc4334059a8d12b1ee1db07fd403d0718e858425533a935db8fb6",
+    "scripts/ci/tooling-isolation.mjs": "917d6bf61ff4d0cf2cd5c25fdf752f2cb0e4b7f22d4e834c40ba5efb4d55f3b3",
+    "scripts/ci/tooling-isolation.test.mjs": "c411c064420e2e27d94d396afd3064b4e1d5155fd828ff513c75bf5b7406253b",
+    "scripts/ci/tooling-isolation-check.mjs": "4abde249a9880886d6c8b604e9920d328456aca6954fb5ecf48524e97a8e234e"
+  },
+  "nativeAuditScope": "Full native audit of every package in the exact isolated SaaS lock, plus separate omit=dev audit; no severity filter or waiver",
+  "checksSummary": {
+    "materializerUnitTests": 17,
+    "guardTests": 4,
+    "saasTests": 29,
+    "sanitizerTests": 3,
+    "buildAssets": 3,
+    "fullAuditVulnerabilities": 0,
+    "runtimeAuditVulnerabilities": 0,
+    "cleanup": "PASS",
+    "secretsOrDatabaseUsed": false,
+    "unitEvidence": "Executed locally; independent reviewer and committed regression will record separate provenance"
+  },
+  "callerState": {
+    "workflow": "Updated by integration controller to verify; not yet remote CI verified at this evidence snapshot",
+    "p1-l1FrontendAndSanitizer": "Both delegate to verify; direct entrypoint runtime proof belongs to committed regression",
+    "oldClientToolchain": "Never installed or invoked by this verifier; CP-016 legacy full audit remains FAIL"
+  },
+  "bundledViteAssessment": {
+    "classification": "NO REACHABLE PATH FOUND WITH CURRENT EVIDENCE for versioned benign commands; universal non-exposure NOT VERIFIED",
+    "evidence": "vite-bundled-coverage.json",
+    "staticPotential": "Vite contains braces in watcher getDirParts and bundled selector-parser; package-resolver hooks cannot block calls inside vendored code",
+    "dynamicObserved": "Known three benign fixture commands: braces walker/getDirParts counts zero, module initialization present; selector chunk dep-DDtvSN7_.js not loaded",
+    "inputs": "Exact versioned allowlist, no tenant/HTTP CSS or patterns, no public Vite dev server",
+    "notCovered": "Other configs/plugins/dev servers, arbitrary malicious repository code, universal bundled-code safety"
+  }
+}

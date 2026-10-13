@@ -1,0 +1,19 @@
+✔ expired pool wait retains a pending lease until the late real client is discarded (36.9949ms)
+✔ an expired query retains its lease until SQL returns and discards the client (37.1327ms)
+✔ read-only SQL and all three server timeouts shrink to the actual remaining budget (1.2753ms)
+✔ exhausted read budget sends no SQL (0.2322ms)
+✔ concurrent acquisition opens one pool and never exceeds two leases (5.1546ms)
+✔ rotation drains old leases before replacement without duplicating quota (1.483ms)
+✔ full cache refuses a fifth borrowed tenant and evicts only idle pools (1.3725ms)
+✔ invalid purpose/status and mismatched secret never create a pool (0.3521ms)
+✔ secret resolver rejects unlisted reference, epoch and unsafe TLS without fallback (0.4072ms)
+✔ close refuses new leases, waits active callbacks and frees failed clients (0.8375ms)
+✔ shutdown waits for an in-progress pool creation and closes it (0.5622ms)
+ℹ tests 11
+ℹ suites 0
+ℹ pass 11
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 144.8936

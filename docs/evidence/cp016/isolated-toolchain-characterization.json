@@ -1,0 +1,281 @@
+{
+  "schemaVersion": 1,
+  "checkpoint": "CP-016",
+  "classification": "DETECTED",
+  "sourceCodeSha": "44e55714b30dca776bc6a7fe65cb389b67343738",
+  "environment": {
+    "node": "24.21.0",
+    "npm": "11.9.0",
+    "platform": "Windows",
+    "architecture": "x64",
+    "noQAorDatabase": true
+  },
+  "result": "PASS_LOCAL_CHARACTERIZATION_ONLY",
+  "newProductPackage": false,
+  "checks": [
+    {
+      "id": "existing-client-full-audit",
+      "command": [
+        "node",
+        "<npm-cli>",
+        "audit",
+        "--prefix",
+        "client",
+        "--json"
+      ],
+      "cwd": ".",
+      "exitCode": 1,
+      "at": "2026-10-13T16:52:56.297180+00:00",
+      "elapsedSeconds": 8.628751,
+      "timeoutSeconds": 180,
+      "log": "existing-client-full-audit.txt"
+    },
+    {
+      "id": "existing-client-runtime-audit",
+      "command": [
+        "node",
+        "<npm-cli>",
+        "audit",
+        "--prefix",
+        "client",
+        "--omit=dev",
+        "--json"
+      ],
+      "cwd": ".",
+      "exitCode": 0,
+      "at": "2026-10-13T16:53:04.926509+00:00",
+      "elapsedSeconds": 0.829941,
+      "timeoutSeconds": 180,
+      "log": "existing-client-runtime-audit.txt"
+    },
+    {
+      "id": "registry-braces",
+      "command": [
+        "node",
+        "<npm-cli>",
+        "view",
+        "braces",
+        "version",
+        "dependencies",
+        "dist-tags",
+        "--json"
+      ],
+      "cwd": ".",
+      "exitCode": 0,
+      "at": "2026-10-13T16:53:05.756918+00:00",
+      "elapsedSeconds": 0.865511,
+      "timeoutSeconds": 180,
+      "log": "registry-braces.txt"
+    },
+    {
+      "id": "registry-tailwindcss-3.4.19",
+      "command": [
+        "node",
+        "<npm-cli>",
+        "view",
+        "tailwindcss@3.4.19",
+        "version",
+        "dependencies",
+        "dist-tags",
+        "--json"
+      ],
+      "cwd": ".",
+      "exitCode": 0,
+      "at": "2026-10-13T16:53:06.622442+00:00",
+      "elapsedSeconds": 0.972019,
+      "timeoutSeconds": 180,
+      "log": "registry-tailwindcss-3.4.19.txt"
+    },
+    {
+      "id": "registry-postcss-selector-parser-6",
+      "command": [
+        "node",
+        "<npm-cli>",
+        "view",
+        "postcss-selector-parser@6",
+        "version",
+        "dependencies",
+        "dist-tags",
+        "--json"
+      ],
+      "cwd": ".",
+      "exitCode": 0,
+      "at": "2026-10-13T16:53:07.594474+00:00",
+      "elapsedSeconds": 0.630374,
+      "timeoutSeconds": 180,
+      "log": "registry-postcss-selector-parser-6.txt"
+    },
+    {
+      "id": "registry-postcss-nested-6.2.0",
+      "command": [
+        "node",
+        "<npm-cli>",
+        "view",
+        "postcss-nested@6.2.0",
+        "version",
+        "dependencies",
+        "dist-tags",
+        "--json"
+      ],
+      "cwd": ".",
+      "exitCode": 0,
+      "at": "2026-10-13T16:53:08.224859+00:00",
+      "elapsedSeconds": 0.67958,
+      "timeoutSeconds": 180,
+      "log": "registry-postcss-nested-6.2.0.txt"
+    },
+    {
+      "id": "isolated-generate-lock",
+      "command": [
+        "node",
+        "<npm-cli>",
+        "install",
+        "--prefix",
+        "client",
+        "--package-lock-only",
+        "--ignore-scripts",
+        "--no-audit",
+        "--no-fund"
+      ],
+      "cwd": ".qa-private\\cp016-tooling\\isolated-client",
+      "exitCode": 0,
+      "at": "2026-10-13T16:53:09.104126+00:00",
+      "elapsedSeconds": 16.445228,
+      "timeoutSeconds": 180,
+      "log": "isolated-generate-lock.txt"
+    },
+    {
+      "id": "isolated-locked-install",
+      "command": [
+        "node",
+        "<npm-cli>",
+        "ci",
+        "--prefix",
+        "client",
+        "--ignore-scripts",
+        "--no-audit",
+        "--no-fund"
+      ],
+      "cwd": ".qa-private\\cp016-tooling\\isolated-client",
+      "exitCode": 0,
+      "at": "2026-10-13T16:53:25.549365+00:00",
+      "elapsedSeconds": 3.688661,
+      "timeoutSeconds": 180,
+      "log": "isolated-locked-install.txt"
+    },
+    {
+      "id": "isolated-full-audit",
+      "command": [
+        "node",
+        "<npm-cli>",
+        "audit",
+        "--prefix",
+        "client",
+        "--json"
+      ],
+      "cwd": ".qa-private\\cp016-tooling\\isolated-client",
+      "exitCode": 0,
+      "at": "2026-10-13T16:53:29.238037+00:00",
+      "elapsedSeconds": 0.838332,
+      "timeoutSeconds": 180,
+      "log": "isolated-full-audit.txt"
+    },
+    {
+      "id": "isolated-runtime-audit",
+      "command": [
+        "node",
+        "<npm-cli>",
+        "audit",
+        "--prefix",
+        "client",
+        "--omit=dev",
+        "--json"
+      ],
+      "cwd": ".qa-private\\cp016-tooling\\isolated-client",
+      "exitCode": 0,
+      "at": "2026-10-13T16:53:30.076774+00:00",
+      "elapsedSeconds": 0.814077,
+      "timeoutSeconds": 180,
+      "log": "isolated-runtime-audit.txt"
+    },
+    {
+      "id": "isolated-guard-tests",
+      "command": [
+        "node",
+        "--test",
+        "scripts/ci/tooling-isolation.test.mjs"
+      ],
+      "cwdRelativeToWorktree": ".qa-private\\cp016-tooling\\isolated-client",
+      "exitCode": 0,
+      "at": "2026-10-13T16:58:06.812472+00:00",
+      "elapsedSeconds": 0.316277,
+      "log": "isolated-guard-tests.txt",
+      "timeoutSeconds": 180
+    },
+    {
+      "id": "isolated-commands",
+      "command": [
+        "node",
+        "scripts/ci/tooling-isolation-check.mjs"
+      ],
+      "cwdRelativeToWorktree": ".qa-private\\cp016-tooling\\isolated-client",
+      "exitCode": 0,
+      "at": "2026-10-13T16:58:07.128759+00:00",
+      "elapsedSeconds": 18.276488,
+      "log": "isolated-commands.txt",
+      "timeoutSeconds": 180
+    }
+  ],
+  "copiedFilesExact": 20,
+  "fixtureLockSha256": "4835748dc12c4bbdb3094f9c398cfaaee01ef4f5d2408c47989eb1cb4144e82a",
+  "fixturePackageCount": 211,
+  "blockedPackagesAbsent": [
+    "braces",
+    "chokidar",
+    "fast-glob",
+    "micromatch",
+    "postcss-nested",
+    "postcss-selector-parser",
+    "tailwindcss"
+  ],
+  "fullAuditResult": "PASS",
+  "runtimeAuditResult": "PASS",
+  "frontendTests": 29,
+  "sanitizerTests": 3,
+  "guardTests": 4,
+  "assets": [
+    {
+      "path": "assets/saas-DclqrR_W.css",
+      "sha256": "cdb3b3885a4aea0c72204e0c7952eb8ebd7522c2767529eb824b487582d54159",
+      "sameAsCurrentAndArchivedF": true
+    },
+    {
+      "path": "assets/saas-DsjAOXZI.js",
+      "sha256": "846991792b1506d97706bca144f265874f79d17bba91d930dec4d45c3b7bbf04",
+      "sameAsCurrentAndArchivedF": true
+    },
+    {
+      "path": "saas.html",
+      "sha256": "ab3c357852ca07b8f4689fb5b23a8ddb093ab2bb4e0aa2d75ba98012b132ee51",
+      "sameAsCurrentAndArchivedF": true
+    }
+  ],
+  "limits": [
+    "The actual client legacy full audit remains FAIL; no gate waived",
+    "Vite bundled internals remain present in Vite6.4.3 and are not covered by npm tree matching",
+    "No implementation of proposed toolchain split or L2; approval still required",
+    "Fixture cleanup KEEP private for reproducibility; sentinel scratch cleaned by its runner"
+  ],
+  "noDependencyFallback": "PASS: guard realpath boundary rejects external node_modules, including controlled negative",
+  "sourceDeltaHashes": {
+    "scripts/ci/tooling-isolation.mjs": "917d6bf61ff4d0cf2cd5c25fdf752f2cb0e4b7f22d4e834c40ba5efb4d55f3b3",
+    "scripts/ci/tooling-isolation.test.mjs": "c411c064420e2e27d94d396afd3064b4e1d5155fd828ff513c75bf5b7406253b",
+    "scripts/ci/tooling-isolation-check.mjs": "4abde249a9880886d6c8b604e9920d328456aca6954fb5ecf48524e97a8e234e"
+  },
+  "archivedFComparison": {
+    "result": "PASS",
+    "artifactDigest": "sha256:5950ae7e519170ebaaf6cf8c99e9187c14b41f32779044e2829e8de5abbac0a6",
+    "historicalCodeSha": "b0f5e199e5df457d7f901ff3a3dca5ab3a8d5701",
+    "sourceEvidence": "docs/evidence/cp015/archived-f-identity.json"
+  }
+}

@@ -60,4 +60,6 @@ coverage/
 .railway/
 .kilo/
 .mecanet-configured
-docs/
+.qa-private/
+client/dist-saas/
+.vercel/

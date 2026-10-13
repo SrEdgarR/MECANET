@@ -1,0 +1,138 @@
+name: mecanet-qa-p1l1
+services:
+  api1: &api
+    image: node@sha256:ba6b7d0ee561d9d49deb99e2b93c98632cc287b6cca1a6b18d66127054efa4dc
+    platform: linux/arm64
+    user: "999:999"
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    cpus: 0.20
+    mem_limit: 320m
+    pids_limit: 64
+    working_dir: /workspace
+    command: [node, tests/qa/entry.mjs]
+    stop_grace_period: 35s
+    volumes:
+      - /opt/mecanet-qa-p1l1/release:/workspace:ro
+      - /opt/mecanet-qa-p1l1/secrets/api.json:/run/qa-secrets/api.json:ro
+    networks: [data, front]
+    tmpfs: ["/tmp:size=16m"]
+    logging:
+      driver: json-file
+      options: {max-size: 8m, max-file: "2"}
+  api2: *api
+  web:
+    image: nginx@sha256:3abad30db61dfb2a339ea21acc9f3e6bbe78e291fcff2f835f4510c8fdfcbd83
+    platform: linux/arm64
+    user: "101:101"
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    cpus: 0.10
+    mem_limit: 96m
+    pids_limit: 64
+    entrypoint: [nginx, -g, "daemon off;", -c, /etc/nginx/nginx.conf]
+    volumes:
+      - /opt/mecanet-qa-p1l1/release/client/dist-saas:/app:ro
+      - /opt/mecanet-qa-p1l1/config/nginx.conf:/etc/nginx/nginx.conf:ro
+      - /opt/mecanet-qa-p1l1/tls/web:/run/tls:ro
+      - /opt/mecanet-qa-p1l1/ingress:/run/qa-ingress
+    tmpfs: ["/tmp:size=16m,uid=101,gid=101"]
+    networks:
+      front:
+        ipv4_address: 10.77.32.2
+    logging:
+      driver: json-file
+      options: {max-size: 8m, max-file: "2"}
+  harness:
+    profiles: [tools]
+    image: node@sha256:ba6b7d0ee561d9d49deb99e2b93c98632cc287b6cca1a6b18d66127054efa4dc
+    platform: linux/arm64
+    user: "999:999"
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    # Tools run only while APIs/web are stopped; enforced by the QA runner.
+    cpus: 0.25
+    mem_limit: 128m
+    pids_limit: 64
+    working_dir: /workspace
+    command: [node, tests/qa/prepare.mjs]
+    volumes:
+      - /opt/mecanet-qa-p1l1/release:/workspace:ro
+      - /opt/mecanet-qa-p1l1/secrets:/run/qa-secrets
+      - /opt/mecanet-qa-p1l1/config/ca.crt:/run/qa-ca.crt:ro
+      - /opt/mecanet-qa-p1l1/evidence/system-id:/run/qa-system-id:ro
+    tmpfs: ["/tmp:size=16m"]
+    networks: [data]
+    logging:
+      driver: json-file
+      options: {max-size: 8m, max-file: "2"}
+  postgres:
+    image: postgres@sha256:67ba68a22dc7d5af3627b7e0f33d10bbefad07562ff9703b3a6c2de247649129
+    platform: linux/arm64
+    user: "999:999"
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    cpus: 0.35
+    mem_limit: 640m
+    pids_limit: 128
+    restart: "no"
+    environment:
+      POSTGRES_USER: qa_bootstrap
+      POSTGRES_DB: postgres
+      POSTGRES_PASSWORD_FILE: /run/secrets/bootstrap
+      POSTGRES_INITDB_ARGS: --auth-host=scram-sha-256 --auth-local=scram-sha-256
+      PGDATA: /var/lib/postgresql/18/docker
+    command: [postgres, -c, config_file=/etc/postgresql/postgresql.conf]
+    volumes:
+      - /opt/mecanet-qa-p1l1/data:/var/lib/postgresql
+      - /opt/mecanet-qa-p1l1/config/postgresql.conf:/etc/postgresql/postgresql.conf:ro
+      - /opt/mecanet-qa-p1l1/config/pg_hba.conf:/etc/postgresql/pg_hba.conf:ro
+      - /opt/mecanet-qa-p1l1/tls/postgres:/run/tls:ro
+      - /opt/mecanet-qa-p1l1/secrets/bootstrap:/run/secrets/bootstrap:ro
+    tmpfs: ["/tmp:size=16m", "/var/run/postgresql:size=8m,mode=0770,uid=999,gid=999"]
+    networks:
+      data:
+        ipv4_address: 10.77.31.2
+    logging:
+      driver: json-file
+      options: {max-size: 8m, max-file: "2"}
+  worker:
+    image: node@sha256:ba6b7d0ee561d9d49deb99e2b93c98632cc287b6cca1a6b18d66127054efa4dc
+    platform: linux/arm64
+    user: "999:999"
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    cpus: 0.10
+    mem_limit: 192m
+    pids_limit: 64
+    working_dir: /workspace
+    command: [node, tests/qa/worker.mjs]
+    volumes:
+      - /opt/mecanet-qa-p1l1/release:/workspace:ro
+      - /opt/mecanet-qa-p1l1/secrets/worker.json:/run/qa-secrets/worker.json:ro
+    networks: [data]
+    logging:
+      driver: json-file
+      options: {max-size: 8m, max-file: "2"}
+networks:
+  front:
+    name: mecanet-qa-p1l1-front
+    internal: true
+    enable_ipv6: false
+    driver_opts:
+      com.docker.network.bridge.gateway_mode_ipv4: isolated
+    ipam:
+      config: [{subnet: 10.77.32.0/24}]
+  data:
+    name: mecanet-qa-p1l1-data
+    internal: true
+    enable_ipv6: false
+    driver_opts:
+      com.docker.network.bridge.gateway_mode_ipv4: isolated
+    ipam:
+      config: [{subnet: 10.77.31.0/24}]

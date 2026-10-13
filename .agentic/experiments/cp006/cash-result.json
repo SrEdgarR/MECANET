@@ -1,0 +1,70 @@
+{
+  "scope": "CP-006 offline pure-function characterization and bounded abstract model; not POS/Mongo integration",
+  "date": "2026-10-07",
+  "node": "v24.14.0",
+  "inspectedProductBaseSha": "fcd93a809d907e06e2ce514f71437827c993c74a",
+  "returnPolicySha256": "0ace4186888395af3abadad7270e41a4f143e81eec479bc4db7a4d0bf8b7676a",
+  "sequentialPartitions": {
+    "status": "PASS",
+    "amountCents": [
+      0,
+      1001
+    ],
+    "quantity": [
+      1,
+      6
+    ],
+    "partitionCases": 63126,
+    "returnCalls": 192384,
+    "claim": "Conservation only for the bounded valid sequential fixtures; exhausted quantity rejected"
+  },
+  "rejectedPending": {
+    "status": "PASS",
+    "claim": "Observed old reservation differs from recomputation after an earlier rejection",
+    "firstPendingCents": 333,
+    "secondReservedCents": 668,
+    "secondRecomputedCents": 667,
+    "controllerExecution": "NOT VERIFIED; the existing mismatch guard was only inspected"
+  },
+  "repeatedProductLines": {
+    "status": "PASS",
+    "claim": "Observed product-level grouping loses the selected line price",
+    "soldLineCents": [
+      10000,
+      20000
+    ],
+    "returnedOneUnitCents": 15000
+  },
+  "closeModel": {
+    "status": "PASS",
+    "schedules": 6,
+    "withoutFenceCounterexamples": [
+      {
+        "events": [
+          "read",
+          "freeze",
+          "commit",
+          "snapshot"
+        ],
+        "committed": 1,
+        "members": 0,
+        "exclusiveCompleteSet": false
+      },
+      {
+        "events": [
+          "read",
+          "freeze",
+          "snapshot",
+          "commit"
+        ],
+        "committed": 1,
+        "members": 0,
+        "exclusiveCompleteSet": false
+      }
+    ],
+    "withFenceViolations": 0,
+    "premise": "freeze and fenced commit are atomic in this model; physical enforcement remains NOT VERIFIED"
+  },
+  "elapsedMs": 781,
+  "resources": "One terminating process; no DB/network/env-file/service; files KEEP, DELETE none"
+}

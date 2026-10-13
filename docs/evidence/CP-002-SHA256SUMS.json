@@ -1,0 +1,28 @@
+{
+  "checkpoint": "CP-002",
+  "date": "2026-10-07",
+  "provenance": "LOCAL hashes; REMOTE VPS snapshot; LOCAL map screenshots; VENDOR-DOCUMENTATION sources",
+  "scope": "New evidence and immutable methodology copy only. CP-001 manifest remains tied to commit 614a74ce000dc43f1bb539f1a69a6db4c51364d7. No self-hash or generated-map cycle.",
+  "files": [
+    {
+      "file": "docs/evidence/CP-002-vps.json",
+      "sha256": "985a5c5adf44bf89ecb39faa2c7c3f44582d327d47c7fad19089b1cdf540a92d"
+    },
+    {
+      "file": "docs/evidence/ui/CP-002-map-desktop.jpg",
+      "sha256": "5dd7f114073788ae91dc2cb3d622b1a5b63ba6c7b6508f75446b29dd889832e8"
+    },
+    {
+      "file": "docs/evidence/ui/CP-002-map-mobile.jpg",
+      "sha256": "1aa0f4056cef8dc8839bccfa7bc8eab3a548c85a3079d87cc67dd343452a674c"
+    },
+    {
+      "file": "docs/evidence/SOURCES.md",
+      "sha256": "2d4fcdb6adefa4b76d6d5bc7a72250be74c08a7c88abb7c14bd57226a061d54a"
+    },
+    {
+      "file": "docs/methodology/Prompt_Maestro_v2.0.md",
+      "sha256": "d2dafd5f75df32aae33e421953fab6e99e723aa88744b918b555562c7b6a550d"
+    }
+  ]
+}
