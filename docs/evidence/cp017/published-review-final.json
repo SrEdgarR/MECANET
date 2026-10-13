@@ -1,0 +1,45 @@
+{
+  "checkpoint": "CP-017",
+  "status": "PASS FOR PUBLISHED DIFF REVIEW; CI AND MERGE SEPARATE",
+  "observedAt": "2026-10-13T23:04:49.334341+00:00",
+  "reviewer": "root consolidation of independent source reviews + published identity/diff verification",
+  "pr": 3,
+  "url": "https://github.com/SrEdgarR/MECANET/pull/3",
+  "account": "SrEdgarR",
+  "baseSha": "a0098178fc27467bf4c12da0e97723e0b80ce683",
+  "headSha": "df9219a202542fca173ffba25fe8d523b40e54cb",
+  "functionalSha": "8199a414ff06220e147b062ce37fa55709311627",
+  "testedHarnessSha": "2b0dd67f7f19fa563ae5eae802da533572da7abe",
+  "publishedCommitsMatchLocal": true,
+  "publishedPathCount": 178,
+  "publishedPathsMatchLocal": true,
+  "productDeltaAfterReviewedCut": [],
+  "harnessToCheckpointDelta": "Documentation + sole drain test fixture portability correction, reviewed independently in review-ci-fixture.json; runtime helper and product unchanged",
+  "criticalFindingsOpen": 0,
+  "requiredFindingsOpen": 0,
+  "independentReview": "review-consolidated.json with 82 paths/14 original source reviews, plus QA-specific peers",
+  "axes": [
+    "correctness",
+    "readability",
+    "architecture",
+    "security",
+    "performance"
+  ],
+  "documentaryPeer": "l2_sql verified final current canon/CP017/L3, both errata resolved, 0 REQUIRED",
+  "matrixSha256": "3a8fe79607abefb16f32c5f78b56fb34242d6ba89884ee3ba219f9063351af70",
+  "matrixFormatDelta": "Removed one blank line at EOF; acceptance content identical to peer-reviewed54e960 cut, refs refreshed; no criterion change",
+  "pr1": "No API mutation or commits from PR1",
+  "githubHumanReview": "No human GitHub approval claimed; independent agent review under authorized gates",
+  "sourceDiffStoredPrivately": {
+    "sha256": "080cdac79adf8f78bd995197f6f1bcedd6fb83d3eac9c18caa454c614cfadd27",
+    "bytes": 2421801
+  },
+  "sourceVersionsNotReattributed": true,
+  "limitations": [
+    "No general SaaS production readiness",
+    "CI/merge/canonical checks must pass before TERMINAL",
+    "Known deployment mechanism safety recheck required before merge"
+  ],
+  "previousPublishedReview": "published-review.json retains original c733 snapshot",
+  "fixtureLocalVerification": "ci-correction.json: clean checkout RED12/15→GREEN15/15 and full local258/258; remote CI separate"
+}

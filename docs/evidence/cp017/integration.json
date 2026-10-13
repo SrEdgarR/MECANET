@@ -1,0 +1,118 @@
+{
+  "checkpoint": "CP-017",
+  "classification": "DETECTED",
+  "provenance": "REMOTE GitHub API + hosted CI + LOCAL Git identity/delta, QA sources separate",
+  "observedAt": "2026-10-13T23:07:46.289653+00:00",
+  "status": "PASS INTEGRATION GATE P1-L2",
+  "lot": "P1-L2 TERMINAL LIMITED SCOPE",
+  "generalSaaS": "NOT APPROVED",
+  "activePhase": "P1",
+  "baseSha": "a0098178fc27467bf4c12da0e97723e0b80ce683",
+  "testedFunctionalSha": "8199a414ff06220e147b062ce37fa55709311627",
+  "testedQaHarnessSha": "2b0dd67f7f19fa563ae5eae802da533572da7abe",
+  "testedQaArtifactDigest": "sha256:85f959d949897298450b49a705d30b9688bfbaf9573d142fe4e08acae010e75c",
+  "acceptanceCheckpointSha": "c7335f9bc24b68b578c2a165bbab341962fa6854",
+  "prHeadSha": "df9219a202542fca173ffba25fe8d523b40e54cb",
+  "testFixtureCorrectionSha": "df9219a202542fca173ffba25fe8d523b40e54cb",
+  "pr": 3,
+  "prUrl": "https://github.com/SrEdgarR/MECANET/pull/3",
+  "mergedAt": "2026-10-13T23:05:36Z",
+  "mergeSha": "7ff9a6c41060e186c8e8c6ce475957c53d40de38",
+  "canonicalVerifiedSha": "7ff9a6c41060e186c8e8c6ce475957c53d40de38",
+  "headMergeTreeEqual": true,
+  "ci": {
+    "pr": {
+      "id": 38481927763,
+      "url": "https://github.com/SrEdgarR/MECANET/actions/runs/38481927763",
+      "headSha": "df9219a202542fca173ffba25fe8d523b40e54cb",
+      "event": "pull_request",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    "push": {
+      "id": 38481922405,
+      "url": "https://github.com/SrEdgarR/MECANET/actions/runs/38481922405",
+      "headSha": "df9219a202542fca173ffba25fe8d523b40e54cb",
+      "event": "push",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    "canonical": {
+      "id": 38482079889,
+      "url": "https://github.com/SrEdgarR/MECANET/actions/runs/38482079889",
+      "headSha": "7ff9a6c41060e186c8e8c6ce475957c53d40de38",
+      "event": "push",
+      "status": "completed",
+      "conclusion": "success"
+    }
+  },
+  "review": {
+    "status": "PASS",
+    "requiredOpen": 0,
+    "criticalOpen": 0,
+    "evidence": [
+      "review-consolidated.json",
+      "published-review-final.json",
+      "review-ci-fixture.json"
+    ],
+    "githubHumanApprovalClaimed": false
+  },
+  "acceptance": "12/12 criteria PASS under exact approved baseline, local/QA/peer sources in matrix.md",
+  "historicalCIFailure": "ci-correction.json retains first c733 push/PR255PASS3FAIL; corrected clean fixture and df CI PASS, not overwrite",
+  "publicDeployment": false,
+  "sharedInfrastructureMutations": 0,
+  "qa": "6 own STOPPED/KEEP,20 prior consumers unchanged, tunnel closed; cleanup.json",
+  "remainingLiveDocumentClosure": "Same CP017 terminal transition: integrate actual CI/cleanup/gate/registry/map into canonical docs; no new checkpoint or functional lot",
+  "limits": [
+    "No reopening restore, external custody or production RPO/RTO claim",
+    "No P1-L3 A/B or implementation",
+    "Terminal documentary closure SHA is external; avoid self-referential commits"
+  ],
+  "ciCheckoutProvenance": {
+    "pr": {
+      "headSha": "df9219a202542fca173ffba25fe8d523b40e54cb",
+      "actualCheckoutProvenance": {
+        "checkoutCommit": "3bd4dcbe6b44fc78ede161c5b82fc9d640400198",
+        "worktreeClean": true,
+        "node": "v24.21.0",
+        "platform": "linux",
+        "architecture": "x64",
+        "scope": "local-contracts-and-frontend",
+        "postgresIntegration": "NOT RUN",
+        "remoteQA": "NOT USED"
+      },
+      "checkoutTreeSha": "4e55523b7541dcb6ddc02f7bd69fd4a93a22e817",
+      "checkoutTreeEqualsApiHead": true
+    },
+    "push": {
+      "headSha": "df9219a202542fca173ffba25fe8d523b40e54cb",
+      "actualCheckoutProvenance": {
+        "checkoutCommit": "df9219a202542fca173ffba25fe8d523b40e54cb",
+        "worktreeClean": true,
+        "node": "v24.21.0",
+        "platform": "linux",
+        "architecture": "x64",
+        "scope": "local-contracts-and-frontend",
+        "postgresIntegration": "NOT RUN",
+        "remoteQA": "NOT USED"
+      },
+      "checkoutTreeSha": "4e55523b7541dcb6ddc02f7bd69fd4a93a22e817",
+      "checkoutTreeEqualsApiHead": true
+    },
+    "canonical": {
+      "headSha": "7ff9a6c41060e186c8e8c6ce475957c53d40de38",
+      "actualCheckoutProvenance": {
+        "checkoutCommit": "7ff9a6c41060e186c8e8c6ce475957c53d40de38",
+        "worktreeClean": true,
+        "node": "v24.21.0",
+        "platform": "linux",
+        "architecture": "x64",
+        "scope": "local-contracts-and-frontend",
+        "postgresIntegration": "NOT RUN",
+        "remoteQA": "NOT USED"
+      },
+      "checkoutTreeSha": "4e55523b7541dcb6ddc02f7bd69fd4a93a22e817",
+      "checkoutTreeEqualsApiHead": true
+    }
+  }
+}

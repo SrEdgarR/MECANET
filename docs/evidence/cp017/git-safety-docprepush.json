@@ -1,0 +1,51 @@
+{
+  "checkpoint": "CP-017",
+  "stage": "docprepush",
+  "observedAt": "2026-10-13T23:14:07.439734+00:00",
+  "status": "PASS FOR OBSERVED DEPLOYMENT MECHANISMS ONLY",
+  "repository": "SrEdgarR/MECANET",
+  "account": "SrEdgarR",
+  "canonicalSha": "7ff9a6c41060e186c8e8c6ce475957c53d40de38",
+  "hooks": [],
+  "rulesets": [],
+  "selfHostedRunners": 0,
+  "workflows": [
+    {
+      "id": 383488316,
+      "path": ".github/workflows/p1-l1-verify.yml",
+      "state": "active"
+    }
+  ],
+  "candidateWorkflowSha256": "9126d290385ec36ebf29ebfcf3480523ae06d291edff7782595ca0e9877f500e",
+  "remoteWorkflowSha256": "9126d290385ec36ebf29ebfcf3480523ae06d291edff7782595ca0e9877f500e",
+  "workflowVerificationOnly": true,
+  "historicalDeploymentIds": [
+    6914907152,
+    6914914868,
+    6915378351,
+    6915391143,
+    6915495489,
+    6915510608
+  ],
+  "newDeployments": 0,
+  "coolify": {
+    "provenance": "REMOTE BEGIN READ ONLY exact repository filter",
+    "rows": [
+      "mecanet-api|SrEdgarR/MECANET.git|codex/deploy-vercel-coolify|f|f"
+    ],
+    "autoDeploy": false,
+    "previewDeploy": false
+  },
+  "vercel": {
+    "directConnectorAtStage": true,
+    "repoUrl": "https://github.com/SrEdgarR/MECANET",
+    "linkedProjectCount": 0,
+    "details": "Root performed authenticated exact team/repoUrl list_projects immediately before this bounded check; result projects[]/count0"
+  },
+  "limitations": [
+    "GitHub Apps inventory previously HTTP403: NOT VERIFIED, not proof of absence",
+    "No global absence claim for unknown external polling; bounded known mechanisms and direct human disconnect reused",
+    "No shared infrastructure or legacy integration mutation"
+  ],
+  "mutations": []
+}

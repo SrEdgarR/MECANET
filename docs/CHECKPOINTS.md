@@ -507,9 +507,9 @@ Fecha2026-10-13. Fuente humana directa actual desconecta Git Vercel y aprueba SC
 
 Resultado CP-016 terminal:14PASS/1FAILlegacy/1NOTVERIFIEDL2. C-001…232/CP-001…015 intactos. QG/Integration Gate PASS no convierten legacyFAIL o L2A/B pendientes enPASS.
 
-## CP-017 — P1-L2: aceptación técnica y preparación de integración
+## CP-017 — P1-L2: implementación, verificación e integración terminal
 
-Fecha2026-10-13. A/DEC-061 y B/DEC-062 exactas del adjunto58f74b6d; baseline v0.2-CP016 ca975dc… intacta. Producto8199, QAfinal2b0/digest85f959d…; otras fuentes conservadas en matriz/ledger, no reenunciadas como nuevas pruebas. P1 única activa/P0PARCIAL/generalNOTAPPROVED. Doce criterios PASS de aceptación, revisión0REQUIRED/Quality/cleanupPASS; Integration Gate pendiente y L2NO TERMINAL hasta PR/CI/merge/canónico. QA sintética propia detenida,20consumidores previos intactos. Sin producción/DNS/pagos/Coolify/PR1 ni L3 implementado. [Auditoría §27](audit/CP-017.md). Checkpoint/HEAD se registran en Git/informe externo, sin autoSHA.
+Fecha2026-10-13. A/DEC-061 y B/DEC-062 exactas del adjunto58f74b6d; baseline v0.2-CP016 ca975dc… intacta. Producto8199, QAfinal2b0/digest85f959d…; otras fuentes conservadas en matriz/ledger, no reenunciadas como nuevas pruebas. P1 única activa/P0PARCIAL/generalNOTAPPROVED. Doce criterios/review0REQUIRED/Quality/cleanup/IntegrationPASS; L2TERMINAL por PR#3 headdf9219a/merge7ff9a6c/CIpush38481922405/PR38481927763/canónica38482079889 PASS. PrimeraCIc733FAIL conservada y fixture temporal corregido/revisado; producto8199/runtime2b0 sin delta. QA sintética propia detenida,20consumidores previos intactos. Sin producción/DNS/pagos/Coolify/PR1 ni L3 implementado. [Auditoría §27](audit/CP-017.md). Checkpoint/HEAD se registran en Git/informe externo, sin autoSHA.
 
 ## Matriz CP-017
 
@@ -532,8 +532,8 @@ Fecha2026-10-13. A/DEC-061 y B/DEC-062 exactas del adjunto58f74b6d; baseline v0.
 | C-263 | Revisión independiente consolidada | PASS | [review-consolidated](evidence/cp017/review-consolidated.json):82 rutas/14 reviews; 0 críticos/0 REQUIRED, independencia colectiva | LOCAL peer + QA reportada | 8199 funcional / 2b0 QA | 2026-10-13 | DETECTED |
 | C-264 | Quality documental y mapa derivados | PASS | [documentation-quality](evidence/cp017/documentation-quality.json):referencias/14 pendientes/historia248/Prompt/snapshots/12criterios/una fase/mapa--check | LOCAL documental | checkpoint identificado externamente | 2026-10-13 | DETECTED |
 | C-265 | Cleanup y preservación de consumidores | PASS | [cleanup](evidence/cp017/cleanup.json):6 propios STOPPED/0running,20 anteriores exactos; túnel4312 y18443 cerrados | REMOTE + LOCAL | 2b0dd67 QA | 2026-10-13 | DETECTED |
-| C-266 | Integration Gate y rama canónica | NOT VERIFIED | Aceptación previa permite PR/CI/review/merge condicional ya autorizados; CI develop aún no ejecutada. L2 aún NO TERMINAL | GitHub pendiente | sin merge L2 | 2026-10-13 | DETECTED |
+| C-266 | Integration Gate y rama canónica | PASS | [integration](evidence/cp017/integration.json):PR#3/CIpush yPRdf9219a/merge yCIcanónica7ff9a6c PASS; review final0REQUIRED y recheckQ42; cierre documental mismoCP017 | REMOTE GitHub hosted CI + LOCAL Git | df9219a head / 7ff9a6c merge | 2026-10-13 | DETECTED |
 | C-267 | Siguiente candidato acotado preparado | PASS | [P1-L3](../.agentic/P1-L3_CANDIDATE.md) v0.1-CP017-rev1/review:6criteriosNV, nueva fuente con margen; sin código ni recursos | LOCAL documental | SUGGESTED / NOT APPROVED | 2026-10-13 | DETECTED |
 | C-268 | A/B y salidas del siguiente lote | NOT VERIFIED | Design/Specification/A exacta/B/Development/Environment antes de implementar L3; no aprobación inferida | HUMAN + entorno futuro | ninguna baseline L3 aprobada | 2026-10-13 | DETECTED |
 
-Resultado CP-017 previo a integración:18PASS/2NOTVERIFIED. Historia C-001…248 byte exacta; la aceptación local no simula merge ni CI remota. Los doce criterios tienen fuentes/descripciones detalladas en su matriz.
+Resultado CP-017 terminal limitado:19PASS/1NOTVERIFIED futuro L3 A/B. Historia C-001…248 byte exacta; aceptación local y CI remota conservan sources exactos, sin simulación ni atribuir ensayos históricos al nuevo checkpoint. Los doce criterios tienen fuentes/descripciones detalladas en su matriz.
