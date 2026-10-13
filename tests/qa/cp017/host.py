@@ -155,22 +155,26 @@ def accept_artifact():
  print(json.dumps({'artifactAccepted':True,'codeSha':manifest['codeSha'],'digest':manifest['digest'],'files':len(expected)}))
 
 def own_tool():
- own();assert len(sys.argv)>=3 and sys.argv[2] in ['foundation','migration','sql','integration','recovery-check','corrective','resources-api1','resources-api2','promote','quota','revocation']
+ own();assert len(sys.argv)>=3 and sys.argv[2] in ['foundation','migration','sql','integration','recovery-check','corrective','resources-api1','resources-api2','promote','quota','revocation','quota-boundary']
  action=sys.argv[2];live=any(x['running'] for x in facts() if x['project']==PROJECT and x['name'].endswith(('-api1-1','-api2-1','-web-1')))
- service='probe' if action in ['sql','integration','revocation'] or action=='quota' and (len(sys.argv)<5 or sys.argv[4]!='closed') else 'harness';assert service=='probe' or not live,'HARNESS_RUNTIME_OVERLAP'
+ service='probe' if action in ['sql','integration','revocation','recovery-check'] or action=='quota' and (len(sys.argv)<5 or sys.argv[4]!='closed') else 'harness';assert service=='probe' or not live,'HARNESS_RUNTIME_OVERLAP'
  artifact=json.loads((ROOT/'evidence/artifact.json').read_text())
- files={'foundation':'prepare.mjs','migration':'migration-live.mjs','sql':'sql-live.mjs','integration':'integration.mjs','recovery-check':'recovery-check.mjs','corrective':'corrective.mjs','resources-api1':'resource-closure.mjs','resources-api2':'resource-closure.mjs','promote':'promote.mjs','quota':'quota-live.mjs','revocation':'revocation-live.mjs'}
+ files={'foundation':'prepare.mjs','migration':'migration-live.mjs','sql':'sql-live.mjs','integration':'integration.mjs','recovery-check':'recovery-check.mjs','corrective':'corrective.mjs','resources-api1':'resource-closure.mjs','resources-api2':'resource-closure.mjs','promote':'promote.mjs','quota':'quota-live.mjs','revocation':'revocation-live.mjs','quota-boundary':'quota-boundary.mjs'}
  args=['run','--rm','--no-deps','-e','QA_CODE_SHA='+artifact['codeSha']]
  if action=='foundation':args+=['-e','QA_STAGE=foundation']
  if action=='quota':
   assert len(sys.argv)>=4 and sys.argv[3] in ['privileges','unicode','last-product','last-byte','debt'];args+=['-e','QA_QUOTA_PHASE='+sys.argv[3]]
-  if len(sys.argv)>=5:
+  if len(sys.argv)==5:
+   assert sys.argv[4] in ['11111111-1111-4111-8111-111111111111','22222222-2222-4222-8222-222222222222'];args+=['-e','QA_QUOTA_TENANT='+sys.argv[4]]
+  elif len(sys.argv)>5:
    assert sys.argv[4]=='closed' and len(sys.argv)==7 and re.fullmatch('[a-f0-9-]{36}',sys.argv[5]) and re.fullmatch('[a-f0-9-]{36}',sys.argv[6]);args+=['-e','QA_QUOTA_PREPARE=closed','-e','QA_QUOTA_TENANT='+sys.argv[5],'-e','QA_QUOTA_RESTRICTION='+sys.argv[6]]
  # Add only the exclusive synthetic result destination; no shared host mount.
  args+=['-v',str(ROOT/'evidence')+':/run/qa-results',service,'node','tests/qa/cp017/'+files[action]]
  if action.startswith('resources-'):args+=['host-end-proof-'+action.split('-')[1]+'.json']
  if action=='revocation':
   assert len(sys.argv)==4 and sys.argv[3] in ['share-logout','membership','identity','capture-rotation','verify-rotation','capture-epoch','verify-epoch','block-tenant-b','drain'];args+=[sys.argv[3]]
+ if action=='quota-boundary':
+  assert len(sys.argv)==4 and sys.argv[3] in ['tenant','global'];args+=[sys.argv[3]]
  try:print(compose(*args),end='')
  except subprocess.CalledProcessError as error:
   print(error.output,end='');raise SystemExit(error.returncode)
@@ -283,7 +287,7 @@ def promotion_proof():
  command='export PGPASSWORD; PGPASSWORD=$(cat /run/secrets/bootstrap); exec psql -h /var/run/postgresql -U qa_bootstrap -d mecanet_control -qAt -v ON_ERROR_STOP=1'
  absent=run('docker','exec','-i',pg,'sh','-c',command,input="BEGIN READ ONLY; SELECT count(*) FROM pg_stat_activity WHERE usename LIKE 'saas_%'; ROLLBACK;").strip();assert absent=='0','PROMOTION_SQL_OWNER_ALIVE'
  q=json.loads((ROOT/'secrets/connections.json').read_text());a=json.loads((ROOT/'evidence/artifact.json').read_text())
- p=ROOT/'evidence/operational-host-proof.json';p.write_text(json.dumps({'project':PROJECT,'sourceSha':a['codeSha'],'generation':q['generation'],'systemIdentifier':q['systemIdentifier'],'apis':apis,'observedAt':time.strftime('%Y-%m-%dT%H:%M:%SZ',time.gmtime())}));os.chmod(p,0o400);os.chown(p,999,999)
+ p=ROOT/'evidence/operational-host-proof.json';p.write_text(json.dumps({'project':PROJECT,'sourceSha':a['codeSha'],'generation':q['generation'],'systemIdentifier':q['systemIdentifier'],'apis':apis,'workerStopped':True,'webStopped':True,'observedAt':time.strftime('%Y-%m-%dT%H:%M:%SZ',time.gmtime())}));os.chmod(p,0o400);os.chown(p,999,999)
  print('CP017_PROMOTION_PROCESS_AND_SQL_END_PROVEN')
 
 def refresh_config():

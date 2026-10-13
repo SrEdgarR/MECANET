@@ -11,6 +11,7 @@ import {createPgPool} from '../../../server/saas/db/pools.js';
 import {canonicalWrite} from '../../../server/saas/writes/validation.js';
 import {createQaClient,assertStatus} from '../cp014/http-client.mjs';
 import {arm,waitEvent,release} from './faults.mjs';
+import {runMetadataAssay} from './metadata-live.mjs';
 
 const PROJECT='mecanet-qa-p1l2-cp017';
 const TENANT_A='11111111-1111-4111-8111-111111111111',TENANT_B='22222222-2222-4222-8222-222222222222';
@@ -142,6 +143,21 @@ try{
   assert.deepEqual(rows,{products:before+1,operations:1,audits:1});const settled=await waitFor(()=>operationRows(id),value=>value.intent?.reservation_status==='SETTLED');assert.equal(settled.intent.status,'CONFIRMED');
   return {operationId:id,initialReplies,twoApiHttpConcurrency:true,singleProduct:true,singleAudit:true,knownIdQueryBeforeExplicitSameKeyReplay:true,originalGrowthSettled:true};
  },{dependsOn:['normalized-canonical-two-api-and-uc']});
+ await caseOf('competing-sku-distinct-keys-two-api',['L2-A6','L2-A8'],async()=>{
+  const ids=[randomUUID(),randomUUID()],sku=`RACE-${ids[0].slice(0,8)}`,inputs=[{sku,name:'SKU race A ficticio'},{sku,name:'SKU race B ficticio'}];
+  const replies=await Promise.all(ids.map((id,index)=>write(index===0?a:a2,id,inputs[index])));
+  const initialReplies=replies.map(r=>({status:r.status,publicCode:r.json?.error??null}));
+  for(let index=0;index<2;index++)for(let attempt=0;[429,503].includes(replies[index].status)&&attempt<4;attempt++){
+   const observed=await operationRows(ids[index]);assert.notEqual(observed.intent?.status,'UNKNOWN','UNCERTAIN_SKU_REQUIRES_RECONCILIATION');
+   await sleep(200);replies[index]=await write(index===0?a:a2,ids[index],inputs[index]);
+  }
+  assert.deepEqual(replies.map(r=>r.status).sort(),[201,409]);
+  const rejected=replies.find(r=>r.status===409);assert.equal(rejected.json.state,'REJECTED');assert.equal(rejected.json.code,'SKU_CONFLICT');
+  const rows=(await tenant('SELECT (SELECT count(*) FROM catalog.products WHERE sku=$1)::int AS products,(SELECT count(*) FROM inventory.operations WHERE id=ANY($2::uuid[]))::int AS operations,(SELECT count(*) FROM inventory.audit WHERE operation_id=ANY($2::uuid[]))::int AS audits',[sku,ids]))[0];
+  assert.deepEqual(rows,{products:1,operations:2,audits:2});
+  for(const id of ids){const settled=await waitFor(()=>operationRows(id),v=>v.intent?.reservation_status==='SETTLED');assert(['CONFIRMED','REJECTED'].includes(settled.intent.status));}
+  return {operationIds:ids,initialReplies,twoApiHttpConcurrency:true,oneSkuRow:true,twoTerminalAuditedResults:true,originalReservationsSettled:true};
+ });
  await caseOf('two-receipts-sum-and-same-key-replay',['L2-A7'],async()=>{
   assert(product);const ids=[randomUUID(),randomUUID()],inputs=[{quantity:'7',reason:'Ficticio 1'},{quantity:'11',reason:'Ficticio 2'}];
   const replies=await Promise.all([write(a,ids[0],inputs[0],{productId:product}),write(a2,ids[1],inputs[1],{productId:product})]);
@@ -180,6 +196,12 @@ try{
   for(const row of moves.json.items)for(const field of ['actorId','email','reason','requestHash'])assert.equal(Object.hasOwn(row,field),false);
   return {boundedRead:true,movementDtoRedacted:true};
  },{dependsOn:['normalized-canonical-two-api-and-uc','two-receipts-sum-and-same-key-replay']});
+ await caseOf('measured-aggregate-live-pools',['L2-A3'],async()=>{
+  assertStatus(await send(a,`/api/tenants/${TENANT_A}/inventory?limit=2`),200);
+  assertStatus(await send(a2,`/api/tenants/${TENANT_A}/inventory?limit=2`),200);
+  const measured=await runMetadataAssay('pools');assert.equal(measured.status,'PASS FOR LISTED FRAGMENTS ONLY');
+  return {sampleCount:measured.samples.length,samples:measured.samples,saturation:'NOT VERIFIED; bounded current workload only',fixedApiPools:4,fixedApiLeases:8};
+ },{dependsOn:['owned-bounded-redacted-reads','two-receipts-sum-and-same-key-replay']});
  await caseOf('delayed-original-writer-revocation-close-v-plus-two',['L2-A5','L2-A8'],async()=>{
   assert(product);const id=randomUUID(),gate=await arm({instance:'api1',stage:'write.beforeTenant',tenantId:TENANT_A});let pending;
   const before=(await tenant('SELECT on_hand::text AS quantity FROM inventory.balances WHERE product_id=$1',[product]))[0].quantity;

@@ -23,7 +23,7 @@ const ca=await readFile(await privatePath(config.caCertificatePath));
 const modulePath=await privatePath(config.playwrightModule),executablePath=await privatePath(config.browserExecutable);
 const output=await privatePath(config.outputDirectory,false);await mkdir(output,{recursive:true});await privatePath(config.outputDirectory);
 const evidence={environment:'CP017 synthetic cohort; private HTTPS loopback; real API/PostgreSQL',sourceCommit:config.sourceCommit,startedAt:new Date().toISOString(),node:process.version,checks:[],screenshots:[],assets:[]};
-const counts=new Map(),blockedOrigins=new Set(),assetJobs=[];let requests=0,tenantPosts=0,pageErrors=0,browser,page,currentCheck='initialization';
+const counts=new Map(),blockedOrigins=new Set(),assetJobs=[];let requests=0,tenantPosts=0,activityPosts=0,pageErrors=0,browser,page,currentCheck='initialization';
 const hintsKey='mecanet.operation-hints.v1',inventoryPath=`/app/${config.tenant.id}/inventario`;
 const productsPath=`/api/tenants/${config.tenant.id}/products`;
 async function check(name,action){currentCheck=name;await action();evidence.checks.push({name,result:'PASS'})}
@@ -66,7 +66,7 @@ async function dedicatedContext(){
  const context=await browser.newContext({viewport:{width:1440,height:960},locale:'es-DO',reducedMotion:'reduce'});
  await context.route('**/*',route=>{requests++;const url=new URL(route.request().url());if(requests>150)return route.abort('blockedbyclient');if(url.origin!==config.baseUrl){blockedOrigins.add(url.origin);return route.abort('blockedbyclient')}return route.continue()});
  const tab=await context.newPage();tab.setDefaultTimeout(10000);tab.on('pageerror',()=>{pageErrors++});
- tab.on('request',request=>{if(request.method()==='POST'&&new URL(request.url()).pathname.startsWith('/api/tenants/'))tenantPosts++});
+ tab.on('request',request=>{const pathname=new URL(request.url()).pathname;if(request.method()==='POST'&&pathname.startsWith('/api/tenants/'))tenantPosts++;if(request.method()==='POST'&&pathname==='/api/auth/activity')activityPosts++});
  tab.on('response',response=>{
   const pathname=new URL(response.url()).pathname;
   if(pathname.startsWith('/api/')){const key=`${response.request().method()} ${pathname.replace(/[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}/gi,':id')} ${response.status()}`;counts.set(key,(counts.get(key)??0)+1)}
@@ -78,8 +78,33 @@ async function login(tab,account){
  await tab.getByLabel('Contraseña').press('Enter');await tab.getByRole('heading',{level:1,name:'Tus empresas'}).waitFor();
 }
 async function openOwnerInventory(tab){
- const company=tab.locator(`a[href="/app/${config.tenant.id}/catalogo"]`);await company.focus();await tab.keyboard.press('Enter');
- await tab.getByRole('heading',{level:1,name:'Catálogo'}).waitFor();await tab.getByRole('link',{name:'Abrir inventario'}).click();await tab.getByRole('heading',{level:1,name:'Inventario',exact:true}).waitFor();
+ const started=performance.now(),deadline=started+8000;
+ const remaining=()=>{const milliseconds=Math.ceil(deadline-performance.now());assert(milliseconds>0,'FINITE_ACCESS_RECOVERY_EXHAUSTED');return milliseconds};
+ const activity=()=>tab.waitForResponse(response=>response.request().method()==='POST'&&new URL(response.url()).pathname==='/api/auth/activity',{timeout:remaining()});
+ async function recover(reply,stage){
+  assert.equal(reply.status(),503);assert.equal((await reply.json()).error,'ADMISSION_BUSY');
+  assert.equal(evidence.accessRecoveries?.length??0,0,'ONLY_ONE_EXPLICIT_ACCESS_RECOVERY_ALLOWED');
+  const after=reply.headers()['retry-after'];assert.match(after??'',/^\d{1,6}$/);const retryAt=Date.now()+Number(after)*1000,before=postCount(),beforeActivity=activityPosts;
+  await tab.getByRole('heading',{level:1,name:'Servicio no disponible',exact:true}).waitFor({timeout:remaining()});
+  assert.equal(await tab.getByRole('table').count(),0);assert.equal(await tab.getByRole('link',{name:'Abrir inventario',exact:true}).count(),0);
+  const retry=tab.getByRole('button',{name:'Reintentar acceso',exact:true});if(retryAt-Date.now()>100)assert.equal(await retry.isEnabled(),false);
+  const directory=tab.waitForResponse(response=>response.request().method()==='GET'&&new URL(response.url()).pathname==='/api/tenants'&&response.status()===200,{timeout:remaining()});
+  await retry.click({timeout:remaining()});const refreshed=await directory,body=await refreshed.json();
+  await tab.getByRole('heading',{level:1,name:'Tus empresas',exact:true}).waitFor({timeout:remaining()});
+  const restored=body.tenants.find(tenant=>tenant.id===config.tenant.id);assert.equal(body.context.purpose,'company');
+  assert(restored&&['catalog.read','inventory.read','catalog.create','inventory.receive'].every(permission=>restored.permissions.includes(permission)),'OWNER_GRANTS_CHANGED_DURING_RECOVERY');
+  // The explicit UI retry revalidates session/directory. A fresh deep link then
+  // performs authorized reads (interactive=false), never replays activity POST.
+  await tab.goto(config.baseUrl+inventoryPath,{waitUntil:'domcontentloaded',timeout:remaining()});
+  await tab.getByRole('heading',{level:1,name:'Inventario',exact:true}).waitFor({timeout:remaining()});
+  assert.equal(postCount(),before);assert.equal(activityPosts,beforeActivity);remaining();
+  evidence.accessRecoveries=[{stage,firstStatus:503,errorCode:'ADMISSION_BUSY',explicitRecoveries:1,deadlineMs:8000,elapsedMs:Math.ceil(performance.now()-started),extraTenantPosts:0,extraActivityPosts:0}];
+ }
+ const company=tab.locator(`a[href="/app/${config.tenant.id}/catalogo"]`);const selected=activity();await company.focus();await tab.keyboard.press('Enter');
+ const selection=await selected;if(selection.status()===503)return recover(selection,'catalog-selection');assert.equal(selection.status(),200);
+ await tab.getByRole('heading',{level:1,name:'Catálogo'}).waitFor({timeout:remaining()});const entering=activity();
+ await tab.getByRole('link',{name:'Abrir inventario'}).click({timeout:remaining()});const entry=await entering;
+ if(entry.status()===503)return recover(entry,'inventory-entry');assert.equal(entry.status(),200);await tab.getByRole('heading',{level:1,name:'Inventario',exact:true}).waitFor({timeout:remaining()});
 }
 async function createProduct(tab,sku,name){
  await tab.getByLabel('Código del producto').fill(sku);await tab.getByLabel('Nombre del producto').fill(name);

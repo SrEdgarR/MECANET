@@ -1,22 +1,23 @@
 {
   "baselineSha256": "ca975dc822c0bd5e872d3debe824abc536f662007513170f327727878ff3ac71",
   "scope": "approved P1-L2 UI build identity; no real browser verification claim",
-  "sourceCommit": "d609b816284d95320f748701351d789e8d1fcdf1",
+  "sourceCommit": "7edf30ece2bc76dd396535d66bfaeac609c082a2",
   "entries": [
     {
-      "path": "client/dist-saas/assets/saas-LdbSFy8I.css",
-      "sha256": "65fab55c745b0667cb74c5bbc4c07c9d0eae9d888529f9ee8ba72b4937676504",
-      "bytes": 6771
+      "path": "client/dist-saas/assets/saas-BJsNePUp.js",
+      "sha256": "bd0a3ceeeb89aa8bc145432269820613b907eb97f35221be94183f21a1e78d9d",
+      "bytes": 182756
     },
     {
-      "path": "client/dist-saas/assets/saas-RPQxwTiP.js",
-      "sha256": "17eacdb66d1e9adc0f2f1d2f5335a9017efc8ba251eb02d757d69873f01a5d92",
-      "bytes": 182614
+      "path": "client/dist-saas/assets/saas-mSB78BVf.css",
+      "sha256": "ad6fe416fc0d157c3b762c9ff580c962178d3ddeb5cc2e5c3af6d516bbe0ca27",
+      "bytes": 7470
     },
     {
       "path": "client/dist-saas/saas.html",
-      "sha256": "081c7c22bf2c1df6ad66354b792dad65a2c40fa39bfdd2262a48fd2d4bed5848",
+      "sha256": "c7687b27d7359c17eb49d1ea13ba54c46228152d48cfda32e9e16447157bd4b2",
       "bytes": 525
     }
-  ]
+  ],
+  "inputFingerprint": "bb07cb6959557ef75f019d89a8a839450190f1c39dea090c831fd10bd262d0d4"
 }

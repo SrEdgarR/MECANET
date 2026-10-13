@@ -161,10 +161,16 @@ async function quotaCase(qa,phase,tenantId){
   return{before,after,measured,tenantDelta:(BigInt(after.quota.logical_bytes)-BigInt(before.quota.logical_bytes)).toString(),successfulDirectBusinessWrites:0,metadataWorstCase:'NOT VERIFIED; this phase measures real operation metadata, not the global journal boundary'};
  }
  if(phase==='last-product'){
-  const ids=[randomUUID(),randomUUID()];const results=await Promise.all(ids.map((id,index)=>post(index===0?first:second,tenantId,epoch,id,{sku:`LAST-${id.slice(0,8)}`,name:'last product fixture'})));
+  const ids=[randomUUID(),randomUUID()],inputs=ids.map(id=>({sku:`LAST-${id.slice(0,8)}`,name:'last product fixture'}));const results=await Promise.all(ids.map((id,index)=>post(index===0?first:second,tenantId,epoch,id,inputs[index])));
+  const initialReplies=results.map(r=>({status:r.status,publicCode:r.json?.error??null}));
+  for(let index=0;index<2;index++)for(let attempt=0;results[index].status===503&&attempt<4;attempt++){
+   const observed=await withQaInspection(qa,'mecanet_control',async p=>(await p.query('SELECT status FROM saas.write_intents WHERE tenant_id=$1 AND operation_id=$2',[tenantId,ids[index]])).rows[0]);
+   assert.notEqual(observed?.status,'UNKNOWN','UNCERTAIN_LAST_PRODUCT_REQUIRES_RECONCILIATION');
+   await new Promise(resolve=>setTimeout(resolve,200));results[index]=await post(index===0?first:second,tenantId,epoch,ids[index],inputs[index]);
+  }
   assert.deepEqual(results.map(r=>r.status).sort(),[201,429]);const denied=results.findIndex(r=>r.status===429);assert.equal(results[denied].json?.error,'LOGICAL_QUOTA');await noOperation(qa,tenantId,ids[denied]);
   const after=await waitSettled(qa,tenantId);assert.equal(BigInt(after.sums.products)-BigInt(before.sums.products),1n);assert.equal(after.state.used_products,after.state.max_products);
-  return{before,after,accepted:1,denied:1,distinctApi:true,oneLastProduct:true};
+  return{before,after,initialReplies,accepted:1,denied:1,distinctApi:true,oneLastProduct:true,onlySameOriginalKeysOnCapacityRetry:true};
  }
  const product=qa.fixture.tenants.find(t=>t.id===tenantId)?.products[0]?.id;if(!product)throw new Error('QA_QUOTA_SOURCE_PRODUCT_REQUIRED');
  const id=randomUUID(),response=await post(first,tenantId,epoch,id,{quantity:'1',reason:'quota boundary fixture'},product);assertStatus(response,429);assert.equal(response.json?.error,'LOGICAL_QUOTA');await noOperation(qa,tenantId,id);
