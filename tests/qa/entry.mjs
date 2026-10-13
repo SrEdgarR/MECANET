@@ -1,0 +1,34 @@
+// Private composition root. Not imported by server.js or any public release.
+import {readFile,writeFile} from 'node:fs/promises';
+import {randomUUID} from 'node:crypto';
+import {createPgPool,createTenantPoolManager,createSecretResolver} from '../../server/saas/db/pools.js';
+import {createAuthority} from '../../server/saas/auth/authority.js';
+import {createAdmission} from '../../server/saas/admission/index.js';
+import {createApp} from '../../server/saas/app.js';
+import {createFixtureIssuer} from './issuer.js';
+import {createQaFaults,wrapQaServices} from './cp014/faults.mjs';
+import {createTransactionProbe} from './cp014/admission-probe.mjs';
+const config=JSON.parse(await readFile('/run/qa-secrets/api.json','utf8'));
+const owner=randomUUID();
+const pool=await createPgPool({...config.control,max:5,connectionTimeoutMillis:2000,statement_timeout:500,lock_timeout:300,idle_in_transaction_session_timeout:1000,application_name:`mecanet-qa-api:${owner}`});
+const sessions=await createPgPool({...config.sessions,max:2,connectionTimeoutMillis:2000,statement_timeout:500,application_name:'mecanet-qa-session'});
+const issuerPool=await createPgPool({...config.issuer,max:1,connectionTimeoutMillis:2000,statement_timeout:500,application_name:'mecanet-qa-issuer'});
+await Promise.all([pool,sessions,issuerPool].map(p=>p.query('SELECT 1')));
+const pools=createTenantPoolManager({resolveSecret:createSecretResolver({entries:config.entries})});
+const instance=process.env.QA_INSTANCE;
+const checkpoint=instance?createQaFaults({instance,owner}):async()=>{};
+const control=instance?createTransactionProbe(pool,{instance,checkpoint}):pool;
+const wrapped=instance?wrapQaServices({sessionPool:sessions,issuerPool,authority:createAuthority(control,config.generation),tenantPools:pools,checkpoint,instance}):{sessionPool:sessions,issuerPool,authority:createAuthority(control,config.generation),tenantPools:pools};
+const admission=createAdmission({pool:control,owner,generation:config.generation});
+const issuer=createFixtureIssuer({pool:wrapped.issuerPool,generation:config.generation});
+const service=createApp({origin:'https://app.mecanet.test:18443',...wrapped,sessionSecret:config.sessionSecret,admission,issuer,trustedProxy:config.trustedProxy??'10.77.32.2',checkpoint,reportError:event=>console.error(JSON.stringify({type:'qa-api-error',...event}))});
+let checking=false;
+const timer=setInterval(async()=>{if(checking)return;checking=true;try{await admission.observeClock()}finally{checking=false}},150);
+await admission.observeClock();
+const server=service.app.listen(3000,'0.0.0.0');server.requestTimeout=8000;server.headersTimeout=5000;
+server.maxHeadersCount=32;
+await writeFile('/tmp/qa-owner.json',JSON.stringify({owner,generation:config.generation,startedAt:new Date().toISOString()}),{mode:0o600});
+let stopping=false;
+async function stop(){if(stopping)return;stopping=true;await service.drain();clearInterval(timer);server.close();server.closeIdleConnections();await pools.close();await Promise.all([pool.end(),sessions.end(),issuerPool.end()]);}
+process.on('SIGTERM',stop);process.on('SIGINT',stop);
+console.log('MECANET_PRIVATE_QA_STARTED');

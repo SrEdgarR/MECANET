@@ -1,0 +1,19 @@
+{"sha":"86a31efb794a7d149ef82094a70bf5cfc6f33379","environment":"Windows x64 to Linux ARM64 private QA","node":"v24.21.0","time":"2026-10-13T04:10:05.290Z","exitCode":0}
+▶ Private QA HTTP authority journey (real HTTPS and API)
+  ✔ Three invalid logins are followed by a valid login without exhausting auth slots (9216.1947ms)
+  ✔ Unicode CSRF, an unrelated Origin and unrelated Referer are rejected without losing the session (1569.0041ms)
+  ✔ A wrong Host is rejected even over a valid QA TLS connection (286.6859ms)
+  ✔ Tenant/database query overrides and invalid limits are rejected; limit100 returns only the catalog DTO (1725.8282ms)
+  ✔ A valid company session cannot read the other fixture company (313.2035ms)
+  ✔ Two concurrent reads respect the conservative ordinary quota and a later read obtains a slot (6737.1869ms)
+  ✔ Logout is durable: replaying the previously valid signed cookie is unauthorized (636.7933ms)
+✔ Private QA HTTP authority journey (real HTTPS and API) (20935.493ms)
+ℹ Concurrent responses: 200/OK, 429/TENANT_QUOTA
+ℹ tests 8
+ℹ suites 0
+ℹ pass 8
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 21021.3627

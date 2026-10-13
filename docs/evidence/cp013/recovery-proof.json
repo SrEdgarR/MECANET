@@ -1,0 +1,130 @@
+{
+  "sourceBarrier": true,
+  "sourceStopped": true,
+  "clockStopped": true,
+  "projectionStopped": true,
+  "apiOwnersStopped": [
+    "85438ae8-cab4-4b33-9317-a40212139ae3",
+    "3d7cab21-7d44-4c37-a091-023fb1c8e18e"
+  ],
+  "apiProvenance": [
+    {
+      "service": "api1",
+      "containerId": "306b73b3c4e70ba8f2cb88cc923bea7ded39cb82c18dc7d75c056ecb36a0f551",
+      "uid": 999,
+      "owner": "85438ae8-cab4-4b33-9317-a40212139ae3",
+      "generation": "b24ccbd8-ba0f-416d-b61d-1c612c78db57",
+      "clientAddress": "10.77.31.3",
+      "pgBackends": [
+        {
+          "pid": 4718,
+          "application_name": "mecanet-qa-api:85438ae8-cab4-4b33-9317-a40212139ae3",
+          "client_addr": "10.77.31.3"
+        }
+      ]
+    },
+    {
+      "service": "api2",
+      "containerId": "27113cd83ef060c06b81a822c6b48efcfd307d880e16966cece1dc1a6401c617",
+      "uid": 999,
+      "owner": "3d7cab21-7d44-4c37-a091-023fb1c8e18e",
+      "generation": "b24ccbd8-ba0f-416d-b61d-1c612c78db57",
+      "clientAddress": "10.77.31.4",
+      "pgBackends": [
+        {
+          "pid": 4712,
+          "application_name": "mecanet-qa-api:3d7cab21-7d44-4c37-a091-023fb1c8e18e",
+          "client_addr": "10.77.31.4"
+        }
+      ]
+    }
+  ],
+  "apiRejections": [
+    {
+      "host": "api1",
+      "status": 503,
+      "error": "CLOCK_UNAVAILABLE"
+    },
+    {
+      "host": "api2",
+      "status": 503,
+      "error": "CLOCK_UNAVAILABLE"
+    }
+  ],
+  "stoppedContainers": {
+    "api1": {
+      "id": "306b73b3c4e70ba8f2cb88cc923bea7ded39cb82c18dc7d75c056ecb36a0f551",
+      "finishedAt": "2026-10-13T12:28:27.138787623Z",
+      "state": "exited"
+    },
+    "api2": {
+      "id": "27113cd83ef060c06b81a822c6b48efcfd307d880e16966cece1dc1a6401c617",
+      "finishedAt": "2026-10-13T12:28:27.15441Z",
+      "state": "exited"
+    },
+    "web": {
+      "id": "850bdbb6019d6d7c1135c9d2bab57223341d39e693ff5e920fe6e144f3ec9127",
+      "finishedAt": "2026-10-13T12:28:27.147048757Z",
+      "state": "exited"
+    },
+    "worker": {
+      "id": "4801d05d65b0cbab2574d723724080bbb8cdc10085970aa28ae9781a2329e74f",
+      "finishedAt": "2026-10-13T12:28:22.649834947Z",
+      "state": "exited"
+    }
+  },
+  "sourceFacts": {
+    "system_id": "7695987901305831451",
+    "version": 180006,
+    "barrier": true,
+    "generation": "b24ccbd8-ba0f-416d-b61d-1c612c78db57",
+    "tick": "101532",
+    "live": 0
+  },
+  "liveTickets": 0,
+  "observedAt": 1791894591.4018226,
+  "targetEgressClosed": true,
+  "targetTlsReviewed": true,
+  "targetHbaReviewed": true,
+  "targetPrivate": true,
+  "backupVerified": true,
+  "sourceStoppedContainer": {
+    "id": "51dcf248acd5eae94a1dc7b011cb00c67984d08a4f937dd343e6fca64bae7a69",
+    "finishedAt": "2026-10-13T12:29:43.546667063Z"
+  },
+  "targetContainer": {
+    "id": "1d6be4db6a3bd9be44d8a037b7ca1c7606efcb73a8324d2142edbf1196524dc8",
+    "networkId": "c85dff95ca646afb042ed2663882a76005c90694d21c0ada7b11a10ef86ae280",
+    "bind": "/opt/mecanet-qa-p1l1/restore-data",
+    "inode": 1573284
+  },
+  "sourceBind": {
+    "path": "/opt/mecanet-qa-p1l1/data",
+    "inode": 1572913
+  },
+  "targetFacts": {
+    "row": {
+      "system_identifier": "7695987901305831451",
+      "tls": true,
+      "barrier": true,
+      "generation": "b24ccbd8-ba0f-416d-b61d-1c612c78db57"
+    },
+    "probes": [
+      {
+        "host": "1.1.1.1",
+        "port": 443,
+        "result": "BLOCKED"
+      },
+      {
+        "host": "169.254.169.254",
+        "port": 80,
+        "result": "BLOCKED"
+      },
+      {
+        "host": "10.77.31.2",
+        "port": 5432,
+        "result": "BLOCKED"
+      }
+    ]
+  }
+}

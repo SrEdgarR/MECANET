@@ -1,0 +1,38 @@
+{
+  "cohortId": "b6c1ad37-7012-4b87-bce7-22339dbe9d41",
+  "physicalCohortMatches": true,
+  "replay": {
+    "applied": 2,
+    "pendingRestrictivelyApplied": 0
+  },
+  "canariesVerified": true,
+  "oldCredentialsDenied": true,
+  "crossDatabaseDenied": true,
+  "previousSessionsRevoked": true,
+  "previousSampleSessionsDenied": 4,
+  "demoTerminal": true,
+  "generationChanged": true,
+  "epochs": [
+    {
+      "id": "11111111-1111-4111-8111-111111111111",
+      "data_epoch": "2",
+      "credential_version": "2",
+      "status": "draining"
+    },
+    {
+      "id": "22222222-2222-4222-8222-222222222222",
+      "data_epoch": "2",
+      "credential_version": "2",
+      "status": "draining"
+    },
+    {
+      "id": "33333333-3333-4333-8333-333333333333",
+      "data_epoch": "2",
+      "credential_version": "2",
+      "status": "blocked"
+    }
+  ],
+  "tickPreserved": true,
+  "barrier": true,
+  "applicationReopened": false
+}

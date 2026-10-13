@@ -1,0 +1,95 @@
+{
+  "experiment": "QA-EXP-02",
+  "base_sha": "f72bd2393e26eeaf97f6962baf520a71e50e356b",
+  "script_sha256": "ec8ce121964fecabba47b07abac5e930f24db0c5cefbee33bf2f9ff323bbae64",
+  "started_at": "2026-10-08T17:11:10.605Z",
+  "provenance": "LOCAL — native Windows temporary Mongo replica set, fictitious data only",
+  "versions": {
+    "node": "v24.14.0",
+    "platform": "win32",
+    "architecture": "x64",
+    "driver": "6.20.0",
+    "engine_sha256": "fb5035767717c9d00ca1eada0a63be28a1758c6108dc614cd95c41465a98aabe",
+    "mongodb": "8.3.11"
+  },
+  "limits": {
+    "elapsed_seconds": 180,
+    "mongo_rss_mib": 1024,
+    "mongo_cpu_seconds": 30,
+    "runtime_directory_mib": 768,
+    "wiredtiger_cache_mib": 256,
+    "oplog_mib": 16,
+    "node_heap_mib": 128,
+    "dataset_documents_max": 10,
+    "monitoring": "sampled abort thresholds, not hard OS quotas"
+  },
+  "checks": [
+    {
+      "id": "QA-01",
+      "purpose": "Dedicated process and loopback listener confirmed before Mongo connection",
+      "status": "PASS"
+    },
+    {
+      "id": "QA-02",
+      "purpose": "Authenticated one-member PRIMARY and actual process/configuration match",
+      "status": "PASS"
+    },
+    {
+      "id": "QA-03",
+      "purpose": "Distinct credentials read/write their own fictitious database",
+      "status": "PASS"
+    },
+    {
+      "id": "QA-04",
+      "purpose": "A to B and B to A read/write denied with Mongo authorization code13",
+      "status": "PASS"
+    },
+    {
+      "id": "QA-05",
+      "purpose": "Tenant credential cannot access control data or create users",
+      "status": "PASS"
+    },
+    {
+      "id": "QA-06",
+      "purpose": "Unauthenticated protected read denied after bootstrap",
+      "status": "PASS"
+    },
+    {
+      "id": "QA-07",
+      "purpose": "Real transaction commits both fictitious writes",
+      "status": "PASS"
+    },
+    {
+      "id": "QA-08",
+      "purpose": "Real transaction abort leaves neither fictitious write",
+      "status": "PASS"
+    }
+  ],
+  "resources": {
+    "created": 1,
+    "cleanup": "PASS — own process stopped, port released, own runtime/keyfile/data/log removed",
+    "pid": 14736,
+    "bind": "127.0.0.1",
+    "port": 53670
+  },
+  "measured": {
+    "samples": 2,
+    "peak_sampled_rss_mib": 165.19,
+    "cpu_seconds": 0.89,
+    "peak_sampled_directory_mib": 200.72,
+    "elapsed_seconds": 4.593
+  },
+  "scope_exclusions": [
+    "existing MongoDB service",
+    "Atlas/VPS/Nexora",
+    "Mecanet APIs/resolver",
+    "two API processes",
+    "Linux ARM64",
+    "MongoDB 7.0.43 compatibility",
+    "backup/restore",
+    "HA/failover",
+    "production capacity or security certification"
+  ],
+  "status": "PASS",
+  "ended_at": "2026-10-08T17:11:15.198Z"
+}

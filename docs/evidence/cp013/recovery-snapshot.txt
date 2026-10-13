@@ -1,0 +1,3 @@
+ Container mecanet-qa-p1l1-harness-run-be558e132661 Creating
+ Container mecanet-qa-p1l1-harness-run-be558e132661 Created
+{"snapshot":true,"cohortId":"b6c1ad37-7012-4b87-bce7-22339dbe9d41","databases":4,"liveTickets":0,"issuerBarrierDenied":true,"reopen":false}

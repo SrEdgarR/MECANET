@@ -1,0 +1,8 @@
+{
+  "status": 503,
+  "body": {
+    "status": "unavailable"
+  },
+  "at": "2026-10-13T12:26:25.085Z",
+  "condition": "worker exited after uncertain COMMIT; before verified transfer"
+}

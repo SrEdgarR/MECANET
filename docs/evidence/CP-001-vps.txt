@@ -1,0 +1,41 @@
+Observed 2026-10-07 (America/La_Paz); REMOTE read-only SSH inventory. Exact capture time was not recorded.
+Application container image identifies f5afaa23c54c968be249231f18e212b2b43a0c82. Point-in-time resource snapshot, not load test or capacity promise.
+Commands: uname -srmo; nproc; free -m; df -h / /data; docker version; docker ps; docker stats --no-stream; mongod --version; node --version. No env/secret inspection, writes, restart or new resources.
+
+Linux 7.0.0-1011-oracle aarch64 GNU/Linux
+2
+               total        used        free      shared  buff/cache   available
+Mem:           11925        3580        1727         249        7077        8344
+Swap:              0           0           0
+Filesystem      Size  Used Avail Use% Mounted on
+/dev/sda1       145G   13G  132G   9% /
+/dev/sda1       145G   13G  132G   9% /
+29.8.1
+anxlw7yetk0ocvbyzwbpjint-163548116612	anxlw7yetk0ocvbyzwbpjint:f5afaa23c54c968be249231f18e212b2b43a0c82	Up 34 minutes (healthy)	5000/tcp
+7lr48ioylpn4uwuwmzdr84xv	mongo:7	Up 38 minutes (healthy)	27017/tcp
+tofxqwcillfystizcppgwefs-152517892574	tofxqwcillfystizcppgwefs:bbb54177c8397b3ccccd7cbf1c287d9c57801e7b	Up 2 hours (healthy)	3001/tcp
+coolify-sentinel	coollabsio/sentinel:1.0.2	Up 8 hours (healthy)	
+kwbztz6s0wntvtw7wc3n6sv4	9854f7139445	Up 8 days (healthy)	27017/tcp
+l5xb1i1sv6xmndnradzxzlhz	9854f7139445	Up 9 days (healthy)	27017/tcp
+coolify-proxy	traefik:v3.6	Up 9 days (healthy)	0.0.0.0:80->80/tcp, [::]:80->80/tcp, 0.0.0.0:443->443/tcp, [::]:443->443/tcp, 0.0.0.0:8080->8080/tcp, [::]:8080->8080/tcp, 0.0.0.0:443->443/udp, [::]:443->443/udp
+coolify	coollabsio/coolify:4.3.23	Up 9 days (healthy)	8000/tcp, 8443/tcp, 9000/tcp, 0.0.0.0:8000->8080/tcp, [::]:8000->8080/tcp
+coolify-db	postgres:15-alpine	Up 9 days (healthy)	5432/tcp
+coolify-redis	redis:7-alpine	Up 9 days (healthy)	6379/tcp
+coolify-realtime	coollabsio/coolify-realtime:1.0.19	Up 9 days (healthy)	0.0.0.0:6001-6002->6001-6002/tcp, [::]:6001-6002->6001-6002/tcp
+anxlw7yetk0ocvbyzwbpjint-163548116612	2.66%	73.18MiB / 11.65GiB	0.61%
+7lr48ioylpn4uwuwmzdr84xv	0.54%	90.92MiB / 1GiB	8.88%
+tofxqwcillfystizcppgwefs-152517892574	0.17%	75.75MiB / 11.65GiB	0.64%
+coolify-sentinel	0.02%	3.895MiB / 11.65GiB	0.03%
+kwbztz6s0wntvtw7wc3n6sv4	0.94%	1.232GiB / 11.65GiB	10.58%
+l5xb1i1sv6xmndnradzxzlhz	0.53%	675.2MiB / 11.65GiB	5.66%
+coolify-proxy	1.78%	61.13MiB / 11.65GiB	0.51%
+coolify	0.36%	366.3MiB / 11.65GiB	3.07%
+coolify-db	0.01%	44.76MiB / 11.65GiB	0.38%
+coolify-redis	0.58%	13.96MiB / 11.65GiB	0.12%
+coolify-realtime	0.39%	74.13MiB / 11.65GiB	0.62%
+db version v7.0.43
+Build Info: {
+    "version": "7.0.43",
+    "gitVersion": "ef5a7d3480b59feae13d564376129fc4ceee6177",
+    "openSSLVersion": "OpenSSL 3.0.2 15 Mar 2022",
+v24.21.0

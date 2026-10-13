@@ -1,0 +1,16 @@
+ Container mecanet-qa-p1l1-cp014-probe-run-ada12ce65952 Creating
+ Container mecanet-qa-p1l1-cp014-probe-run-ada12ce65952 Created
+{"stage":"before","time":"2026-10-13T13:42:14.227Z","worker":{"clockOwner":"22437417-ccf4-4835-9aa5-73c83866e07d","controlGeneration":"47557dab-4f7d-49a3-80d2-1003d3a46159","tick":"21209","latestSamples":[{"source_id":"qa-private-worker","generation":"22437417-ccf4-4835-9aa5-73c83866e07d","metric":"service.cpu_usec","unit":"microseconds","source":"process.self","quality":"DIRECT","asOf":"2026-10-13T13:41:54.462Z","coverage":1,"discontinuity":false,"granularity":"minute"},{"source_id":"qa-private-worker","generation":"22437417-ccf4-4835-9aa5-73c83866e07d","metric":"service.rss_bytes","unit":"bytes","source":"process.self","quality":"DIRECT","asOf":"2026-10-13T13:41:54.462Z","coverage":1,"discontinuity":false,"granularity":"minute"}],"firstCpuAndRssDiscontinuous":true},"sourceAndGenerationVisible":true,"qualityAndAsOfPresent":true,"tenantCpuAttribution":false,"result":"PASS"}
+ Container mecanet-qa-p1l1-cp014-api2-1 Stopping
+ Container mecanet-qa-p1l1-cp014-api1-1 Stopping
+ Container mecanet-qa-p1l1-cp014-api2-1 Stopped
+ Container mecanet-qa-p1l1-cp014-api1-1 Stopped
+{"phase": "prove-api-end", "status": "PASS", "ownApiContainersExited": 2, "oldApiBackends": 0, "tenantBackends": 0, "sharedResourcesChanged": 0}
+ Container mecanet-qa-p1l1-cp014-worker-1 Stopping
+ Container mecanet-qa-p1l1-cp014-worker-1 Stopped
+ Container mecanet-qa-p1l1-cp014-probe-run-a6773b3d390f Creating
+ Container mecanet-qa-p1l1-cp014-probe-run-a6773b3d390f Created
+{"result":"PASS","at":"2026-10-13T13:42:20.236Z","reconciled":1,"unprovenEndDenied":1,"consumptionPreserved":true,"oldRunnersEnded":2,"tenantBackends":0}
+ Container mecanet-qa-p1l1-cp014-probe-run-5decfc71767f Creating
+ Container mecanet-qa-p1l1-cp014-probe-run-5decfc71767f Created
+{"stage":"buffer-recovery","time":"2026-10-13T13:42:22.772Z","worker":null,"sourceAndGenerationVisible":true,"qualityAndAsOfPresent":true,"tenantCpuAttribution":false,"samplerFirstThenSecond":true,"firstDiscontinuityPersistsInSql":true,"buffer":{"limitBytes":4194304,"occupiedBytes":4194288,"dropped":2808,"failures":3,"maxBatchBytes":65529,"retrySequenceStable":true,"recoverySucceeded":true},"unavailabilityIsNull":true,"staleAsOfVisible":true,"sensitiveCanariesAbsent":true,"minimumPrivilegesVerified":true,"result":"PASS"}

@@ -1,0 +1,1 @@
+{"targetContainerRemoved": true, "targetNetworkRemoved": true, "allBindDataPreserved": true, "sourceStopped": true}

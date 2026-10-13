@@ -1,0 +1,17 @@
+{
+  "project": "mecanet-qa-p1l1",
+  "initializedAt": 1791865465.2748098,
+  "envelope": {
+    "running": 2,
+    "cpu": 0.45,
+    "memoryMiB": 832
+  },
+  "headroom": {
+    "availableMemoryBytes": 8705339392,
+    "diskFreeBytes": 141688578048,
+    "cpuBusyPercent": 2.02
+  },
+  "restoreHelperNetworks": [
+    "restore"
+  ]
+}

@@ -1,0 +1,62 @@
+# Sequential synthetic recovery only. Never run tools concurrently with full QA unless <=1 CPU total.
+services:
+  harness:
+    cpus: 0.05
+    volumes:
+      - /opt/mecanet-qa-p1l1/recovery:/run/qa-recovery
+      - /opt/mecanet-qa-p1l1/backup:/backup:ro
+  backup:
+    profiles: [tools]
+    image: postgres@sha256:67ba68a22dc7d5af3627b7e0f33d10bbefad07562ff9703b3a6c2de247649129
+    platform: linux/arm64
+    user: "999:999"
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    cpus: 0.25
+    mem_limit: 128m
+    pids_limit: 64
+    environment:
+      PGPASSFILE: /run/backup.pgpass
+      PGSSLMODE: verify-full
+      PGSSLROOTCERT: /run/qa-ca.crt
+    entrypoint: []
+    command: [pg_basebackup, --host=postgres, --username=saas_backup, --pgdata=/backup/base, --wal-method=stream, --checkpoint=fast, --manifest-checksums=SHA256, --max-rate=16M, --no-password]
+    volumes:
+      - /opt/mecanet-qa-p1l1/backup:/backup
+      - /opt/mecanet-qa-p1l1/secrets/backup.pgpass:/run/backup.pgpass:ro
+      - /opt/mecanet-qa-p1l1/config/ca.crt:/run/qa-ca.crt:ro
+    networks: [data]
+    tmpfs: ["/tmp:size=16m"]
+  postgres-restore:
+    profiles: [recovery]
+    image: postgres@sha256:67ba68a22dc7d5af3627b7e0f33d10bbefad07562ff9703b3a6c2de247649129
+    platform: linux/arm64
+    user: "999:999"
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    cpus: 0.35
+    mem_limit: 640m
+    pids_limit: 128
+    environment:
+      PGDATA: /var/lib/postgresql/18/docker
+    command: [postgres, -c, config_file=/etc/postgresql/postgresql.conf]
+    volumes:
+      - /opt/mecanet-qa-p1l1/restore-data:/var/lib/postgresql
+      - /opt/mecanet-qa-p1l1/config/restore-postgresql.conf:/etc/postgresql/postgresql.conf:ro
+      - /opt/mecanet-qa-p1l1/config/restore-pg_hba.conf:/etc/postgresql/pg_hba.conf:ro
+      - /opt/mecanet-qa-p1l1/tls/postgres-restore:/run/tls:ro
+    tmpfs: ["/tmp:size=16m", "/var/run/postgresql:size=8m,mode=0770,uid=999,gid=999"]
+    networks:
+      restore:
+        ipv4_address: 10.77.33.2
+networks:
+  restore:
+    name: mecanet-qa-p1l1-restore
+    internal: true
+    enable_ipv6: false
+    driver_opts:
+      com.docker.network.bridge.gateway_mode_ipv4: isolated
+    ipam:
+      config: [{subnet: 10.77.33.0/24}]

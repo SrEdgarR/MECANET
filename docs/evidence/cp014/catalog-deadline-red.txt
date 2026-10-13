@@ -1,0 +1,29 @@
+✔ expired pool wait retains a pending lease until the late real client is discarded (36.6467ms)
+✔ an expired query retains its lease until SQL returns and discards the client (35.0795ms)
+✔ read-only SQL and all three server timeouts shrink to the actual remaining budget (0.9492ms)
+✔ exhausted read budget sends no SQL (0.2135ms)
+✖ a late COMMIT cannot return a catalog after the read deadline even before timers run (0.5931ms)
+ℹ tests 5
+ℹ suites 0
+ℹ pass 4
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 141.0006
+
+✖ failing tests:
+
+test at tests\qa\cp014\deadlines.test.mjs:35:1
+✖ a late COMMIT cannot return a catalog after the read deadline even before timers run (0.5931ms)
+  AssertionError [ERR_ASSERTION]: Missing expected rejection.
+      at async TestContext.<anonymous> (file:///C:/Users/thede/Desktop/Proyectos%20de%20programacion/MECANET-develop/tests/qa/cp014/deadlines.test.mjs:38:2)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: { code: 'DB_DEADLINE' },
+    operator: 'rejects',
+    diff: 'simple'
+  }

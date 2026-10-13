@@ -1,0 +1,39 @@
+{
+  "checkpoint": "CP-014",
+  "stage": "final",
+  "result": "PASS",
+  "at": "2026-10-13T14:27:29.132331+00:00",
+  "sourceHead": "0bb4b9b8028d6fe6db07129b36c333b3db715286",
+  "base": "5624ef0da489d2285534a942bd6ce9eab22f280d",
+  "markdownFiles": 11,
+  "references": 172,
+  "tables": 51,
+  "historicalCriteriaPreserved": 190,
+  "criteria": 215,
+  "pending": 14,
+  "blocking": 0,
+  "future": 14,
+  "decisions": 59,
+  "protectedUnchanged": [
+    "docs/methodology/Prompt_Maestro_v2.0.md",
+    "docs/specs/P1-L1.md",
+    "docs/DECISIONS.md",
+    ".agentic/METHODOLOGY_FEEDBACK.md"
+  ],
+  "promptSha256": "d2dafd5f75df32aae33e421953fab6e99e723aa88744b918b555562c7b6a550d",
+  "checks": [
+    "references and table widths",
+    "historic checkpoints prefix preserved",
+    "unique complete criterion IDs",
+    "pending IDs types and resolve-before",
+    "protected spec decisions method feedback hashes",
+    "rollback real artifact/session/data/control and PG identity",
+    "QA STOPPED and foreign consumers preserved",
+    "allowlist export excludes private credential files",
+    "JSON syntax and sensitive-literal scan",
+    "Git branch remote worktree and diff whitespace"
+  ],
+  "map": "PASS: generated and --check",
+  "C213": "PASS",
+  "independentReview": "close-review.json"
+}

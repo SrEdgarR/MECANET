@@ -1,0 +1,2 @@
+PASS canonical configure projection: data, front -> web.2/api1.3/api2.4
+PASS canonical configure projection: front, data -> web.2/api1.3/api2.4

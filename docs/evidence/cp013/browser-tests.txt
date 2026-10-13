@@ -1,0 +1,2 @@
+{"sha":"86a31efb794a7d149ef82094a70bf5cfc6f33379","environment":"Windows x64 to Linux ARM64 private QA","node":"v24.21.0","time":"2026-10-13T04:10:16.188Z","exitCode":0}
+{"result":"PASS","passed":15,"failed":[],"evidence":".qa-private\\browser-qa"}

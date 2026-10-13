@@ -1,0 +1,531 @@
+{
+  "checkpoint": "CP-002",
+  "provenance": "REMOTE",
+  "scope": "Read-only snapshot; no environment values, secrets or application data; no load/build/restore executed",
+  "observedAtUtc": "2026-10-07T18:07:48.372444+00:00",
+  "kernel": "7.0.0-1011-oracle",
+  "architecture": "aarch64",
+  "cpuCount": 2,
+  "memoryKiB": {
+    "MemTotal": 12211460,
+    "MemAvailable": 8550988,
+    "SwapTotal": 0,
+    "SwapFree": 0
+  },
+  "loadAverage": [
+    0.36181640625,
+    0.41259765625,
+    0.32275390625
+  ],
+  "diskRoot": "Filesystem        1B-blocks        Used    Available Use% Mounted on\n/dev/sda1      154894188544 13799686144 141077725184   9% /",
+  "dockerVersion": "29.8.1",
+  "containers": [
+    {
+      "name": "anxlw7yetk0ocvbyzwbpjint-163548116612",
+      "image": "anxlw7yetk0ocvbyzwbpjint:f5afaa23c54c968be249231f18e212b2b43a0c82",
+      "imageId": "sha256:af97d16a68b0f569fe137d3b70acf387983be15bf34e75dae16e09a9e64a4fbe",
+      "state": "running",
+      "health": "healthy",
+      "memoryLimitBytes": 0,
+      "nanoCpus": 0,
+      "cpuQuota": 0,
+      "cpuPeriod": 0,
+      "restartCount": 0,
+      "ports": {
+        "5000/tcp": null
+      },
+      "networks": [
+        "coolify"
+      ],
+      "mounts": []
+    },
+    {
+      "name": "7lr48ioylpn4uwuwmzdr84xv",
+      "image": "mongo:7",
+      "imageId": "sha256:1f995ad6fdb93244a1addab1b58f934a0bc2f5643c38e02f5e9d7f0c7d227a7b",
+      "state": "running",
+      "health": "healthy",
+      "memoryLimitBytes": 1073741824,
+      "nanoCpus": 0,
+      "cpuQuota": 0,
+      "cpuPeriod": 0,
+      "restartCount": 0,
+      "ports": {
+        "27017/tcp": null
+      },
+      "networks": [
+        "coolify"
+      ],
+      "mounts": [
+        {
+          "type": "bind",
+          "destination": "/docker-entrypoint-initdb.d"
+        },
+        {
+          "type": "volume",
+          "destination": "/data/configdb"
+        },
+        {
+          "type": "volume",
+          "destination": "/data/db"
+        },
+        {
+          "type": "bind",
+          "destination": "/etc/mongo/mongod.conf"
+        }
+      ]
+    },
+    {
+      "name": "tofxqwcillfystizcppgwefs-152517892574",
+      "image": "tofxqwcillfystizcppgwefs:bbb54177c8397b3ccccd7cbf1c287d9c57801e7b",
+      "imageId": "sha256:b4415438e0b32f56caea7bc03b1990fb3070d6647df8e3988ee28197ec37421f",
+      "state": "running",
+      "health": "healthy",
+      "memoryLimitBytes": 0,
+      "nanoCpus": 0,
+      "cpuQuota": 0,
+      "cpuPeriod": 0,
+      "restartCount": 0,
+      "ports": {
+        "3001/tcp": null
+      },
+      "networks": [
+        "coolify"
+      ],
+      "mounts": []
+    },
+    {
+      "name": "coolify-sentinel",
+      "image": "docker.io/coollabsio/sentinel:1.0.2",
+      "imageId": "sha256:9355fc746d5ca550b8c16577c514337a12dda54f88bb1876333e4ff2128e6371",
+      "state": "running",
+      "health": "healthy",
+      "memoryLimitBytes": 0,
+      "nanoCpus": 0,
+      "cpuQuota": 0,
+      "cpuPeriod": 0,
+      "restartCount": 0,
+      "ports": {},
+      "networks": [
+        "coolify"
+      ],
+      "mounts": [
+        {
+          "type": "bind",
+          "destination": "/app/db"
+        },
+        {
+          "type": "bind",
+          "destination": "/var/run/docker.sock"
+        }
+      ]
+    },
+    {
+      "name": "kwbztz6s0wntvtw7wc3n6sv4",
+      "image": "mongo:7",
+      "imageId": "sha256:9854f7139445d766a9523571d6f047530c45547460ffcf8259eb2bf4264632ca",
+      "state": "running",
+      "health": "healthy",
+      "memoryLimitBytes": 0,
+      "nanoCpus": 0,
+      "cpuQuota": 0,
+      "cpuPeriod": 0,
+      "restartCount": 0,
+      "ports": {
+        "27017/tcp": null
+      },
+      "networks": [
+        "coolify"
+      ],
+      "mounts": [
+        {
+          "type": "bind",
+          "destination": "/docker-entrypoint-initdb.d"
+        },
+        {
+          "type": "volume",
+          "destination": "/data/configdb"
+        },
+        {
+          "type": "volume",
+          "destination": "/data/db"
+        }
+      ]
+    },
+    {
+      "name": "l5xb1i1sv6xmndnradzxzlhz",
+      "image": "mongo:7",
+      "imageId": "sha256:9854f7139445d766a9523571d6f047530c45547460ffcf8259eb2bf4264632ca",
+      "state": "running",
+      "health": "healthy",
+      "memoryLimitBytes": 0,
+      "nanoCpus": 0,
+      "cpuQuota": 0,
+      "cpuPeriod": 0,
+      "restartCount": 0,
+      "ports": {
+        "27017/tcp": null
+      },
+      "networks": [
+        "coolify"
+      ],
+      "mounts": [
+        {
+          "type": "bind",
+          "destination": "/docker-entrypoint-initdb.d"
+        },
+        {
+          "type": "volume",
+          "destination": "/data/configdb"
+        },
+        {
+          "type": "volume",
+          "destination": "/data/db"
+        }
+      ]
+    },
+    {
+      "name": "coolify-proxy",
+      "image": "traefik:v3.6",
+      "imageId": "sha256:31267173a15b4944e797a76ffd9c419707c8d8b32fe5b610f80cd0cfa05f372d",
+      "state": "running",
+      "health": "healthy",
+      "memoryLimitBytes": 0,
+      "nanoCpus": 0,
+      "cpuQuota": 0,
+      "cpuPeriod": 0,
+      "restartCount": 0,
+      "ports": {
+        "443/tcp": [
+          {
+            "HostIp": "0.0.0.0",
+            "HostPort": "443"
+          },
+          {
+            "HostIp": "::",
+            "HostPort": "443"
+          }
+        ],
+        "443/udp": [
+          {
+            "HostIp": "0.0.0.0",
+            "HostPort": "443"
+          },
+          {
+            "HostIp": "::",
+            "HostPort": "443"
+          }
+        ],
+        "80/tcp": [
+          {
+            "HostIp": "0.0.0.0",
+            "HostPort": "80"
+          },
+          {
+            "HostIp": "::",
+            "HostPort": "80"
+          }
+        ],
+        "8080/tcp": [
+          {
+            "HostIp": "0.0.0.0",
+            "HostPort": "8080"
+          },
+          {
+            "HostIp": "::",
+            "HostPort": "8080"
+          }
+        ]
+      },
+      "networks": [
+        "coolify"
+      ],
+      "mounts": [
+        {
+          "type": "bind",
+          "destination": "/traefik"
+        },
+        {
+          "type": "bind",
+          "destination": "/var/run/docker.sock"
+        }
+      ]
+    },
+    {
+      "name": "coolify",
+      "image": "docker.io/coollabsio/coolify:4.3.23",
+      "imageId": "sha256:79d5c0443696f2fcb280a4d5a15fcc091a51784e566ab212889a08e424d8187c",
+      "state": "running",
+      "health": "healthy",
+      "memoryLimitBytes": 0,
+      "nanoCpus": 0,
+      "cpuQuota": 0,
+      "cpuPeriod": 0,
+      "restartCount": 0,
+      "ports": {
+        "8000/tcp": null,
+        "8080/tcp": [
+          {
+            "HostIp": "0.0.0.0",
+            "HostPort": "8000"
+          },
+          {
+            "HostIp": "::",
+            "HostPort": "8000"
+          }
+        ],
+        "8443/tcp": null,
+        "9000/tcp": null
+      },
+      "networks": [
+        "coolify"
+      ],
+      "mounts": [
+        {
+          "type": "bind",
+          "destination": "/var/www/html/.env"
+        },
+        {
+          "type": "bind",
+          "destination": "/var/www/html/storage/app/applications"
+        },
+        {
+          "type": "bind",
+          "destination": "/var/www/html/storage/app/backups"
+        },
+        {
+          "type": "bind",
+          "destination": "/var/www/html/storage/app/databases"
+        },
+        {
+          "type": "bind",
+          "destination": "/var/www/html/storage/app/images"
+        },
+        {
+          "type": "bind",
+          "destination": "/var/www/html/storage/app/services"
+        },
+        {
+          "type": "bind",
+          "destination": "/var/www/html/storage/app/ssh"
+        }
+      ]
+    },
+    {
+      "name": "coolify-db",
+      "image": "postgres:15-alpine",
+      "imageId": "sha256:f7d23353e1b15400d22ebe31189f4d314b87a4c129cc400c8c2d8d4ca127bf81",
+      "state": "running",
+      "health": "healthy",
+      "memoryLimitBytes": 0,
+      "nanoCpus": 0,
+      "cpuQuota": 0,
+      "cpuPeriod": 0,
+      "restartCount": 0,
+      "ports": {
+        "5432/tcp": null
+      },
+      "networks": [
+        "coolify"
+      ],
+      "mounts": [
+        {
+          "type": "volume",
+          "destination": "/var/lib/postgresql/data"
+        }
+      ]
+    },
+    {
+      "name": "coolify-redis",
+      "image": "redis:7-alpine",
+      "imageId": "sha256:858f009f9709ce576febc734aa78b8f6d624b82571f9ddb6bda4377c833b3499",
+      "state": "running",
+      "health": "healthy",
+      "memoryLimitBytes": 0,
+      "nanoCpus": 0,
+      "cpuQuota": 0,
+      "cpuPeriod": 0,
+      "restartCount": 0,
+      "ports": {
+        "6379/tcp": null
+      },
+      "networks": [
+        "coolify"
+      ],
+      "mounts": [
+        {
+          "type": "volume",
+          "destination": "/data"
+        }
+      ]
+    },
+    {
+      "name": "coolify-realtime",
+      "image": "docker.io/coollabsio/coolify-realtime:1.0.19",
+      "imageId": "sha256:087c9d263ab0154d68d40c900bf729a8b59a262bd73d8407c2d1104b70cfdedf",
+      "state": "running",
+      "health": "healthy",
+      "memoryLimitBytes": 0,
+      "nanoCpus": 0,
+      "cpuQuota": 0,
+      "cpuPeriod": 0,
+      "restartCount": 0,
+      "ports": {
+        "6001/tcp": [
+          {
+            "HostIp": "0.0.0.0",
+            "HostPort": "6001"
+          },
+          {
+            "HostIp": "::",
+            "HostPort": "6001"
+          }
+        ],
+        "6002/tcp": [
+          {
+            "HostIp": "0.0.0.0",
+            "HostPort": "6002"
+          },
+          {
+            "HostIp": "::",
+            "HostPort": "6002"
+          }
+        ]
+      },
+      "networks": [
+        "coolify"
+      ],
+      "mounts": [
+        {
+          "type": "bind",
+          "destination": "/var/www/html/storage/app/ssh"
+        }
+      ]
+    }
+  ],
+  "stats": [
+    {
+      "BlockIO": "0B / 0B",
+      "CPUPerc": "0.13%",
+      "Container": "bf610dbf592d58b314b195c39b1bfd8addb8aade2ccdf58070d179a26ae5ea85",
+      "ID": "bf610dbf592d",
+      "MemPerc": "0.64%",
+      "MemUsage": "76.55MiB / 11.65GiB",
+      "Name": "anxlw7yetk0ocvbyzwbpjint-163548116612",
+      "NetIO": "4.46MB / 1.06MB",
+      "PIDs": "11"
+    },
+    {
+      "BlockIO": "0B / 45.2MB",
+      "CPUPerc": "2.43%",
+      "Container": "4de25bf15c14e6407df3854456cebbdb839aadcd13efe83ba23552e1c2e50862",
+      "ID": "4de25bf15c14",
+      "MemPerc": "8.95%",
+      "MemUsage": "91.65MiB / 1GiB",
+      "Name": "7lr48ioylpn4uwuwmzdr84xv",
+      "NetIO": "3.92MB / 1.37MB",
+      "PIDs": "78"
+    },
+    {
+      "BlockIO": "4.47MB / 12.3kB",
+      "CPUPerc": "0.08%",
+      "Container": "c0d29e4a0d0310fda23ac63bdd851a0f097bdeab82aad739413fc4e7cc0eeec4",
+      "ID": "c0d29e4a0d03",
+      "MemPerc": "0.65%",
+      "MemUsage": "77.48MiB / 11.65GiB",
+      "Name": "tofxqwcillfystizcppgwefs-152517892574",
+      "NetIO": "21.1MB / 12.3MB",
+      "PIDs": "11"
+    },
+    {
+      "BlockIO": "168kB / 2.29MB",
+      "CPUPerc": "0.03%",
+      "Container": "b1cd805a5a3cd0ee537f67e2430b76d68e8c6f63820d6417fe3cc42048573e20",
+      "ID": "b1cd805a5a3c",
+      "MemPerc": "0.04%",
+      "MemUsage": "4.301MiB / 11.65GiB",
+      "Name": "coolify-sentinel",
+      "NetIO": "18MB / 8.49MB",
+      "PIDs": "3"
+    },
+    {
+      "BlockIO": "1.01MB / 7.7GB",
+      "CPUPerc": "2.36%",
+      "Container": "bfdb0b54cf15dbcecabfc284fa0c435f2cf11911fb11c6afed75ff54256e327c",
+      "ID": "bfdb0b54cf15",
+      "MemPerc": "10.57%",
+      "MemUsage": "1.231GiB / 11.65GiB",
+      "Name": "kwbztz6s0wntvtw7wc3n6sv4",
+      "NetIO": "965MB / 827MB",
+      "PIDs": "150"
+    },
+    {
+      "BlockIO": "8.58MB / 6.33GB",
+      "CPUPerc": "0.51%",
+      "Container": "c34ed1b7659f73d2a6f5d60a73dd5e5db2699424eff1937ecce50b4c888e59e1",
+      "ID": "c34ed1b7659f",
+      "MemPerc": "5.66%",
+      "MemUsage": "674.8MiB / 11.65GiB",
+      "Name": "l5xb1i1sv6xmndnradzxzlhz",
+      "NetIO": "798MB / 707MB",
+      "PIDs": "89"
+    },
+    {
+      "BlockIO": "38.4MB / 0B",
+      "CPUPerc": "0.11%",
+      "Container": "094b5a9325391e128333d49f25fbe5d4f4f7ea5dd5d385c115a4cee2f856534a",
+      "ID": "094b5a932539",
+      "MemPerc": "0.51%",
+      "MemUsage": "60.8MiB / 11.65GiB",
+      "Name": "coolify-proxy",
+      "NetIO": "2.16GB / 674MB",
+      "PIDs": "11"
+    },
+    {
+      "BlockIO": "20.3MB / 313MB",
+      "CPUPerc": "0.22%",
+      "Container": "b3dc5ccd956f4d9a2e4e9d8930d4e658b897bb946d0ffdc58620775a42ea8845",
+      "ID": "b3dc5ccd956f",
+      "MemPerc": "3.04%",
+      "MemUsage": "362.7MiB / 11.65GiB",
+      "Name": "coolify",
+      "NetIO": "9.57GB / 8.04GB",
+      "PIDs": "27"
+    },
+    {
+      "BlockIO": "3.15MB / 1.78GB",
+      "CPUPerc": "0.00%",
+      "Container": "7886707b24d9679adb6dd548410990bfd46f6e1ca05c7ef106a9e74eea52486c",
+      "ID": "7886707b24d9",
+      "MemPerc": "0.37%",
+      "MemUsage": "44.18MiB / 11.65GiB",
+      "Name": "coolify-db",
+      "NetIO": "1.18GB / 6.43GB",
+      "PIDs": "7"
+    },
+    {
+      "BlockIO": "4.41MB / 61.4GB",
+      "CPUPerc": "0.63%",
+      "Container": "208edbf5fa12857c594ac4f48c848d8f1ce9564b34a61034bfc3fbb06dc8df89",
+      "ID": "208edbf5fa12",
+      "MemPerc": "0.11%",
+      "MemUsage": "13.5MiB / 11.65GiB",
+      "Name": "coolify-redis",
+      "NetIO": "6.14GB / 1.97GB",
+      "PIDs": "6"
+    },
+    {
+      "BlockIO": "5.11MB / 4.1kB",
+      "CPUPerc": "0.41%",
+      "Container": "8016d1aa0e50dd4981756a430b3362237d4cf035a5685e87c5114146028ad2f9",
+      "ID": "8016d1aa0e50",
+      "MemPerc": "0.62%",
+      "MemUsage": "73.96MiB / 11.65GiB",
+      "Name": "coolify-realtime",
+      "NetIO": "31MB / 471MB",
+      "PIDs": "38"
+    }
+  ],
+  "apiNodeVersion": "v24.21.0",
+  "mongoBinaryVersion": "db version v7.0.43"
+}

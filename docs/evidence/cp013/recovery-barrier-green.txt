@@ -1,0 +1,1 @@
+{"barrier": true, "apiRejected": 2, "sourceRunnersStopped": true, "liveTickets": 0}

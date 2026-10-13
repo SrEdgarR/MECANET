@@ -1,0 +1,32 @@
+ Container mecanet-qa-p1l1-cp014-worker-1 Stopping
+ Container mecanet-qa-p1l1-cp014-worker-1 Stopped
+ Container mecanet-qa-p1l1-cp014-worker-1 Recreate
+ Container mecanet-qa-p1l1-cp014-worker-1 Recreated
+ Container mecanet-qa-p1l1-cp014-worker-1 Starting
+ Container mecanet-qa-p1l1-cp014-worker-1 Started
+{"workerTransferRequested": true, "mode": "full", "previousProcessProvenExited": true, "newOwnerRequiresCAS": true}
+ Container mecanet-qa-p1l1-cp014-api1-1 Recreate
+ Container mecanet-qa-p1l1-cp014-api2-1 Recreate
+ Container mecanet-qa-p1l1-cp014-api1-1 Recreated
+ Container mecanet-qa-p1l1-cp014-api2-1 Recreated
+ Container mecanet-qa-p1l1-cp014-api2-1 Starting
+ Container mecanet-qa-p1l1-cp014-api1-1 Starting
+ Container mecanet-qa-p1l1-cp014-api2-1 Started
+ Container mecanet-qa-p1l1-cp014-api1-1 Started
+ Container mecanet-qa-p1l1-cp014-web-1 Recreate
+ Container mecanet-qa-p1l1-cp014-web-1 Recreated
+ Container mecanet-qa-p1l1-cp014-web-1 Starting
+ Container mecanet-qa-p1l1-cp014-web-1 Started
+{"phase": "restart-api", "restartRequested": true, "onlyServices": ["api1", "api2", "web"], "privateUpstreamsRefreshed": true, "sharedResourcesChanged": 0}
+ Container mecanet-qa-p1l1-cp014-api1-1 Starting
+ Container mecanet-qa-p1l1-cp014-api1-1 Started
+{"result": "PASS", "time": "2026-10-13T13:52:48Z", "checkpoint": "admission.started", "instance": "api1", "containerId": "cbef2a38de5849e7f0e304fb97c81d19c5a69f37c51c803dde314fb51bfacc7e", "nodeImageId": "sha256:ba6b7d0ee561d9d49deb99e2b93c98632cc287b6cca1a6b18d66127054efa4dc", "workspace": "/opt/mecanet-qa-p1l1-cp014/artifacts/sha256-fa6f167df4e777e56d218396b3a4a9f53ac02c5531cdf8def37665da89930177", "apiOwner": "697a64e4-1c55-482e-a12b-a4f0958db389", "ticketBefore": {"id": "d5bbfe73-7e75-41d6-87a2-bdfcd07231a5", "owner": "697a64e4-1c55-482e-a12b-a4f0958db389", "state": "ACTIVE", "work_started": true, "reserved_qc": 0, "reserved_qt": 1048576}, "ticketAfter": {"id": "d5bbfe73-7e75-41d6-87a2-bdfcd07231a5", "state": "FINISHED", "reserved_qc": 0, "reserved_qt": 0, "work_started": true}, "termSignalConfirmed": true, "orderedStopSeconds": 0.929, "exitCode": 0, "oomKilled": false, "flight": {"result": "PASS", "stage": "flight", "checkpoint": "admission.started", "instance": "api1", "time": "2026-10-13T13:52:48.200Z", "ticketId": "d5bbfe73-7e75-41d6-87a2-bdfcd07231a5", "owner": "697a64e4-1c55-482e-a12b-a4f0958db389", "twoHundredForExistingFlight": true, "readinessUnavailableDuringDrain": true, "newRequestRejectedAsDraining": true, "dataFingerprint": "1fb6c0b53c31175ff5aace47c540bc46f02d01764dc2f76a0a27f9fa2c5b3efd", "scope": "Committed operation in flight before catalogue execution"}, "contractSeconds": 30}
+ Container mecanet-qa-p1l1-cp014-probe-run-6e7150af3baa Creating
+ Container mecanet-qa-p1l1-cp014-probe-run-6e7150af3baa Created
+{"result":"PASS","stage":"verify","checkpoint":"admission.started","instance":"api1","time":"2026-10-13T13:52:52.414Z","sameStandardSessionAuthenticated":true,"dataFingerprintPreserved":true,"dataFingerprint":"1fb6c0b53c31175ff5aace47c540bc46f02d01764dc2f76a0a27f9fa2c5b3efd","missingAsset404":true,"unknownApiJson404":true,"bothApiReady":[{"instance":"api1","status":200},{"instance":"api2","status":200}]}
+ Container mecanet-qa-p1l1-cp014-api2-1 Starting
+ Container mecanet-qa-p1l1-cp014-api2-1 Started
+{"result": "PASS", "time": "2026-10-13T13:53:00Z", "checkpoint": "admission.bytes", "instance": "api2", "containerId": "bb4e8dba1730e4a827e5c173e3e2c31e1a8b025e899536c055c99d4a99b7ef1c", "nodeImageId": "sha256:ba6b7d0ee561d9d49deb99e2b93c98632cc287b6cca1a6b18d66127054efa4dc", "workspace": "/opt/mecanet-qa-p1l1-cp014/artifacts/sha256-fa6f167df4e777e56d218396b3a4a9f53ac02c5531cdf8def37665da89930177", "apiOwner": "2240d555-5f6d-4796-b253-3df4e8672622", "ticketBefore": {"id": "48ccf047-356c-4a9e-b490-9372f4fe53fd", "owner": "2240d555-5f6d-4796-b253-3df4e8672622", "state": "ACTIVE", "work_started": true, "reserved_qc": 0, "reserved_qt": 1048124}, "ticketAfter": {"id": "48ccf047-356c-4a9e-b490-9372f4fe53fd", "state": "FINISHED", "reserved_qc": 0, "reserved_qt": 0, "work_started": true}, "termSignalConfirmed": true, "orderedStopSeconds": 0.945, "exitCode": 0, "oomKilled": false, "flight": {"result": "PASS", "stage": "flight", "checkpoint": "admission.bytes", "instance": "api2", "time": "2026-10-13T13:52:59.464Z", "ticketId": "48ccf047-356c-4a9e-b490-9372f4fe53fd", "owner": "2240d555-5f6d-4796-b253-3df4e8672622", "twoHundredForExistingFlight": true, "readinessUnavailableDuringDrain": true, "newRequestRejectedAsDraining": true, "dataFingerprint": "1fb6c0b53c31175ff5aace47c540bc46f02d01764dc2f76a0a27f9fa2c5b3efd", "scope": "Real SQL completed and payload accounted; operation/HTTP response still in flight"}, "contractSeconds": 30}
+ Container mecanet-qa-p1l1-cp014-probe-run-5b980c8740af Creating
+ Container mecanet-qa-p1l1-cp014-probe-run-5b980c8740af Created
+{"result":"PASS","stage":"verify","checkpoint":"admission.bytes","instance":"api2","time":"2026-10-13T13:53:03.905Z","sameStandardSessionAuthenticated":true,"dataFingerprintPreserved":true,"dataFingerprint":"1fb6c0b53c31175ff5aace47c540bc46f02d01764dc2f76a0a27f9fa2c5b3efd","missingAsset404":true,"unknownApiJson404":true,"bothApiReady":[{"instance":"api1","status":200},{"instance":"api2","status":200}]}

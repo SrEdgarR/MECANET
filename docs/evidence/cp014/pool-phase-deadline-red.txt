@@ -1,0 +1,108 @@
+✔ expired pool wait retains a pending lease until the late real client is discarded (36.3799ms)
+✔ an expired query retains its lease until SQL returns and discards the client (36.4913ms)
+✔ read-only SQL and all three server timeouts shrink to the actual remaining budget (0.9316ms)
+✔ exhausted read budget sends no SQL (0.17ms)
+✔ a late COMMIT cannot return a catalog after the read deadline even before timers run (0.1886ms)
+✖ acquire cannot settle at or after its two-second limit before its overdue timer runs (2000ms) (0.7362ms)
+✖ acquire cannot settle at or after its two-second limit before its overdue timer runs (2001ms) (0.2488ms)
+✖ connect cannot settle at or after its two-second limit before its overdue timer runs (2000ms) (0.2513ms)
+✖ connect cannot settle at or after its two-second limit before its overdue timer runs (2001ms) (0.2326ms)
+✖ operation cannot settle at or after its two-second limit before its overdue timer runs (2000ms) (0.351ms)
+✖ operation cannot settle at or after its two-second limit before its overdue timer runs (2001ms) (0.2086ms)
+✔ pool acquisition and operation receive separate two-second windows inside the global deadline (0.3215ms)
+✔ the global deadline truncates the operation window even if its phase timer has not run (0.298ms)
+✔ the default infinite deadline retains the existing pool-manager behavior (0.2213ms)
+ℹ tests 14
+ℹ suites 0
+ℹ pass 8
+ℹ fail 6
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 148.05
+
+✖ failing tests:
+
+test at tests\qa\cp014\deadlines.test.mjs:40:87
+✖ acquire cannot settle at or after its two-second limit before its overdue timer runs (2000ms) (0.7362ms)
+  AssertionError [ERR_ASSERTION]: Missing expected rejection.
+      at async TestContext.<anonymous> (file:///C:/Users/thede/Desktop/Proyectos%20de%20programacion/MECANET-develop/tests/qa/cp014/deadlines.test.mjs:48:3)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: { code: 'DB_DEADLINE' },
+    operator: 'rejects',
+    diff: 'simple'
+  }
+
+test at tests\qa\cp014\deadlines.test.mjs:40:87
+✖ acquire cannot settle at or after its two-second limit before its overdue timer runs (2001ms) (0.2488ms)
+  AssertionError [ERR_ASSERTION]: Missing expected rejection.
+      at async TestContext.<anonymous> (file:///C:/Users/thede/Desktop/Proyectos%20de%20programacion/MECANET-develop/tests/qa/cp014/deadlines.test.mjs:48:3)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: { code: 'DB_DEADLINE' },
+    operator: 'rejects',
+    diff: 'simple'
+  }
+
+test at tests\qa\cp014\deadlines.test.mjs:40:87
+✖ connect cannot settle at or after its two-second limit before its overdue timer runs (2000ms) (0.2513ms)
+  AssertionError [ERR_ASSERTION]: Missing expected rejection.
+      at async TestContext.<anonymous> (file:///C:/Users/thede/Desktop/Proyectos%20de%20programacion/MECANET-develop/tests/qa/cp014/deadlines.test.mjs:48:3)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: { code: 'DB_DEADLINE' },
+    operator: 'rejects',
+    diff: 'simple'
+  }
+
+test at tests\qa\cp014\deadlines.test.mjs:40:87
+✖ connect cannot settle at or after its two-second limit before its overdue timer runs (2001ms) (0.2326ms)
+  AssertionError [ERR_ASSERTION]: Missing expected rejection.
+      at async TestContext.<anonymous> (file:///C:/Users/thede/Desktop/Proyectos%20de%20programacion/MECANET-develop/tests/qa/cp014/deadlines.test.mjs:48:3)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: { code: 'DB_DEADLINE' },
+    operator: 'rejects',
+    diff: 'simple'
+  }
+
+test at tests\qa\cp014\deadlines.test.mjs:40:87
+✖ operation cannot settle at or after its two-second limit before its overdue timer runs (2000ms) (0.351ms)
+  AssertionError [ERR_ASSERTION]: Missing expected rejection.
+      at async TestContext.<anonymous> (file:///C:/Users/thede/Desktop/Proyectos%20de%20programacion/MECANET-develop/tests/qa/cp014/deadlines.test.mjs:48:3)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: { code: 'DB_DEADLINE' },
+    operator: 'rejects',
+    diff: 'simple'
+  }
+
+test at tests\qa\cp014\deadlines.test.mjs:40:87
+✖ operation cannot settle at or after its two-second limit before its overdue timer runs (2001ms) (0.2086ms)
+  AssertionError [ERR_ASSERTION]: Missing expected rejection.
+      at async TestContext.<anonymous> (file:///C:/Users/thede/Desktop/Proyectos%20de%20programacion/MECANET-develop/tests/qa/cp014/deadlines.test.mjs:48:3)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: { code: 'DB_DEADLINE' },
+    operator: 'rejects',
+    diff: 'simple'
+  }

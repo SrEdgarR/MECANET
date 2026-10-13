@@ -1,0 +1,1798 @@
+{
+  "fixtureVersion": "demo-cp006-v1",
+  "synthetic": true,
+  "asOf": "2026-10-07T18:00:00.000Z",
+  "currency": "DOP",
+  "amountUnit": "minor",
+  "disclaimer": "Datos ficticios; no seed de aplicación, ingreso real, cálculo fiscal ni UI verificada.",
+  "products": [
+    {
+      "id": "DEMO-P01",
+      "sku": "DEMO-1",
+      "name": "Pieza ficticia 1",
+      "category": "Filtros",
+      "priceMinor": 35000,
+      "closingStock": 3,
+      "lowStockThreshold": 5,
+      "source": "preloaded",
+      "openingStock": 6
+    },
+    {
+      "id": "DEMO-P02",
+      "sku": "DEMO-2",
+      "name": "Pieza ficticia 2",
+      "category": "Frenos",
+      "priceMinor": 72500,
+      "closingStock": 41,
+      "lowStockThreshold": 5,
+      "source": "preloaded",
+      "openingStock": 53
+    },
+    {
+      "id": "DEMO-P03",
+      "sku": "DEMO-3",
+      "name": "Pieza ficticia 3",
+      "category": "Aceites",
+      "priceMinor": 160000,
+      "closingStock": 42,
+      "lowStockThreshold": 5,
+      "source": "preloaded",
+      "openingStock": 49
+    },
+    {
+      "id": "DEMO-P04",
+      "sku": "DEMO-4",
+      "name": "Pieza ficticia 4",
+      "category": "Accesorios",
+      "priceMinor": 92500,
+      "closingStock": 43,
+      "lowStockThreshold": 5,
+      "source": "preloaded",
+      "openingStock": 51
+    },
+    {
+      "id": "DEMO-P05",
+      "sku": "DEMO-5",
+      "name": "Pieza ficticia 5",
+      "category": "Filtros",
+      "priceMinor": 125000,
+      "closingStock": 44,
+      "lowStockThreshold": 5,
+      "source": "preloaded",
+      "openingStock": 51
+    },
+    {
+      "id": "DEMO-P06",
+      "sku": "DEMO-6",
+      "name": "Pieza ficticia 6",
+      "category": "Frenos",
+      "priceMinor": 35000,
+      "closingStock": 45,
+      "lowStockThreshold": 5,
+      "source": "preloaded",
+      "openingStock": 53
+    },
+    {
+      "id": "DEMO-P07",
+      "sku": "DEMO-7",
+      "name": "Pieza ficticia 7",
+      "category": "Aceites",
+      "priceMinor": 72500,
+      "closingStock": 46,
+      "lowStockThreshold": 5,
+      "source": "preloaded",
+      "openingStock": 52
+    },
+    {
+      "id": "DEMO-P08",
+      "sku": "DEMO-8",
+      "name": "Pieza ficticia 8",
+      "category": "Accesorios",
+      "priceMinor": 160000,
+      "closingStock": 3,
+      "lowStockThreshold": 5,
+      "source": "preloaded",
+      "openingStock": 17
+    },
+    {
+      "id": "DEMO-P09",
+      "sku": "DEMO-9",
+      "name": "Pieza ficticia 9",
+      "category": "Filtros",
+      "priceMinor": 92500,
+      "closingStock": 48,
+      "lowStockThreshold": 5,
+      "source": "preloaded",
+      "openingStock": 53
+    },
+    {
+      "id": "DEMO-P10",
+      "sku": "DEMO-10",
+      "name": "Pieza ficticia 10",
+      "category": "Frenos",
+      "priceMinor": 125000,
+      "closingStock": 49,
+      "lowStockThreshold": 5,
+      "source": "preloaded",
+      "openingStock": 65
+    },
+    {
+      "id": "DEMO-P11",
+      "sku": "DEMO-11",
+      "name": "Pieza ficticia 11",
+      "category": "Aceites",
+      "priceMinor": 35000,
+      "closingStock": 50,
+      "lowStockThreshold": 5,
+      "source": "preloaded",
+      "openingStock": 56
+    },
+    {
+      "id": "DEMO-P12",
+      "sku": "DEMO-12",
+      "name": "Pieza ficticia 12",
+      "category": "Accesorios",
+      "priceMinor": 72500,
+      "closingStock": 51,
+      "lowStockThreshold": 5,
+      "source": "preloaded",
+      "openingStock": 63
+    },
+    {
+      "id": "DEMO-P13",
+      "sku": "DEMO-13",
+      "name": "Pieza ficticia 13",
+      "category": "Filtros",
+      "priceMinor": 160000,
+      "closingStock": 52,
+      "lowStockThreshold": 5,
+      "source": "preloaded",
+      "openingStock": 60
+    },
+    {
+      "id": "DEMO-P14",
+      "sku": "DEMO-14",
+      "name": "Pieza ficticia 14",
+      "category": "Frenos",
+      "priceMinor": 92500,
+      "closingStock": 53,
+      "lowStockThreshold": 5,
+      "source": "preloaded",
+      "openingStock": 63
+    },
+    {
+      "id": "DEMO-P15",
+      "sku": "DEMO-15",
+      "name": "Pieza ficticia 15",
+      "category": "Aceites",
+      "priceMinor": 125000,
+      "closingStock": 3,
+      "lowStockThreshold": 5,
+      "source": "preloaded",
+      "openingStock": 11
+    },
+    {
+      "id": "DEMO-P16",
+      "sku": "DEMO-16",
+      "name": "Pieza ficticia 16",
+      "category": "Accesorios",
+      "priceMinor": 35000,
+      "closingStock": 55,
+      "lowStockThreshold": 5,
+      "source": "preloaded",
+      "openingStock": 65
+    },
+    {
+      "id": "DEMO-P17",
+      "sku": "DEMO-17",
+      "name": "Pieza ficticia 17",
+      "category": "Filtros",
+      "priceMinor": 72500,
+      "closingStock": 56,
+      "lowStockThreshold": 5,
+      "source": "preloaded",
+      "openingStock": 62
+    },
+    {
+      "id": "DEMO-P18",
+      "sku": "DEMO-18",
+      "name": "Pieza ficticia 18",
+      "category": "Frenos",
+      "priceMinor": 160000,
+      "closingStock": 57,
+      "lowStockThreshold": 5,
+      "source": "preloaded",
+      "openingStock": 73
+    },
+    {
+      "id": "DEMO-P19",
+      "sku": "DEMO-19",
+      "name": "Pieza ficticia 19",
+      "category": "Aceites",
+      "priceMinor": 92500,
+      "closingStock": 58,
+      "lowStockThreshold": 5,
+      "source": "preloaded",
+      "openingStock": 62
+    },
+    {
+      "id": "DEMO-P20",
+      "sku": "DEMO-20",
+      "name": "Pieza ficticia 20",
+      "category": "Accesorios",
+      "priceMinor": 125000,
+      "closingStock": 59,
+      "lowStockThreshold": 5,
+      "source": "preloaded",
+      "openingStock": 73
+    }
+  ],
+  "customers": [
+    {
+      "id": "DEMO-C1",
+      "name": "Cliente ficticio 1",
+      "source": "preloaded"
+    },
+    {
+      "id": "DEMO-C2",
+      "name": "Cliente ficticio 2",
+      "source": "preloaded"
+    },
+    {
+      "id": "DEMO-C3",
+      "name": "Cliente ficticio 3",
+      "source": "preloaded"
+    },
+    {
+      "id": "DEMO-C4",
+      "name": "Cliente ficticio 4",
+      "source": "preloaded"
+    },
+    {
+      "id": "DEMO-C5",
+      "name": "Cliente ficticio 5",
+      "source": "preloaded"
+    }
+  ],
+  "sales": [
+    {
+      "id": "DEMO-S001",
+      "source": "preloaded",
+      "createdAt": "2026-09-09T12:00:00.000Z",
+      "customerId": "DEMO-C2",
+      "paymentMethod": "Tarjeta",
+      "items": [
+        {
+          "productId": "DEMO-P02",
+          "quantity": 2,
+          "unitPriceMinor": 72500,
+          "lineTotalMinor": 145000
+        },
+        {
+          "productId": "DEMO-P09",
+          "quantity": 1,
+          "unitPriceMinor": 92500,
+          "lineTotalMinor": 92500
+        }
+      ],
+      "totalMinor": 237500
+    },
+    {
+      "id": "DEMO-S002",
+      "source": "preloaded",
+      "createdAt": "2026-09-10T12:00:00.000Z",
+      "customerId": "DEMO-C3",
+      "paymentMethod": "Transferencia",
+      "items": [
+        {
+          "productId": "DEMO-P03",
+          "quantity": 1,
+          "unitPriceMinor": 160000,
+          "lineTotalMinor": 160000
+        },
+        {
+          "productId": "DEMO-P10",
+          "quantity": 2,
+          "unitPriceMinor": 125000,
+          "lineTotalMinor": 250000
+        }
+      ],
+      "totalMinor": 410000
+    },
+    {
+      "id": "DEMO-S003",
+      "source": "preloaded",
+      "createdAt": "2026-09-10T12:01:00.000Z",
+      "customerId": "DEMO-C4",
+      "paymentMethod": "Efectivo",
+      "items": [
+        {
+          "productId": "DEMO-P06",
+          "quantity": 2,
+          "unitPriceMinor": 35000,
+          "lineTotalMinor": 70000
+        },
+        {
+          "productId": "DEMO-P13",
+          "quantity": 1,
+          "unitPriceMinor": 160000,
+          "lineTotalMinor": 160000
+        }
+      ],
+      "totalMinor": 230000
+    },
+    {
+      "id": "DEMO-S004",
+      "source": "preloaded",
+      "createdAt": "2026-09-11T12:00:00.000Z",
+      "customerId": "DEMO-C4",
+      "paymentMethod": "Efectivo",
+      "items": [
+        {
+          "productId": "DEMO-P04",
+          "quantity": 2,
+          "unitPriceMinor": 92500,
+          "lineTotalMinor": 185000
+        },
+        {
+          "productId": "DEMO-P11",
+          "quantity": 1,
+          "unitPriceMinor": 35000,
+          "lineTotalMinor": 35000
+        }
+      ],
+      "totalMinor": 220000
+    },
+    {
+      "id": "DEMO-S005",
+      "source": "preloaded",
+      "createdAt": "2026-09-11T12:01:00.000Z",
+      "customerId": "DEMO-C5",
+      "paymentMethod": "Tarjeta",
+      "items": [
+        {
+          "productId": "DEMO-P07",
+          "quantity": 1,
+          "unitPriceMinor": 72500,
+          "lineTotalMinor": 72500
+        },
+        {
+          "productId": "DEMO-P14",
+          "quantity": 2,
+          "unitPriceMinor": 92500,
+          "lineTotalMinor": 185000
+        }
+      ],
+      "totalMinor": 257500
+    },
+    {
+      "id": "DEMO-S006",
+      "source": "preloaded",
+      "createdAt": "2026-09-11T12:02:00.000Z",
+      "customerId": "DEMO-C1",
+      "paymentMethod": "Transferencia",
+      "items": [
+        {
+          "productId": "DEMO-P10",
+          "quantity": 2,
+          "unitPriceMinor": 125000,
+          "lineTotalMinor": 250000
+        },
+        {
+          "productId": "DEMO-P17",
+          "quantity": 1,
+          "unitPriceMinor": 72500,
+          "lineTotalMinor": 72500
+        }
+      ],
+      "totalMinor": 322500
+    },
+    {
+      "id": "DEMO-S007",
+      "source": "preloaded",
+      "createdAt": "2026-09-11T12:03:00.000Z",
+      "customerId": "DEMO-C2",
+      "paymentMethod": "Efectivo",
+      "items": [
+        {
+          "productId": "DEMO-P13",
+          "quantity": 1,
+          "unitPriceMinor": 160000,
+          "lineTotalMinor": 160000
+        },
+        {
+          "productId": "DEMO-P20",
+          "quantity": 2,
+          "unitPriceMinor": 125000,
+          "lineTotalMinor": 250000
+        }
+      ],
+      "totalMinor": 410000
+    },
+    {
+      "id": "DEMO-S008",
+      "source": "preloaded",
+      "createdAt": "2026-09-12T12:00:00.000Z",
+      "customerId": "DEMO-C5",
+      "paymentMethod": "Tarjeta",
+      "items": [
+        {
+          "productId": "DEMO-P05",
+          "quantity": 1,
+          "unitPriceMinor": 125000,
+          "lineTotalMinor": 125000
+        },
+        {
+          "productId": "DEMO-P12",
+          "quantity": 2,
+          "unitPriceMinor": 72500,
+          "lineTotalMinor": 145000
+        }
+      ],
+      "totalMinor": 270000
+    },
+    {
+      "id": "DEMO-S009",
+      "source": "preloaded",
+      "createdAt": "2026-09-12T12:01:00.000Z",
+      "customerId": "DEMO-C1",
+      "paymentMethod": "Transferencia",
+      "items": [
+        {
+          "productId": "DEMO-P08",
+          "quantity": 2,
+          "unitPriceMinor": 160000,
+          "lineTotalMinor": 320000
+        },
+        {
+          "productId": "DEMO-P15",
+          "quantity": 1,
+          "unitPriceMinor": 125000,
+          "lineTotalMinor": 125000
+        }
+      ],
+      "totalMinor": 445000
+    },
+    {
+      "id": "DEMO-S010",
+      "source": "preloaded",
+      "createdAt": "2026-09-12T12:02:00.000Z",
+      "customerId": "DEMO-C2",
+      "paymentMethod": "Efectivo",
+      "items": [
+        {
+          "productId": "DEMO-P11",
+          "quantity": 1,
+          "unitPriceMinor": 35000,
+          "lineTotalMinor": 35000
+        },
+        {
+          "productId": "DEMO-P18",
+          "quantity": 2,
+          "unitPriceMinor": 160000,
+          "lineTotalMinor": 320000
+        }
+      ],
+      "totalMinor": 355000
+    },
+    {
+      "id": "DEMO-S011",
+      "source": "preloaded",
+      "createdAt": "2026-09-14T12:00:00.000Z",
+      "customerId": "DEMO-C2",
+      "paymentMethod": "Efectivo",
+      "items": [
+        {
+          "productId": "DEMO-P07",
+          "quantity": 1,
+          "unitPriceMinor": 72500,
+          "lineTotalMinor": 72500
+        },
+        {
+          "productId": "DEMO-P14",
+          "quantity": 2,
+          "unitPriceMinor": 92500,
+          "lineTotalMinor": 185000
+        }
+      ],
+      "totalMinor": 257500
+    },
+    {
+      "id": "DEMO-S012",
+      "source": "preloaded",
+      "createdAt": "2026-09-15T12:00:00.000Z",
+      "customerId": "DEMO-C3",
+      "paymentMethod": "Tarjeta",
+      "items": [
+        {
+          "productId": "DEMO-P08",
+          "quantity": 2,
+          "unitPriceMinor": 160000,
+          "lineTotalMinor": 320000
+        },
+        {
+          "productId": "DEMO-P15",
+          "quantity": 1,
+          "unitPriceMinor": 125000,
+          "lineTotalMinor": 125000
+        }
+      ],
+      "totalMinor": 445000
+    },
+    {
+      "id": "DEMO-S013",
+      "source": "preloaded",
+      "createdAt": "2026-09-15T12:01:00.000Z",
+      "customerId": "DEMO-C4",
+      "paymentMethod": "Transferencia",
+      "items": [
+        {
+          "productId": "DEMO-P11",
+          "quantity": 1,
+          "unitPriceMinor": 35000,
+          "lineTotalMinor": 35000
+        },
+        {
+          "productId": "DEMO-P18",
+          "quantity": 2,
+          "unitPriceMinor": 160000,
+          "lineTotalMinor": 320000
+        }
+      ],
+      "totalMinor": 355000
+    },
+    {
+      "id": "DEMO-S014",
+      "source": "preloaded",
+      "createdAt": "2026-09-16T12:00:00.000Z",
+      "customerId": "DEMO-C4",
+      "paymentMethod": "Transferencia",
+      "items": [
+        {
+          "productId": "DEMO-P09",
+          "quantity": 1,
+          "unitPriceMinor": 92500,
+          "lineTotalMinor": 92500
+        },
+        {
+          "productId": "DEMO-P16",
+          "quantity": 2,
+          "unitPriceMinor": 35000,
+          "lineTotalMinor": 70000
+        }
+      ],
+      "totalMinor": 162500
+    },
+    {
+      "id": "DEMO-S015",
+      "source": "preloaded",
+      "createdAt": "2026-09-16T12:01:00.000Z",
+      "customerId": "DEMO-C5",
+      "paymentMethod": "Efectivo",
+      "items": [
+        {
+          "productId": "DEMO-P12",
+          "quantity": 2,
+          "unitPriceMinor": 72500,
+          "lineTotalMinor": 145000
+        },
+        {
+          "productId": "DEMO-P19",
+          "quantity": 1,
+          "unitPriceMinor": 92500,
+          "lineTotalMinor": 92500
+        }
+      ],
+      "totalMinor": 237500
+    },
+    {
+      "id": "DEMO-S016",
+      "source": "preloaded",
+      "createdAt": "2026-09-16T12:02:00.000Z",
+      "customerId": "DEMO-C1",
+      "paymentMethod": "Tarjeta",
+      "items": [
+        {
+          "productId": "DEMO-P15",
+          "quantity": 1,
+          "unitPriceMinor": 125000,
+          "lineTotalMinor": 125000
+        },
+        {
+          "productId": "DEMO-P02",
+          "quantity": 2,
+          "unitPriceMinor": 72500,
+          "lineTotalMinor": 145000
+        }
+      ],
+      "totalMinor": 270000
+    },
+    {
+      "id": "DEMO-S017",
+      "source": "preloaded",
+      "createdAt": "2026-09-16T12:03:00.000Z",
+      "customerId": "DEMO-C2",
+      "paymentMethod": "Transferencia",
+      "items": [
+        {
+          "productId": "DEMO-P18",
+          "quantity": 2,
+          "unitPriceMinor": 160000,
+          "lineTotalMinor": 320000
+        },
+        {
+          "productId": "DEMO-P05",
+          "quantity": 1,
+          "unitPriceMinor": 125000,
+          "lineTotalMinor": 125000
+        }
+      ],
+      "totalMinor": 445000
+    },
+    {
+      "id": "DEMO-S018",
+      "source": "preloaded",
+      "createdAt": "2026-09-17T12:00:00.000Z",
+      "customerId": "DEMO-C5",
+      "paymentMethod": "Efectivo",
+      "items": [
+        {
+          "productId": "DEMO-P10",
+          "quantity": 2,
+          "unitPriceMinor": 125000,
+          "lineTotalMinor": 250000
+        },
+        {
+          "productId": "DEMO-P17",
+          "quantity": 1,
+          "unitPriceMinor": 72500,
+          "lineTotalMinor": 72500
+        }
+      ],
+      "totalMinor": 322500
+    },
+    {
+      "id": "DEMO-S019",
+      "source": "preloaded",
+      "createdAt": "2026-09-17T12:01:00.000Z",
+      "customerId": "DEMO-C1",
+      "paymentMethod": "Tarjeta",
+      "items": [
+        {
+          "productId": "DEMO-P13",
+          "quantity": 1,
+          "unitPriceMinor": 160000,
+          "lineTotalMinor": 160000
+        },
+        {
+          "productId": "DEMO-P20",
+          "quantity": 2,
+          "unitPriceMinor": 125000,
+          "lineTotalMinor": 250000
+        }
+      ],
+      "totalMinor": 410000
+    },
+    {
+      "id": "DEMO-S020",
+      "source": "preloaded",
+      "createdAt": "2026-09-17T12:02:00.000Z",
+      "customerId": "DEMO-C2",
+      "paymentMethod": "Transferencia",
+      "items": [
+        {
+          "productId": "DEMO-P16",
+          "quantity": 2,
+          "unitPriceMinor": 35000,
+          "lineTotalMinor": 70000
+        },
+        {
+          "productId": "DEMO-P03",
+          "quantity": 1,
+          "unitPriceMinor": 160000,
+          "lineTotalMinor": 160000
+        }
+      ],
+      "totalMinor": 230000
+    },
+    {
+      "id": "DEMO-S021",
+      "source": "preloaded",
+      "createdAt": "2026-09-19T12:00:00.000Z",
+      "customerId": "DEMO-C2",
+      "paymentMethod": "Transferencia",
+      "items": [
+        {
+          "productId": "DEMO-P12",
+          "quantity": 2,
+          "unitPriceMinor": 72500,
+          "lineTotalMinor": 145000
+        },
+        {
+          "productId": "DEMO-P19",
+          "quantity": 1,
+          "unitPriceMinor": 92500,
+          "lineTotalMinor": 92500
+        }
+      ],
+      "totalMinor": 237500
+    },
+    {
+      "id": "DEMO-S022",
+      "source": "preloaded",
+      "createdAt": "2026-09-20T12:00:00.000Z",
+      "customerId": "DEMO-C3",
+      "paymentMethod": "Efectivo",
+      "items": [
+        {
+          "productId": "DEMO-P13",
+          "quantity": 1,
+          "unitPriceMinor": 160000,
+          "lineTotalMinor": 160000
+        },
+        {
+          "productId": "DEMO-P20",
+          "quantity": 2,
+          "unitPriceMinor": 125000,
+          "lineTotalMinor": 250000
+        }
+      ],
+      "totalMinor": 410000
+    },
+    {
+      "id": "DEMO-S023",
+      "source": "preloaded",
+      "createdAt": "2026-09-20T12:01:00.000Z",
+      "customerId": "DEMO-C4",
+      "paymentMethod": "Tarjeta",
+      "items": [
+        {
+          "productId": "DEMO-P16",
+          "quantity": 2,
+          "unitPriceMinor": 35000,
+          "lineTotalMinor": 70000
+        },
+        {
+          "productId": "DEMO-P03",
+          "quantity": 1,
+          "unitPriceMinor": 160000,
+          "lineTotalMinor": 160000
+        }
+      ],
+      "totalMinor": 230000
+    },
+    {
+      "id": "DEMO-S024",
+      "source": "preloaded",
+      "createdAt": "2026-09-21T12:00:00.000Z",
+      "customerId": "DEMO-C4",
+      "paymentMethod": "Tarjeta",
+      "items": [
+        {
+          "productId": "DEMO-P14",
+          "quantity": 2,
+          "unitPriceMinor": 92500,
+          "lineTotalMinor": 185000
+        },
+        {
+          "productId": "DEMO-P01",
+          "quantity": 1,
+          "unitPriceMinor": 35000,
+          "lineTotalMinor": 35000
+        }
+      ],
+      "totalMinor": 220000
+    },
+    {
+      "id": "DEMO-S025",
+      "source": "preloaded",
+      "createdAt": "2026-09-21T12:01:00.000Z",
+      "customerId": "DEMO-C5",
+      "paymentMethod": "Transferencia",
+      "items": [
+        {
+          "productId": "DEMO-P17",
+          "quantity": 1,
+          "unitPriceMinor": 72500,
+          "lineTotalMinor": 72500
+        },
+        {
+          "productId": "DEMO-P04",
+          "quantity": 2,
+          "unitPriceMinor": 92500,
+          "lineTotalMinor": 185000
+        }
+      ],
+      "totalMinor": 257500
+    },
+    {
+      "id": "DEMO-S026",
+      "source": "preloaded",
+      "createdAt": "2026-09-21T12:02:00.000Z",
+      "customerId": "DEMO-C1",
+      "paymentMethod": "Efectivo",
+      "items": [
+        {
+          "productId": "DEMO-P20",
+          "quantity": 2,
+          "unitPriceMinor": 125000,
+          "lineTotalMinor": 250000
+        },
+        {
+          "productId": "DEMO-P07",
+          "quantity": 1,
+          "unitPriceMinor": 72500,
+          "lineTotalMinor": 72500
+        }
+      ],
+      "totalMinor": 322500
+    },
+    {
+      "id": "DEMO-S027",
+      "source": "preloaded",
+      "createdAt": "2026-09-21T12:03:00.000Z",
+      "customerId": "DEMO-C2",
+      "paymentMethod": "Tarjeta",
+      "items": [
+        {
+          "productId": "DEMO-P03",
+          "quantity": 1,
+          "unitPriceMinor": 160000,
+          "lineTotalMinor": 160000
+        },
+        {
+          "productId": "DEMO-P10",
+          "quantity": 2,
+          "unitPriceMinor": 125000,
+          "lineTotalMinor": 250000
+        }
+      ],
+      "totalMinor": 410000
+    },
+    {
+      "id": "DEMO-S028",
+      "source": "preloaded",
+      "createdAt": "2026-09-22T12:00:00.000Z",
+      "customerId": "DEMO-C5",
+      "paymentMethod": "Transferencia",
+      "items": [
+        {
+          "productId": "DEMO-P15",
+          "quantity": 1,
+          "unitPriceMinor": 125000,
+          "lineTotalMinor": 125000
+        },
+        {
+          "productId": "DEMO-P02",
+          "quantity": 2,
+          "unitPriceMinor": 72500,
+          "lineTotalMinor": 145000
+        }
+      ],
+      "totalMinor": 270000
+    },
+    {
+      "id": "DEMO-S029",
+      "source": "preloaded",
+      "createdAt": "2026-09-22T12:01:00.000Z",
+      "customerId": "DEMO-C1",
+      "paymentMethod": "Efectivo",
+      "items": [
+        {
+          "productId": "DEMO-P18",
+          "quantity": 2,
+          "unitPriceMinor": 160000,
+          "lineTotalMinor": 320000
+        },
+        {
+          "productId": "DEMO-P05",
+          "quantity": 1,
+          "unitPriceMinor": 125000,
+          "lineTotalMinor": 125000
+        }
+      ],
+      "totalMinor": 445000
+    },
+    {
+      "id": "DEMO-S030",
+      "source": "preloaded",
+      "createdAt": "2026-09-22T12:02:00.000Z",
+      "customerId": "DEMO-C2",
+      "paymentMethod": "Tarjeta",
+      "items": [
+        {
+          "productId": "DEMO-P01",
+          "quantity": 1,
+          "unitPriceMinor": 35000,
+          "lineTotalMinor": 35000
+        },
+        {
+          "productId": "DEMO-P08",
+          "quantity": 2,
+          "unitPriceMinor": 160000,
+          "lineTotalMinor": 320000
+        }
+      ],
+      "totalMinor": 355000
+    },
+    {
+      "id": "DEMO-S031",
+      "source": "preloaded",
+      "createdAt": "2026-09-24T12:00:00.000Z",
+      "customerId": "DEMO-C2",
+      "paymentMethod": "Tarjeta",
+      "items": [
+        {
+          "productId": "DEMO-P17",
+          "quantity": 1,
+          "unitPriceMinor": 72500,
+          "lineTotalMinor": 72500
+        },
+        {
+          "productId": "DEMO-P04",
+          "quantity": 2,
+          "unitPriceMinor": 92500,
+          "lineTotalMinor": 185000
+        }
+      ],
+      "totalMinor": 257500
+    },
+    {
+      "id": "DEMO-S032",
+      "source": "preloaded",
+      "createdAt": "2026-09-25T12:00:00.000Z",
+      "customerId": "DEMO-C3",
+      "paymentMethod": "Transferencia",
+      "items": [
+        {
+          "productId": "DEMO-P18",
+          "quantity": 2,
+          "unitPriceMinor": 160000,
+          "lineTotalMinor": 320000
+        },
+        {
+          "productId": "DEMO-P05",
+          "quantity": 1,
+          "unitPriceMinor": 125000,
+          "lineTotalMinor": 125000
+        }
+      ],
+      "totalMinor": 445000
+    },
+    {
+      "id": "DEMO-S033",
+      "source": "preloaded",
+      "createdAt": "2026-09-25T12:01:00.000Z",
+      "customerId": "DEMO-C4",
+      "paymentMethod": "Efectivo",
+      "items": [
+        {
+          "productId": "DEMO-P01",
+          "quantity": 1,
+          "unitPriceMinor": 35000,
+          "lineTotalMinor": 35000
+        },
+        {
+          "productId": "DEMO-P08",
+          "quantity": 2,
+          "unitPriceMinor": 160000,
+          "lineTotalMinor": 320000
+        }
+      ],
+      "totalMinor": 355000
+    },
+    {
+      "id": "DEMO-S034",
+      "source": "preloaded",
+      "createdAt": "2026-09-26T12:00:00.000Z",
+      "customerId": "DEMO-C4",
+      "paymentMethod": "Efectivo",
+      "items": [
+        {
+          "productId": "DEMO-P19",
+          "quantity": 1,
+          "unitPriceMinor": 92500,
+          "lineTotalMinor": 92500
+        },
+        {
+          "productId": "DEMO-P06",
+          "quantity": 2,
+          "unitPriceMinor": 35000,
+          "lineTotalMinor": 70000
+        }
+      ],
+      "totalMinor": 162500
+    },
+    {
+      "id": "DEMO-S035",
+      "source": "preloaded",
+      "createdAt": "2026-09-26T12:01:00.000Z",
+      "customerId": "DEMO-C5",
+      "paymentMethod": "Tarjeta",
+      "items": [
+        {
+          "productId": "DEMO-P02",
+          "quantity": 2,
+          "unitPriceMinor": 72500,
+          "lineTotalMinor": 145000
+        },
+        {
+          "productId": "DEMO-P09",
+          "quantity": 1,
+          "unitPriceMinor": 92500,
+          "lineTotalMinor": 92500
+        }
+      ],
+      "totalMinor": 237500
+    },
+    {
+      "id": "DEMO-S036",
+      "source": "preloaded",
+      "createdAt": "2026-09-26T12:02:00.000Z",
+      "customerId": "DEMO-C1",
+      "paymentMethod": "Transferencia",
+      "items": [
+        {
+          "productId": "DEMO-P05",
+          "quantity": 1,
+          "unitPriceMinor": 125000,
+          "lineTotalMinor": 125000
+        },
+        {
+          "productId": "DEMO-P12",
+          "quantity": 2,
+          "unitPriceMinor": 72500,
+          "lineTotalMinor": 145000
+        }
+      ],
+      "totalMinor": 270000
+    },
+    {
+      "id": "DEMO-S037",
+      "source": "preloaded",
+      "createdAt": "2026-09-26T12:03:00.000Z",
+      "customerId": "DEMO-C2",
+      "paymentMethod": "Efectivo",
+      "items": [
+        {
+          "productId": "DEMO-P08",
+          "quantity": 2,
+          "unitPriceMinor": 160000,
+          "lineTotalMinor": 320000
+        },
+        {
+          "productId": "DEMO-P15",
+          "quantity": 1,
+          "unitPriceMinor": 125000,
+          "lineTotalMinor": 125000
+        }
+      ],
+      "totalMinor": 445000
+    },
+    {
+      "id": "DEMO-S038",
+      "source": "preloaded",
+      "createdAt": "2026-09-27T12:00:00.000Z",
+      "customerId": "DEMO-C5",
+      "paymentMethod": "Tarjeta",
+      "items": [
+        {
+          "productId": "DEMO-P20",
+          "quantity": 2,
+          "unitPriceMinor": 125000,
+          "lineTotalMinor": 250000
+        },
+        {
+          "productId": "DEMO-P07",
+          "quantity": 1,
+          "unitPriceMinor": 72500,
+          "lineTotalMinor": 72500
+        }
+      ],
+      "totalMinor": 322500
+    },
+    {
+      "id": "DEMO-S039",
+      "source": "preloaded",
+      "createdAt": "2026-09-27T12:01:00.000Z",
+      "customerId": "DEMO-C1",
+      "paymentMethod": "Transferencia",
+      "items": [
+        {
+          "productId": "DEMO-P03",
+          "quantity": 1,
+          "unitPriceMinor": 160000,
+          "lineTotalMinor": 160000
+        },
+        {
+          "productId": "DEMO-P10",
+          "quantity": 2,
+          "unitPriceMinor": 125000,
+          "lineTotalMinor": 250000
+        }
+      ],
+      "totalMinor": 410000
+    },
+    {
+      "id": "DEMO-S040",
+      "source": "preloaded",
+      "createdAt": "2026-09-27T12:02:00.000Z",
+      "customerId": "DEMO-C2",
+      "paymentMethod": "Efectivo",
+      "items": [
+        {
+          "productId": "DEMO-P06",
+          "quantity": 2,
+          "unitPriceMinor": 35000,
+          "lineTotalMinor": 70000
+        },
+        {
+          "productId": "DEMO-P13",
+          "quantity": 1,
+          "unitPriceMinor": 160000,
+          "lineTotalMinor": 160000
+        }
+      ],
+      "totalMinor": 230000
+    },
+    {
+      "id": "DEMO-S041",
+      "source": "preloaded",
+      "createdAt": "2026-09-29T12:00:00.000Z",
+      "customerId": "DEMO-C2",
+      "paymentMethod": "Efectivo",
+      "items": [
+        {
+          "productId": "DEMO-P02",
+          "quantity": 2,
+          "unitPriceMinor": 72500,
+          "lineTotalMinor": 145000
+        },
+        {
+          "productId": "DEMO-P09",
+          "quantity": 1,
+          "unitPriceMinor": 92500,
+          "lineTotalMinor": 92500
+        }
+      ],
+      "totalMinor": 237500
+    },
+    {
+      "id": "DEMO-S042",
+      "source": "preloaded",
+      "createdAt": "2026-09-30T12:00:00.000Z",
+      "customerId": "DEMO-C3",
+      "paymentMethod": "Tarjeta",
+      "items": [
+        {
+          "productId": "DEMO-P03",
+          "quantity": 1,
+          "unitPriceMinor": 160000,
+          "lineTotalMinor": 160000
+        },
+        {
+          "productId": "DEMO-P10",
+          "quantity": 2,
+          "unitPriceMinor": 125000,
+          "lineTotalMinor": 250000
+        }
+      ],
+      "totalMinor": 410000
+    },
+    {
+      "id": "DEMO-S043",
+      "source": "preloaded",
+      "createdAt": "2026-09-30T12:01:00.000Z",
+      "customerId": "DEMO-C4",
+      "paymentMethod": "Transferencia",
+      "items": [
+        {
+          "productId": "DEMO-P06",
+          "quantity": 2,
+          "unitPriceMinor": 35000,
+          "lineTotalMinor": 70000
+        },
+        {
+          "productId": "DEMO-P13",
+          "quantity": 1,
+          "unitPriceMinor": 160000,
+          "lineTotalMinor": 160000
+        }
+      ],
+      "totalMinor": 230000
+    },
+    {
+      "id": "DEMO-S044",
+      "source": "preloaded",
+      "createdAt": "2026-10-01T12:00:00.000Z",
+      "customerId": "DEMO-C4",
+      "paymentMethod": "Transferencia",
+      "items": [
+        {
+          "productId": "DEMO-P04",
+          "quantity": 2,
+          "unitPriceMinor": 92500,
+          "lineTotalMinor": 185000
+        },
+        {
+          "productId": "DEMO-P11",
+          "quantity": 1,
+          "unitPriceMinor": 35000,
+          "lineTotalMinor": 35000
+        }
+      ],
+      "totalMinor": 220000
+    },
+    {
+      "id": "DEMO-S045",
+      "source": "preloaded",
+      "createdAt": "2026-10-01T12:01:00.000Z",
+      "customerId": "DEMO-C5",
+      "paymentMethod": "Efectivo",
+      "items": [
+        {
+          "productId": "DEMO-P07",
+          "quantity": 1,
+          "unitPriceMinor": 72500,
+          "lineTotalMinor": 72500
+        },
+        {
+          "productId": "DEMO-P14",
+          "quantity": 2,
+          "unitPriceMinor": 92500,
+          "lineTotalMinor": 185000
+        }
+      ],
+      "totalMinor": 257500
+    },
+    {
+      "id": "DEMO-S046",
+      "source": "preloaded",
+      "createdAt": "2026-10-01T12:02:00.000Z",
+      "customerId": "DEMO-C1",
+      "paymentMethod": "Tarjeta",
+      "items": [
+        {
+          "productId": "DEMO-P10",
+          "quantity": 2,
+          "unitPriceMinor": 125000,
+          "lineTotalMinor": 250000
+        },
+        {
+          "productId": "DEMO-P17",
+          "quantity": 1,
+          "unitPriceMinor": 72500,
+          "lineTotalMinor": 72500
+        }
+      ],
+      "totalMinor": 322500
+    },
+    {
+      "id": "DEMO-S047",
+      "source": "preloaded",
+      "createdAt": "2026-10-01T12:03:00.000Z",
+      "customerId": "DEMO-C2",
+      "paymentMethod": "Transferencia",
+      "items": [
+        {
+          "productId": "DEMO-P13",
+          "quantity": 1,
+          "unitPriceMinor": 160000,
+          "lineTotalMinor": 160000
+        },
+        {
+          "productId": "DEMO-P20",
+          "quantity": 2,
+          "unitPriceMinor": 125000,
+          "lineTotalMinor": 250000
+        }
+      ],
+      "totalMinor": 410000
+    },
+    {
+      "id": "DEMO-S048",
+      "source": "preloaded",
+      "createdAt": "2026-10-02T12:00:00.000Z",
+      "customerId": "DEMO-C5",
+      "paymentMethod": "Efectivo",
+      "items": [
+        {
+          "productId": "DEMO-P05",
+          "quantity": 1,
+          "unitPriceMinor": 125000,
+          "lineTotalMinor": 125000
+        },
+        {
+          "productId": "DEMO-P12",
+          "quantity": 2,
+          "unitPriceMinor": 72500,
+          "lineTotalMinor": 145000
+        }
+      ],
+      "totalMinor": 270000
+    },
+    {
+      "id": "DEMO-S049",
+      "source": "preloaded",
+      "createdAt": "2026-10-02T12:01:00.000Z",
+      "customerId": "DEMO-C1",
+      "paymentMethod": "Tarjeta",
+      "items": [
+        {
+          "productId": "DEMO-P08",
+          "quantity": 2,
+          "unitPriceMinor": 160000,
+          "lineTotalMinor": 320000
+        },
+        {
+          "productId": "DEMO-P15",
+          "quantity": 1,
+          "unitPriceMinor": 125000,
+          "lineTotalMinor": 125000
+        }
+      ],
+      "totalMinor": 445000
+    },
+    {
+      "id": "DEMO-S050",
+      "source": "preloaded",
+      "createdAt": "2026-10-02T12:02:00.000Z",
+      "customerId": "DEMO-C2",
+      "paymentMethod": "Transferencia",
+      "items": [
+        {
+          "productId": "DEMO-P11",
+          "quantity": 1,
+          "unitPriceMinor": 35000,
+          "lineTotalMinor": 35000
+        },
+        {
+          "productId": "DEMO-P18",
+          "quantity": 2,
+          "unitPriceMinor": 160000,
+          "lineTotalMinor": 320000
+        }
+      ],
+      "totalMinor": 355000
+    },
+    {
+      "id": "DEMO-S051",
+      "source": "preloaded",
+      "createdAt": "2026-10-04T12:00:00.000Z",
+      "customerId": "DEMO-C2",
+      "paymentMethod": "Transferencia",
+      "items": [
+        {
+          "productId": "DEMO-P07",
+          "quantity": 1,
+          "unitPriceMinor": 72500,
+          "lineTotalMinor": 72500
+        },
+        {
+          "productId": "DEMO-P14",
+          "quantity": 2,
+          "unitPriceMinor": 92500,
+          "lineTotalMinor": 185000
+        }
+      ],
+      "totalMinor": 257500
+    },
+    {
+      "id": "DEMO-S052",
+      "source": "preloaded",
+      "createdAt": "2026-10-05T12:00:00.000Z",
+      "customerId": "DEMO-C3",
+      "paymentMethod": "Efectivo",
+      "items": [
+        {
+          "productId": "DEMO-P08",
+          "quantity": 2,
+          "unitPriceMinor": 160000,
+          "lineTotalMinor": 320000
+        },
+        {
+          "productId": "DEMO-P15",
+          "quantity": 1,
+          "unitPriceMinor": 125000,
+          "lineTotalMinor": 125000
+        }
+      ],
+      "totalMinor": 445000
+    },
+    {
+      "id": "DEMO-S053",
+      "source": "preloaded",
+      "createdAt": "2026-10-05T12:01:00.000Z",
+      "customerId": "DEMO-C4",
+      "paymentMethod": "Tarjeta",
+      "items": [
+        {
+          "productId": "DEMO-P11",
+          "quantity": 1,
+          "unitPriceMinor": 35000,
+          "lineTotalMinor": 35000
+        },
+        {
+          "productId": "DEMO-P18",
+          "quantity": 2,
+          "unitPriceMinor": 160000,
+          "lineTotalMinor": 320000
+        }
+      ],
+      "totalMinor": 355000
+    },
+    {
+      "id": "DEMO-S054",
+      "source": "preloaded",
+      "createdAt": "2026-10-06T12:00:00.000Z",
+      "customerId": "DEMO-C4",
+      "paymentMethod": "Tarjeta",
+      "items": [
+        {
+          "productId": "DEMO-P09",
+          "quantity": 1,
+          "unitPriceMinor": 92500,
+          "lineTotalMinor": 92500
+        },
+        {
+          "productId": "DEMO-P16",
+          "quantity": 2,
+          "unitPriceMinor": 35000,
+          "lineTotalMinor": 70000
+        }
+      ],
+      "totalMinor": 162500
+    },
+    {
+      "id": "DEMO-S055",
+      "source": "preloaded",
+      "createdAt": "2026-10-06T12:01:00.000Z",
+      "customerId": "DEMO-C5",
+      "paymentMethod": "Transferencia",
+      "items": [
+        {
+          "productId": "DEMO-P12",
+          "quantity": 2,
+          "unitPriceMinor": 72500,
+          "lineTotalMinor": 145000
+        },
+        {
+          "productId": "DEMO-P19",
+          "quantity": 1,
+          "unitPriceMinor": 92500,
+          "lineTotalMinor": 92500
+        }
+      ],
+      "totalMinor": 237500
+    },
+    {
+      "id": "DEMO-S056",
+      "source": "preloaded",
+      "createdAt": "2026-10-06T12:02:00.000Z",
+      "customerId": "DEMO-C1",
+      "paymentMethod": "Efectivo",
+      "items": [
+        {
+          "productId": "DEMO-P15",
+          "quantity": 1,
+          "unitPriceMinor": 125000,
+          "lineTotalMinor": 125000
+        },
+        {
+          "productId": "DEMO-P02",
+          "quantity": 2,
+          "unitPriceMinor": 72500,
+          "lineTotalMinor": 145000
+        }
+      ],
+      "totalMinor": 270000
+    },
+    {
+      "id": "DEMO-S057",
+      "source": "preloaded",
+      "createdAt": "2026-10-06T12:03:00.000Z",
+      "customerId": "DEMO-C2",
+      "paymentMethod": "Tarjeta",
+      "items": [
+        {
+          "productId": "DEMO-P18",
+          "quantity": 2,
+          "unitPriceMinor": 160000,
+          "lineTotalMinor": 320000
+        },
+        {
+          "productId": "DEMO-P05",
+          "quantity": 1,
+          "unitPriceMinor": 125000,
+          "lineTotalMinor": 125000
+        }
+      ],
+      "totalMinor": 445000
+    },
+    {
+      "id": "DEMO-S058",
+      "source": "preloaded",
+      "createdAt": "2026-10-07T12:00:00.000Z",
+      "customerId": "DEMO-C5",
+      "paymentMethod": "Transferencia",
+      "items": [
+        {
+          "productId": "DEMO-P10",
+          "quantity": 2,
+          "unitPriceMinor": 125000,
+          "lineTotalMinor": 250000
+        },
+        {
+          "productId": "DEMO-P17",
+          "quantity": 1,
+          "unitPriceMinor": 72500,
+          "lineTotalMinor": 72500
+        }
+      ],
+      "totalMinor": 322500
+    },
+    {
+      "id": "DEMO-S059",
+      "source": "preloaded",
+      "createdAt": "2026-10-07T12:01:00.000Z",
+      "customerId": "DEMO-C1",
+      "paymentMethod": "Efectivo",
+      "items": [
+        {
+          "productId": "DEMO-P13",
+          "quantity": 1,
+          "unitPriceMinor": 160000,
+          "lineTotalMinor": 160000
+        },
+        {
+          "productId": "DEMO-P20",
+          "quantity": 2,
+          "unitPriceMinor": 125000,
+          "lineTotalMinor": 250000
+        }
+      ],
+      "totalMinor": 410000
+    },
+    {
+      "id": "DEMO-S060",
+      "source": "preloaded",
+      "createdAt": "2026-10-07T12:02:00.000Z",
+      "customerId": "DEMO-C2",
+      "paymentMethod": "Tarjeta",
+      "items": [
+        {
+          "productId": "DEMO-P16",
+          "quantity": 2,
+          "unitPriceMinor": 35000,
+          "lineTotalMinor": 70000
+        },
+        {
+          "productId": "DEMO-P03",
+          "quantity": 1,
+          "unitPriceMinor": 160000,
+          "lineTotalMinor": 160000
+        }
+      ],
+      "totalMinor": 230000
+    }
+  ],
+  "initialNewUsage": {
+    "sales": 0,
+    "quotations": 0,
+    "stockAdjustments": 0
+  },
+  "newActionCapsApproved": {
+    "sales": 10,
+    "quotations": 5,
+    "stockAdjustments": 10
+  },
+  "chartReference": {
+    "totalMinor": 18877500,
+    "salesByDay": [
+      {
+        "date": "2026-09-08",
+        "totalMinor": 0,
+        "transactions": 0
+      },
+      {
+        "date": "2026-09-09",
+        "totalMinor": 237500,
+        "transactions": 1
+      },
+      {
+        "date": "2026-09-10",
+        "totalMinor": 640000,
+        "transactions": 2
+      },
+      {
+        "date": "2026-09-11",
+        "totalMinor": 1210000,
+        "transactions": 4
+      },
+      {
+        "date": "2026-09-12",
+        "totalMinor": 1070000,
+        "transactions": 3
+      },
+      {
+        "date": "2026-09-13",
+        "totalMinor": 0,
+        "transactions": 0
+      },
+      {
+        "date": "2026-09-14",
+        "totalMinor": 257500,
+        "transactions": 1
+      },
+      {
+        "date": "2026-09-15",
+        "totalMinor": 800000,
+        "transactions": 2
+      },
+      {
+        "date": "2026-09-16",
+        "totalMinor": 1115000,
+        "transactions": 4
+      },
+      {
+        "date": "2026-09-17",
+        "totalMinor": 962500,
+        "transactions": 3
+      },
+      {
+        "date": "2026-09-18",
+        "totalMinor": 0,
+        "transactions": 0
+      },
+      {
+        "date": "2026-09-19",
+        "totalMinor": 237500,
+        "transactions": 1
+      },
+      {
+        "date": "2026-09-20",
+        "totalMinor": 640000,
+        "transactions": 2
+      },
+      {
+        "date": "2026-09-21",
+        "totalMinor": 1210000,
+        "transactions": 4
+      },
+      {
+        "date": "2026-09-22",
+        "totalMinor": 1070000,
+        "transactions": 3
+      },
+      {
+        "date": "2026-09-23",
+        "totalMinor": 0,
+        "transactions": 0
+      },
+      {
+        "date": "2026-09-24",
+        "totalMinor": 257500,
+        "transactions": 1
+      },
+      {
+        "date": "2026-09-25",
+        "totalMinor": 800000,
+        "transactions": 2
+      },
+      {
+        "date": "2026-09-26",
+        "totalMinor": 1115000,
+        "transactions": 4
+      },
+      {
+        "date": "2026-09-27",
+        "totalMinor": 962500,
+        "transactions": 3
+      },
+      {
+        "date": "2026-09-28",
+        "totalMinor": 0,
+        "transactions": 0
+      },
+      {
+        "date": "2026-09-29",
+        "totalMinor": 237500,
+        "transactions": 1
+      },
+      {
+        "date": "2026-09-30",
+        "totalMinor": 640000,
+        "transactions": 2
+      },
+      {
+        "date": "2026-10-01",
+        "totalMinor": 1210000,
+        "transactions": 4
+      },
+      {
+        "date": "2026-10-02",
+        "totalMinor": 1070000,
+        "transactions": 3
+      },
+      {
+        "date": "2026-10-03",
+        "totalMinor": 0,
+        "transactions": 0
+      },
+      {
+        "date": "2026-10-04",
+        "totalMinor": 257500,
+        "transactions": 1
+      },
+      {
+        "date": "2026-10-05",
+        "totalMinor": 800000,
+        "transactions": 2
+      },
+      {
+        "date": "2026-10-06",
+        "totalMinor": 1115000,
+        "transactions": 4
+      },
+      {
+        "date": "2026-10-07",
+        "totalMinor": 962500,
+        "transactions": 3
+      }
+    ],
+    "salesByPayment": [
+      {
+        "name": "Efectivo",
+        "totalMinor": 6292500,
+        "count": 20
+      },
+      {
+        "name": "Tarjeta",
+        "totalMinor": 6292500,
+        "count": 20
+      },
+      {
+        "name": "Transferencia",
+        "totalMinor": 6292500,
+        "count": 20
+      }
+    ],
+    "topProducts": [
+      {
+        "productId": "DEMO-P10",
+        "name": "Pieza ficticia 10",
+        "totalSold": 16,
+        "totalRevenueMinor": 2000000
+      },
+      {
+        "productId": "DEMO-P18",
+        "name": "Pieza ficticia 18",
+        "totalSold": 16,
+        "totalRevenueMinor": 2560000
+      },
+      {
+        "productId": "DEMO-P08",
+        "name": "Pieza ficticia 8",
+        "totalSold": 14,
+        "totalRevenueMinor": 2240000
+      },
+      {
+        "productId": "DEMO-P20",
+        "name": "Pieza ficticia 20",
+        "totalSold": 14,
+        "totalRevenueMinor": 1750000
+      },
+      {
+        "productId": "DEMO-P02",
+        "name": "Pieza ficticia 2",
+        "totalSold": 12,
+        "totalRevenueMinor": 870000
+      }
+    ],
+    "lowStockProductIds": [
+      "DEMO-P01",
+      "DEMO-P08",
+      "DEMO-P15"
+    ]
+  }
+}

@@ -1,0 +1,41 @@
+Observed 2026-10-07; LOCAL Windows x64 Node 24.14.0; tested_code_sha=f5afaa23c54c968be249231f18e212b2b43a0c82
+Command: node --test scripts/http.test.js scripts/security.test.js scripts/localSetup.test.js scripts/setup-client.test.js
+No real database. Temporary directories and in-memory fakes only.
+
+✔ cloud API accepts its frontend, rejects other origins and reports database availability (54.7131ms)
+✔ local mode remains restricted to loopback and cloud origins are configurable (0.6197ms)
+✔ creates usable local settings and a secret without printing it (77.1136ms)
+✔ preserves a valid unquoted secret and the entire existing configuration (71.0838ms)
+✔ replaces a placeholder without changing the database (60.3595ms)
+✔ does not create local configuration in APP_MODE (56.7455ms)
+✔ does not create local configuration in VERCEL (63.6932ms)
+✔ does not create local configuration in RAILWAY_ENVIRONMENT (59.2895ms)
+✔ does not create local configuration in HEROKU_APP_NAME (61.5025ms)
+✔ does not modify an existing cloud configuration (61.3752ms)
+✔ refund includes item and invoice discounts and never exceeds payment (1.5339ms)
+✔ rejects duplicate, negative, fractional and excessive return quantities (0.3785ms)
+✔ groups repeated original sale lines and allocates the last cent (0.2172ms)
+✔ exchange price comes from catalog and requires positive integer quantity (0.221ms)
+✔ redacts nested credentials and audit change values (0.5355ms)
+✔ publication refuses private paths and exact locally configured secrets (0.5832ms)
+✔ search treats operators as text (0.1711ms)
+✔ accepts a valid local environment without exposing its values (1.5755ms)
+✔ accepts an Atlas SRV URI with a selected database (0.1847ms)
+✔ blocks cloud environments before a destructive setup (0.1968ms)
+✔ explains missing .env, invalid Mongo URI, JWT secret, and port (0.2155ms)
+✔ restores the original documents and removes collections created during a failed setup (3.7262ms)
+✔ discards an incomplete backup before any reset began (0.4802ms)
+✔ removes a committed backup without undoing the completed setup (0.6178ms)
+✔ preserves a pre-existing collection that conflicts with the reserved recovery name (0.5094ms)
+✔ refuses to reset capped collections before creating a backup or deleting data (0.2852ms)
+✔ does not proceed when the snapshot document count differs from the source (0.3438ms)
+✔ refuses automatic restoration if a required snapshot is missing (0.2949ms)
+✔ never restores data without a fresh recovery confirmation (0.3078ms)
+ℹ tests 29
+ℹ suites 0
+ℹ pass 29
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1978.5867

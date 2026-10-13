@@ -1,0 +1,44 @@
+{"sha":"86a31efb794a7d149ef82094a70bf5cfc6f33379","environment":"Linux ARM64 PostgreSQL18.6 Node24.21.0","time":"2026-10-13T04:09:05.769Z","exitCode":0}
+✔ API cannot advance time, replace generation, change policy or lift barrier (707.393871ms)
+✔ old SERIALIZABLE snapshot cannot admit after a physically committed clock advance (129.399625ms)
+✔ two independent API owners share the final ordinary slot and FIFO without duplicate HTTP charge (384.559755ms)
+✔ fresh authority rejection during claim never runs work and waiting can be rejected safely (87.371017ms)
+✔ HTTP retry and polling count new HTTP admissions, jobs consume work without fictitious HTTP (399.838413ms)
+✔ auth and operator use finite separate envelopes without a forged tenant (181.294909ms)
+✔ policy CAS and audit commit atomically; duplicate mismatch and usage-only operator denied (37.625678ms)
+✔ uncertain work retains its reservation and never releases from heartbeat expiry (282.137644ms)
+✔ real SQL COMMIT with lost client acknowledgement leaves one ticket and no blind retry (195.440234ms)
+✔ override expiry versions the base policy while preserving usage and live history (9.434389ms)
+✔ quota reduction reuses the same live window and rejects at the reduced HTTP ceiling (499.936097ms)
+✔ expired waiting ticket has no work, returns reserves, and never refunds an admitted HTTP attempt (74.578908ms)
+✔ verified identity, membership and action authorize only own company using fresh SQL snapshots (2022.176131ms)
+✔ valid authenticated demo/operator sessions are forbidden from company catalogue (2991.46797ms)
+✔ logout committed on API A defeats a late standard-store upsert observed by API B (1632.7696ms)
+✔ rotation revokes old SID before late save and new SID retains authority (1598.830965ms)
+✔ no store-only SID or reused registry SID acquires authority (1582.308212ms)
+✔ identity revocation is visible after COMMIT on the other authority connection (1690.317149ms)
+✔ grant revocation denies the next direct authorization without implied role permissions (1685.592814ms)
+✔ absolute, inactivity and demo caps remain enforced even before purge (7221.50311ms)
+✔ wrong generation and attempted revocation of someone else fail closed (2993.517672ms)
+✔ central outage produces an error, never a cached positive authorization (1617.507661ms)
+✔ role policy revocation removes the tenant from the list as well as denying catalogue (1685.696134ms)
+✔ PG18.6 role connections authenticate with TLS and durability enabled (607.069023ms)
+✔ same product UUID returns different fictitious contents through bounded tenant pools (99.249635ms)
+✔ A credentials cannot connect to B, demo, central or maintenance databases (302.789683ms)
+✔ HBA rejects plaintext and a TLS connection with an untrusted CA (31.270364ms)
+✔ tenant credentials cannot write, create, become another role or add extensions (683.384592ms)
+✔ API and session store cannot alter identity, permissions or authoritative sessions (315.690193ms)
+✔ measurement grants expose four fixed physical sizes and no business content (267.130508ms)
+✔ private SQL allowlist produces bounded technical projection without query/business canaries (293.93522ms)
+✔ projection retries deduplicate and API cannot mutate measurements or quota (104.435376ms)
+✔ two samples of the same series in one flush preserve the most recent gauge (36.465864ms)
+ℹ tests 33
+ℹ suites 0
+ℹ pass 33
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 33918.540083
+ Container mecanet-qa-p1l1-harness-run-230e52971db6 Creating
+ Container mecanet-qa-p1l1-harness-run-230e52971db6 Created

@@ -1,0 +1,17 @@
+Observed 2026-10-07; LOCAL Windows x64 Node 24.14.0; tested_code_sha=f5afaa23c54c968be249231f18e212b2b43a0c82
+VITEST_REAL_API=false; REAL_API=false
+Command: npm --prefix client run test:run -- src/__tests__/unit src/__tests__/integration
+Mock API. E2E excluded; not proof of production or tenant isolation.
+
+
+> mecanet-client@2.0.1 test:run
+> vitest run src/__tests__/unit src/__tests__/integration
+
+
+ RUN  v4.1.11 C:/Users/thede/Desktop/Proyectos de programacion/MECANET-develop/client
+
+
+ Test Files  9 passed (9)
+      Tests  61 passed (61)
+   Start at  13:13:01
+   Duration  19.53s (transform 2.00s, setup 34.89s, import 1.66s, tests 915ms, environment 81.44s)

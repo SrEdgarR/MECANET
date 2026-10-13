@@ -1,0 +1,74 @@
+name: P1-L1 verification
+
+on:
+  pull_request:
+    branches: [develop]
+  push:
+    branches: [develop, codex/integrate-p1-l1]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: p1-l1-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  local-contract:
+    name: Local contracts, frontend and dependency audit
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    env:
+      CI: 'true'
+      REAL_API: 'false'
+      VITEST_REAL_API: 'false'
+    steps:
+      - name: Checkout without persisted credentials
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
+        with:
+          persist-credentials: false
+
+      - name: Use the approved Node runtime
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: '24.21.0'
+          package-manager-cache: false
+
+      - name: Check the exact toolchain
+        run: |
+          node --version
+          npm --version
+          test "$(node --version)" = "v24.21.0"
+          test "$(npm --version)" = "11.9.0"
+          node scripts/ci/p1-l1.mjs provenance
+
+      - name: Install locked backend dependencies without lifecycle scripts
+        run: npm ci --prefix server/saas --ignore-scripts --no-audit --no-fund
+
+      - name: Install locked frontend dependencies without lifecycle scripts
+        run: npm ci --prefix client --ignore-scripts --no-audit --no-fund
+
+      - name: Check JavaScript syntax
+        run: node scripts/ci/p1-l1.mjs syntax
+
+      - name: Run the explicit local contract suite
+        run: node scripts/ci/p1-l1.mjs test
+
+      - name: Check pure QA controller regressions
+        run: python3 -X utf8 tests/qa/cp014/host-regression.py
+
+      - name: Verify the isolated SaaS frontend
+        run: node scripts/ci/p1-l1.mjs frontend
+
+      - name: Verify the existing receipt sanitizer after its dependency fix
+        run: node scripts/ci/p1-l1.mjs sanitizer
+
+      - name: Audit backend runtime dependencies
+        run: npm audit --prefix server/saas --omit=dev
+
+      - name: Audit frontend runtime dependencies
+        run: npm audit --prefix client --omit=dev
+
+      - name: Audit frontend tooling dependencies as well
+        if: ${{ !cancelled() }}
+        run: npm audit --prefix client

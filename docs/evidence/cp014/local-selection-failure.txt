@@ -1,0 +1,82 @@
+✔ private clock waits from confirmed commit and never catches up elapsed ticks (3.5047ms)
+✔ lost clock COMMIT cannot be repeated before a fresh reconciliation and delay (1.8614ms)
+✔ restart must acquire the expected owner and cannot steal via an expiry (0.6965ms)
+✔ a timeout, missing runner or incomplete SQL end never releases an uncertain reservation (2.0412ms)
+✔ first start requires untouched clock and exact trusted ownership attestation (2.2902ms)
+✔ restarting never substitutes lease timeout for previous process stop evidence (1.703ms)
+✔ ordinary budget contains the essential share; it does not add capacity (1.5829ms)
+✔ scope construction accepts only an accredited UUID and fixed lane (1.0302ms)
+✔ 601/11 conservative windows retain the oldest boundary bucket (0.3187ms)
+✔ live byte and work reservations survive an empty consumption window (0.3092ms)
+✔ a policy reduction never resets existing debt (0.214ms)
+✔ overrides are exact allowlist and bounded, not an unlimited policy (0.3576ms)
+✔ clock is not ready until observed progress and closes after one monotonic second (0.2211ms)
+✔ clock regression and barrier do not refill the budget (0.1594ms)
+✔ serialization retry rolls back the entire transaction and never releases dirty client (12.3387ms)
+✔ lost COMMIT acknowledgement is uncertain and never repeats the work (1.2087ms)
+✔ persistent conflicts stop at three attempts (9.4551ms)
+✔ a stalled pool acquisition observes the complete control deadline and releases a late client (25.3611ms)
+✔ a stalled SQL control command destroys the connection at the complete deadline (24.2766ms)
+✔ deadline 503 retains uncertain capacity when tenant-work settles after the external response (8036.6709ms)
+✔ deadline 503 retains uncertain capacity when byte-accounting settles after the external response (8016.4598ms)
+✔ login acotado no acepta objetos, claves extra ni correo no válido (1.605ms)
+✔ origen/host exacto y Referer solo alternativa verificable (0.4535ms)
+✔ consulta solo acepta cursor UUID y límite entero acotado (2.2072ms)
+✔ clock diagnostics disclose only a phase, allowed cause code and closed state (1.7856ms)
+✔ unknown codes and phases cannot smuggle sensitive error text into a clock log (0.5642ms)
+✔ private transaction costs and conflicts are sanitized and retain driver semantics (3.3158ms)
+✔ transaction tracing is bounded and rejects a path or identity outside exclusive QA (44.1689ms)
+✖ CP014 boundaries: real two-process authentication and purpose boundaries (3.9338ms)
+✔ failed explicit session persistence after registry commit cannot auto-save an authenticated cookie in a 503 response (37.1769ms)
+✔ preparer rejects missing ownership or non-synthetic target before connecting (1.5508ms)
+✔ private fixture has four identities and same UUID with distinct A/B contents (1.2276ms)
+✔ HBA contains exact TLS SCRAM pairs, deny-all and no public subnet (0.937ms)
+✔ concurrent acquisition opens one pool and never exceeds two leases (7.8797ms)
+✔ rotation drains old leases before replacement without duplicating quota (1.8141ms)
+✔ full cache refuses a fifth borrowed tenant and evicts only idle pools (2.5917ms)
+✔ invalid purpose/status and mismatched secret never create a pool (0.5574ms)
+✔ secret resolver rejects unlisted reference, epoch and unsafe TLS without fallback (0.5786ms)
+✔ close refuses new leases, waits active callbacks and frees failed clients (1.3686ms)
+✔ shutdown waits for an in-progress pool creation and closes it (0.7146ms)
+✔ projection is an explicit allowlist; business content and secrets cannot survive (1.901ms)
+✔ unavailable measurement has null value, never fictitious zero (0.1985ms)
+✔ scope/metric/source/quality/cardinality and tenant CPU attribution are denied (0.3036ms)
+✔ buffer is finite during publisher failure and records coverage loss (1.019ms)
+✔ flush is bounded and serial; uncertain delivery reuses the same batch identity (0.4589ms)
+✔ only one asynchronous sample can run and stop prevents new collection (0.2556ms)
+✔ a new process sampler marks its first CPU and RSS samples as a discontinuity (0.792ms)
+✔ projection readers distinguish a restarted producer from its preceding generation (0.3749ms)
+✔ permite solamente recursos exclusivos dentro del sobre (0.8783ms)
+✔ aborta capacidad, destino, red, puerto o autoridad insuficientes antes de I/O (0.347ms)
+✔ journal persists intent before result, verifies chain and resumes at exact anchor (21.2683ms)
+✔ journal rejects competing writer, unknown result, excessive target and changed anchor (10.4073ms)
+✔ tampering, sequence holes, truncated records and dropped tail block verification (10.256ms)
+✔ an unresolved durable intent is replayed restrictively and replay failure stays closed (10.1325ms)
+✔ physical restore keeps system ID but requires distinct destination and closed source (0.5559ms)
+✔ credential candidate contains exactly the private login roles with distinct 32-byte secrets (0.4019ms)
+✔ credential rotation rejects incomplete, extra or unsafe candidates before opening SQL (0.7807ms)
+✔ credential rotation applies the supplied custody candidate exactly and returns no secrets (0.4258ms)
+ℹ tests 58
+ℹ suites 0
+ℹ pass 57
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 16331.861
+
+✖ failing tests:
+
+test at tests\qa\cp014\auth-http.test.mjs:16:1
+✖ CP014 boundaries: real two-process authentication and purpose boundaries (3.9338ms)
+  Error: ENOENT: no such file or directory, open 'C:\run\qa-secrets\connections.json'
+      at async open (node:internal/fs/promises:1345:25)
+      at async readFile (node:internal/fs/promises:1996:14)
+      at async TestContext.<anonymous> (file:///C:/Users/thede/Desktop/Proyectos%20de%20programacion/MECANET-develop/tests/qa/cp014/auth-http.test.mjs:17:26)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    errno: -4058,
+    code: 'ENOENT',
+    syscall: 'open',
+    path: 'C:\\run\\qa-secrets\\connections.json'
+  }

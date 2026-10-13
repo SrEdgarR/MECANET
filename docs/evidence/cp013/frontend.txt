@@ -1,0 +1,9 @@
+{"sha":"86a31efb794a7d149ef82094a70bf5cfc6f33379","node":"v24.21.0","time":"2026-10-13T04:13:41.115Z","exitCode":0}
+
+ RUN  v4.1.11 C:/Users/thede/Desktop/Proyectos de programacion/MECANET-develop/client
+
+
+ Test Files  3 passed (3)
+      Tests  19 passed (19)
+   Start at  00:13:39
+   Duration  1.78s (transform 163ms, setup 684ms, import 311ms, tests 776ms, environment 2.00s)

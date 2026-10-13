@@ -1,0 +1,47 @@
+import test, { after } from 'node:test';
+import assert from 'node:assert/strict';
+import { randomUUID } from 'node:crypto';
+import { readFile } from 'node:fs/promises';
+import { createPgPool } from '../../server/saas/db/pools.js';
+import { createProjectionRepository, createDatabaseSampler } from '../../server/saas/observability/repository.js';
+import { ProjectionProducer } from '../../server/saas/observability/producer.js';
+const path=process.env.MECANET_QA_CONNECTIONS??'/run/qa-secrets/connections.json';
+if(!path.startsWith('/run/qa-secrets/'))throw new Error('QA_PRIVATE_CONNECTIONS_PATH_REQUIRED');
+const qa=JSON.parse(await readFile(path,'utf8'));
+const pool=await createPgPool({...qa.connections.saas_measure,max:1,connectionTimeoutMillis:2000,statement_timeout:2000});
+const api=await createPgPool({...qa.connections.saas_api,max:1,connectionTimeoutMillis:2000,statement_timeout:2000});
+after(async()=>Promise.all([pool.end(),api.end()]));
+const scopes=new Set(['control','demo','tenant:11111111-1111-4111-8111-111111111111','tenant:22222222-2222-4222-8222-222222222222','tenant:33333333-3333-4333-8333-333333333333']);
+test('private SQL allowlist produces bounded technical projection without query/business canaries',async()=>{
+  const repo=createProjectionRepository({pool,scopes});
+  const samples=await createDatabaseSampler({pool,scopes})();
+  assert.equal(samples.length,4);assert.ok(samples.every(x=>x.quality==='DIRECT'&&x.value>0));
+  const producer=new ProjectionProducer({scopes,generation:qa.generation,sourceId:'qa-measure-worker',publish:repo.publish});
+  for(const sample of samples)producer.add({...sample,password:'CANARY_SECRET',sales:'CANARY_SALE',sql:'CANARY_QUERY'});
+  assert.equal(await producer.flush(),true);
+  const reader=createProjectionRepository({pool:api,scopes});
+  const rows=await reader.read({scope:samples[0].scope,authorized:true});
+  assert.ok(rows.length>=2);assert.doesNotMatch(JSON.stringify(rows),/CANARY/);
+  await assert.rejects(reader.read({scope:samples[0].scope,authorized:false}),{status:403});
+});
+test('projection retries deduplicate and API cannot mutate measurements or quota',async()=>{
+  const repo=createProjectionRepository({pool,scopes});
+  const samples=await createDatabaseSampler({pool,scopes})();
+  const batch={sourceId:`qa-${randomUUID()}`,generation:qa.generation,sequence:1,samples};
+  await repo.publish(batch);await repo.publish(batch);
+  const {rows:[count]}=await pool.query('SELECT count(*)::int AS n FROM saas.usage_projection WHERE source_id=$1 AND generation=$2',[batch.sourceId,qa.generation]);
+  assert.equal(count.n,8);
+  await assert.rejects(api.query('DELETE FROM saas.usage_projection'),{code:'42501'});
+  await assert.rejects(pool.query("UPDATE saas.policies SET limits='{}'::jsonb"),{code:'42501'});
+  await assert.rejects(pool.query('SELECT email FROM saas.identities'),{code:'42501'});
+});
+test('two samples of the same series in one flush preserve the most recent gauge',async()=>{
+  const repo=createProjectionRepository({pool,scopes});
+  const base={scope:'control',metric:'db.physical_bytes',unit:'bytes',source:'postgres.size',quality:'DIRECT',coverage:1};
+  const start=new Date();start.setUTCSeconds(0,0);
+  const samples=[{...base,value:111,asOf:start.toISOString()},{...base,value:222,asOf:new Date(start.getTime()+1).toISOString()}];
+  const batch={sourceId:`qa-${randomUUID()}`,generation:qa.generation,sequence:1,samples};
+  await repo.publish(batch);await repo.publish(batch);
+  const rows=(await pool.query('SELECT value,as_of FROM saas.usage_projection WHERE source_id=$1 AND generation=$2',[batch.sourceId,qa.generation])).rows;
+  assert.equal(rows.length,2);assert.ok(rows.every(r=>r.value===222));
+});

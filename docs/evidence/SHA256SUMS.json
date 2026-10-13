@@ -1,0 +1,55 @@
+{
+  "date": "2026-10-07",
+  "provenance": "LOCAL",
+  "scope": "Evidence and immutable methodology copy only; no self-hash or generated-map cycle",
+  "files": [
+    {
+      "file": "docs/methodology/Prompt_Maestro_v2.0.md",
+      "sha256": "d2dafd5f75df32aae33e421953fab6e99e723aa88744b918b555562c7b6a550d"
+    },
+    {
+      "file": "docs/evidence/CP-001-browser-checks.md",
+      "sha256": "b1049a18bc35df21310602218c610bc7088903c6efe273cf395274b730d5f479"
+    },
+    {
+      "file": "docs/evidence/CP-001-client-tests.txt",
+      "sha256": "8e8526d71fb6aebcab78fa3b35999055132c8abdf6d60b602fa3dfc7d2b03ad7"
+    },
+    {
+      "file": "docs/evidence/CP-001-document-checks.md",
+      "sha256": "c3bd37b2b253922f2dc400764efb33353fb2b3e57230c24f7a6320f747322a97"
+    },
+    {
+      "file": "docs/evidence/CP-001-index-inventory.json",
+      "sha256": "be572e1167c7004064d833b9959b41f6359fdf134000b0f9d0f49171ed4cdfa6"
+    },
+    {
+      "file": "docs/evidence/CP-001-root-tests.txt",
+      "sha256": "1c7e5707ce39a1c82857b2d8dc50e9403b2f1fd106d9660b353d85786dbb28ff"
+    },
+    {
+      "file": "docs/evidence/CP-001-vps.txt",
+      "sha256": "43bc0090ab38279d18d9ae50d7cc3ca9c288a99882bf1629e289143136767973"
+    },
+    {
+      "file": "docs/evidence/SOURCES.md",
+      "sha256": "674c5231e26291c17a7219c85e3db42f0927cf77753c72262f6a6fe4dd3078e5"
+    },
+    {
+      "file": "docs/evidence/ui/current-app.jpg",
+      "sha256": "d63390d0b236768548274c28a5705655ae43989aaa23098270b4b92507dbc065"
+    },
+    {
+      "file": "docs/evidence/ui/current-public.jpg",
+      "sha256": "c3b77ecee82eac0bab7e954e7036cb15ce4a787c4284cb7e899cb9c98d5a8234"
+    },
+    {
+      "file": "docs/evidence/ui/map-desktop.jpg",
+      "sha256": "83c82e45c122525145491694abb4398ebc1fcfd2c616b832f8bf83b0d7368b89"
+    },
+    {
+      "file": "docs/evidence/ui/map-mobile.jpg",
+      "sha256": "6afabffd9d0afc401c448af27862f49af5e7b1380d17d03471d7683ce1b5097e"
+    }
+  ]
+}

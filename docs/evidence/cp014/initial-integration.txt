@@ -1,0 +1,38 @@
+{"time": "2026-10-13T13:07:40Z", "result": "PASS", "ownRunning": 5, "otherContainersPreserved": 10, "cpuLimit": 0.95, "memoryLimitMiB": 1568.0, "published": "No remote TCP port; own Unix socket via SSH to local 127.0.0.1:18443", "probes": [{"name": "internet-v4", "result": "BLOCKED"}, {"name": "metadata", "result": "BLOCKED"}, {"name": "internet-v6", "result": "BLOCKED"}, {"name": "other-network-0", "result": "BLOCKED"}, {"name": "other-network-1", "result": "BLOCKED"}, {"name": "other-network-2", "result": "BLOCKED"}, {"name": "other-network-3", "result": "BLOCKED"}], "limit": "Finite TCP probes, not an exhaustive network penetration test"}
+ Container mecanet-qa-p1l1-cp014-probe-run-2fd5364a48ac Creating
+ Container mecanet-qa-p1l1-cp014-probe-run-2fd5364a48ac Created
+{"stage":"before","time":"2026-10-13T13:07:43.392Z","worker":{"clockOwner":"c8d7984a-d06d-43df-8192-1a44ec37bbc9","controlGeneration":"47557dab-4f7d-49a3-80d2-1003d3a46159","tick":"4399","latestSamples":[{"source_id":"qa-private-worker","generation":"c8d7984a-d06d-43df-8192-1a44ec37bbc9","metric":"service.cpu_usec","unit":"microseconds","source":"process.self","quality":"DIRECT","asOf":"2026-10-13T13:07:24.762Z","coverage":1,"discontinuity":true,"granularity":"minute"},{"source_id":"qa-private-worker","generation":"c8d7984a-d06d-43df-8192-1a44ec37bbc9","metric":"service.rss_bytes","unit":"bytes","source":"process.self","quality":"DIRECT","asOf":"2026-10-13T13:07:24.762Z","coverage":1,"discontinuity":true,"granularity":"minute"}],"firstCpuAndRssDiscontinuous":true},"sourceAndGenerationVisible":true,"qualityAndAsOfPresent":true,"tenantCpuAttribution":false,"result":"PASS"}
+ Container mecanet-qa-p1l1-cp014-probe-run-9a983c05ae14 Creating
+ Container mecanet-qa-p1l1-cp014-probe-run-9a983c05ae14 Created
+✖ CP014 boundaries: real two-process authentication and purpose boundaries (4244.720371ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 0
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 9299.933436
+
+✖ failing tests:
+
+test at tests/qa/cp014/auth-http.test.mjs:16:1
+✖ CP014 boundaries: real two-process authentication and purpose boundaries (4244.720371ms)
+  AssertionError [ERR_ASSERTION]: Expected HTTP 200, received 503/SERVICE_UNAVAILABLE
+
+  503 !== 200
+
+      at assertStatus (file:///workspace/tests/qa/cp014/http-client.mjs:37:9)
+      at Object.loginStandard [as login] (file:///workspace/tests/qa/cp014/http-client.mjs:30:69)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Promise.all (index 1)
+      at async TestContext.<anonymous> (file:///workspace/tests/qa/cp014/auth-http.test.mjs:35:17)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 503,
+    expected: 200,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

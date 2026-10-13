@@ -1,0 +1,91 @@
+{
+  "environment": "private QA via loopback tunnel; real API",
+  "startedAt": "2026-10-13T04:10:05.340Z",
+  "node": "v24.21.0",
+  "checks": [
+    {
+      "name": "TLS: exact QA CA, hostname and SPKI validated by Node",
+      "result": "PASS"
+    },
+    {
+      "name": "TLS: an unrelated public CA rejects the QA certificate",
+      "result": "PASS"
+    },
+    {
+      "name": "TLS: a wrong hostname rejects the QA certificate",
+      "result": "PASS"
+    },
+    {
+      "name": "Login: labeled fields, keyboard and safe invalid-credential feedback",
+      "result": "PASS"
+    },
+    {
+      "name": "Company selector reaches its real PostgreSQL catalog with keyboard",
+      "result": "PASS"
+    },
+    {
+      "name": "Session cookies are Secure, HttpOnly, Lax and host-only",
+      "result": "PASS"
+    },
+    {
+      "name": "Direct API: another company is denied and missing CSRF cannot log out",
+      "result": "PASS"
+    },
+    {
+      "name": "Layout 320px: square controls, contained document and complete keyboard navigation",
+      "result": "PASS"
+    },
+    {
+      "name": "Layout 768px: square controls, contained document and complete keyboard navigation",
+      "result": "PASS"
+    },
+    {
+      "name": "Layout 1440px: square controls, contained document and complete keyboard navigation",
+      "result": "PASS"
+    },
+    {
+      "name": "Dark mode preserves square layout and reduced motion",
+      "result": "PASS"
+    },
+    {
+      "name": "Text enlarged to 200% reflows without document overflow (not browser zoom)",
+      "result": "PASS"
+    },
+    {
+      "name": "Deep link reload revalidates before displaying its catalog",
+      "result": "PASS"
+    },
+    {
+      "name": "Logout revokes the browser session and removes company data",
+      "result": "PASS"
+    },
+    {
+      "name": "Browser: no JavaScript exception or external application request",
+      "result": "PASS"
+    }
+  ],
+  "screenshots": [
+    "catalog-320.png",
+    "catalog-768.png",
+    "catalog-1440.png",
+    "catalog-dark.png",
+    "catalog-text-200-percent.png"
+  ],
+  "chromium": "156.0.8078.4",
+  "result": "PASS",
+  "finishedAt": "2026-10-13T04:10:16.175Z",
+  "httpCounts": {
+    "GET /api/auth/session 200": 3,
+    "POST /api/auth/login 401": 1,
+    "POST /api/auth/login 200": 1,
+    "GET /api/tenants 200": 2,
+    "POST /api/auth/activity 200": 2,
+    "GET /api/tenants/:tenantId/catalog 200": 3,
+    "GET /api/tenants/:tenantId/catalog 403": 1,
+    "POST /api/auth/logout 403": 1,
+    "GET /api/not-a-route 404": 1,
+    "POST /api/auth/logout 200": 1,
+    "GET /api/tenants/:tenantId/catalog 401": 1
+  },
+  "testedCodeSha": "86a31efb794a7d149ef82094a70bf5cfc6f33379"
+}

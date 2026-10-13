@@ -1,0 +1,225 @@
+{
+  "checkpoint": "CP-015",
+  "at": "2026-10-13T15:52:22.252697+00:00",
+  "provenance": "LOCAL Git + REMOTE GitHub API + Vercel connector/UI + Coolify read-only SQL",
+  "githubAccount": {
+    "login": "SrEdgarR"
+  },
+  "repo": "SrEdgarR/MECANET",
+  "remote": "https://github.com/SrEdgarR/MECANET.git",
+  "sourceHead": "9fcdd9540848edbbdef1cfc94667491c9ab2ba92",
+  "defaultBranch": "develop",
+  "permissions": {
+    "admin": true,
+    "maintain": true,
+    "pull": true,
+    "push": true,
+    "triage": true
+  },
+  "develop": "010aab670c638d168c971df3e3e53b97e72ff443",
+  "sourceBranch": "codex/saas-discovery",
+  "sourceMergeBaseDevelop": "010aab670c638d168c971df3e3e53b97e72ff443",
+  "sourceMergeBaseLegacyPR": "f5afaa23c54c968be249231f18e212b2b43a0c82",
+  "legacyCommits": [
+    "3deccdfd307ff4cd186a9c6e6ceb78cc04566125",
+    "f5afaa23c54c968be249231f18e212b2b43a0c82"
+  ],
+  "remoteSaasBranch": "",
+  "legacyPR": {
+    "baseRefName": "develop",
+    "baseRefOid": "010aab670c638d168c971df3e3e53b97e72ff443",
+    "files": [
+      {
+        "path": ".dockerignore",
+        "additions": 26,
+        "deletions": 0,
+        "changeType": "ADDED"
+      },
+      {
+        "path": ".env.example",
+        "additions": 7,
+        "deletions": 0,
+        "changeType": "MODIFIED"
+      },
+      {
+        "path": ".gitignore",
+        "additions": 1,
+        "deletions": 0,
+        "changeType": "MODIFIED"
+      },
+      {
+        "path": "DEPLOYMENT.md",
+        "additions": 103,
+        "deletions": 0,
+        "changeType": "ADDED"
+      },
+      {
+        "path": "Dockerfile",
+        "additions": 29,
+        "deletions": 0,
+        "changeType": "ADDED"
+      },
+      {
+        "path": "README.md",
+        "additions": 12,
+        "deletions": 34,
+        "changeType": "MODIFIED"
+      },
+      {
+        "path": "client/.env.example",
+        "additions": 3,
+        "deletions": 0,
+        "changeType": "MODIFIED"
+      },
+      {
+        "path": "client/src/pages/Settings.jsx",
+        "additions": 8,
+        "deletions": 37,
+        "changeType": "MODIFIED"
+      },
+      {
+        "path": "client/src/services/api.js",
+        "additions": 1,
+        "deletions": 1,
+        "changeType": "MODIFIED"
+      },
+      {
+        "path": "client/vercel.json",
+        "additions": 11,
+        "deletions": 6,
+        "changeType": "MODIFIED"
+      },
+      {
+        "path": "config/http.js",
+        "additions": 37,
+        "deletions": 0,
+        "changeType": "ADDED"
+      },
+      {
+        "path": "package.json",
+        "additions": 1,
+        "deletions": 0,
+        "changeType": "MODIFIED"
+      },
+      {
+        "path": "scripts/http.test.js",
+        "additions": 66,
+        "deletions": 0,
+        "changeType": "ADDED"
+      },
+      {
+        "path": "server.js",
+        "additions": 20,
+        "deletions": 45,
+        "changeType": "MODIFIED"
+      },
+      {
+        "path": "web/favicon.svg",
+        "additions": 1,
+        "deletions": 0,
+        "changeType": "ADDED"
+      },
+      {
+        "path": "web/index.html",
+        "additions": 96,
+        "deletions": 0,
+        "changeType": "ADDED"
+      },
+      {
+        "path": "web/robots.txt",
+        "additions": 3,
+        "deletions": 0,
+        "changeType": "ADDED"
+      },
+      {
+        "path": "web/sitemap.xml",
+        "additions": 2,
+        "deletions": 0,
+        "changeType": "ADDED"
+      },
+      {
+        "path": "web/styles.css",
+        "additions": 101,
+        "deletions": 0,
+        "changeType": "ADDED"
+      },
+      {
+        "path": "web/vercel.json",
+        "additions": 17,
+        "deletions": 0,
+        "changeType": "ADDED"
+      }
+    ],
+    "headRefName": "codex/deploy-vercel-coolify",
+    "headRefOid": "f5afaa23c54c968be249231f18e212b2b43a0c82",
+    "isDraft": true,
+    "number": 1,
+    "state": "OPEN",
+    "statusCheckRollup": [
+      {
+        "__typename": "CheckRun",
+        "completedAt": "2026-10-07T16:41:26Z",
+        "conclusion": "SUCCESS",
+        "detailsUrl": "https://vercel.com/github",
+        "name": "Vercel Preview Comments",
+        "startedAt": "2026-10-07T16:41:26Z",
+        "status": "COMPLETED",
+        "workflowName": ""
+      },
+      {
+        "__typename": "StatusContext",
+        "context": "Vercel \u2013 mecanet-app",
+        "startedAt": "2026-10-07T16:41:25Z",
+        "state": "SUCCESS",
+        "targetUrl": "https://vercel.com/mr-xpras-projects/mecanet-app/8fkcZXdkL9E7j9bQ5KkFDfJri7nS"
+      },
+      {
+        "__typename": "StatusContext",
+        "context": "Vercel \u2013 mecanet-web",
+        "startedAt": "2026-10-07T16:40:44Z",
+        "state": "SUCCESS",
+        "targetUrl": "https://vercel.com/mr-xpras-projects/mecanet-web/67WVkwxzeuKMkKKLn91eyMQytsYr"
+      }
+    ],
+    "title": "Deploy Mecanet frontend to Vercel and API to Coolify",
+    "url": "https://github.com/SrEdgarR/MECANET/pull/1"
+  },
+  "workflows": [],
+  "rulesets": [],
+  "hooksCount": 0,
+  "developProtected": false,
+  "coolify": {
+    "source": "docker exec coolify-db psql read-only SELECT of application_settings; no environment/secret columns",
+    "name": "mecanet-api",
+    "git_repository": "SrEdgarR/MECANET.git",
+    "git_branch": "codex/deploy-vercel-coolify",
+    "build_pack": "dockerfile",
+    "is_auto_deploy_enabled": false,
+    "is_preview_deployments_enabled": false,
+    "modified": false
+  },
+  "vercel": {
+    "source": "get_project/list_projects connector + focused Git settings page",
+    "team": "mr-xpras-projects",
+    "projects": [
+      "mecanet-app",
+      "mecanet-web"
+    ],
+    "gitSettingsExposedByConnector": false,
+    "gitSettingsBrowser": "LOGIN_REQUIRED",
+    "historicalPRPreviews": "Vercel app/web checks on PR1 dated2026-10-07; not proof of present trigger configuration",
+    "safePushPRMerge": "NOT VERIFIED",
+    "modified": false
+  },
+  "remoteMutations": {
+    "push": false,
+    "newPR": false,
+    "merge": false,
+    "workflowExecution": false,
+    "integrationChanges": false
+  },
+  "operationStopped": "push/PR/merge only: current Vercel Git deployment conditions not observable; no deployment waiver inferred",
+  "integrationWorktree": "C:\\Users\\thede\\.codex\\worktrees\\p1l1-integration\\MECANET-develop",
+  "integrationBranch": "codex/integrate-p1-l1",
+  "integrationBase": "010aab670c638d168c971df3e3e53b97e72ff443"
+}

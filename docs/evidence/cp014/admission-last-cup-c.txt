@@ -1,0 +1,16 @@
+{"type":"qa-api-error","requestId":"01d3a531-85ea-49e9-81b9-b40ee932726a","code":"ACCESS_DENIED","status":403}
+{"type":"qa-api-error","requestId":"3d6bfab7-32b1-49d3-855c-b2be171f1707","code":"ACCESS_DENIED","status":403}
+{"type":"qa-api-error","requestId":"ab90712b-57db-4da6-96e3-70b068d54c4f","code":"ACCESS_DENIED","status":403}
+{"type":"qa-api-error","requestId":"67a4ac74-a1d9-4a49-9eef-29367dc42d17","code":"INVALID_TENANT","status":400}
+{"type":"qa-api-error","requestId":"cf49da62-a2ca-40d7-8bff-854451b924e4","code":"INVALID_QUERY","status":400}
+{"type":"qa-api-error","requestId":"a11357d4-d746-45c0-95e1-10948f1ad002","code":"INVALID_QUERY","status":400}
+{"type":"qa-api-error","requestId":"cfae0f22-cd7e-410a-b420-bf7821167bf5","code":"INVALID_QUERY","status":400}
+{"type":"qa-api-error","requestId":"45e32e82-c52f-4e67-b62f-86e36617cbae","code":"UNCLASSIFIED","status":400}
+{"type":"qa-api-error","requestId":"a015bce5-1cef-4542-a360-4f7a4578d58b","code":"SESSION_EXPIRED","status":401}
+{"type":"qa-api-error","requestId":"b4bf8e68-94ea-4471-ad68-bcc4e7b11847","code":"UNCLASSIFIED","status":503}
+{"type":"qa-api-error","requestId":"c2a14eea-b37e-4691-8de9-d0538a5c919d","code":"SESSION_EXPIRED","status":401}
+{"type":"qa-api-error","requestId":"2703e65a-fec1-4cf5-9ea7-ac4990899898","code":"SESSION_EXPIRED","status":401}
+ Container mecanet-qa-p1l1-cp014-probe-run-cc5e543067c5 Creating
+ Container mecanet-qa-p1l1-cp014-probe-run-cc5e543067c5 Created
+{"criterion":"HTTP_TWO_API_LAST_CUP_AGGREGATE_LEDGER","status":"PASS","twoApiOwners":2,"admitted":2,"denied":1,"qhDelta":2,"qcDelta":2,"qtDelta":904,"chargedScopes":4}
+{"phase":"last-cup","status":"FAIL","code":"ERR_ASSERTION","assertion":"The expression evaluated to a falsy value:"}

@@ -1,0 +1,27 @@
+{
+  "pgVerifybackupExitCode": 0,
+  "toolVersion": "18.6",
+  "toolVersionOutput": "pg_verifybackup (PostgreSQL) 18.6 (Debian 18.6-1.pgdg12+2)",
+  "manifestSha256": "d8f4cb3c7d42a479516969b33eb3ab9d21af1f398738a3c95fd94c6cb10801ae",
+  "dimensions": {
+    "bytes": 73911359,
+    "files": 2285
+  },
+  "walBefore": {
+    "other_tablespaces": 0,
+    "max_wal_size": "512MB",
+    "wal_bytes": 33554432
+  },
+  "elapsedSeconds": 7.197,
+  "headroomBefore": {
+    "availableMemoryBytes": 8695889920,
+    "diskFreeBytes": 141671227392,
+    "cpuBusyPercent": 5.05
+  },
+  "headroomAfter": {
+    "availableMemoryBytes": 8685215744,
+    "diskFreeBytes": 141597069312,
+    "cpuBusyPercent": 1.01
+  },
+  "observedAt": 1791894555.7661939
+}

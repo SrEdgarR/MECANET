@@ -1,0 +1,51 @@
+ Container mecanet-qa-p1l1-cp014-api1-1 Stopping
+ Container mecanet-qa-p1l1-cp014-api2-1 Stopping
+ Container mecanet-qa-p1l1-cp014-api2-1 Stopped
+ Container mecanet-qa-p1l1-cp014-api1-1 Stopped
+{"phase": "prove-api-end", "status": "PASS", "ownApiContainersExited": 2, "oldApiBackends": 0, "tenantBackends": 0, "sharedResourcesChanged": 0}
+ Container mecanet-qa-p1l1-cp014-worker-1 Stopping
+ Container mecanet-qa-p1l1-cp014-worker-1 Stopped
+ Container mecanet-qa-p1l1-cp014-probe-run-c62d3262c0e5 Creating
+ Container mecanet-qa-p1l1-cp014-probe-run-c62d3262c0e5 Created
+{"result":"PASS","at":"2026-10-13T13:30:15.088Z","reconciled":1,"unprovenEndDenied":1,"consumptionPreserved":true,"oldRunnersEnded":2,"tenantBackends":0}
+ Container mecanet-qa-p1l1-cp014-worker-1 Stopping
+ Container mecanet-qa-p1l1-cp014-worker-1 Stopped
+ Container mecanet-qa-p1l1-cp014-worker-1 Recreate
+ Container mecanet-qa-p1l1-cp014-worker-1 Recreated
+ Container mecanet-qa-p1l1-cp014-worker-1 Starting
+ Container mecanet-qa-p1l1-cp014-worker-1 Started
+{"workerTransferRequested": true, "mode": "full", "previousProcessProvenExited": true, "newOwnerRequiresCAS": true}
+ Container mecanet-qa-p1l1-cp014-api1-1 Recreate
+ Container mecanet-qa-p1l1-cp014-api2-1 Recreate
+ Container mecanet-qa-p1l1-cp014-api1-1 Recreated
+ Container mecanet-qa-p1l1-cp014-api2-1 Recreated
+ Container mecanet-qa-p1l1-cp014-api2-1 Starting
+ Container mecanet-qa-p1l1-cp014-api1-1 Starting
+ Container mecanet-qa-p1l1-cp014-api2-1 Started
+ Container mecanet-qa-p1l1-cp014-api1-1 Started
+{"phase": "restart-api", "restartRequested": true, "onlyServices": ["api1", "api2"], "sharedResourcesChanged": 0}
+ Container mecanet-qa-p1l1-cp014-probe-run-e81df47bd4e3 Creating
+ Container mecanet-qa-p1l1-cp014-probe-run-e81df47bd4e3 Created
+▶ CP014 lost: real two-process authentication and purpose boundaries
+  ✖ Response lost after authoritative rotation COMMIT cannot return authority to its old cookie (7079.919925ms)
+✖ CP014 lost: real two-process authentication and purpose boundaries (10824.28614ms)
+ℹ tests 2
+ℹ suites 0
+ℹ pass 0
+ℹ fail 2
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 13501.53441
+
+✖ failing tests:
+
+test at tests/qa/cp014/auth-http.test.mjs:114:28
+✖ Response lost after authoritative rotation COMMIT cannot return authority to its old cookie (7079.919925ms)
+  Error: QA_CHECKPOINT_NOT_REACHED:issuer.after-commit:api1
+      at waitEvent (file:///workspace/tests/qa/cp014/faults.mjs:43:8)
+      at async TestContext.<anonymous> (file:///workspace/tests/qa/cp014/auth-http.test.mjs:117:8)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async TestContext.<anonymous> (file:///workspace/tests/qa/cp014/auth-http.test.mjs:114:20)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3)

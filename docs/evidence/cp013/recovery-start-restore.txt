@@ -1,0 +1,1 @@
+{"sourceStopped": true, "targetReady": true, "targetTlsVerified": true, "targetEgressProbesBlocked": 3, "barrier": true, "applicationReopened": false}

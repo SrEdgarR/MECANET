@@ -104,6 +104,10 @@ npm --prefix client run dev
 
 ## ☁️ Despliegue en la nube
 
+**Mecanet SaaS:** P1-L1 tiene ocho salidas verificadas en QA sintética PostgreSQL, React y Express, bajo la baseline limitada DEC-058. La integración Git continúa pendiente; el SaaS general y el lanzamiento público no están aprobados. El destino es el VPS con operación propia mediante Compose, independiente de Coolify. Consulta el [estado canónico](docs/PROJECT_STATE.md), la [baseline protegida](docs/specs/P1-L1.md) y el [procedimiento de operación](DEPLOYMENT.md).
+
+Los procedimientos siguientes pertenecen al producto heredado de un negocio. No son el procedimiento del SaaS ni autorizan ejecutar despliegues durante su integración.
+
 ### Railway + Vercel
 
 #### 1. Backend en Railway

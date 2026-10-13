@@ -1,0 +1,28 @@
+ Container mecanet-qa-p1l1-cp014-postgres-1 Stopping
+ Container mecanet-qa-p1l1-cp014-postgres-1 Stopped
+ Container mecanet-qa-p1l1-cp014-postgres-1 Starting
+ Container mecanet-qa-p1l1-cp014-postgres-1 Started
+{"result": "PASS", "time": "2026-10-13T13:43:27Z", "project": "mecanet-qa-p1l1-cp014", "containerId": "d29bed5099d5c39b8f8c04b2641bf009b0c8ca2a7114f3506b61b8dc8bc98303", "imagePin": "postgres@sha256:67ba68a22dc7d5af3627b7e0f33d10bbefad07562ff9703b3a6c2de247649129", "imageId": "sha256:67ba68a22dc7d5af3627b7e0f33d10bbefad07562ff9703b3a6c2de247649129", "dataMount": "/opt/mecanet-qa-p1l1-cp014/data", "systemIdentifier": "7696135932287279131", "startedAtBefore": "2026-10-13T12:58:02.29576803Z", "startedAtAfter": "2026-10-13T13:43:27.085637019Z", "stoppedBeforeStart": true, "exitCode": 0, "oomKilled": false, "sameContainerImageAndStorage": true, "healthyAfter": {"ready": true, "systemIdentifier": "7696135932287279131", "fsync": "on", "fullPageWrites": "on", "synchronousCommit": "on"}, "elapsedSeconds": 1.165, "healthBoundSeconds": 30, "writersRemainStopped": [{"service": "api1", "containerId": "58e19c8274648fc02ad8d7b11406dd9ca694ffd122e5d6095eecb9b684ab4cab", "finishedAt": "2026-10-13T13:42:15.221775832Z", "running": false}, {"service": "api2", "containerId": "685c6a0283900ab4414b6dd06acf27f19b8121ea2fe2cabb153050ae1e6c553e", "finishedAt": "2026-10-13T13:42:15.210047897Z", "running": false}, {"service": "worker", "containerId": "f8e02f6651c2911345d249a0d3a64e4240f45a0eae1866d3ed52583391416c5d", "finishedAt": "2026-10-13T13:42:16.131629128Z", "running": false}], "scope": "Exclusive synthetic PostgreSQL restart; no restore, downgrade, reset or shared service operation"}
+ Container mecanet-qa-p1l1-cp014-worker-1 Stopping
+ Container mecanet-qa-p1l1-cp014-worker-1 Stopped
+ Container mecanet-qa-p1l1-cp014-worker-1 Recreate
+ Container mecanet-qa-p1l1-cp014-worker-1 Recreated
+ Container mecanet-qa-p1l1-cp014-worker-1 Starting
+ Container mecanet-qa-p1l1-cp014-worker-1 Started
+{"workerTransferRequested": true, "mode": "full", "previousProcessProvenExited": true, "newOwnerRequiresCAS": true}
+ Container mecanet-qa-p1l1-cp014-api1-1 Recreate
+ Container mecanet-qa-p1l1-cp014-api2-1 Recreate
+ Container mecanet-qa-p1l1-cp014-api1-1 Recreated
+ Container mecanet-qa-p1l1-cp014-api2-1 Recreated
+ Container mecanet-qa-p1l1-cp014-api2-1 Starting
+ Container mecanet-qa-p1l1-cp014-api1-1 Starting
+ Container mecanet-qa-p1l1-cp014-api2-1 Started
+ Container mecanet-qa-p1l1-cp014-api1-1 Started
+ Container mecanet-qa-p1l1-cp014-web-1 Recreate
+ Container mecanet-qa-p1l1-cp014-web-1 Recreated
+ Container mecanet-qa-p1l1-cp014-web-1 Starting
+ Container mecanet-qa-p1l1-cp014-web-1 Started
+{"phase": "restart-api", "restartRequested": true, "onlyServices": ["api1", "api2", "web"], "privateUpstreamsRefreshed": true, "sharedResourcesChanged": 0}
+ Container mecanet-qa-p1l1-cp014-probe-run-2640811035b8 Creating
+ Container mecanet-qa-p1l1-cp014-probe-run-2640811035b8 Created
+{"stage":"after","time":"2026-10-13T13:43:36.274Z","worker":{"clockOwner":"26fda9cc-d9ad-4ba4-a84b-ef4b033e2a92","controlGeneration":"47557dab-4f7d-49a3-80d2-1003d3a46159","tick":"21261","latestSamples":[{"source_id":"qa-private-worker","generation":"26fda9cc-d9ad-4ba4-a84b-ef4b033e2a92","metric":"service.cpu_usec","unit":"microseconds","source":"process.self","quality":"DIRECT","asOf":"2026-10-13T13:43:32.541Z","coverage":1,"discontinuity":true,"granularity":"minute"},{"source_id":"qa-private-worker","generation":"26fda9cc-d9ad-4ba4-a84b-ef4b033e2a92","metric":"service.rss_bytes","unit":"bytes","source":"process.self","quality":"DIRECT","asOf":"2026-10-13T13:43:32.541Z","coverage":1,"discontinuity":true,"granularity":"minute"}],"firstCpuAndRssDiscontinuous":true},"sourceAndGenerationVisible":true,"qualityAndAsOfPresent":true,"tenantCpuAttribution":false,"restartedWorkerNewSeries":true,"previousGenerationRetained":true,"initialCpuAndRssDiscontinuityAfterRestart":true,"counterNotReset":true,"result":"PASS"}

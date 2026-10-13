@@ -1,0 +1,14 @@
+ Container mecanet-qa-p1l1-cp014-probe-run-76083c56814a Creating
+ Container mecanet-qa-p1l1-cp014-probe-run-76083c56814a Created
+▶ CP014 faults: real two-process authentication and purpose boundaries
+  ✔ Failure at issuer.after-commit emits no authenticated cookie and cannot resurrect the replaced SID (2813.78634ms)
+  ✔ Failure at session.after-set emits no authenticated cookie and cannot resurrect the replaced SID (2399.831216ms)
+✔ CP014 faults: real two-process authentication and purpose boundaries (10601.077731ms)
+ℹ tests 3
+ℹ suites 0
+ℹ pass 3
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 13206.453013

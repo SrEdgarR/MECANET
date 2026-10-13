@@ -1,0 +1,22 @@
+✔ expired pool wait retains a pending lease until the late real client is discarded (36.6786ms)
+✔ an expired query retains its lease until SQL returns and discards the client (35.708ms)
+✔ read-only SQL and all three server timeouts shrink to the actual remaining budget (0.935ms)
+✔ exhausted read budget sends no SQL (0.1723ms)
+✔ a late COMMIT cannot return a catalog after the read deadline even before timers run (0.181ms)
+✔ acquire cannot settle at or after its two-second limit before its overdue timer runs (2000ms) (0.345ms)
+✔ acquire cannot settle at or after its two-second limit before its overdue timer runs (2001ms) (0.2402ms)
+✔ connect cannot settle at or after its two-second limit before its overdue timer runs (2000ms) (0.2358ms)
+✔ connect cannot settle at or after its two-second limit before its overdue timer runs (2001ms) (0.1824ms)
+✔ operation cannot settle at or after its two-second limit before its overdue timer runs (2000ms) (0.3404ms)
+✔ operation cannot settle at or after its two-second limit before its overdue timer runs (2001ms) (0.2269ms)
+✔ pool acquisition and operation receive separate two-second windows inside the global deadline (0.3093ms)
+✔ the global deadline truncates the operation window even if its phase timer has not run (0.3117ms)
+✔ the default infinite deadline retains the existing pool-manager behavior (0.2162ms)
+ℹ tests 14
+ℹ suites 0
+ℹ pass 14
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 147.6794

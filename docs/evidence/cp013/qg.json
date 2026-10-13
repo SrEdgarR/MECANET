@@ -1,0 +1,20 @@
+{
+  "result": "PASS",
+  "at": "2026-10-13T12:40:26.357Z",
+  "baseSha": "3b387b38784907b67e2209a35c3d5f400d70742e",
+  "sourceHead": "2cd4494c9b48e65864784a6af7c110dc7d410c0e",
+  "changedFiles": 142,
+  "links": 108,
+  "tables": 52,
+  "jsons": 18,
+  "phase": "P1",
+  "decisions": 59,
+  "criteria": 190,
+  "pending": 14,
+  "blocking": 1,
+  "promptSha256": "d2dafd5f75df32aae33e421953fab6e99e723aa88744b918b555562c7b6a550d",
+  "mapCheck": "PASS",
+  "diffCheck": "PASS",
+  "limits": "Local references, table structure, unique IDs, JSON, selected secret patterns and known immutability. Not functional acceptance or a universal secret scan.",
+  "errors": []
+}
