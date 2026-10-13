@@ -1,6 +1,6 @@
 # Expediente Mecanet SaaS
 
-Última revisión: **CP-016, 2026-10-13: Q-42 RESUELTA con evidencia humana/plataforma y mecanismos conocidos; Q-43 RESUELTA localmente por SC-008/DEC-060 APPROVED, auditoría completa estricta de la lane SaaS/backend PASS, revisión y regresión al SHA 0d8285cef117d6174a6053f18ceaac180f8aa1c5. Auditoría legacy FAIL conservada/TD-21. P1 única fase activa; L1 ocho PASS, Integration Gate NOT VERIFIED hasta PR/CI/merge/CI canónica. P0 PARCIAL y SaaS general NOT APPROVED; P1-L2 v0.2 solo candidato revisado, A/B pendientes.**
+Última revisión: **CP-016, 2026-10-13: P1-L1 TERMINAL, ocho salidas PASS y Integration Gate PASS con [PR #2](https://github.com/SrEdgarR/MECANET/pull/2), head `04c5d41299bffc15e201c168677079809feb6a0f`, merge/develop `a0098178fc27467bf4c12da0e97723e0b80ce683`; [CI push](https://github.com/SrEdgarR/MECANET/actions/runs/38440714202), [CI PR](https://github.com/SrEdgarR/MECANET/actions/runs/38440720838) y [CI develop](https://github.com/SrEdgarR/MECANET/actions/runs/38441611717) PASS. Código local probado `0d8285cef117d6174a6053f18ceaac180f8aa1c5`; evidencia remota por sus SHA propios. Q-42/Q-43 resueltas para la lane aprobada; legacy audit FAIL/TD-21 conservado. P1 única fase EN CURSO; P0 PARCIAL/RG-001 y SaaS general NOT APPROVED. P1-L2 v0.2 candidato revisado, A/B pendientes y doce salidas funcionales NOT VERIFIED. Sin despliegues o recursos de infraestructura modificados.**
 
 ## Autoridad
 
@@ -15,10 +15,10 @@
 
 | Documento | Propósito | Estado |
 |---|---|---|
-| [Auditoría CP-016](audit/CP-016.md) | Triggers acreditados, SC-008 y preparación L2; integración Git por acreditar | Vivo; gate local PASS, remoto NOT VERIFIED |
+| [Auditoría CP-016](audit/CP-016.md) | Seguridad, SC-008, integración terminal L1 y candidato L2 | Vivo; Integration Gate PASS, L2 A/B pendientes |
 | [PROJECT_STATE](PROJECT_STATE.md) | Fase, readiness, restricciones, trazabilidad | Vivo |
 | [INVENTORY](INVENTORY.md) | Estado real, brechas, infraestructura y fuentes | DETECTED / REPORTED identificados |
-| [CHECKPOINTS](CHECKPOINTS.md) | Adopción, decisiones, diseños y evidencia local | CP-001…014 históricos; CP-015 vivo, integración limpia local y siguiente candidato |
+| [CHECKPOINTS](CHECKPOINTS.md) | Decisiones y evidencia por SHA/entorno | CP-001…015 históricos; CP-016 vivo, L1 TERMINAL y L2 candidato |
 | [ROADMAP](ROADMAP.md) | Dependencias y gates del trabajo | RG-001 APPROVED para el lote; resto conserva gates |
 | [DECISIONS](DECISIONS.md) | Registro de decisiones independientes | Mezcla explícita APPROVED / PROPOSED |
 | [TECH_DEBT](TECH_DEBT.md) | Riesgos y deuda con resolve-before | Vivo |
@@ -27,7 +27,7 @@
 | [Alternativas de arquitectura](../.agentic/ARCHITECTURE_OPTIONS.md) | Contratos históricos MT/MC y DEP-IND operativo propio | Fragmentos relacionales/Compose aprobados en L1; restantes y capacidad general pendientes |
 | [Propuesta de planes](../.agentic/SUBSCRIPTION_PROPOSAL.md) | Catálogo DOP/anualidad, lifecycle y economía recalculable | Catálogo DOP/USD, recurrencia y calendario APPROVED; proveedor/coste final pendientes |
 | [Feedback](../.agentic/METHODOLOGY_FEEDBACK.md) | AUD del proceso, separado de defectos del producto | Pendiente de revisión humana |
-| [Plan de trabajo](../tasks/plan.md) / [tareas](../tasks/todo.md) | Ocho cortes autorizados P1-L1 y dependencias posteriores | L1 COMPLETADA, ocho PASS; integración Git y lotes posteriores separados |
+| [Plan de trabajo](../tasks/plan.md) / [tareas](../tasks/todo.md) | L1 integrado y candidato siguiente separado | L1 TERMINAL, P1 EN CURSO; L2 A/B pendientes |
 | [Mapa local](project-map/index.html) | Vista interactiva del avance y de UI real | Derivado; nunca producción |
 | [Datos del mapa](PROJECT_MAP_DATA.json) | Datos estructurados, sin porcentaje inventado | Derivado |
 | [Fuentes externas](evidence/SOURCES.md) | Proveedor, consulta, alcance y revalidación | VENDOR-DOCUMENTATION |

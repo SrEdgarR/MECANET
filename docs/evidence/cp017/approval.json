@@ -1,0 +1,18 @@
+{
+  "classification": "CONFIRMED",
+  "source": "direct human attachment 58f74b6d-fed5-482c-b395-07767df134f9",
+  "receivedDate": "2026-10-13",
+  "A": {
+    "decision": "DEC-061",
+    "scope": "entire P1-L2 v0.2-CP016",
+    "sourceCheckpoint": "704b4ae22f1af7fe868d3faf6bdf17a227fb0f50",
+    "sha256": "ca975dc822c0bd5e872d3debe824abc536f662007513170f327727878ff3ac71",
+    "hashVerifiedBeforeRegistration": true
+  },
+  "B": {
+    "decision": "DEC-062",
+    "scope": "full implementation and exclusive synthetic QA; Git integration conditioned on all criteria/gates"
+  },
+  "base": "a0098178fc27467bf4c12da0e97723e0b80ce683",
+  "sharedInfrastructureAuthorized": false
+}

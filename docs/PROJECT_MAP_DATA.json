@@ -5,31 +5,31 @@
   "active_phase_name": "Fundación aislada y operable",
   "status": "EN CURSO",
   "last_updated": "2026-10-13",
-  "next_gate": "Publicar rama limpia, PR/review/CI, merge y CI canónica bajo recheck Q-42; después A/B exactas P1-L2 y entradas",
-  "readiness_scope": "P1-L1 v0.2-CP012/S-18/L-01 APPROVED por DEC-058; Development y Environment acreditados para QA limitada. SaaS general NOT APPROVED",
-  "progress_basis": "Estado cualitativo, sin porcentaje. P1-L1 COMPLETADA con ocho salidas PASS y trazabilidad por suite; esto no cierra P1 general ni el SaaS",
-  "implementation": "P1-L1 COMPLETADA: ocho cortes privados PostgreSQL/React/Express; P1 general EN CURSO, sin funcionalidad comercial pública",
+  "next_gate": "Salidas reales L2-A1…A12 y Quality/Integration Gate condicionado; no producción ni nueva B por corte",
+  "readiness_scope": "P1-L2 v0.2-CP016 APPROVED exacta DEC-061/B DEC-062; QA sintética propia con preflight. SaaS general NOT APPROVED",
+  "progress_basis": "Estado cualitativo, sin porcentaje. P1-L1 TERMINAL con ocho PASS e Integration Gate PASS; P1 general EN CURSO y SaaS general NOT APPROVED",
+  "implementation": "P1-L1 TERMINAL integrado; P1-L2 EN CURSO en codex/p1-l2, sin inventario comercial o publicación",
   "current_checkpoint": "CP-016",
   "hosting_target": "CONFIRMED DEC-021/SC-005: VPS existente, operación propia independiente de Coolify; PostgreSQL DEC-054. Dominio futuro mecanet.app DEC-059/SC-007",
-  "hosting_execution": "Cohorte CP-014 privada instalada y probada con Compose, PostgreSQL18.6 ARM64, dos API, worker y Nginx; sin puertos públicos. Cinco contenedores propios STOPPED al cierre, sin URL activa; aislamiento y diez consumidores ajenos preservados. Inventario/cleanup en auditoría CP-014; fuente CP-013 cerrada y hashes preservados",
+  "hosting_execution": "QA CP017 propia con Compose/PG18.6 ARM64, sin TCP público; preflight PASS. CP013/CP014 permanecen STOPPED. Recursos nuevos QA permitidos DEC-062, otros consumidores preservados.",
   "progress_percent": null,
   "trace": {
-    "base_sha": "010aab670c638d168c971df3e3e53b97e72ff443, base limpia de integración; fuente CP-014 9fcdd9540848edbbdef1cfc94667491c9ab2ba92 preservada",
+    "base_sha": "a0098178fc27467bf4c12da0e97723e0b80ce683 — develop canónico verificado al iniciar L2",
     "research_head_sha": "9fcdd9540848edbbdef1cfc94667491c9ab2ba92; lectura focalizada sin reinventariar el VPS",
     "tested_code_sha": "0d8285cef117d6174a6053f18ceaac180f8aa1c5 — SC-008 local21negativas/29+3/build/3assetsF/auditorías0/syntax69; evidencia DB/browser/restore histórica conserva sus SHA",
     "qa_controller_sha": "409880a513bee1eff909caf68d23325af55e9be4; normalización del inventario ajeno y regresión del controlador QA, sin cambio del artefacto F desplegado/probado",
     "experimental_test_reference": "CP-006/010 históricos no repetidos ni atribuidos a PostgreSQL; las90 pruebas Mongo f5afaa2 no prueban este lote",
     "HEAD": "Resolver git rev-parse HEAD en cada worktree; checkpoint final no se escribe en su propio commit",
-    "checkpoint_sha": "CP-015 fuentea541f7bcab88f289fa2bc89f6c9c9d004283cff2/integración44e55714b30dca776bc6a7fe65cb389b67343738; CP-016 final se identifica externamente/Git sin autoSHA",
+    "checkpoint_sha": "CP-016 documental premerge `54da15c05b781d531e5156766f3831d91c3fa0ca`, head remoto congelado `04c5d41299bffc15e201c168677079809feb6a0f`; cierre primary se identifica externamente/Git, sin autoSHA",
     "approved_head_sha": "3b387b38784907b67e2209a35c3d5f400d70742e, solamente S-18/manifiestoL-01/ocho cortes por DEC-058",
-    "merge_sha": "Ninguno todavía: Integration Gate remoto por ejecutar; autorización vigente",
-    "current_main_baseline_sha": "010aab670c638d168c971df3e3e53b97e72ff443 — develop remoto comprobado; no nuevo merge todavía",
-    "next_phase_base_sha": "No definido hasta merge/CI canónica; A/B de L2 pendientes",
-    "local_branch": "codex/integrate-p1-l1 preparada en worktree propio; codex/saas-discovery conserva fuente y planificación siguiente",
-    "remote_branch": "Rama nueva aún no publicada al checkpoint previo; PR #1 y codex/deploy-vercel-coolify intactos",
+    "merge_sha": "a0098178fc27467bf4c12da0e97723e0b80ce683",
+    "current_main_baseline_sha": "a0098178fc27467bf4c12da0e97723e0b80ce683 — develop verificado tras CI canónica PASS",
+    "next_phase_base_sha": "a0098178fc27467bf4c12da0e97723e0b80ce683 — base L2 aprobada; siguiente lote necesita su A/B",
+    "local_branch": "codex/p1-l2 en worktree adjunto reutilizado limpio desde develop; primary/fuente y worktree anterior preservados",
+    "remote_branch": "codex/integrate-p1-l1 publicada e integrada; PR #1/codex/deploy-vercel-coolify preservados",
     "worktree": "Primario fuente/planning y C:/Users/thede/.codex/worktrees/p1l1-integration/MECANET-develop; .kilo/worktrees/majestic-chiller conservado",
-    "integration_target": "develop 010aab670c638d168c971df3e3e53b97e72ff443; PR exacto L1 preparado localmente, sin candidato siguiente mezclado",
-    "CI": "SC-008 local/revisión/actionlint PASS, fullaudit backend/lane SaaS0; legacy FAIL conservado. CI PR/canónica NOT VERIFIED"
+    "integration_target": "develop integrado mediante [PR #2](https://github.com/SrEdgarR/MECANET/pull/2), head `04c5d41299bffc15e201c168677079809feb6a0f`, merge/develop `a0098178fc27467bf4c12da0e97723e0b80ce683`; [CI push](https://github.com/SrEdgarR/MECANET/actions/runs/38440714202), [CI PR](https://github.com/SrEdgarR/MECANET/actions/runs/38440720838) y [CI develop](https://github.com/SrEdgarR/MECANET/actions/runs/38441611717) PASS",
+    "CI": "SC-008 local/revisión PASS; [CI push](https://github.com/SrEdgarR/MECANET/actions/runs/38440714202), [CI PR](https://github.com/SrEdgarR/MECANET/actions/runs/38440720838) y [CI develop](https://github.com/SrEdgarR/MECANET/actions/runs/38441611717) PASS; fullaudit lane/backend0, legacy FAIL conservado"
   },
   "readiness": [
     {
@@ -80,9 +80,9 @@
       "name": "Fundación aislada y operable",
       "status": "EN CURSO",
       "dependencies": "P0-L1-S/D/E acreditados para alcance actual según RG-001",
-      "summary": "Conservar fundación P1-L1 verificada y preparar su Integration Gate, sin ampliar el alcance autorizado",
+      "summary": "Conservar fundación P1-L1 TERMINAL/integrada y preparar candidato P1-L2 con A/B pendientes, sin ampliar el alcance autorizado",
       "closure": "Salida P1-L1 PASS; Integration Gate y garantías restantes de P1 conservan sus criterios, sin cierre global por extensión",
-      "blockers": "Salida funcional L1 PASS; Q-42/43 localmente resueltas, integración Git/CI aún por ejecutar; baseline/gates antes de otro lote",
+      "blockers": "Salida e Integration Gate L1 PASS; L1 TERMINAL. Q-42/43 resueltas para lane; A/B/baseline/gates antes de otro lote",
       "evidence": "CP-014: ocho salidas PASS acotadas, QA propia PG18.6 ARM64/dos API/Nginx/worker, matriz por SHA",
       "document": "specs/P1-L1.md"
     },
@@ -221,8 +221,8 @@
       "phase": "P1",
       "id": "P1-L1-INT",
       "name": "Integration Gate del lote (§8.5)",
-      "status": "NOT VERIFIED",
-      "criterion": "CP-016 rama limpia/SC-008/revisión/regresión/gates locales PASS; PR/CI remoto/merge/canónica por ejecutar. No baseline de L2 o fase por extensión"
+      "status": "PASS",
+      "criterion": "[PR #2](https://github.com/SrEdgarR/MECANET/pull/2), head `04c5d41299bffc15e201c168677079809feb6a0f`, merge/develop `a0098178fc27467bf4c12da0e97723e0b80ce683`; [CI push](https://github.com/SrEdgarR/MECANET/actions/runs/38440714202), [CI PR](https://github.com/SrEdgarR/MECANET/actions/runs/38440720838) y [CI develop](https://github.com/SrEdgarR/MECANET/actions/runs/38441611717) PASS; L1 TERMINAL. No baseline de L2 o fase por extensión"
     }
   ],
   "screens": [
@@ -651,6 +651,30 @@
       "title": "Cadena de compilación y verificación SaaS propia",
       "status": "APPROVED",
       "detail": "- Fecha/estado/tipo: 2026-10-13, CP-016 / APPROVED / SPEC CHANGE SC-008, alcance L-06 y gate de dependencias de P1-L1.\n- Fuente humana directa: respuesta actual «Aprobar SC-008 e implementarlo (recomendado)» a la propuesta concreta de manifiesto/lock SaaS, materialización temporal de allowlist y auditoría completa estricta. A y B de este cambio quedan expresas; no autoriza P1-L2.\n- Problema/evidencia: audit completo del cliente heredado FAIL, siete paquetes de tooling afectados por dos GHSA; no corrección compatible acreditada. Caracterización previa aislada: 20 archivos copiados byte exactos, diez dependencias directas fijadas, auditorías completa/runtime sin hallazgos, 29 pruebas SaaS + 3 sanitización, cuatro negativas y tres assets iguales a F. Es caracterización local, no un PASS anticipado de implementación/CI.\n- Decisión exacta: incorporar manifiesto y lock exclusivos para construir/probar SaaS; staging temporal con lista cerrada de fuentes/config, sin .env/public/paquetes heredados. Conservar React18.3.1/Vite6.4.3/Vitest4.1.11 y el cliente heredado/Tailwind3.4.18 sin cambios. Auditar estrictamente todas las dependencias del backend y de la nueva cadena SaaS; no filtrar advisories, rebajar umbral, ignorar exit ni aceptar riesgo por extensión.\n- Límites: la auditoría legacy permanece FAIL visible y su tooling no se usa en esta lane. Remediarla antes de volver a depender de ella. Vite contiene código bundled que npm audit y los hooks de paquetes no inventarían como limpio; evaluar rutas reales/entradas versionadas, no usar servidor de desarrollo público ni contenido tenant como configuración/CSS/patrón. Los hooks fail closed y las negativas limitan cargas externas/fallback, sin prometer inspección de llamadas internas.\n- Impacto/reverse-impact: actualización aditiva de docs/specs/P1-L1.md, scripts/ci/manifiesto/lock/runner/barrera y callers de verificación/build propios; CI conserva tests y audit completo de su alcance real. No bytes funcionales, permisos SQL, sesiones, cuotas, recovery, Compose/QA ni cliente legacy alterados. CP-013/014 conserva provenance; regresión de assets no sustituye DB/browser/restore. L2 y lotes futuros deben acreditar su cadena cuando cambien entradas/dependencias.\n- Alternativa descartada para esta ejecución: major Tailwind4 afectaría el cliente heredado y no elimina automáticamente código bundled de Vite. No se aplica excepción humana indefinida ni se presenta audit0 del fixture como solución ya integrada.\n- Rollback: revertir commit del runner/manifiesto/gate devuelve Q-43 BLOCKING; no ejecutar tooling afectado ni alegar reversión de datos. Gate: instalar lock sin lifecycle, negativas de allowlist/symlink/fallback, hashes de copia, tests reales y build/F, auditorías nativas, revisión independiente y CI del SHA exacto antes de merge. No QA ni recursos compartidos nuevos."
+    },
+    {
+      "id": "DEC-061",
+      "title": "A exacta de P1-L2 v0.2-CP016",
+      "status": "APPROVED",
+      "detail": "- Fecha/estado/tipo: 2026-10-13, CP-017 / APPROVED / baseline limitada; SPEC CHANGE SC-009.\n- Fuente humana directa: adjunto `58f74b6d-fed5-482c-b395-07767df134f9`, «APRUEBO A Y AUTORIZO B para P1-L2 v0.2-CP016». A cubre TODO `.agentic/NEXT_LOT_CANDIDATE.md`, SHA256 `ca975dc822c0bd5e872d3debe824abc536f662007513170f327727878ff3ac71`, verificado antes de registro. [Baseline protegida](specs/P1-L2.md); snapshot íntegro del checkpoint fuente704b4ae.\n- Alcance: doce criterios, ajuste fundacional P1/P2, altas y recepciones ficticias sin importes, permisos, pool writer, protocolo monotónico restrictivo, idempotencia, cuotas, migración aditiva, recuperación/rollback y UI cuadrada. No A global ni otros módulos por referencia transitiva. Conserva PostgreSQL/React/Express/Compose independiente y decisiones comerciales/fiscales previas.\n- SC-009: cambio real de mecanismo respecto a L1 lector y asignación limitada de escritores a P1, expresamente incluido en A. Impacto inverso: sesión/emisor/logout, autoridad central, grants, schema/directorio/credenciales/pools, efecto empresarial, ledger/reservas, barrera/recovery, UI y artefacto. Revocación tiene preparación restrictiva durable y cierre local exclusivo antes de acuse; conserva garantía de ningún efecto posterior al cierre probado y separación de prueba de fin de recursos. No modifica bytes protegidos L1 ni reutiliza sus PASS como salida writer.\n- Revisión/entrada: F14-L2 CP-016 y revisiones focales separadas SQL/servicio/UI CP-017, contrato HTTP aprobado intacto, sin defectos críticos detectados. Environment Gate antes de QA propia; toda salida nueva inicialmente NOT VERIFIED. Metodología intacta."
+    },
+    {
+      "id": "DEC-062",
+      "title": "B e integración condicionada de P1-L2",
+      "status": "APPROVED",
+      "detail": "- Fecha/estado/tipo: 2026-10-13, CP-017 / APPROVED / ejecución diferenciada de A.\n- Fuente: mismo adjunto humano §§3…8. Autoriza implementar y verificar TODO el lote DEC-061, sin pedir otra B por corte/prueba/corrección. Permite QA ficticia propia con preflight/credenciales nuevas/límites y cleanup; PR contra develop/CI/revisión/fixes/merge solo cuando todas las salidas y gates, incluida ausencia acreditada de despliegue accidental, pasen.\n- Límites: no P2, producción, datos reales, DNS/TLS públicos, recursos compartidos, Coolify/Traefik, Nexora/Mecanet-EAK, pagos/cobros/contratos ni coste. No tocar PR #1. P1-L2 TERMINAL únicamente tras integración y CI canónica verificados; siguiente baseline independiente de checkpoint documental/código probado.\n- Próximo trabajo: gates de entrada por alcance y entorno, implementación completa autorizada; [plan previo](../.agentic/P1-L2_PLAN.md). Ninguna prueba funcional se acredita por esta decisión."
+    },
+    {
+      "id": "DEC-063",
+      "title": "Entrada futura exclusiva del operador Mecanet",
+      "status": "APPROVED",
+      "detail": "- Fecha/estado/tipo: 2026-10-13, CP-017 / APPROVED / dirección de producto futura.\n- Fuente: adjunto actual; `admin.mecanet.app` será panel independiente exclusivo del operador, con identidad/permisos separados de tenants. Conserva DEC-045 y sus restricciones; no concede acceso POS/ventas/contenido, infraestructura, impersonación o soporte por extensión.\n- Resolve-before: diseño del primer handler/pantalla operador/P4 DG-ADMIN y entrada pública Q-41; DNS/HTTPS/implementación NOT VERIFIED, no autorizados en P1-L2. No consume este lote ni bloquea writers QA."
+    },
+    {
+      "id": "DEC-064",
+      "title": "PayPal como candidato adicional recurrente",
+      "status": "PROPOSED",
+      "detail": "- Fecha/estado/tipo: 2026-10-13, CP-017 / PROPOSED / evaluación externa futura.\n- Fuente humana: adjunto actual solicita considerar PayPal además de CardNET/AZUL; CONFIRMED únicamente su incorporación a la evaluación. No proveedor aprobado ni sustitución de DEC-008/alternativas actuales.\n- Pendiente técnico/contractual/comercial Q-03/38 antes de primer código de pagos/P3: disponibilidad para el comerciante concreto RD, recurrencia/monedas/fees/cancelación/webhooks y condiciones verificables. No conexión/cobro/contratación ni afirmación de disponibilidad en esta ejecución; no bloquea QA sintética L2."
     }
   ],
   "pending": [
@@ -3417,20 +3441,20 @@
     {
       "id": "C-243",
       "name": "Publicación/PR/revisión y CI del PR",
-      "status": "NOT VERIFIED",
-      "evidence": "Pendiente ejecución GitHub autorizada tras QG/preflight; no PASS de Linux por ensayo Windows",
-      "environment": "REMOTE por ejecutar",
-      "sha": "PR nuevo ninguno aún",
+      "status": "PASS",
+      "evidence": "[PR #2](https://github.com/SrEdgarR/MECANET/pull/2), head `04c5d41299bffc15e201c168677079809feb6a0f`, merge/develop `a0098178fc27467bf4c12da0e97723e0b80ce683`; [CI push](https://github.com/SrEdgarR/MECANET/actions/runs/38440714202), [CI PR](https://github.com/SrEdgarR/MECANET/actions/runs/38440720838) y [CI develop](https://github.com/SrEdgarR/MECANET/actions/runs/38441611717) PASS; revisión PASS/0REQUIRED: published-review.json; recheck: git-preflight-before-merge.json / coolify-trigger-before-merge.json / vercel-before-merge.json; after-merge equivalents; no new GitHub deployments; PR1 unchanged",
+      "environment": "REMOTE GitHub / CI Linux por sus SHA",
+      "sha": "04c5d41299bffc15e201c168677079809feb6a0f",
       "date": "2026-10-13",
       "provenance": "DETECTED"
     },
     {
       "id": "C-244",
       "name": "Merge/CI canónica y baseline siguiente",
-      "status": "NOT VERIFIED",
-      "evidence": "develop010aab, L1 noTERMINAL; registrar mergeexacto y CIcanónica antes de transición",
-      "environment": "REMOTE por ejecutar",
-      "sha": "merge_sha ninguno aún",
+      "status": "PASS",
+      "evidence": "[PR #2](https://github.com/SrEdgarR/MECANET/pull/2), head `04c5d41299bffc15e201c168677079809feb6a0f`, merge/develop `a0098178fc27467bf4c12da0e97723e0b80ce683`; [CI push](https://github.com/SrEdgarR/MECANET/actions/runs/38440714202), [CI PR](https://github.com/SrEdgarR/MECANET/actions/runs/38440720838) y [CI develop](https://github.com/SrEdgarR/MECANET/actions/runs/38441611717) PASS; L1TERMINAL, base siguiente acreditada sin A/B L2",
+      "environment": "REMOTE GitHub / CI Linux por sus SHA",
+      "sha": "a0098178fc27467bf4c12da0e97723e0b80ce683",
       "date": "2026-10-13",
       "provenance": "DETECTED"
     },
@@ -3495,15 +3519,15 @@
   "source_files": [
     {
       "path": "docs/PROJECT_STATE.md",
-      "sha256": "cd997ab4f5d6042379b9223e262445e611db7a9bcc40dfd568ff9e5f5609a963"
+      "sha256": "a35e57ac7df2614c2965f4f3d3222d8c8f34a254bccafcef888d1b7f991e8838"
     },
     {
       "path": "docs/ROADMAP.md",
-      "sha256": "3634a75465a1c3baafa8640627cceac45411482320a05bb740cbbccabb5d0b39"
+      "sha256": "8b67505c5cad4629b91f7bfda9c44195d6cb54f1ba0d80adba5e31a89c4c1e21"
     },
     {
       "path": "docs/DECISIONS.md",
-      "sha256": "eb798b38af34d7f83ac5f4cb1a42604e981114ce805dba63d18d18fc0ce442dc"
+      "sha256": "4562901ebc3e98c3ff1386f1d00bdf07e0c1bd904ad3bc11f0f209be514b4c27"
     },
     {
       "path": "docs/TECH_DEBT.md",
@@ -3511,11 +3535,11 @@
     },
     {
       "path": "docs/CHECKPOINTS.md",
-      "sha256": "2a50436e35b0ce1f024da5107cad1c44102f6146640795f3b65d777acc1955d2"
+      "sha256": "5562738c6600690104d42b4be79ca9dada9fb6d70826051e79b4b5def77cc2be"
     },
     {
       "path": ".agentic/PLANNING_STATE.md",
-      "sha256": "596b2816ad800952a9fb949b4ca30e8c7499cf764c9ea02bb086849210e08456"
+      "sha256": "8db46ca751bb5eb2091a7b0b3f2c670d2526aa5b2cc709853457b41b5fa99019"
     },
     {
       "path": ".agentic/METHODOLOGY_FEEDBACK.md",

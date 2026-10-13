@@ -1,5 +1,11 @@
 # Mecanet — protocolo de trabajo
 
+## Vigencia actual CP-017 — sustituye únicamente los límites anteriores del lote/Git
+
+CP-017 en curso, 2026-10-13: A exacta P1-L2 v0.2-CP016/DEC-061 y B diferenciada DEC-062 recibidas del adjunto58f74b6d, hash verificado. P1 única fase EN CURSO; P0 PARCIAL/RG-001 y SaaS general NOT APPROVED. Base develop a0098178fc27467bf4c12da0e97723e0b80ce683/PR #2; P1-L1 TERMINAL conservado. Specification/Design/Development locales acreditados para el lote; QA nueva exclusiva CP017 con preflight ARM64/pins/headroom/redes/secretos propios PASS. Implementación P1-L2 EN CURSO; doce salidas funcionales aún NOT VERIFIED, sin heredar PASS L1. Sin lanzamiento ni cambio de infraestructura compartida. DEC-063 admin.mecanet.app futuro y DEC-064 PayPal candidato, ambos fuera del lote.
+
+- A/B completas y QA propia del lote autorizadas; no otra aprobación por corte. Baseline protegida docs/specs/P1-L2.md/snapshot hash exacto. Plan previo .agentic/P1-L2_PLAN.md. PR/CI/review/merge únicamente tras todas las salidas y recheck Q42. No código de P2, servicios/secretos ajenos, público o datos reales por extensión. Las prohibiciones históricas de push/L2 conservan su fecha/alcance anterior, no revocan esta autorización humana nueva.
+
 Responder en español. Esta es una adopción de un producto existente, no un proyecto nuevo.
 
 ## Antes de trabajar
@@ -11,7 +17,7 @@ Responder en español. Esta es una adopción de un producto existente, no un pro
 
 ## Fase y límites actuales
 
-- CP-016: **P1 EN CURSO**, única fase activa. L1 ocho PASS; Q-42 resuelta y Q-43 local PASS por SC-008/DEC-060 APPROVED, fullaudit SaaS/backend estricto0, legacy FAIL preservado/TD-21. Código 0d8285cef117d6174a6053f18ceaac180f8aa1c5. Git/CI/merge condicionales habilitados bajo recheck, sin despliegues; Integration Gate aún NOT VERIFIED hasta CI/merge/canónica. L2 v0.2 candidato revisado con A/B pendientes, sin implementación/P2.
+- CP-016: **P1 EN CURSO**, única fase activa; P1-L1 **TERMINAL**, ocho PASS e Integration Gate PASS. [PR #2](https://github.com/SrEdgarR/MECANET/pull/2), head `04c5d41299bffc15e201c168677079809feb6a0f`, merge/develop `a0098178fc27467bf4c12da0e97723e0b80ce683`; [CI push](https://github.com/SrEdgarR/MECANET/actions/runs/38440714202), [CI PR](https://github.com/SrEdgarR/MECANET/actions/runs/38440720838) y [CI develop](https://github.com/SrEdgarR/MECANET/actions/runs/38441611717) PASS. Q-42/Q-43 resueltas para SC-008/DEC-060 aprobada, audit SaaS/backend0; legacy FAIL/TD-21 conservado. Código local 0d8285cef117d6174a6053f18ceaac180f8aa1c5. L2 v0.2 candidato revisado A/B pendientes, doce salidas NV, sin implementación/P2/despliegue. Snapshot remoto premerge conservado; cierre posterior solo primary.
 - CP-006 amplía solo la evidencia local: fixtures, simulaciones y caracterización acotada en .agentic/experiments/cp006, con plan previo, destinos locales acreditados, límites y cleanup. No cargar .env ni integrar experimentos en producto/deploy. Delegación por archivos permitida; no preguntas durante la ejecución autónoma solicitada. Esto no autoriza implementación SaaS.
 - Alcance confirmado: concentrarse en SaaS. Mantener compatibilidad comercial local no es requisito del MVP; esta decisión no autoriza borrar instalaciones, datos o código heredado sin un cambio revisado.
 - DEC-058: A **APPROVED** exacta de P1-L1 v0.2-CP012/S-18/manifiesto L-01 y ocho cortes al commit `3b387b38784907b67e2209a35c3d5f400d70742e`, protegida en `docs/specs/P1-L1.md`. B y QA temporal propia autorizadas expresamente, sin nueva aprobación por corte. Los gates de entrada del alcance limitado están acreditados; cada recurso nuevo conserva su preflight y cada salida sus pruebas. No extender esta aprobación a otros módulos.

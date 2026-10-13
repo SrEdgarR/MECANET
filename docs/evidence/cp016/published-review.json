@@ -1,0 +1,379 @@
+{
+  "schemaVersion": 1,
+  "checkpoint": "CP-016",
+  "at": "2026-10-13T17:47:17.722Z",
+  "classification": "DETECTED",
+  "reviewer": "/root/cp016_integration_review",
+  "independence": "Revisor distinto de autores; revisión técnica de agente, no aprobación humana ni APPROVE GitHub del PR propio. No mutaciones remotas por el revisor.",
+  "result": "PASS revisión publicada y CI actual; merge habilitado condicionalmente",
+  "requiredOpen": 0,
+  "repository": "SrEdgarR/MECANET",
+  "authenticatedLogin": "SrEdgarR",
+  "pullRequest": {
+    "number": 2,
+    "url": "https://github.com/SrEdgarR/MECANET/pull/2",
+    "state": "open",
+    "isDraft": false,
+    "headRef": "codex/integrate-p1-l1",
+    "headSha": "04c5d41299bffc15e201c168677079809feb6a0f",
+    "baseRef": "develop",
+    "baseSha": "010aab670c638d168c971df3e3e53b97e72ff443",
+    "mergeable": true,
+    "mergeableState": "clean"
+  },
+  "provenance": {
+    "functionalReviewAndLocalTestedCodeSha": "0d8285cef117d6174a6053f18ceaac180f8aa1c5",
+    "premergeDocumentationSha": "54da15c05b781d531e5156766f3831d91c3fa0ca",
+    "publishedReviewedHead": "04c5d41299bffc15e201c168677079809feb6a0f",
+    "historicalReview": "independent-review.json en snapshot publicado",
+    "historicalReviewSha256": "f2abee63dad5f32bde9455ae529ce308576e5996fe5e79954d79ba9fd4c87de9",
+    "planningSource": "codex/saas-discovery, expediente separado",
+    "methodology": "§8.5 Integration Gate: review/CI antes de merge, SHA canónico + CI canónica antes de terminal"
+  },
+  "codeReview": {
+    "result": "PASS",
+    "delta": "Únicamente tres líneas de workflow: explicación e instalación explícita global npm@11.9.0 sin lifecycle; conserva assertions Node24.21/npm11.9 y todos gates.",
+    "workflowBlobSha256": "29d9c188d86643ea19e69bb0bca3becea234f69520bb17b007d6a8791299841f",
+    "strictAudit": "Native full audit exact lane SaaS and backend; runtime separate. No severity suppression, continue-on-error, fallback or waiver.",
+    "secretsAndDeploy": "contents:read, checkout sin credenciales persistidas; sin despliegue/SSH/Docker/DB/secretos. npm global se instala en runner efímero, no VPS.",
+    "functionalObjects": "Sin delta server/saas, React SaaS, helpers ni QA ejecutable desde código revisado0d; 103/104 objetos CP015 iguales, excepción README QA documental.",
+    "dependencyScope": "DEC060/SC008 APPROVED. Legacy7FAIL/TD21 conservado; copias vendorizadas Vite con evaluación acotada, sin afirmar parche o ausencia universal de exposición.",
+    "initialFailure": {
+      "headSha": "54da15c05b781d531e5156766f3831d91c3fa0ca",
+      "runs": [
+        {
+          "id": 38440520553,
+          "event": "pull_request",
+          "url": "https://github.com/SrEdgarR/MECANET/actions/runs/38440520553",
+          "conclusion": "failure"
+        },
+        {
+          "id": 38440362306,
+          "event": "push",
+          "url": "https://github.com/SrEdgarR/MECANET/actions/runs/38440362306",
+          "conclusion": "failure"
+        }
+      ],
+      "independentlyVerified": "Log PR imprime v24.21.0/npm11.19.0; assertion npm11.9.0 exit1. Fallo histórico preservado, no atribuir éxito al head anterior."
+    }
+  },
+  "prScope": {
+    "api": "GET /repos/SrEdgarR/MECANET/pulls/2/files paginado",
+    "files": 387,
+    "allNamesEqualLocalGitDiff": true,
+    "l2CandidateIncluded": false,
+    "oldPr1NotAncestor": true,
+    "legacyClientDelta": "Patches DOMPurify/source-map-js anteriores de CP015 respecto develop, no nuevos cambios SC008. Cliente package/lock sin delta desde0d.",
+    "endpointLimit": "gh pr diff HTTP406 >300files; sustitución por API paginada387 y diff Git local, sin omitir archivos."
+  },
+  "ci": [
+    {
+      "runId": 38440720838,
+      "url": "https://github.com/SrEdgarR/MECANET/actions/runs/38440720838",
+      "event": "pull_request",
+      "headSha": "04c5d41299bffc15e201c168677079809feb6a0f",
+      "status": "completed",
+      "conclusion": "success",
+      "runAttempt": 1,
+      "provenance": {
+        "checkoutCommit": "9380d06491d1fb3b4d414114abaf26f582b8b931",
+        "worktreeClean": true,
+        "node": "v24.21.0",
+        "platform": "linux",
+        "architecture": "x64",
+        "scope": "local-contracts-and-frontend",
+        "postgresIntegration": "NOT RUN",
+        "remoteQA": "NOT USED"
+      },
+      "logsSha256": "5c9f55ab9d93ba1619dc7cc2354f51552dd5cd11b8d1468708fdbfd1ec4eb479",
+      "logBytes": 95989,
+      "jobs": [
+        {
+          "id": 115446272717,
+          "url": "https://github.com/SrEdgarR/MECANET/actions/runs/38440720838/job/115446272717",
+          "name": "Local contracts, frontend and dependency audit",
+          "conclusion": "success",
+          "steps": [
+            {
+              "name": "Set up job",
+              "conclusion": "success"
+            },
+            {
+              "name": "Checkout without persisted credentials",
+              "conclusion": "success"
+            },
+            {
+              "name": "Use the approved Node runtime",
+              "conclusion": "success"
+            },
+            {
+              "name": "Check the exact toolchain",
+              "conclusion": "success"
+            },
+            {
+              "name": "Install locked backend dependencies without lifecycle scripts",
+              "conclusion": "success"
+            },
+            {
+              "name": "Check JavaScript syntax",
+              "conclusion": "success"
+            },
+            {
+              "name": "Run the explicit local contract suite",
+              "conclusion": "success"
+            },
+            {
+              "name": "Check pure QA controller regressions",
+              "conclusion": "success"
+            },
+            {
+              "name": "Verify the SaaS lane boundaries and tooling isolation negatives",
+              "conclusion": "success"
+            },
+            {
+              "name": "Verify locked SaaS lane, guarded tests, build and complete dependency audit",
+              "conclusion": "success"
+            },
+            {
+              "name": "Compare the compiled SaaS assets with the archived verified release",
+              "conclusion": "success"
+            },
+            {
+              "name": "Audit backend runtime dependencies",
+              "conclusion": "success"
+            },
+            {
+              "name": "Audit all backend dependencies as well",
+              "conclusion": "success"
+            },
+            {
+              "name": "Post Use the approved Node runtime",
+              "conclusion": "success"
+            },
+            {
+              "name": "Post Checkout without persisted credentials",
+              "conclusion": "success"
+            },
+            {
+              "name": "Complete job",
+              "conclusion": "success"
+            }
+          ]
+        }
+      ],
+      "lane": {
+        "sourceCodeSha": "9380d06491d1fb3b4d414114abaf26f582b8b931",
+        "node": "v24.21.0",
+        "platform": "linux",
+        "architecture": "x64",
+        "result": "PASS",
+        "fullAudit": "PASS",
+        "runtimeAudit": "PASS",
+        "cleanup": "PASS",
+        "inputs": 22,
+        "allInputsEqualCommittedBlob": true,
+        "inputFingerprintSha256": "6d2aa03257522d1e0d42e16d53961ee1eb99fee8dc0543419a0c3df6aa32d678",
+        "assets": [
+          {
+            "path": "client/dist-saas/saas.html",
+            "sha256": "ab3c357852ca07b8f4689fb5b23a8ddb093ab2bb4e0aa2d75ba98012b132ee51",
+            "bytes": 525
+          },
+          {
+            "path": "client/dist-saas/assets/saas-DclqrR_W.css",
+            "sha256": "cdb3b3885a4aea0c72204e0c7952eb8ebd7522c2767529eb824b487582d54159",
+            "bytes": 5686
+          },
+          {
+            "path": "client/dist-saas/assets/saas-DsjAOXZI.js",
+            "sha256": "846991792b1506d97706bca144f265874f79d17bba91d930dec4d45c3b7bbf04",
+            "bytes": 158150
+          }
+        ]
+      },
+      "counts": {
+        "syntaxFiles": 69,
+        "backend": 73,
+        "materializer": 17,
+        "guard": 4,
+        "saas": 29,
+        "sanitizer": 3,
+        "controller": 3
+      },
+      "scope": "CI real Ubuntu24.04/Linuxx64, contratos puros/frontend/audits. Sin PostgreSQL real/ARM64/browser/restore/QA privada."
+    },
+    {
+      "runId": 38440714202,
+      "url": "https://github.com/SrEdgarR/MECANET/actions/runs/38440714202",
+      "event": "push",
+      "headSha": "04c5d41299bffc15e201c168677079809feb6a0f",
+      "status": "completed",
+      "conclusion": "success",
+      "runAttempt": 1,
+      "provenance": {
+        "checkoutCommit": "04c5d41299bffc15e201c168677079809feb6a0f",
+        "worktreeClean": true,
+        "node": "v24.21.0",
+        "platform": "linux",
+        "architecture": "x64",
+        "scope": "local-contracts-and-frontend",
+        "postgresIntegration": "NOT RUN",
+        "remoteQA": "NOT USED"
+      },
+      "logsSha256": "6624eeae39c5d84f1ec8e109e4e52442985aade45e4900bca318eb2892986406",
+      "logBytes": 94060,
+      "jobs": [
+        {
+          "id": 115446247895,
+          "url": "https://github.com/SrEdgarR/MECANET/actions/runs/38440714202/job/115446247895",
+          "name": "Local contracts, frontend and dependency audit",
+          "conclusion": "success",
+          "steps": [
+            {
+              "name": "Set up job",
+              "conclusion": "success"
+            },
+            {
+              "name": "Checkout without persisted credentials",
+              "conclusion": "success"
+            },
+            {
+              "name": "Use the approved Node runtime",
+              "conclusion": "success"
+            },
+            {
+              "name": "Check the exact toolchain",
+              "conclusion": "success"
+            },
+            {
+              "name": "Install locked backend dependencies without lifecycle scripts",
+              "conclusion": "success"
+            },
+            {
+              "name": "Check JavaScript syntax",
+              "conclusion": "success"
+            },
+            {
+              "name": "Run the explicit local contract suite",
+              "conclusion": "success"
+            },
+            {
+              "name": "Check pure QA controller regressions",
+              "conclusion": "success"
+            },
+            {
+              "name": "Verify the SaaS lane boundaries and tooling isolation negatives",
+              "conclusion": "success"
+            },
+            {
+              "name": "Verify locked SaaS lane, guarded tests, build and complete dependency audit",
+              "conclusion": "success"
+            },
+            {
+              "name": "Compare the compiled SaaS assets with the archived verified release",
+              "conclusion": "success"
+            },
+            {
+              "name": "Audit backend runtime dependencies",
+              "conclusion": "success"
+            },
+            {
+              "name": "Audit all backend dependencies as well",
+              "conclusion": "success"
+            },
+            {
+              "name": "Post Use the approved Node runtime",
+              "conclusion": "success"
+            },
+            {
+              "name": "Post Checkout without persisted credentials",
+              "conclusion": "success"
+            },
+            {
+              "name": "Complete job",
+              "conclusion": "success"
+            }
+          ]
+        }
+      ],
+      "lane": {
+        "sourceCodeSha": "04c5d41299bffc15e201c168677079809feb6a0f",
+        "node": "v24.21.0",
+        "platform": "linux",
+        "architecture": "x64",
+        "result": "PASS",
+        "fullAudit": "PASS",
+        "runtimeAudit": "PASS",
+        "cleanup": "PASS",
+        "inputs": 22,
+        "allInputsEqualCommittedBlob": true,
+        "inputFingerprintSha256": "6d2aa03257522d1e0d42e16d53961ee1eb99fee8dc0543419a0c3df6aa32d678",
+        "assets": [
+          {
+            "path": "client/dist-saas/saas.html",
+            "sha256": "ab3c357852ca07b8f4689fb5b23a8ddb093ab2bb4e0aa2d75ba98012b132ee51",
+            "bytes": 525
+          },
+          {
+            "path": "client/dist-saas/assets/saas-DclqrR_W.css",
+            "sha256": "cdb3b3885a4aea0c72204e0c7952eb8ebd7522c2767529eb824b487582d54159",
+            "bytes": 5686
+          },
+          {
+            "path": "client/dist-saas/assets/saas-DsjAOXZI.js",
+            "sha256": "846991792b1506d97706bca144f265874f79d17bba91d930dec4d45c3b7bbf04",
+            "bytes": 158150
+          }
+        ]
+      },
+      "counts": {
+        "syntaxFiles": 69,
+        "backend": 73,
+        "materializer": 17,
+        "guard": 4,
+        "saas": 29,
+        "sanitizer": 3,
+        "controller": 3
+      },
+      "scope": "CI real Ubuntu24.04/Linuxx64, contratos puros/frontend/audits. Sin PostgreSQL real/ARM64/browser/restore/QA privada."
+    }
+  ],
+  "normalizedInputProvenance": {
+    "localWindowsFingerprint": "4a10d68f3740f4a87afdce9f70e194116890c67bfc696a4c4cd8bc765aabfddd",
+    "linuxFingerprint": "6d2aa03257522d1e0d42e16d53961ee1eb99fee8dc0543419a0c3df6aa32d678",
+    "differences": [
+      {
+        "source": "scripts/ci/saas-toolchain/package.json",
+        "localWindowsSha256": "6e49afa96eb1845f63d5eb9fc236dd90a4277bbcbf13236b184c05173abca994",
+        "committedLinuxSha256": "85643425a0ffdabfda1d4331ce01ac94ac2704626b07ac27e0c437347812edd4",
+        "localNormalizedLfEqualsCommit": true
+      },
+      {
+        "source": "scripts/ci/saas-toolchain/package-lock.json",
+        "localWindowsSha256": "0c28b577fd2fc4334059a8d12b1ee1db07fd403d0718e858425533a935db8fb6",
+        "committedLinuxSha256": "d793a6a5ef5a7a9e9d07a9c586a903a96672be9d08d21537a55a511098468470",
+        "localNormalizedLfEqualsCommit": true
+      }
+    ],
+    "explanation": "Solo manifiesto/lock propios creados localmente CRLF y normalizados LF por Git. Se registran hashes raw distintos; todos inputs Linux coinciden con blobs comprometidos y los22 se copian/verifican byte exactos en cada ejecución. Tres assetsF idénticos."
+  },
+  "integrationGate": {
+    "state": "NOT VERIFIED todavía; merge y CI canónica pendientes",
+    "enabledAction": "Merge del head04c5 únicamente si recheck Q42/base/head/políticas/checks sigue válido; aprobación condicional humana ya existente.",
+    "resolveBeforeTerminal": [
+      "Registrar mergeSha real y baseline develop",
+      "CI canónica del merge SHA SUCCESS",
+      "Actualizar checkpoint/mapa sin atribuir QA/DB nueva ni aprobar L2"
+    ],
+    "humanDecisionsRemaining": "P1-L2 A y B pendientes; esta review no las concede."
+  },
+  "limits": [
+    "No nuevas pruebas físicas PostgreSQL/ARM64/dosAPI/browser/restore; evidencia CP013/014 mantiene provenance.",
+    "CI PR checkout sintético9380d06491d1fb3b4d414114abaf26f582b8b931; CI push checkout exact04c5. Se distingue de headSha metadata.",
+    "Q42 PASS acotado a mecanismos conocidos; revalidar antes merge. Apps403 y polling externo no se inventan como ausentes.",
+    "No PR APPROVE, comentarios, commits, push, merge, despliegues ni cambios de infraestructura por este revisor.",
+    "No modificación del snapshot remoto independent-review; este reporte posterior se escribe únicamente en árbol primario."
+  ],
+  "resourcesCreatedOrModified": [],
+  "remoteMutations": []
+}

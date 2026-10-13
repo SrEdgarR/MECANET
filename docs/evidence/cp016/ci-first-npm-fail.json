@@ -1,0 +1,17 @@
+{
+  "checkpoint": "CP-016",
+  "classification": "DETECTED",
+  "at_utc": "2026-10-13T17:41:00.965026+00:00",
+  "runId": 38440362306,
+  "url": "https://github.com/SrEdgarR/MECANET/actions/runs/38440362306",
+  "headSha": "54da15c05b781d531e5156766f3831d91c3fa0ca",
+  "result": "FAIL",
+  "stage": "Check the exact toolchain",
+  "node": "24.21.0",
+  "observedNpm": "11.19.0",
+  "requiredNpm": "11.9.0",
+  "reason": "Linux Node distribution npm differs from approved local installation",
+  "correction": "Install npm@11.9.0 explicitly without lifecycle scripts, retaining strict version assertion and all gates",
+  "log": "ci-first-npm-fail.txt",
+  "serviceMutations": []
+}

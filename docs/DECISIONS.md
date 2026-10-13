@@ -778,3 +778,30 @@ Fuente humana directa actual: adjunto CP-0151c09dd03-5335-4dee-abad-844c36aebdcc
 - Impacto/reverse-impact: actualización aditiva de docs/specs/P1-L1.md, scripts/ci/manifiesto/lock/runner/barrera y callers de verificación/build propios; CI conserva tests y audit completo de su alcance real. No bytes funcionales, permisos SQL, sesiones, cuotas, recovery, Compose/QA ni cliente legacy alterados. CP-013/014 conserva provenance; regresión de assets no sustituye DB/browser/restore. L2 y lotes futuros deben acreditar su cadena cuando cambien entradas/dependencias.
 - Alternativa descartada para esta ejecución: major Tailwind4 afectaría el cliente heredado y no elimina automáticamente código bundled de Vite. No se aplica excepción humana indefinida ni se presenta audit0 del fixture como solución ya integrada.
 - Rollback: revertir commit del runner/manifiesto/gate devuelve Q-43 BLOCKING; no ejecutar tooling afectado ni alegar reversión de datos. Gate: instalar lock sin lifecycle, negativas de allowlist/symlink/fallback, hashes de copia, tests reales y build/F, auditorías nativas, revisión independiente y CI del SHA exacto antes de merge. No QA ni recursos compartidos nuevos.
+
+## DEC-061 — A exacta de P1-L2 v0.2-CP016
+
+- Fecha/estado/tipo: 2026-10-13, CP-017 / APPROVED / baseline limitada; SPEC CHANGE SC-009.
+- Fuente humana directa: adjunto `58f74b6d-fed5-482c-b395-07767df134f9`, «APRUEBO A Y AUTORIZO B para P1-L2 v0.2-CP016». A cubre TODO `.agentic/NEXT_LOT_CANDIDATE.md`, SHA256 `ca975dc822c0bd5e872d3debe824abc536f662007513170f327727878ff3ac71`, verificado antes de registro. [Baseline protegida](specs/P1-L2.md); snapshot íntegro del checkpoint fuente704b4ae.
+- Alcance: doce criterios, ajuste fundacional P1/P2, altas y recepciones ficticias sin importes, permisos, pool writer, protocolo monotónico restrictivo, idempotencia, cuotas, migración aditiva, recuperación/rollback y UI cuadrada. No A global ni otros módulos por referencia transitiva. Conserva PostgreSQL/React/Express/Compose independiente y decisiones comerciales/fiscales previas.
+- SC-009: cambio real de mecanismo respecto a L1 lector y asignación limitada de escritores a P1, expresamente incluido en A. Impacto inverso: sesión/emisor/logout, autoridad central, grants, schema/directorio/credenciales/pools, efecto empresarial, ledger/reservas, barrera/recovery, UI y artefacto. Revocación tiene preparación restrictiva durable y cierre local exclusivo antes de acuse; conserva garantía de ningún efecto posterior al cierre probado y separación de prueba de fin de recursos. No modifica bytes protegidos L1 ni reutiliza sus PASS como salida writer.
+- Revisión/entrada: F14-L2 CP-016 y revisiones focales separadas SQL/servicio/UI CP-017, contrato HTTP aprobado intacto, sin defectos críticos detectados. Environment Gate antes de QA propia; toda salida nueva inicialmente NOT VERIFIED. Metodología intacta.
+
+## DEC-062 — B e integración condicionada de P1-L2
+
+- Fecha/estado/tipo: 2026-10-13, CP-017 / APPROVED / ejecución diferenciada de A.
+- Fuente: mismo adjunto humano §§3…8. Autoriza implementar y verificar TODO el lote DEC-061, sin pedir otra B por corte/prueba/corrección. Permite QA ficticia propia con preflight/credenciales nuevas/límites y cleanup; PR contra develop/CI/revisión/fixes/merge solo cuando todas las salidas y gates, incluida ausencia acreditada de despliegue accidental, pasen.
+- Límites: no P2, producción, datos reales, DNS/TLS públicos, recursos compartidos, Coolify/Traefik, Nexora/Mecanet-EAK, pagos/cobros/contratos ni coste. No tocar PR #1. P1-L2 TERMINAL únicamente tras integración y CI canónica verificados; siguiente baseline independiente de checkpoint documental/código probado.
+- Próximo trabajo: gates de entrada por alcance y entorno, implementación completa autorizada; [plan previo](../.agentic/P1-L2_PLAN.md). Ninguna prueba funcional se acredita por esta decisión.
+
+## DEC-063 — Entrada futura exclusiva del operador Mecanet
+
+- Fecha/estado/tipo: 2026-10-13, CP-017 / APPROVED / dirección de producto futura.
+- Fuente: adjunto actual; `admin.mecanet.app` será panel independiente exclusivo del operador, con identidad/permisos separados de tenants. Conserva DEC-045 y sus restricciones; no concede acceso POS/ventas/contenido, infraestructura, impersonación o soporte por extensión.
+- Resolve-before: diseño del primer handler/pantalla operador/P4 DG-ADMIN y entrada pública Q-41; DNS/HTTPS/implementación NOT VERIFIED, no autorizados en P1-L2. No consume este lote ni bloquea writers QA.
+
+## DEC-064 — PayPal como candidato adicional recurrente
+
+- Fecha/estado/tipo: 2026-10-13, CP-017 / PROPOSED / evaluación externa futura.
+- Fuente humana: adjunto actual solicita considerar PayPal además de CardNET/AZUL; CONFIRMED únicamente su incorporación a la evaluación. No proveedor aprobado ni sustitución de DEC-008/alternativas actuales.
+- Pendiente técnico/contractual/comercial Q-03/38 antes de primer código de pagos/P3: disponibilidad para el comerciante concreto RD, recurrencia/monedas/fees/cancelación/webhooks y condiciones verificables. No conexión/cobro/contratación ni afirmación de disponibilidad en esta ejecución; no bloquea QA sintética L2.

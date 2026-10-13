@@ -1,0 +1,127 @@
+{
+  "checkpoint": "CP-016",
+  "at_utc": "2026-10-13T17:43:29.515762+00:00",
+  "classification": "DETECTED",
+  "source": "GitHub authenticated API and local Git",
+  "repository": "SrEdgarR/MECANET",
+  "account": {
+    "login": "SrEdgarR"
+  },
+  "repository_metadata": {
+    "default_branch": "develop",
+    "id": 1383698839,
+    "permissions": {
+      "admin": true,
+      "maintain": true,
+      "pull": true,
+      "push": true,
+      "triage": true
+    },
+    "visibility": "public"
+  },
+  "branch": {
+    "name": "develop",
+    "protected": false,
+    "sha": "010aab670c638d168c971df3e3e53b97e72ff443"
+  },
+  "workflows": {
+    "total_count": 1,
+    "workflows": [
+      {
+        "name": "P1-L1 verification",
+        "path": ".github/workflows/p1-l1-verify.yml",
+        "state": "active"
+      }
+    ]
+  },
+  "hooks": [],
+  "rulesets": [],
+  "actions_permissions": {
+    "enabled": true,
+    "allowed_actions": "all",
+    "sha_pinning_required": false
+  },
+  "workflow_permissions": {
+    "default_workflow_permissions": "read",
+    "can_approve_pull_request_reviews": false
+  },
+  "self_hosted_runners": {
+    "runners": [],
+    "total_count": 0
+  },
+  "historical_deployments": [
+    {
+      "created_at": "2026-10-07T16:41:25Z",
+      "creator": "vercel[bot]",
+      "environment": "Production \u2013 mecanet-app",
+      "id": 6915510608,
+      "sha": "f5afaa23c54c968be249231f18e212b2b43a0c82"
+    },
+    {
+      "created_at": "2026-10-07T16:40:44Z",
+      "creator": "vercel[bot]",
+      "environment": "Production \u2013 mecanet-web",
+      "id": 6915495489,
+      "sha": "f5afaa23c54c968be249231f18e212b2b43a0c82"
+    },
+    {
+      "created_at": "2026-10-07T16:35:54Z",
+      "creator": "vercel[bot]",
+      "environment": "Preview \u2013 mecanet-app",
+      "id": 6915391143,
+      "sha": "f5afaa23c54c968be249231f18e212b2b43a0c82"
+    },
+    {
+      "created_at": "2026-10-07T16:35:19Z",
+      "creator": "vercel[bot]",
+      "environment": "Preview \u2013 mecanet-web",
+      "id": 6915378351,
+      "sha": "f5afaa23c54c968be249231f18e212b2b43a0c82"
+    },
+    {
+      "created_at": "2026-10-07T16:14:42Z",
+      "creator": "vercel[bot]",
+      "environment": "Production \u2013 mecanet-app",
+      "id": 6914914868,
+      "sha": "3deccdfd307ff4cd186a9c6e6ceb78cc04566125"
+    },
+    {
+      "created_at": "2026-10-07T16:14:21Z",
+      "creator": "vercel[bot]",
+      "environment": "Production \u2013 mecanet-web",
+      "id": 6914907152,
+      "sha": "3deccdfd307ff4cd186a9c6e6ceb78cc04566125"
+    }
+  ],
+  "legacy_pr": {
+    "base": "develop",
+    "draft": true,
+    "head": "f5afaa23c54c968be249231f18e212b2b43a0c82",
+    "number": 1,
+    "state": "open",
+    "title": "Deploy Mecanet frontend to Vercel and API to Coolify"
+  },
+  "local_integration_head": "04c5d41299bffc15e201c168677079809feb6a0f",
+  "remote": "https://github.com/SrEdgarR/MECANET.git",
+  "own_workflow": {
+    "path": ".github/workflows/p1-l1-verify.yml",
+    "sha256": "29d9c188d86643ea19e69bb0bca3becea234f69520bb17b007d6a8791299841f",
+    "triggers": [
+      "pull_request to develop",
+      "push develop/codex/integrate-p1-l1"
+    ],
+    "operations": "local contracts/build/audit only; no secrets/deploy/SSH/docker; npm ci --ignore-scripts"
+  },
+  "apps_inventory_limit": {
+    "status": "NOT VERIFIED",
+    "reason": "GET /user/installations HTTP403: GitHub App-authorized token required. Does not imply absence of Apps. Known deploy paths separately checked; no token acquisition or secret read."
+  },
+  "mutations": [],
+  "recheck_before": [
+    "push",
+    "create PR",
+    "merge"
+  ],
+  "assessment": "Q-42 PASS bounded to observed mechanisms plus direct human disconnection and Vercel repo filter; not an assertion of absence of any external polling system. New deployment evidence requires stop and investigation.",
+  "stage": "before-merge"
+}

@@ -1,8 +1,8 @@
 {
   "checkpoint": "CP-016",
-  "at_utc": "2026-10-13T17:37:25.281643+00:00",
+  "at_utc": "2026-10-13T17:56:31.259580+00:00",
   "classification": "DETECTED",
-  "stage": "premerge",
+  "stage": "final",
   "tested_code_sha": "0d8285cef117d6174a6053f18ceaac180f8aa1c5",
   "historical_tested_code_sha": "a89cc2eee43a8f60f3464bea26a6ea4f9ddfc867",
   "source_primary_sha": "a541f7bcab88f289fa2bc89f6c9c9d004283cff2",
@@ -34,16 +34,16 @@
       "id": "planning:matrix-states",
       "result": "PASS",
       "evidence": {
-        "stage": "premerge",
+        "stage": "final",
         "expected": {
-          "PASS": 12,
+          "PASS": 14,
           "FAIL": 1,
-          "NOT VERIFIED": 3
+          "NOT VERIFIED": 1
         },
         "actual": {
-          "PASS": 12,
+          "PASS": 14,
           "FAIL": 1,
-          "NOT VERIFIED": 3
+          "NOT VERIFIED": 1
         },
         "only_legacy_audit_may_fail": true
       }
@@ -150,7 +150,7 @@
       "id": "planning:evidence-json",
       "result": "PASS",
       "evidence": {
-        "files": 26,
+        "files": 48,
         "invalid": []
       }
     },
@@ -243,7 +243,7 @@
       "id": "planning:affected-references",
       "result": "PASS",
       "evidence": {
-        "checked": 154,
+        "checked": 158,
         "broken": [],
         "limits": "Local file existence; no remoteURL/all-anchor check. Exact snapshots use manifest sourcePath. No generic suppression of broken historical links."
       }
@@ -272,8 +272,69 @@
       "result": "PASS",
       "evidence": {
         "scope": "current",
-        "exit": 0,
-        "exceptions": [],
+        "exit": 2,
+        "exceptions": [
+          {
+            "path": "docs/evidence/cp016/ci-pr-verification.txt",
+            "line": 14,
+            "reason": "trailing whitespace.",
+            "justification": "exact pinned GitHub verification stdout bytes; trailing spaces kept, source hash verified"
+          },
+          {
+            "path": "docs/evidence/cp016/ci-pr-verification.txt",
+            "line": 175,
+            "reason": "trailing whitespace.",
+            "justification": "exact pinned GitHub verification stdout bytes; trailing spaces kept, source hash verified"
+          },
+          {
+            "path": "docs/evidence/cp016/ci-pr-verification.txt",
+            "line": 234,
+            "reason": "trailing whitespace.",
+            "justification": "exact pinned GitHub verification stdout bytes; trailing spaces kept, source hash verified"
+          },
+          {
+            "path": "docs/evidence/cp016/ci-pr-verification.txt",
+            "line": 236,
+            "reason": "trailing whitespace.",
+            "justification": "exact pinned GitHub verification stdout bytes; trailing spaces kept, source hash verified"
+          },
+          {
+            "path": "docs/evidence/cp016/ci-pr-verification.txt",
+            "line": 242,
+            "reason": "trailing whitespace.",
+            "justification": "exact pinned GitHub verification stdout bytes; trailing spaces kept, source hash verified"
+          },
+          {
+            "path": "docs/evidence/cp016/ci-pr-verification.txt",
+            "line": 247,
+            "reason": "trailing whitespace.",
+            "justification": "exact pinned GitHub verification stdout bytes; trailing spaces kept, source hash verified"
+          },
+          {
+            "path": "docs/evidence/cp016/ci-pr-verification.txt",
+            "line": 248,
+            "reason": "trailing whitespace.",
+            "justification": "exact pinned GitHub verification stdout bytes; trailing spaces kept, source hash verified"
+          },
+          {
+            "path": "docs/evidence/cp016/ci-pr-verification.txt",
+            "line": 250,
+            "reason": "trailing whitespace.",
+            "justification": "exact pinned GitHub verification stdout bytes; trailing spaces kept, source hash verified"
+          },
+          {
+            "path": "docs/evidence/cp016/ci-pr-verification.txt",
+            "line": 252,
+            "reason": "trailing whitespace.",
+            "justification": "exact pinned GitHub verification stdout bytes; trailing spaces kept, source hash verified"
+          },
+          {
+            "path": "docs/evidence/cp016/ci-pr-verification.txt",
+            "line": 257,
+            "reason": "trailing whitespace.",
+            "justification": "exact pinned GitHub verification stdout bytes; trailing spaces kept, source hash verified"
+          }
+        ],
         "unexpected": []
       }
     },
@@ -298,8 +359,8 @@
         "decisions": 60,
         "pending": 14,
         "criteria": 248,
-        "INT": "NOT VERIFIED",
-        "expectedINT": "NOT VERIFIED",
+        "INT": "PASS",
+        "expectedINT": "PASS",
         "noSaaSReady": true
       }
     },
@@ -335,7 +396,7 @@
       "id": "integration:matrix-states",
       "result": "PASS",
       "evidence": {
-        "stage": "premerge",
+        "stage": "final",
         "expected": {
           "PASS": 12,
           "FAIL": 1,
@@ -730,6 +791,20 @@
         ],
         "artifactF": "sha256:5950ae7e519170ebaaf6cf8c99e9187c14b41f32779044e2829e8de5abbac0a6",
         "limit": "No current PostgreSQL/browser/physicalrestore run"
+      }
+    },
+    {
+      "id": "remote-chain-documentary-provenance",
+      "result": "PASS",
+      "evidence": {
+        "head": "04c5d41299bffc15e201c168677079809feb6a0f",
+        "merge": "a0098178fc27467bf4c12da0e97723e0b80ce683",
+        "CIProofs": [
+          true,
+          true,
+          true
+        ],
+        "scope": "Checks captured actual GitHub evidence and fetched Git identity, does not rerun CI or infer production readiness"
       }
     }
   ],

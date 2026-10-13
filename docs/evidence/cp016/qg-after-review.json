@@ -1,0 +1,22 @@
+{
+  "checkpoint": "CP-016",
+  "at_utc": "2026-10-13T17:58:30.588280+00:00",
+  "classification": "DETECTED",
+  "command": "private cp016-doc-qg.py code0d final --no-write",
+  "result": {
+    "result": "PASS",
+    "stage": "final",
+    "checks": 65,
+    "failed": [],
+    "details": []
+  },
+  "frozen_qg": {
+    "source": "qg.json",
+    "sourceSha256": "351560ac767552541649bc6556e3ecdd6b33c8f21e56f897f8d4708f91e49ed8"
+  },
+  "review": {
+    "source": "terminal-review.json",
+    "sourceSha256": "9e406c37954b9aa584009fab94db5881f84a8ac92083f7ed169e57106d6f8876"
+  },
+  "limits": "Documentary closure recheck only; does not rerun product or CI tests; raw stdout whitespace exceptions pinned to full hash"
+}

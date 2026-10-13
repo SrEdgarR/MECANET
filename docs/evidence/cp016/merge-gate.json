@@ -1,0 +1,43 @@
+{
+  "at_utc": "2026-10-13T17:48:12.336308+00:00",
+  "repository": "SrEdgarR/MECANET",
+  "account": "SrEdgarR",
+  "decision": "AUTHORIZED_CONDITIONAL_MERGE_GATES_PASS",
+  "pr": {
+    "baseRefOid": "010aab670c638d168c971df3e3e53b97e72ff443",
+    "headRefOid": "04c5d41299bffc15e201c168677079809feb6a0f",
+    "isDraft": false,
+    "mergeStateStatus": "CLEAN",
+    "mergeable": "MERGEABLE",
+    "state": "OPEN",
+    "statusCheckRollup": [
+      {
+        "__typename": "CheckRun",
+        "completedAt": "2026-10-13T17:42:37Z",
+        "conclusion": "SUCCESS",
+        "detailsUrl": "https://github.com/SrEdgarR/MECANET/actions/runs/38440720838/job/115446272717",
+        "name": "Local contracts, frontend and dependency audit",
+        "startedAt": "2026-10-13T17:41:47Z",
+        "status": "COMPLETED",
+        "workflowName": "P1-L1 verification"
+      },
+      {
+        "__typename": "CheckRun",
+        "completedAt": "2026-10-13T17:42:25Z",
+        "conclusion": "SUCCESS",
+        "detailsUrl": "https://github.com/SrEdgarR/MECANET/actions/runs/38440714202/job/115446247895",
+        "name": "Local contracts, frontend and dependency audit",
+        "startedAt": "2026-10-13T17:41:43Z",
+        "status": "COMPLETED",
+        "workflowName": "P1-L1 verification"
+      }
+    ],
+    "url": "https://github.com/SrEdgarR/MECANET/pull/2"
+  },
+  "review": "published-review.json",
+  "reviewSha256": "c65c6c849464e635d24d46b82332ccfd38bcbc9e52e980c1761523fb5f1595aa",
+  "Q42": "git-preflight-before-merge.json + coolify-trigger-before-merge.json + vercel-before-merge.json",
+  "mutations_requested": [
+    "normal merge PR2 only; no admin override/force/delete branch/deploy"
+  ]
+}

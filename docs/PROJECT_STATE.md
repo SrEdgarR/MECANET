@@ -1,6 +1,8 @@
 # Estado del proyecto — Mecanet SaaS
 
-Revisión CP-016, 2026-10-13: P1-L1 conserva ocho salidas PASS; Q-42 y Q-43 locales resueltas mediante evidencia real y SC-008 aprobada/implementada. Integration Gate NOT VERIFIED hasta PR/CI/merge/canónica. P1 única fase EN CURSO; P0 PARCIAL/RG-001 y SaaS general NOT APPROVED. P1-L2 v0.2 candidato revisado, A/B pendientes.
+CP-017 en curso, 2026-10-13: A exacta P1-L2 v0.2-CP016/DEC-061 y B diferenciada DEC-062 recibidas del adjunto58f74b6d, hash verificado. P1 única fase EN CURSO; P0 PARCIAL/RG-001 y SaaS general NOT APPROVED. Base develop a0098178fc27467bf4c12da0e97723e0b80ce683/PR #2; P1-L1 TERMINAL conservado. Specification/Design/Development locales acreditados para el lote; QA nueva exclusiva CP017 con preflight ARM64/pins/headroom/redes/secretos propios PASS. Implementación P1-L2 EN CURSO; doce salidas funcionales aún NOT VERIFIED, sin heredar PASS L1. Sin lanzamiento ni cambio de infraestructura compartida. DEC-063 admin.mecanet.app futuro y DEC-064 PayPal candidato, ambos fuera del lote.
+
+Revisión CP-016, 2026-10-13: P1-L1 TERMINAL, ocho salidas PASS y Integration Gate PASS con [PR #2](https://github.com/SrEdgarR/MECANET/pull/2), head `04c5d41299bffc15e201c168677079809feb6a0f`, merge/develop `a0098178fc27467bf4c12da0e97723e0b80ce683`; [CI push](https://github.com/SrEdgarR/MECANET/actions/runs/38440714202), [CI PR](https://github.com/SrEdgarR/MECANET/actions/runs/38440720838) y [CI develop](https://github.com/SrEdgarR/MECANET/actions/runs/38441611717) PASS. Código local probado `0d8285cef117d6174a6053f18ceaac180f8aa1c5`; evidencia remota por sus SHA propios. Q-42/Q-43 resueltas para la lane aprobada; legacy audit FAIL/TD-21 conservado. P1 única fase EN CURSO; P0 PARCIAL/RG-001 y SaaS general NOT APPROVED. P1-L2 v0.2 candidato revisado, A/B pendientes y doce salidas funcionales NOT VERIFIED. Sin despliegues o recursos de infraestructura modificados.
 
 ## Estado global
 
@@ -11,13 +13,13 @@ Revisión CP-016, 2026-10-13: P1-L1 conserva ocho salidas PASS; Q-42 y Q-43 loca
 | active_phase_name | Fundación aislada y operable |
 | status | EN CURSO |
 | last_updated | 2026-10-13 |
-| next_gate | Publicar rama limpia, PR/review/CI, merge y CI canónica bajo recheck Q-42; después A/B exactas P1-L2 y entradas |
-| readiness_scope | P1-L1 v0.2-CP012/S-18/L-01 APPROVED por DEC-058; Development y Environment acreditados para QA limitada. SaaS general NOT APPROVED |
-| progress_basis | Estado cualitativo, sin porcentaje. P1-L1 COMPLETADA con ocho salidas PASS y trazabilidad por suite; esto no cierra P1 general ni el SaaS |
-| implementation | P1-L1 COMPLETADA: ocho cortes privados PostgreSQL/React/Express; P1 general EN CURSO, sin funcionalidad comercial pública |
+| next_gate | Salidas reales L2-A1…A12 y Quality/Integration Gate condicionado; no producción ni nueva B por corte |
+| readiness_scope | P1-L2 v0.2-CP016 APPROVED exacta DEC-061/B DEC-062; QA sintética propia con preflight. SaaS general NOT APPROVED |
+| progress_basis | Estado cualitativo, sin porcentaje. P1-L1 TERMINAL con ocho PASS e Integration Gate PASS; P1 general EN CURSO y SaaS general NOT APPROVED |
+| implementation | P1-L1 TERMINAL integrado; P1-L2 EN CURSO en codex/p1-l2, sin inventario comercial o publicación |
 | current_checkpoint | CP-016 |
 | hosting_target | CONFIRMED DEC-021/SC-005: VPS existente, operación propia independiente de Coolify; PostgreSQL DEC-054. Dominio futuro mecanet.app DEC-059/SC-007 |
-| hosting_execution | Cohorte CP-014 privada instalada y probada con Compose, PostgreSQL18.6 ARM64, dos API, worker y Nginx; sin puertos públicos. Cinco contenedores propios STOPPED al cierre, sin URL activa; aislamiento y diez consumidores ajenos preservados. Inventario/cleanup en auditoría CP-014; fuente CP-013 cerrada y hashes preservados |
+| hosting_execution | QA CP017 propia con Compose/PG18.6 ARM64, sin TCP público; preflight PASS. CP013/CP014 permanecen STOPPED. Recursos nuevos QA permitidos DEC-062, otros consumidores preservados. |
 
 ## Readiness
 
@@ -33,22 +35,22 @@ Revisión CP-016, 2026-10-13: P1-L1 conserva ocho salidas PASS; Q-42 y Q-43 loca
 
 | Campo | Valor |
 |---|---|
-| base_sha | 010aab670c638d168c971df3e3e53b97e72ff443, base limpia de integración; fuente CP-014 9fcdd9540848edbbdef1cfc94667491c9ab2ba92 preservada |
+| base_sha | a0098178fc27467bf4c12da0e97723e0b80ce683 — develop canónico verificado al iniciar L2 |
 | research_head_sha | 9fcdd9540848edbbdef1cfc94667491c9ab2ba92; lectura focalizada sin reinventariar el VPS |
 | tested_code_sha | 0d8285cef117d6174a6053f18ceaac180f8aa1c5 — SC-008 local21negativas/29+3/build/3assetsF/auditorías0/syntax69; evidencia DB/browser/restore histórica conserva sus SHA |
 | qa_controller_sha | 409880a513bee1eff909caf68d23325af55e9be4; normalización del inventario ajeno y regresión del controlador QA, sin cambio del artefacto F desplegado/probado |
 | experimental_test_reference | CP-006/010 históricos no repetidos ni atribuidos a PostgreSQL; las90 pruebas Mongo f5afaa2 no prueban este lote |
 | HEAD | Resolver git rev-parse HEAD en cada worktree; checkpoint final no se escribe en su propio commit |
-| checkpoint_sha | CP-015 fuentea541f7bcab88f289fa2bc89f6c9c9d004283cff2/integración44e55714b30dca776bc6a7fe65cb389b67343738; CP-016 final se identifica externamente/Git sin autoSHA |
+| checkpoint_sha | CP-016 documental premerge `54da15c05b781d531e5156766f3831d91c3fa0ca`, head remoto congelado `04c5d41299bffc15e201c168677079809feb6a0f`; cierre primary se identifica externamente/Git, sin autoSHA |
 | approved_head_sha | 3b387b38784907b67e2209a35c3d5f400d70742e, solamente S-18/manifiestoL-01/ocho cortes por DEC-058 |
-| merge_sha | Ninguno todavía: Integration Gate remoto por ejecutar; autorización vigente |
-| current_main_baseline_sha | 010aab670c638d168c971df3e3e53b97e72ff443 — develop remoto comprobado; no nuevo merge todavía |
-| next_phase_base_sha | No definido hasta merge/CI canónica; A/B de L2 pendientes |
-| local_branch | codex/integrate-p1-l1 preparada en worktree propio; codex/saas-discovery conserva fuente y planificación siguiente |
-| remote_branch | Rama nueva aún no publicada al checkpoint previo; PR #1 y codex/deploy-vercel-coolify intactos |
+| merge_sha | a0098178fc27467bf4c12da0e97723e0b80ce683 |
+| current_main_baseline_sha | a0098178fc27467bf4c12da0e97723e0b80ce683 — develop verificado tras CI canónica PASS |
+| next_phase_base_sha | a0098178fc27467bf4c12da0e97723e0b80ce683 — base L2 aprobada; siguiente lote necesita su A/B |
+| local_branch | codex/p1-l2 en worktree adjunto reutilizado limpio desde develop; primary/fuente y worktree anterior preservados |
+| remote_branch | codex/integrate-p1-l1 publicada e integrada; PR #1/codex/deploy-vercel-coolify preservados |
 | worktree | Primario fuente/planning y C:/Users/thede/.codex/worktrees/p1l1-integration/MECANET-develop; .kilo/worktrees/majestic-chiller conservado |
-| integration_target | develop 010aab670c638d168c971df3e3e53b97e72ff443; PR exacto L1 preparado localmente, sin candidato siguiente mezclado |
-| CI | SC-008 local/revisión/actionlint PASS, fullaudit backend/lane SaaS0; legacy FAIL conservado. CI PR/canónica NOT VERIFIED |
+| integration_target | develop integrado mediante [PR #2](https://github.com/SrEdgarR/MECANET/pull/2), head `04c5d41299bffc15e201c168677079809feb6a0f`, merge/develop `a0098178fc27467bf4c12da0e97723e0b80ce683`; [CI push](https://github.com/SrEdgarR/MECANET/actions/runs/38440714202), [CI PR](https://github.com/SrEdgarR/MECANET/actions/runs/38440720838) y [CI develop](https://github.com/SrEdgarR/MECANET/actions/runs/38441611717) PASS |
+| CI | SC-008 local/revisión PASS; [CI push](https://github.com/SrEdgarR/MECANET/actions/runs/38440714202), [CI PR](https://github.com/SrEdgarR/MECANET/actions/runs/38440720838) y [CI develop](https://github.com/SrEdgarR/MECANET/actions/runs/38441611717) PASS; fullaudit lane/backend0, legacy FAIL conservado |
 
 ## UI actual
 
@@ -153,4 +155,6 @@ Registro vigente:16pendientes,2BLOCKING/14FUTURE;4diseños/5evidencias/5decision
 
 ## Resultado CP-016 — gates locales y candidato siguiente
 
-Q-42 resuelta con fuente humana/filtroVercel/GitHub/Coolify y límites explícitos. SC-008/DEC-060 aprobada/implementada: manifests/lock/allowlist/guard propio, runtimeReact/Vite/Vitest conservado y strictfullaudit0; clientelegacy intacto/FAIL TD-21. Pruebas fijadas al SHA0d8285cef117d6174a6053f18ceaac180f8aa1c5 y review independiente PASS; arnés inicial falló al omitirSystemRoot y se corrigió sin producto, evidencia preservada. Integration Gate aún NV hasta ejecución remota. Candidato L2 v0.2 ca975dc822c0bd5e872d3debe824abc536f662007513170f327727878ff3ac71, 15 cálculos/review documental PASS, doce salidas NV y A/B pendientes. Infraestructura creada/modificada: ninguna; QA STOPPED/KEEP CP014 reportada, sin nuevo ensayo físico.
+CP-016, 2026-10-13: P1-L1 TERMINAL, ocho salidas PASS y Integration Gate PASS con [PR #2](https://github.com/SrEdgarR/MECANET/pull/2), head `04c5d41299bffc15e201c168677079809feb6a0f`, merge/develop `a0098178fc27467bf4c12da0e97723e0b80ce683`; [CI push](https://github.com/SrEdgarR/MECANET/actions/runs/38440714202), [CI PR](https://github.com/SrEdgarR/MECANET/actions/runs/38440720838) y [CI develop](https://github.com/SrEdgarR/MECANET/actions/runs/38441611717) PASS. Código local probado `0d8285cef117d6174a6053f18ceaac180f8aa1c5`; evidencia remota por sus SHA propios. Q-42/Q-43 resueltas para la lane aprobada; legacy audit FAIL/TD-21 conservado. P1 única fase EN CURSO; P0 PARCIAL/RG-001 y SaaS general NOT APPROVED. P1-L2 v0.2 candidato revisado, A/B pendientes y doce salidas funcionales NOT VERIFIED. Sin despliegues o recursos de infraestructura modificados.
+
+Próximo paso: Decisión A exacta P1-L2 v0.2/ajuste P1-P2 y B diferenciada; después Design/Development/Environment del lote antes de código/recursos. No P2 o lanzamiento por extensión
