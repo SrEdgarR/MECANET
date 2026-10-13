@@ -198,6 +198,12 @@ def finish_config():
 def runtime():
  own();resources();compose('up','-d','--no-build','--pull','never','worker','api1','api2','web');preserve()
 
+def container_artifact(cid):
+ mounts=json.loads(run('docker','inspect','--format','{{json .Mounts}}',cid));source=next(m['Source'] for m in mounts if m['Destination']=='/workspace')
+ assert re.fullmatch(re.escape(str(ROOT/'artifacts'))+'/[a-f0-9]{64}',source)
+ manifest=json.loads((pathlib.Path(source)/'artifact.json').read_text());assert manifest['digest']=='sha256:'+pathlib.Path(source).name
+ return manifest
+
 def prove_stop():
  own();assert len(sys.argv)==3 and sys.argv[2] in ['api1','api2'];instance=sys.argv[2]
  cid=compose('ps','-q',instance).strip();assert re.fullmatch(r'[0-9a-f]{64}',cid)
@@ -206,7 +212,7 @@ def prove_stop():
  compose('stop',instance)
  state=json.loads(run('docker','inspect','--format','{{json .State}}',cid))
  assert not state['Running'] and state['Status']=='exited'
- proof={'project':PROJECT,'sourceSha':json.loads((ROOT/'evidence/artifact.json').read_text())['codeSha'],
+ proof={'project':PROJECT,'sourceSha':container_artifact(cid)['codeSha'],
   'generation':record['generation'],'instance':instance,'owner':record['owner'],'containerId':cid,'running':False,'exitCode':state['ExitCode'],
   'containerStoppedAt':state['FinishedAt'],'httpClosed':True,'writerApplicationName':'mecanet-writer:'+record['owner']}
  pg=compose('ps','-q','postgres').strip()
@@ -264,6 +270,86 @@ def restart_proof():
  p.write_text(json.dumps(worker));os.chmod(p,0o400);os.chown(p,999,999)
  print('CP017_CLOCK_RESTART_PROCESS_AND_SQL_END_PROVEN')
 
+def promotion_proof():
+ own();apis=[]
+ assert all(not x['running'] for x in facts() if x['project']==PROJECT and not x['name'].endswith('-postgres-1')),'PROMOTION_RUNTIME_ACTIVE'
+ for instance in ['api1','api2']:
+  p=json.loads((ROOT/'evidence'/('host-end-proof-'+instance+'.json')).read_text())
+  state=json.loads(run('docker','inspect','--format','{{json .State}}',p['containerId']))
+  assert not state['Running'] and state['Status']=='exited' and p['httpClosed'] and p['sqlOwnerAbsent']
+  apis.append({**{k:p[k] for k in ['instance','containerId','owner','httpClosed','sqlOwnerAbsent','writerApplicationName']},'state':'exited','stoppedSourceSha':p['sourceSha']})
+ assert len({p['owner'] for p in apis})==2 and len({p['containerId'] for p in apis})==2
+ pg=compose('ps','-q','postgres').strip();assert pg
+ command='export PGPASSWORD; PGPASSWORD=$(cat /run/secrets/bootstrap); exec psql -h /var/run/postgresql -U qa_bootstrap -d mecanet_control -qAt -v ON_ERROR_STOP=1'
+ absent=run('docker','exec','-i',pg,'sh','-c',command,input="BEGIN READ ONLY; SELECT count(*) FROM pg_stat_activity WHERE usename LIKE 'saas_%'; ROLLBACK;").strip();assert absent=='0','PROMOTION_SQL_OWNER_ALIVE'
+ q=json.loads((ROOT/'secrets/connections.json').read_text());a=json.loads((ROOT/'evidence/artifact.json').read_text())
+ p=ROOT/'evidence/operational-host-proof.json';p.write_text(json.dumps({'project':PROJECT,'sourceSha':a['codeSha'],'generation':q['generation'],'systemIdentifier':q['systemIdentifier'],'apis':apis,'observedAt':time.strftime('%Y-%m-%dT%H:%M:%SZ',time.gmtime())}));os.chmod(p,0o400);os.chown(p,999,999)
+ print('CP017_PROMOTION_PROCESS_AND_SQL_END_PROVEN')
+
+def refresh_config():
+ own();assert all(not x['running'] for x in facts() if x['project']==PROJECT and not x['name'].endswith('-postgres-1'))
+ q=json.loads((ROOT/'secrets/connections.json').read_text())
+ for name,fields in [('api.json',['entries','writerEntries']),('worker.json',['maintenanceEntries'])]:
+  p=ROOT/'secrets'/name;old=json.loads(p.read_text());assert old['generation']==q['generation']
+  for key in fields:old[key]=q[key]
+  p.write_text(json.dumps(old));os.chmod(p,0o400);os.chown(p,999,999)
+ print('CP017_OWN_RUNTIME_CONFIGURATION_REFRESHED_NO_SECRET_OUTPUT')
+
+def operational_promotion():
+ own();assert all(not x['running'] for x in facts() if x['project']==PROJECT and not x['name'].endswith('-postgres-1'))
+ assert len(sys.argv)>=4 and sys.argv[2] in ['prepare','promote'] and sys.argv[3] in ['POLICY','ROTATION','EPOCH']
+ a=json.loads((ROOT/'evidence/artifact.json').read_text());args=['run','--rm','--no-deps','-e','QA_CODE_SHA='+a['codeSha']]
+ if sys.argv[2]=='prepare':
+  assert len(sys.argv)>=5 and re.fullmatch('[a-f0-9-]{36}',sys.argv[4]);args+=['-e','QA_PROMOTION_RESTRICTION='+sys.argv[4]]
+  if sys.argv[3]=='POLICY':
+   assert len(sys.argv) in [6,7] and sys.argv[5] in ['last-product','last-byte','debt'];args+=['-e','QA_QUOTA_PHASE='+sys.argv[5]]
+   if len(sys.argv)==7:
+    assert re.fullmatch('[a-f0-9-]{36}',sys.argv[6]);args+=['-e','QA_QUOTA_RETAINED_OPERATION='+sys.argv[6]]
+  else:assert len(sys.argv)==5
+ else:assert len(sys.argv)==4
+ args+=['-v',str(ROOT/'evidence')+':/run/qa-results','harness','node','tests/qa/cp017/promotion.mjs',sys.argv[2],sys.argv[3]]
+ try:print(compose(*args),end='')
+ except subprocess.CalledProcessError as e:print(e.output,end='');raise SystemExit(e.returncode)
+
+def rollback_target():
+ own();assert len(sys.argv)==3 and re.fullmatch('sha256:[a-f0-9]{64}',sys.argv[2])
+ assert all(not x['running'] for x in facts() if x['project']==PROJECT and not x['name'].endswith('-postgres-1')),'ROLLBACK_RUNTIME_ACTIVE'
+ current=json.loads((ROOT/'evidence/artifact.json').read_text());target=ROOT/'artifacts'/sys.argv[2].split(':')[1];assert target.resolve().parent==ROOT/'artifacts'
+ desired=json.loads((target/'artifact.json').read_text());assert desired['digest']==sys.argv[2]
+ latest=json.loads((ROOT/'artifacts'/current['digest'].split(':')[1]/'artifact.json').read_text());expected=[e for e in latest['entries'] if e['path'].startswith('server/saas/db/migrations/')]
+ names=['001-control.sql','002-tenant.sql','003-control-writers.sql','003-tenant-writers.sql','004-tenant-writers-fix.sql'];assert len(expected)==len(names) and {e['path'].split('/')[-1] for e in expected}==set(names)
+ assert len([e for e in desired['entries'] if e['path'].startswith('server/saas/db/migrations/')])==len(names)
+ for entry in expected:assert any(e['path']==entry['path'] and e['sha256']==entry['sha256'] for e in desired['entries']),'ROLLBACK_SCHEMA_INCOMPATIBLE'
+ config=json.loads(compose('config','--format','json'))
+ for service in ['api1','api2','web']:
+  for volume in config['services'][service]['volumes']:
+   old=volume.get('source','')
+   if old.startswith(str(ROOT/'artifacts')+'/'):
+    suffix=re.sub('^'+re.escape(str(ROOT/'artifacts'))+'/[a-f0-9]{64}','',old);volume['source']=str(target)+suffix
+ (ROOT/'compose.yaml').write_text(json.dumps(config));compose('config','--quiet')
+ q=json.loads((ROOT/'secrets/connections.json').read_text());proof={'project':PROJECT,'generation':q['generation'],'schemaCompatible':True,'runtimeDigest':desired['digest'],'runtimeSourceSha':desired['codeSha'],'controllerSourceSha':current['codeSha'],'apis':[{'instance':i,'sourceSha':desired['codeSha']} for i in ['api1','api2']]}
+ p=ROOT/'evidence/rollback-runtime-proof.json';p.write_text(json.dumps(proof));os.chmod(p,0o400);os.chown(p,999,999)
+ print(json.dumps({'ownCompatibleRuntimeTarget':desired['codeSha'],'digest':desired['digest'],'schemaVersion':2,'noProcessStarted':True}))
+
+def rollback_tool():
+ own();assert len(sys.argv)==3 and sys.argv[2] in ['capture','rollback','forward'];a=json.loads((ROOT/'evidence/artifact.json').read_text())
+ proof=json.loads((ROOT/'evidence/rollback-runtime-proof.json').read_text())
+ actualApis=[]
+ for instance in ['api1','api2']:
+  cid=compose('ps','-q',instance).strip();assert re.fullmatch('[a-f0-9]{64}',cid)
+  actual=container_artifact(cid);assert actual['codeSha']==proof['runtimeSourceSha'] and actual['digest']==proof['runtimeDigest']
+  actualApis.append({'instance':instance,'containerId':cid,'running':True,'sourceSha':actual['codeSha']})
+ proof['apis']=actualApis;p=ROOT/'evidence/rollback-runtime-proof.json';p.write_text(json.dumps(proof));os.chmod(p,0o400);os.chown(p,999,999)
+ print(compose('run','--rm','--no-deps','-e','QA_CODE_SHA='+a['codeSha'],'-v',str(ROOT/'evidence')+':/run/qa-results','-v',str(ROOT/'journal')+':/run/qa-journal','probe','node','tests/qa/cp017/rollback.mjs',sys.argv[2]),end='')
+
+def metadata_tool():
+ own();assert len(sys.argv)==3 and sys.argv[2] in ['closed','pools'];a=json.loads((ROOT/'evidence/artifact.json').read_text())
+ live=any(x['running'] for x in facts() if x['project']==PROJECT and x['name'].endswith(('-api1-1','-api2-1','-web-1')))
+ assert live if sys.argv[2]=='pools' else not live
+ service='probe' if live else 'harness'
+ try:print(compose('run','--rm','--no-deps','-e','QA_CODE_SHA='+a['codeSha'],'-v',str(ROOT/'evidence')+':/run/qa-results',service,'node','tests/qa/cp017/metadata-live.mjs',sys.argv[2]),end='')
+ except subprocess.CalledProcessError as e:print(e.output,end='');raise SystemExit(e.returncode)
+
 def recovery_proof():
  own();apis=[]
  assert all(not x['running'] for x in facts() if x['project']==PROJECT and not x['name'].endswith('-postgres-1')),'RESTORE_SOURCE_RUNTIME_ACTIVE'
@@ -282,6 +368,7 @@ def recovery_copy():
  own();proof=json.loads((ROOT/'evidence/recovery-proof.json').read_text());assert proof['sourceRuntimeStopped'] and proof['sqlOwnersAbsent']
  assert all(not x['running'] for x in facts() if x['project']==PROJECT and not x['name'].endswith('-postgres-1'))
  source=ROOT/'data';destination=ROOT/'backup/writer-closed';assert source.resolve()==ROOT/'data' and destination.resolve()==ROOT/'backup/writer-closed' and not destination.exists()
+ assert not source.is_symlink() and not any(p.is_symlink() for p in source.rglob('*')),'RESTORE_SYMLINK_ABORT'
  assert sum(p.stat().st_size for p in source.rglob('*') if p.is_file())<2*1024**3,'RESTORE_COPY_SIZE_ABORT'
  resources();compose('stop','postgres');assert not any(x['running'] for x in facts() if x['project']==PROJECT)
  shutil.copytree(source,destination);pairs=[]
@@ -303,10 +390,20 @@ def recovery_target():
    if c.get('Subnet'):
     other=ipaddress.ip_network(c['Subnet']);assert other.version!=subnet.version or not other.overlaps(subnet),'RESTORE_NETWORK_CONFLICT'
  manifest=json.loads((ROOT/'backup/writer-manifest.json').read_text());backup=ROOT/'backup/writer-closed'
+ assert not backup.is_symlink() and not any(p.is_symlink() for p in backup.rglob('*')),'RESTORE_SYMLINK_ABORT'
+ assert len({e['path'] for e in manifest['files']})==len(manifest['files'])
+ assert {str(p.relative_to(backup)) for p in backup.rglob('*') if p.is_file()}=={e['path'] for e in manifest['files']},'RESTORE_BACKUP_INVENTORY_MISMATCH'
  for e in manifest['files']:
   p=backup/e['path'];assert p.resolve().is_relative_to(backup.resolve()) and not p.is_symlink() and p.is_file() and p.stat().st_size==e['bytes'] and hashlib.sha256(p.read_bytes()).hexdigest()==e['sha256'],'RESTORE_BACKUP_CHECKSUM_FAILED'
  assert hashlib.sha256(json.dumps(manifest['files'],separators=(',',':')).encode()).hexdigest()==manifest['digest']
  shutil.copytree(backup,target/'data');assert not (target/'data/postmaster.pid').exists()
+ # copytree preserves modes, not the postgres UID. Only the new, validated
+ # own destination is changed; never the source, backup or shared volumes.
+ data=target/'data';assert data.resolve()==ROOT/'restore/data'
+ for p in [data,*data.rglob('*')]:
+  assert not p.is_symlink() and p.resolve().is_relative_to(data.resolve())
+  os.chown(p,999,999)
+ assert all(p.stat().st_uid==999 and p.stat().st_gid==999 for p in [data,*data.rglob('*')])
  for p in ['standby.signal','recovery.signal']:assert not (target/'data'/p).exists()
  (target/'pg_hba.conf').write_text((ROOT/'config/pg_hba.conf').read_text().replace('10.77.51','10.77.53'));os.chmod(target/'pg_hba.conf',0o444)
  artifact=json.loads((ROOT/'evidence/artifact.json').read_text());directory=str(ROOT/'artifacts'/artifact['digest'].split(':')[1]);name=PROJECT+'-restore'
@@ -398,10 +495,17 @@ def drain_control():
  print(json.dumps({'ownApi1DrainEnded':True,'sqlOwnerAbsent':True,'elapsedSeconds':round(time.monotonic()-t,3),'containerId':cid}))
 
 def stop_own():
- own();compose('stop','api1','api2','web','worker','postgres');preserve();owner=own();owner['state']='STOPPED_PRIVATE_SYNTHETIC';(ROOT/'owner.json').write_text(json.dumps(owner))
+ own();compose('stop','api1','api2','web','worker','postgres')
+ target=ROOT/'restore/compose.yaml'
+ if target.exists():
+  assert target.resolve()==ROOT/'restore/compose.yaml'
+  assert json.loads(run('docker','compose','-f',str(target),'config','--format','json'))['name']==PROJECT+'-restore'
+  run('docker','compose','-f',str(target),'stop')
+ assert not any(x['running'] for x in facts() if x['project'] in [PROJECT,PROJECT+'-restore'])
+ preserve();owner=own();owner['state']='STOPPED_PRIVATE_SYNTHETIC';(ROOT/'owner.json').write_text(json.dumps(owner))
  print('CP017_OWN_RUNTIME_STOPPED_NO_DATA_DELETION')
 if __name__=='__main__':
- action=sys.argv[1];assert action in ['preflight','bootstrap','preserve','configure','start-postgres','accept-artifact','tool','foundation-backup','finish-config','runtime','stop-own','prove-stop','corrective-proof','pause-own','restart-proof','recovery-proof','recovery-copy','recovery-target','recovery-tool','close-writers','drain-control']
+ action=sys.argv[1];assert action in ['preflight','bootstrap','preserve','configure','start-postgres','accept-artifact','tool','foundation-backup','finish-config','runtime','stop-own','prove-stop','corrective-proof','pause-own','restart-proof','recovery-proof','recovery-copy','recovery-target','recovery-tool','close-writers','drain-control','promotion-proof','refresh-config','operational-promotion','rollback-target','rollback-tool','metadata-tool']
  if action=='preflight':print(json.dumps(preflight()))
  elif action=='bootstrap':bootstrap()
  elif action=='configure':configure()
@@ -416,6 +520,12 @@ if __name__=='__main__':
  elif action=='corrective-proof':corrective_proof()
  elif action=='pause-own':pause_own()
  elif action=='restart-proof':restart_proof()
+ elif action=='promotion-proof':promotion_proof()
+ elif action=='refresh-config':refresh_config()
+ elif action=='operational-promotion':operational_promotion()
+ elif action=='rollback-target':rollback_target()
+ elif action=='rollback-tool':rollback_tool()
+ elif action=='metadata-tool':metadata_tool()
  elif action=='recovery-proof':recovery_proof()
  elif action=='recovery-copy':recovery_copy()
  elif action=='recovery-target':recovery_target()

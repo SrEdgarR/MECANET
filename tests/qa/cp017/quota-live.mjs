@@ -9,6 +9,7 @@ import {createPgPool} from '../../../server/saas/db/pools.js';
 import {canonicalWrite} from '../../../server/saas/writes/validation.js';
 import {createQaClient,assertStatus} from '../cp014/http-client.mjs';
 import {withQaInspection,sanitizeSqlFailure} from './sql-live.mjs';
+import {extensionDenialSql} from './sql-vectors.mjs';
 const PROJECT='mecanet-qa-p1l2-cp017',A='11111111-1111-4111-8111-111111111111',B='22222222-2222-4222-8222-222222222222';
 const PHASES=['privileges','unicode','last-product','last-byte','debt'];
 const decimal=/^(0|[1-9][0-9]{0,18})$/;
@@ -119,7 +120,7 @@ const post=(client,tenantId,epoch,id,input,productId=null)=>client.request(produ
 async function waitSettled(qa,tenantId){const end=performance.now()+6500;while(performance.now()<end){const value=await snapshot(qa,tenantId);if(value.state.reserved_bytes==='0')return value;await new Promise(resolve=>setTimeout(resolve,40))}throw new Error('QA_QUOTA_RESOURCES_NOT_SETTLED')}
 async function privileges(qa){
  const facts=[];
- for(const [label,sql]of [['DML_BALANCE','UPDATE inventory.balances SET on_hand=0'],['DELETE_MOVEMENT','DELETE FROM inventory.movements'],['FENCE_UPDATE',"UPDATE inventory.writer_fence SET state='OPEN'"],['DDL','CREATE TABLE catalog.forged(id int)'],['ROLE_ELEVATION','SET ROLE saas_owner_a'],['EXTENSION','CREATE EXTENSION dblink']])facts.push(await role(qa,'saas_writer_a',p=>assertSqlDenied(()=>p.query(sql),['42501'],label)));
+ for(const [label,sql]of [['DML_BALANCE','UPDATE inventory.balances SET on_hand=0'],['DELETE_MOVEMENT','DELETE FROM inventory.movements'],['FENCE_UPDATE',"UPDATE inventory.writer_fence SET state='OPEN'"],['DDL','CREATE TABLE catalog.forged(id int)'],['ROLE_ELEVATION','SET ROLE saas_owner_a'],['EXTENSION',extensionDenialSql]])facts.push(await role(qa,'saas_writer_a',p=>assertSqlDenied(()=>p.query(sql),['42501'],label)));
  for(const [label,database]of [['FOREIGN_B','mecanet_tenant_b'],['FOREIGN_CONTROL','mecanet_control'],['FOREIGN_ADMIN','postgres']])facts.push(await assertSqlDenied(()=>role(qa,'saas_writer_a',p=>p.query('SELECT 1'),{database}),['42501','28000'],label));
  facts.push(await role(qa,'saas_tenant_a',p=>assertSqlDenied(()=>p.query('SELECT * FROM inventory.create_product($1,$2,$3,$4,2,1)',[randomUUID(),'[]','0'.repeat(64),qa.generation]),['42501'],'READER_WRITER_FUNCTION')));
  const fence=(await snapshot(qa,A)).fence;

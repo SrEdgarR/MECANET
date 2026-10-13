@@ -95,7 +95,8 @@ export function Inventory({ state, onCreate, onReceive, onCompanies, onRefresh, 
     {permits('catalog.create') && <ProductForm busy={busy} onCreate={onCreate} />}
     {permits('inventory.receive') && (selected || !permits('inventory.read')) && <ReceiptForm key={selected?.id ?? 'reference'} product={selected} busy={busy} onReceive={onReceive} onCancel={selected ? cancel : undefined} readless={!permits('inventory.read')} />}
     {permits('inventory.read') && <section className="inventory-section" aria-labelledby="stock-heading"><h2 id="stock-heading">Existencias</h2>
-      {state.items.length ? <div className="table-region" role="region" aria-label="Existencias de productos" tabIndex={0}><table><caption className="sr-only">Existencias de {state.tenant.name}</caption>
+      {state.items.length ? <div className="table-region" role="region" aria-label="Existencias de productos" tabIndex={0}
+        onFocus={event => { if (event.target.tagName === 'BUTTON') event.target.scrollIntoView?.({ block: 'nearest', inline: 'nearest' }); }}><table><caption className="sr-only">Existencias de {state.tenant.name}</caption>
         <thead><tr><th scope="col">Código</th><th scope="col">Producto</th><th scope="col">Unidades</th><th scope="col">Acciones</th></tr></thead>
         <tbody>{state.items.map(product => <tr key={product.id}><td className="sku">{product.sku}</td><td>{product.name}</td><td className="stock-number">{product.onHand}</td><td><div className="button-row">
           {permits('inventory.receive') && <button type="button" aria-label={`Recibir unidades de ${product.name}`} disabled={state.writeBusy} onClick={event => receive(product, event)}>Recibir unidades</button>}

@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
 import { Inventory } from './Inventory.jsx';
@@ -13,6 +13,15 @@ function ui(state = {}, props = {}) {
 }
 
 describe('square private inventory screen', () => {
+  it('brings a focused row action into its scroll region without submitting or reading', () => {
+    const actions = ui();
+    const region = screen.getByRole('region', { name: 'Existencias de productos' });
+    const button = screen.getByRole('button', { name: 'Movimientos de Filtro sintético' });
+    button.scrollIntoView = vi.fn(); region.scrollIntoView = vi.fn();
+    fireEvent.focus(region); expect(region.scrollIntoView).not.toHaveBeenCalled();
+    fireEvent.focus(button); expect(button.scrollIntoView).toHaveBeenCalledWith({ block: 'nearest', inline: 'nearest' });
+    expect(actions.onCreate).not.toHaveBeenCalled(); expect(actions.onReceive).not.toHaveBeenCalled(); expect(actions.onMovements).not.toHaveBeenCalled();
+  });
   it('shows the company, stock and separately labeled create/receive forms with keyboard submission', async () => {
     const actions = ui(); const user = userEvent.setup();
     expect(screen.getByText('Taller sintético A')).toBeInTheDocument();

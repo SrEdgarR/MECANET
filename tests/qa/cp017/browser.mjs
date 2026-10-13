@@ -27,6 +27,33 @@ const counts=new Map(),blockedOrigins=new Set(),assetJobs=[];let requests=0,tena
 const hintsKey='mecanet.operation-hints.v1',inventoryPath=`/app/${config.tenant.id}/inventario`;
 const productsPath=`/api/tenants/${config.tenant.id}/products`;
 async function check(name,action){currentCheck=name;await action();evidence.checks.push({name,result:'PASS'})}
+const ackError=code=>Object.assign(Error(code),{code});
+async function privateCreateAck(request,expectedBody){
+ // Playwright's route.fetch uses Node DNS, outside Chromium's host resolver.
+ // Keep this one intercepted request on the verified local tunnel. Cookies and
+ // CSRF headers remain in memory; native request errors are never logged.
+ const deadline=performance.now()+8000,url=new URL(request.url()),body=request.postDataBuffer(),headers=await request.allHeaders();
+ if(request.method()!=='POST'||url.origin!==config.baseUrl||url.pathname!==productsPath||url.search||url.hash||!body||body.length>65536)throw ackError('ACK_REQUEST_REJECTED');
+ try{assert.deepEqual(JSON.parse(new TextDecoder('utf-8',{fatal:true}).decode(body)),expectedBody)}catch{throw ackError('ACK_BODY_REJECTED')}
+ if(headers.host!==undefined&&headers.host!==url.host)throw ackError('ACK_HOST_REJECTED');
+ if(!headers.cookie||!headers['x-csrf-token']||!/^\d{1,19}$/.test(headers['x-data-epoch']??'')||!/^[a-f0-9]{8}(?:-[a-f0-9]{4}){3}-[a-f0-9]{12}$/i.test(headers['idempotency-key']??''))throw ackError('ACK_HEADERS_REJECTED');
+ if(performance.now()>=deadline)throw ackError('ACK_DEADLINE');
+ return new Promise((resolve,reject)=>{
+  let settled=false,timer;const done=(error,value)=>{if(settled)return;settled=true;clearTimeout(timer);error?reject(error):resolve(value)};
+  const req=https.request({hostname:'app.mecanet.test',port:18443,path:productsPath,method:'POST',headers:{...headers,host:url.host,'content-length':String(body.length),'accept-encoding':'identity'},ca,rejectUnauthorized:true,servername:'app.mecanet.test',agent:false,
+   lookup:(_host,options,callback)=>options.all?callback(null,[{address:'127.0.0.1',family:4}]):callback(null,'127.0.0.1',4),
+   checkServerIdentity:(hostname,certificate)=>{
+    try{const invalid=tls.checkServerIdentity(hostname,certificate);if(invalid)return ackError('ACK_TLS_REJECTED');const cert=new X509Certificate(certificate.raw);return createHash('sha256').update(cert.publicKey.export({type:'spki',format:'der'})).digest('base64')===config.spkiSha256?undefined:ackError('ACK_SPKI_REJECTED')}catch{return ackError('ACK_TLS_REJECTED')}
+   }},res=>{
+    const chunks=[];let bytes=0;
+    res.on('data',chunk=>{bytes+=chunk.length;if(bytes>65536){req.destroy();done(ackError('ACK_RESPONSE_LIMIT'));return}chunks.push(chunk)});
+    res.on('error',()=>done(ackError('ACK_RESPONSE_FAILED')));res.on('aborted',()=>done(ackError('ACK_RESPONSE_FAILED')));
+    res.on('end',()=>{if(!res.complete||performance.now()>=deadline)return done(ackError('ACK_DEADLINE'));const status=res.statusCode;if(!Number.isInteger(status))return done(ackError('ACK_RESPONSE_FAILED'));const key=`POST ${productsPath.replace(/[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}/gi,':id')} ${status}`;counts.set(key,(counts.get(key)??0)+1);done(null,{status,headers:res.headers,body:Buffer.concat(chunks)})});
+   });
+  req.on('error',()=>done(ackError('ACK_TRANSPORT_FAILED')));
+  timer=setTimeout(()=>{req.destroy();done(ackError('ACK_DEADLINE'))},Math.max(1,deadline-performance.now()));req.end(body);
+ });
+}
 function handshake({authority=ca,hostname='app.mecanet.test'}={}){
  return new Promise((resolve,reject)=>{
   const req=https.request({hostname,port:18443,path:'/',method:'HEAD',ca:authority,rejectUnauthorized:true,servername:hostname,agent:false,checkServerIdentity:tls.checkServerIdentity,
@@ -115,6 +142,22 @@ async function textContrast(tab){
  for(const [front,back]of[['ink','surface'],['muted','surface'],['ink','canvas'],['muted','canvas'],['accent','surface'],['accent-ink','accent'],['error','error-surface']])assert(ratio(front,back)>=4.5,front+' text contrast');
  assert(ratio('focus','surface')>=3);assert(ratio('focus','canvas')>=3);
 }
+async function inventoryLegibility(tab){
+ const region=tab.getByRole('region',{name:'Existencias de productos',exact:true});
+ const geometry=await region.evaluate(node=>{
+  const first=node.querySelector('tbody tr'),cells=[...first.cells],content=cells.slice(0,2).map(cell=>{const css=getComputedStyle(cell);return {width:cell.clientWidth-parseFloat(css.paddingLeft)-parseFloat(css.paddingRight),minimum:parseFloat(css.fontSize)*.65*12}});
+  return {content,documentOverflow:document.documentElement.scrollWidth>innerWidth,scrollable:node.scrollWidth>node.clientWidth,headers:[...node.querySelectorAll('th')].map(cell=>{const range=document.createRange();range.selectNodeContents(cell);return {textHeight:range.getBoundingClientRect().height,maximum:parseFloat(getComputedStyle(cell).lineHeight)*3}})};
+ });
+ assert.equal(geometry.documentOverflow,false);assert(geometry.content.every(cell=>cell.width>=cell.minimum),'Inventory code/name columns collapsed into single-character lines');assert(geometry.headers.every(cell=>cell.textHeight<=cell.maximum),'Inventory headers are vertically fragmented');
+ await region.focus();assert(await region.evaluate(node=>document.activeElement===node));
+ if(geometry.scrollable){await region.evaluate(node=>{node.scrollLeft=0});await tab.keyboard.press('ArrowRight');await region.evaluate(node=>new Promise((resolve,reject)=>{const started=performance.now();const inspect=()=>node.scrollLeft>0?resolve():performance.now()-started>1000?reject(Error('REGION_KEYBOARD_SCROLL_FAILED')):requestAnimationFrame(inspect);inspect()}))}
+ const actions=region.locator('tbody tr').first().getByRole('button');
+ for(let index=0;index<await actions.count();index++){
+  const button=actions.nth(index);await button.focus();
+  const box=await button.evaluate(node=>{const control=node.getBoundingClientRect(),region=node.closest('.table-region').getBoundingClientRect(),css=getComputedStyle(node),ring=parseFloat(css.outlineWidth)+parseFloat(css.outlineOffset);return {focused:document.activeElement===node,left:control.left,right:control.right,regionLeft:region.left,regionRight:region.right,ring,outline:css.outlineStyle}});
+  assert.equal(box.focused,true);assert.notEqual(box.outline,'none');assert(box.left-box.ring>=box.regionLeft-1&&box.right+box.ring<=box.regionRight+1,'Focused inventory action/ring clipped by its scroll region');
+ }
+}
 
 try{
  await check('TLS validates the exact private CA, hostname and SPKI',async()=>assert.equal(await handshake(),config.spkiSha256));
@@ -137,18 +180,27 @@ try{
  });
  let lostOperation;const lostSku='ACK-'+randomUUID().slice(0,8).toUpperCase(),lostName='ACK sintético '+lostSku;
  await check('A received server ACK lost only toward the browser keeps a query hint and never re-POSTs on reload',async()=>{
-  let intercepted=0,unexpectedStatus=false;
-  const interception=async route=>{if(route.request().method()!=='POST')return route.continue();intercepted++;const response=await route.fetch();if(response.status()!==201){unexpectedStatus=true;return route.fulfill({response})}lostOperation=await response.json();await route.abort('failed')};
+  let intercepted=0,unexpectedStatus=false,interceptionFailure,finishInterception;
+  const interceptionDone=new Promise(resolve=>{finishInterception=resolve});
+  const interception=async route=>{
+   try{if(route.request().method()!=='POST')return await route.continue();intercepted++;const response=await privateCreateAck(route.request(),{sku:lostSku,name:lostName});
+    if(response.status!==201){unexpectedStatus=true;return await route.fulfill({status:response.status,headers:response.headers,body:response.body})}
+    lostOperation=JSON.parse(response.body.toString('utf8'));await route.abort('failed');
+   }catch(error){interceptionFailure=/^ACK_[A-Z_]+$/.test(error.code??'')?error.code:'ACK_CALLBACK_FAILED';try{await route.abort('failed')}catch{}}
+   finally{finishInterception()}
+  };
   await page.route(config.baseUrl+productsPath,interception);
   await page.getByLabel('Código del producto').fill(lostSku);await page.getByLabel('Nombre del producto').fill(lostName);await page.getByRole('button',{name:'Crear producto',exact:true}).click();
-  await page.getByRole('heading',{name:'Resultado incierto',exact:true}).waitFor();assert.equal(unexpectedStatus,false);assert.equal(intercepted,1);assert.equal(lostOperation.state,'CONFIRMED');
+  await page.getByRole('heading',{name:'Resultado incierto',exact:true}).waitFor();
+  let callbackTimer;try{await Promise.race([interceptionDone,new Promise((_resolve,reject)=>{callbackTimer=setTimeout(()=>reject(ackError('ACK_CALLBACK_DEADLINE')),8000)})])}finally{clearTimeout(callbackTimer)}
+  if(interceptionFailure){evidence.ackHarnessFailure=interceptionFailure;throw ackError(interceptionFailure)}assert.equal(unexpectedStatus,false);assert.equal(intercepted,1);assert.equal(lostOperation.state,'CONFIRMED');
   const hints=await assertHintShape(page);assert(hints.some(h=>h.operationId===lostOperation.operationId&&h.tenantId===config.tenant.id));
   await screenshot(page,'inventory-client-ack-lost.png');const before=postCount();await page.unroute(config.baseUrl+productsPath,interception);
   const recovered=page.waitForResponse(response=>response.request().method()==='GET'&&new URL(response.url()).pathname===`/api/tenants/${config.tenant.id}/operations/${lostOperation.operationId}`);
   await page.reload({waitUntil:'networkidle'});await page.getByRole('heading',{level:1,name:'Inventario',exact:true}).waitFor();const queried=await recovered;assert.equal(queried.status(),200);assert.equal((await queried.json()).state,'CONFIRMED');
   await page.waitForFunction(({key,id})=>!JSON.parse(sessionStorage.getItem(key)??'[]').some(hint=>hint.operationId===id),{key:hintsKey,id:lostOperation.operationId});
   assert.equal(postCount(),before);assert.equal(await page.getByRole('button',{name:'Reenviar la misma operación',exact:true}).count(),0);assert.equal((await assertHintShape(page)).length,0);const row=await ownRow(page,lostName);assert.equal(await row.count(),1);
-  evidence.clientLostAckScope='Route.fetch received a real201 then dropped only the browser ACK. Backend COMMIT uncertainty and reservation reconciliation require separate SQL tests.';
+  evidence.clientLostAckScope='An exact-CA/SNI/SPKI Node transport through the private loopback received a real201 then dropped only the browser ACK. Backend COMMIT uncertainty and reservation reconciliation require separate SQL tests.';
  });
  await check('Company change hides all company content and foreign direct operations are denied',async()=>{
   await page.getByRole('button',{name:'Cambiar empresa',exact:true}).click();await page.getByRole('heading',{level:1,name:'Tus empresas'}).waitFor();assert.equal(await page.getByText(name,{exact:true}).count(),0);assert.equal(await page.getByText(lostName,{exact:true}).count(),0);
@@ -158,13 +210,13 @@ try{
   await page.setViewportSize({width,height:960});await page.getByRole('heading',{level:1}).focus();
   const shape=await page.evaluate(()=>{const nodes=[...document.querySelectorAll('button,input,a,table,td,th,.inventory-panel,.operation-state,.notice')].filter(n=>n.getBoundingClientRect().width>0);return {overflow:document.documentElement.scrollWidth>innerWidth,radii:nodes.flatMap(n=>{const c=getComputedStyle(n);return [c.borderTopLeftRadius,c.borderTopRightRadius,c.borderBottomLeftRadius,c.borderBottomRightRadius]}),smallControls:nodes.filter(n=>n.matches('button,input')&&n.getBoundingClientRect().height<44).length,h1Count:document.querySelectorAll('h1').length,motion:matchMedia('(prefers-reduced-motion: reduce)').matches}});
   assert.equal(shape.overflow,false);assert.equal(shape.smallControls,0);assert.equal(shape.h1Count,1);assert.equal(shape.motion,true);assert(shape.radii.every(value=>value==='0px'));
-  for(let step=0;step<8;step++){await page.keyboard.press('Tab');assert(await page.evaluate(()=>{const node=document.activeElement;if(!node||node===document.body)return true;const r=node.getBoundingClientRect();return r.left>=-1&&r.right<=innerWidth+1&&getComputedStyle(node).outlineStyle!=='none'}))}await screenshot(page,`inventory-${width}.png`);
+  for(let step=0;step<8;step++){await page.keyboard.press('Tab');assert(await page.evaluate(()=>{const node=document.activeElement;if(!node||node===document.body)return true;const r=node.getBoundingClientRect();return r.left>=-1&&r.right<=innerWidth+1&&getComputedStyle(node).outlineStyle!=='none'}))}await inventoryLegibility(page);await screenshot(page,`inventory-${width}.png`);
  });
  await check('Light text and focus palette meet contrast thresholds',async()=>{await page.emulateMedia({colorScheme:'light',reducedMotion:'reduce'});await textContrast(page)});
  await check('Dark mode preserves contrast, square controls and reduced motion',async()=>{await page.emulateMedia({colorScheme:'dark',reducedMotion:'reduce'});assert(await page.evaluate(()=>matchMedia('(prefers-color-scheme: dark)').matches));await textContrast(page);await screenshot(page,'inventory-dark.png')});
  for(const width of [320,768,1440])await check(`Text200% at ${width}px reflows without document or control clipping`,async()=>{
   await page.setViewportSize({width,height:960});await page.evaluate(()=>{document.documentElement.style.fontSize='32px'});
-  const shape=await page.evaluate(()=>({font:getComputedStyle(document.documentElement).fontSize,overflow:document.documentElement.scrollWidth>innerWidth,clipped:[...document.querySelectorAll('main>button,.inventory-form>button,.catalog-tools button')].filter(n=>{const r=n.getBoundingClientRect();return r.left<0||r.right>innerWidth}).length}));assert.equal(shape.font,'32px');assert.equal(shape.overflow,false);assert.equal(shape.clipped,0);await screenshot(page,`inventory-text-200-percent-${width}.png`);await page.evaluate(()=>{document.documentElement.style.fontSize=''});
+  const shape=await page.evaluate(()=>({font:getComputedStyle(document.documentElement).fontSize,overflow:document.documentElement.scrollWidth>innerWidth,clipped:[...document.querySelectorAll('main>button,.inventory-form>button,.catalog-tools button')].filter(n=>{const r=n.getBoundingClientRect();return r.left<0||r.right>innerWidth}).length}));assert.equal(shape.font,'32px');assert.equal(shape.overflow,false);assert.equal(shape.clipped,0);await inventoryLegibility(page);await screenshot(page,`inventory-text-200-percent-${width}.png`);await page.evaluate(()=>{document.documentElement.style.fontSize=''});
  });
  const writer=await dedicatedContext();const writerReads=[];writer.page.on('request',req=>{if(req.method()==='GET'&&/\/(?:inventory|stock-movements)(?:\?|$)/.test(new URL(req.url()).pathname))writerReads.push(req.url())});
  await check('A receive-only member reaches its form without inventory or movement reads',async()=>{

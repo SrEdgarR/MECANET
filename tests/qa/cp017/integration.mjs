@@ -144,11 +144,22 @@ try{
  },{dependsOn:['normalized-canonical-two-api-and-uc']});
  await caseOf('two-receipts-sum-and-same-key-replay',['L2-A7'],async()=>{
   assert(product);const ids=[randomUUID(),randomUUID()],inputs=[{quantity:'7',reason:'Ficticio 1'},{quantity:'11',reason:'Ficticio 2'}];
-  const replies=await Promise.all([write(a,ids[0],inputs[0],{productId:product}),write(a2,ids[1],inputs[1],{productId:product})]);replies.forEach(r=>assertStatus(r,201));
+  const replies=await Promise.all([write(a,ids[0],inputs[0],{productId:product}),write(a2,ids[1],inputs[1],{productId:product})]);
+  const initialReplies=replies.map(r=>({status:r.status,publicCode:r.json?.error??null}));
+  // Ordinary capacity may admit only one of two different intentions at once.
+  // Preserve both original keys and inputs, observe their durable state, and
+  // explicitly retry the same intention after the first HTTP resource ends.
+  // UNKNOWN is never treated as absence and no counters/quotas are reset.
+  for(let index=0;index<replies.length;index++)for(let attempt=0;replies[index].status!==201&&attempt<4;attempt++){
+   assert([429,503].includes(replies[index].status),'RECEIPT_RESPONSE_OUTSIDE_APPROVED_CONTRACT');
+   const observed=await operationRows(ids[index]);assert.notEqual(observed.intent?.status,'UNKNOWN','UNCERTAIN_RECEIPT_REQUIRES_RECONCILIATION');
+   await sleep(200);replies[index]=await write(index===0?a:a2,ids[index],inputs[index],{productId:product});
+  }
+  replies.forEach(r=>assertStatus(r,201));
   assertStatus(await write(a2,ids[0],inputs[0],{productId:product}),201);
   const balance=(await tenant('SELECT on_hand::text AS quantity,version::text,(SELECT count(*) FROM inventory.movements WHERE product_id=$1)::int AS movements FROM inventory.balances WHERE product_id=$1',[product]))[0];assert.deepEqual(balance,{quantity:'18',version:'3',movements:2});
   const ledger=(await tenant('SELECT logical_bytes::text AS counted,inventory.logical_usage()::text AS actual FROM inventory.quota_state WHERE id=1'))[0];assert.equal(ledger.counted,ledger.actual);
-  return {operationIds:ids,twoApiHttpConcurrency:true,quantity:'18',movements:2,logicalCounterExact:true};
+  return {operationIds:ids,initialReplies,twoApiHttpConcurrency:true,sameOriginalKeysOnCapacityRetry:true,quantity:'18',movements:2,logicalCounterExact:true};
  },{dependsOn:['normalized-canonical-two-api-and-uc']});
  await caseOf('incompatible-key-and-own-result-privacy',['L2-A4','L2-A6','L2-A7'],async()=>{
   const id=randomUUID(),input={quantity:'3',reason:'Original ficticio'};assertStatus(await write(a,id,input,{productId:product}),201);

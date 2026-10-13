@@ -7,6 +7,7 @@ import { createPgPool } from '../../../server/saas/db/pools.js';
 import { createQaClient,assertStatus } from '../cp014/http-client.mjs';
 import { withQaInspection } from './sql-live.mjs';
 import {assertSqlDenied} from './quota-live.mjs';
+import {extensionDenialSql,sqlCreateVector} from './sql-vectors.mjs';
 const file = process.env.MECANET_QA_CONNECTIONS ?? '/run/qa-secrets/connections.json';
 if (!file.startsWith('/run/qa-secrets/')) throw new Error('PRIVATE_QA_CONNECTIONS_REQUIRED');
 const qa = JSON.parse(await readFile(file, 'utf8'));
@@ -36,7 +37,7 @@ async function effect(pool, kind, operation, preimage, guards) {
   return (await pool.query(`SELECT * FROM inventory.${kind}($1,$2,$3,$4,$5,$6)`, [operation, preimage, hash(preimage), guards.generation, guards.data_epoch, guards.writer_version])).rows[0];
 }
 test('writer has no free DML, DDL, fence mutation, role elevation or foreign connection', async () => {
-  const denied = [['DML_BALANCE','UPDATE inventory.balances SET on_hand=0'],['DELETE_MOVEMENT','DELETE FROM inventory.movements'],['FENCE_UPDATE','UPDATE inventory.writer_fence SET state=\'OPEN\''],['DDL','CREATE TABLE catalog.forged(id int)'],['ROLE_ELEVATION','SET ROLE saas_owner_a'],['EXTENSION','CREATE EXTENSION dblink']];
+  const denied = [['DML_BALANCE','UPDATE inventory.balances SET on_hand=0'],['DELETE_MOVEMENT','DELETE FROM inventory.movements'],['FENCE_UPDATE','UPDATE inventory.writer_fence SET state=\'OPEN\''],['DDL','CREATE TABLE catalog.forged(id int)'],['ROLE_ELEVATION','SET ROLE saas_owner_a'],['EXTENSION',extensionDenialSql]];
   for (const [label,sql] of denied) await withRole(role,pool=>assertSqlDenied(()=>pool.query(sql),['42501','25006'],label));
   for (const [label,database] of [['FOREIGN_B','mecanet_tenant_b'],['FOREIGN_CONTROL','mecanet_control'],['FOREIGN_ADMIN','postgres']]) await assertSqlDenied(()=>withRole(role,pool=>pool.query('SELECT 1'),{database}),['42501','28000'],label);
   await withRole('saas_tenant_a',pool=>assertSqlDenied(()=>pool.query('SELECT * FROM inventory.create_product($1,$2,$3,$4,2,1)',[randomUUID(),matrix('catalog.create',null,['FORGED','forged']),'0'.repeat(64),qa.generation]),['42501'],'READER_WRITER_FUNCTION'));
@@ -45,12 +46,12 @@ test('SQL validates the same exact canonical UTF8 digest and derives the effect 
   await withQaInspection(qa,'mecanet_tenant_a', async maintenance => {
     const guard = (await maintenance.query('SELECT * FROM inventory.writer_fence WHERE id=1')).rows[0];
     await withRole(role, async writer => {
-      const op = randomUUID(); const text = matrix('catalog.create',null,[`PG-${op.slice(0,8)}`,'Texto 😀 e\u0301 \u0001'], String(guard.data_epoch));
-      const [client]=await httpPair();await post(client,'catalog.create',op,{sku:`PG-${op.slice(0,8)}`,name:'Texto 😀 e\u0301 \u0001'},guard);
+      const op = randomUUID(),vector=sqlCreateVector({tenantId:tenant,actorId:actor,operationId:op,dataEpoch:String(guard.data_epoch)}),text=vector.preimage;
+      const [client]=await httpPair();await post(client,'catalog.create',op,vector.input,guard);
       const row = await effect(writer,'create_product',op,text,guard);
       assert.equal(row.result.state,'CONFIRMED'); assert.equal(row.replay,true); assert.ok(BigInt(row.logical_delta)>0n);
       const again = await effect(writer,'create_product',op,text,guard); assert.equal(again.replay,true); assert.deepEqual(again.result,row.result); assert.equal(again.logical_delta,row.logical_delta);
-      await assert.rejects(effect(writer,'create_product',op,matrix('catalog.create',null,[`PG-${op.slice(0,8)}`,'changed'],String(guard.data_epoch)),guard), error => error.message.includes('IDEMPOTENCY_CONFLICT'));
+      await assert.rejects(effect(writer,'create_product',op,matrix('catalog.create',null,[vector.input.sku,'changed'],String(guard.data_epoch)),guard), error => error.message.includes('IDEMPOTENCY_CONFLICT'));
       await assert.rejects(writer.query('SELECT * FROM inventory.create_product($1,$2,$3,$4,$5,$6)', [randomUUID(),text,'0'.repeat(64),guard.generation,guard.data_epoch,guard.writer_version]), error => error.message.includes('CANONICAL_INPUT_INVALID'));
       const count = (await maintenance.query('SELECT count(*)::int AS n FROM inventory.audit WHERE operation_id=$1',[op])).rows[0]; assert.equal(count.n,1);
     });
