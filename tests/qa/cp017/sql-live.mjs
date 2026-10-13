@@ -1,0 +1,73 @@
+// Real own-QA inspection and bounded HTTP->SQL tests; never production data.
+import assert from 'node:assert/strict';
+import { readFile } from 'node:fs/promises';
+import { createHash } from 'node:crypto';
+import { spawn } from 'node:child_process';
+import { pathToFileURL } from 'node:url';
+import { arch } from 'node:os';
+import { createPgPool } from '../../../server/saas/db/pools.js';
+
+const TENANTS=['11111111-1111-4111-8111-111111111111','22222222-2222-4222-8222-222222222222'];
+const code=value=>{if(!/^[0-9a-f]{40}$/.test(value??''))throw new Error('EXACT_QA_CODE_SHA_REQUIRED');return value};
+async function withConnection(config,fn){
+ if(config?.host!=='postgres'||!config.ssl?.rejectUnauthorized)throw new Error('OWN_QA_CONNECTION_REQUIRED');
+ const pool=await createPgPool({...config,max:1,connectionTimeoutMillis:2000,statement_timeout:2000,application_name:'mecanet-private-writer-inspection'});
+ try{return await fn(pool)}finally{await pool.end()}
+}
+
+export async function collectWriterSqlFacts({qa,sourceSha}){
+ sourceSha=code(sourceSha);
+ if(!qa?.fixture?.identities?.every(i=>i.email.endsWith('@qa.invalid'))||!qa.connections?.saas_writer_maintenance)throw new Error('SYNTHETIC_WRITER_FIXTURE_REQUIRED');
+ const central=await withConnection(qa.connections.saas_writer_maintenance,async pool=>{
+  const states=(await pool.query('SELECT * FROM saas.tenant_writer_state ORDER BY tenant_id')).rows;
+  const aggregate=(await pool.query("SELECT q.used_bytes::text,q.reserved_bytes::text,q.max_bytes::text,q.barrier_max_bytes::text,saas.write_barrier_cost()::text AS barrier_bytes,(SELECT coalesce(sum(saas.write_operation_cost(r.tenant_id,r.operation_id)),0)::text FROM saas.write_growth_reservations r WHERE r.status='SETTLED') AS actual_used,(SELECT coalesce(sum(control_bytes_reserved),0)::text FROM saas.write_growth_reservations WHERE status<>'SETTLED') AS actual_reserved FROM saas.write_control_quota q WHERE id=1")).rows[0];
+  assert.equal(aggregate.used_bytes,aggregate.actual_used);assert.equal(aggregate.reserved_bytes,aggregate.actual_reserved);
+  assert(BigInt(aggregate.used_bytes)+BigInt(aggregate.reserved_bytes)<=BigInt(aggregate.max_bytes));
+  assert(BigInt(aggregate.barrier_bytes)<=BigInt(aggregate.barrier_max_bytes));
+  const shape=(await pool.query("SELECT count(*)::int AS n FROM information_schema.columns WHERE table_schema='saas' AND table_name IN('write_intents','write_growth_reservations','write_projections','write_transitions') AND column_name IN('payload','body','preimage','sku','name','reason','stock','on_hand')")).rows[0];assert.equal(shape.n,0);
+  const debt=(await pool.query("SELECT count(*)::int AS unsettled,count(*) FILTER(WHERE i.status IN('PENDING','EXECUTING','UNKNOWN'))::int AS nonterminal FROM saas.write_growth_reservations r JOIN saas.write_intents i USING(tenant_id,operation_id) WHERE r.status<>'SETTLED'")).rows[0];
+  return{states,aggregate,debt,noBusinessPayload:true};
+ });
+ const tenants=[];
+ for(let index=0;index<TENANTS.length;index++){
+  const suffix=index===0?'a':'b';
+  tenants.push(await withConnection(qa.connections[`saas_maintainer_${suffix}`],async pool=>{
+   const environment=(await pool.query("SELECT current_setting('server_version_num') AS version,current_setting('server_encoding') AS encoding,current_setting('client_encoding') AS client,current_setting('synchronous_commit') AS sync,(SELECT ssl FROM pg_stat_ssl WHERE pid=pg_backend_pid()) AS tls")).rows[0];
+   assert.equal(environment.version,'180006');assert.equal(environment.encoding,'UTF8');assert.equal(environment.client,'UTF8');assert.equal(environment.sync,'on');assert.equal(environment.tls,true);
+   const invariant=(await pool.query("SELECT q.active_products::text AS products,q.logical_bytes::text AS used,inventory.logical_usage()::text AS actual,(SELECT count(*) FROM catalog.products WHERE status='active')::text AS actual_products,(SELECT count(*) FROM inventory.operations)::text AS operations,(SELECT count(*) FROM inventory.audit)::text AS audits,(SELECT count(*) FROM inventory.movements)::text AS movements,(SELECT count(*) FROM inventory.balances b WHERE b.on_hand<>(SELECT coalesce(sum(m.quantity),0) FROM inventory.movements m WHERE m.product_id=b.product_id))::int AS balance_mismatch,(SELECT count(*) FROM inventory.operations o LEFT JOIN inventory.audit a ON a.operation_id=o.id WHERE a.operation_id IS NULL OR a.result_hash<>encode(sha256(convert_to(o.result::text,'UTF8')),'hex'))::int AS result_mismatch FROM inventory.quota_state q WHERE id=1")).rows[0];
+   assert.equal(invariant.used,invariant.actual);assert.equal(invariant.products,invariant.actual_products);assert.equal(invariant.operations,invariant.audits);assert.equal(invariant.balance_mismatch,0);assert.equal(invariant.result_mismatch,0);
+   const fence=(await pool.query('SELECT tenant_id,generation,data_epoch,writer_version,state FROM inventory.writer_fence WHERE id=1')).rows[0];
+   const state=central.states.find(s=>s.tenant_id===TENANTS[index]);assert(state);assert.equal(fence.generation,state.generation);assert.equal(fence.data_epoch,state.data_epoch);assert.equal(fence.writer_version,state.writer_version);assert.equal(fence.state,state.state);
+   assert(BigInt(state.used_bytes)<=BigInt(invariant.used));assert(BigInt(state.used_bytes)+BigInt(state.reserved_bytes)>=BigInt(invariant.used));
+   assert(BigInt(state.used_products)<=BigInt(invariant.products));assert(BigInt(state.used_products)+BigInt(state.reserved_products)>=BigInt(invariant.products));
+   if(state.reserved_bytes==='0')assert.equal(state.used_bytes,invariant.used);
+   const privilege=(await pool.query("SELECT count(*) FILTER(WHERE r.rolcanlogin OR r.rolsuper OR r.rolbypassrls)::int AS unsafe_owners,count(*) FILTER(WHERE p.proconfig IS NULL OR NOT EXISTS(SELECT 1 FROM unnest(p.proconfig) x WHERE x LIKE 'search_path=pg_catalog,%'))::int AS unsafe_paths,count(*) FILTER(WHERE EXISTS(SELECT 1 FROM aclexplode(coalesce(p.proacl,acldefault('f',p.proowner))) a WHERE a.grantee=0 AND a.privilege_type='EXECUTE'))::int AS public_exec FROM pg_proc p JOIN pg_namespace n ON n.oid=p.pronamespace JOIN pg_roles r ON r.oid=p.proowner WHERE n.nspname='inventory' AND p.prosecdef")).rows[0];
+   assert.deepEqual(privilege,{unsafe_owners:0,unsafe_paths:0,public_exec:0});
+   return{tenantId:TENANTS[index],environment,invariant,fence,ownerAndPaths:privilege,conservativeCentralLedger:true};
+  }));
+ }
+ const migrationHashes={};
+ for(const path of ['003-control-writers.sql','003-tenant-writers.sql'])migrationHashes[path]=createHash('sha256').update(await readFile(new URL(`../../../server/saas/db/migrations/${path}`,import.meta.url))).digest('hex');
+ return{sourceSha,observedAt:new Date().toISOString(),runtimeArch:arch(),environment:'own synthetic PostgreSQL18.6/TLS real',migrationHashes,central:{aggregate:central.aggregate,debt:central.debt,noBusinessPayload:true},tenants,secretsPrinted:false};
+}
+
+export async function runWriterSqlTests(){
+ const file=new URL('./sql-writers.test.mjs',import.meta.url);
+ return new Promise((resolve,reject)=>{
+  const child=spawn(process.execPath,['--test','--test-reporter=tap',file.pathname],{stdio:['ignore','pipe','pipe'],env:process.env});
+  let bytes=0,stdout='',stderr='',expired=false;
+  const timer=setTimeout(()=>{expired=true;child.kill('SIGKILL')},120000);
+  const capture=which=>chunk=>{bytes+=chunk.length;if(bytes>1048576){child.kill('SIGKILL');return}if(which==='out')stdout+=chunk;else stderr+=chunk};
+  child.stdout.on('data',capture('out'));child.stderr.on('data',capture('err'));child.on('error',error=>{clearTimeout(timer);reject(error)});
+  child.on('close',exitCode=>{
+   clearTimeout(timer);const counts={};for(const field of ['tests','pass','fail','cancelled','skipped'])counts[field]=Number(new RegExp(`^# ${field} (\\d+)`,'m').exec(stdout)?.[1]??0);
+   resolve({exitCode,expired,counts,stdoutSha256:createHash('sha256').update(stdout).digest('hex'),stderrSha256:createHash('sha256').update(stderr).digest('hex'),failedNames:stdout.split('\n').filter(line=>/^not ok \d+ - /.test(line)),rawOutputPrinted:false});
+  });
+ });
+}
+if(process.argv[1]&&import.meta.url===pathToFileURL(process.argv[1]).href){
+ const file=process.env.MECANET_QA_CONNECTIONS??'/run/qa-secrets/connections.json';if(!file.startsWith('/run/qa-secrets/'))throw new Error('PRIVATE_QA_CONNECTIONS_REQUIRED');
+ const qa=JSON.parse(await readFile(file,'utf8'));const tests=await runWriterSqlTests();
+ if(tests.exitCode!==0||tests.expired||tests.counts.fail!==0){console.log(JSON.stringify({status:'FAIL',tests,secretsPrinted:false}));process.exitCode=1}
+ else{const facts=await collectWriterSqlFacts({qa,sourceSha:process.env.QA_CODE_SHA});console.log(JSON.stringify({status:'PASS',tests,facts}));}
+}

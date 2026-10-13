@@ -1,13 +1,14 @@
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 const bounded = (value, max) => typeof value === 'string' && value.length > 0 && value.length <= max;
 const epoch = value => (typeof value === 'string' || Number.isSafeInteger(value)) && String(value).length <= 80;
-const blank = { phase: 'starting', user: null, tenants: [], tenant: null, items: [], nextCursor: null, message: '', busy: false, canLogout: false, retryAt: 0 };
+const blank = { phase: 'starting', user: null, tenants: [], tenant: null, items: [], nextCursor: null, message: '', busy: false, canLogout: false, retryAt: 0,
+  operation: null, operations: [], operationsCursor: null, operationMessage: '', writeBusy: false, movementProduct: null, movements: [], movementCursor: null, movementsLoading: false };
 const fault = status => Object.assign(new Error('Private request failed'), { status });
 
 /** In-memory only. A generation is invalidated before each context transition.
  * Abort is a resource optimization, never the authority for accepting a result.
  */
-export function createSaasClient(fetchRequest = globalThis.fetch.bind(globalThis), { monotonicNow = () => performance.now(), random = Math.random } = {}) {
+export function createSaasClient(fetchRequest = globalThis.fetch.bind(globalThis), { monotonicNow = () => performance.now(), random = Math.random, storage, operationUuid } = {}) {
   let state = { ...blank };
   let generation = 0;
   let abort;
@@ -24,10 +25,11 @@ export function createSaasClient(fetchRequest = globalThis.fetch.bind(globalThis
     return { generation, signal: abort.signal, authority, deadline: monotonicNow() + 8000 };
   };
   const current = request => request.generation === generation && !request.signal.aborted;
-  const forget = () => { authority = undefined; csrf = undefined; tenantDirectory.clear(); };
+  const forget = ({ clearHints = true } = {}) => { inventory.reset({ clearHints }); authority = undefined; csrf = undefined; tenantDirectory.clear(); };
+  const requestSnapshot = () => ({ generation, signal: abort.signal, authority, deadline: monotonicNow() + 8000 });
 
-  async function json(path, request, method = 'GET', body) {
-    const headers = { Accept: 'application/json' };
+  async function json(path, request, method = 'GET', body, extraHeaders = {}) {
+    const headers = { Accept: 'application/json', ...extraHeaders };
     if (method === 'POST') {
       if (!csrf) throw fault(403);
       headers['X-CSRF-Token'] = csrf;
@@ -55,6 +57,24 @@ export function createSaasClient(fetchRequest = globalThis.fetch.bind(globalThis
     if (!reply.headers.get('Content-Type')?.includes('application/json')) throw fault(503);
     return reply.json();
   }
+
+  // A mutation gets one finite transport attempt. Aborting a lost response is
+  // not evidence that PostgreSQL rolled back; the known operation ID survives.
+  async function oneJson(path, request, method, body, headers) {
+    const transport = new AbortController(); let timer;
+    const changed = () => transport.abort(); request.signal.addEventListener('abort', changed, { once: true });
+    try {
+      const result = await Promise.race([
+        json(path, { ...request, transportSignal: transport.signal }, method, body, headers),
+        new Promise((_resolve, reject) => { timer = setTimeout(() => { transport.abort(); reject(fault(503)); }, Math.max(0, request.deadline - monotonicNow())); }),
+      ]);
+      if (!current(request)) throw new DOMException('Context changed', 'AbortError');
+      if (request.deadline - monotonicNow() <= 0) throw fault(503);
+      return result;
+    } finally { clearTimeout(timer); request.signal.removeEventListener('abort', changed); }
+  }
+  const postOnce = (path, request, body, headers) => oneJson(path, request, 'POST', body, headers);
+  const getOnce = (path, request) => oneJson(path, request, 'GET');
 
   async function waitForRetry(milliseconds, request) {
     if (!current(request)) throw new DOMException('Context changed', 'AbortError');
@@ -123,8 +143,9 @@ export function createSaasClient(fetchRequest = globalThis.fetch.bind(globalThis
   function acceptSession(value) {
     if (!value || typeof value.authenticated !== 'boolean' || !bounded(value.csrfToken, 512)) throw fault(503);
     csrf = value.csrfToken;
-    if (!value.authenticated) { authority = undefined; return false; }
+    if (!value.authenticated) { forget(); csrf = value.csrfToken; return false; }
     if (!bounded(value.user?.id, 80) || !bounded(value.user?.email, 254) || !bounded(value.purpose, 24) || !epoch(value.contextVersion)) throw fault(503);
+    if (authority && (authority.identityId !== value.user.id || authority.purpose !== value.purpose)) inventory.reset({ clearHints: true });
     authority = { identityId: value.user.id, purpose: value.purpose, contextVersion: String(value.contextVersion), user: { id: value.user.id, email: value.user.email } };
     if (value.purpose !== 'company') throw fault(403);
     return true;
@@ -132,7 +153,7 @@ export function createSaasClient(fetchRequest = globalThis.fetch.bind(globalThis
 
   function checkContext(context) {
     if (!authority || context?.identityId !== authority.identityId || context?.purpose !== authority.purpose
-      || String(context?.contextVersion) !== authority.contextVersion) throw fault(503);
+      || String(context?.contextVersion) !== authority.contextVersion) { inventory.reset({ clearHints: true }); throw fault(503); }
   }
 
   async function listTenants(request) {
@@ -142,14 +163,16 @@ export function createSaasClient(fetchRequest = globalThis.fetch.bind(globalThis
     if (!Array.isArray(result.tenants) || result.tenants.length > 100) throw fault(503);
     const tenants = result.tenants.map(tenant => {
       if (!UUID.test(tenant.id) || !bounded(tenant.name, 160) || !epoch(tenant.dataEpoch)) throw fault(503);
-      return { id: tenant.id, name: tenant.name, dataEpoch: String(tenant.dataEpoch) };
+      const known = new Set(['catalog.read', 'catalog.create', 'inventory.read', 'inventory.receive', 'usage.read', 'quota.change']);
+      if (tenant.permissions !== undefined && (!Array.isArray(tenant.permissions) || tenant.permissions.length > known.size || tenant.permissions.some(action => !known.has(action)))) throw fault(503);
+      return { id: tenant.id.toLowerCase(), name: tenant.name, dataEpoch: String(tenant.dataEpoch), permissions: tenant.permissions === undefined ? ['catalog.read'] : [...new Set(tenant.permissions)] };
     });
     if (new Set(tenants.map(tenant => tenant.id)).size !== tenants.length) throw fault(503);
     tenantDirectory = new Map(tenants.map(tenant => [tenant.id, tenant]));
     emit({ ...blank, phase: 'tenants', user: authority.user, tenants, canLogout: true });
   }
 
-  async function start(tenantId) {
+  async function start(tenantId, view = 'catalog') {
     tenantDirectory.clear();
     const request = begin({ phase: 'starting' });
     try {
@@ -159,7 +182,7 @@ export function createSaasClient(fetchRequest = globalThis.fetch.bind(globalThis
       request.authority = authority;
       await listTenants(request);
       // A deep link is revalidated against the fresh directory and current session.
-      if (tenantId && current(request)) await selectTenant(tenantId, false);
+      if (tenantId && current(request)) await (view === 'inventory' ? inventory.selectInventory(tenantId.toLowerCase(), false) : selectTenant(tenantId.toLowerCase(), false));
     } catch (error) { fail(error, request); }
   }
 
@@ -223,6 +246,7 @@ export function createSaasClient(fetchRequest = globalThis.fetch.bind(globalThis
   async function logout() {
     if (!authority || state.phase === 'logging-out') return;
     tenantDirectory.clear();
+    inventory.reset({ clearHints: true });
     const request = begin({ phase: 'logging-out' });
     try {
       await json('/api/auth/logout', request, 'POST', {});
@@ -236,10 +260,20 @@ export function createSaasClient(fetchRequest = globalThis.fetch.bind(globalThis
     }
   }
 
+  const inventory = createInventoryActions({
+    state: () => state, authority: () => authority, tenant: id => tenantDirectory.get(id),
+    request: requestSnapshot, begin, current, emit, json, readJson, postOnce, getOnce, checkContext, fail,
+  }, { storage, operationUuid });
+
   return {
     getSnapshot: () => state,
     subscribe: listener => { listeners.add(listener); return () => listeners.delete(listener); },
     start, login, showTenants, selectTenant, nextPage, logout,
-    dispose: () => { abort?.abort(); generation += 1; forget(); listeners.clear(); state = { ...blank }; },
+    selectInventory: inventory.selectInventory, createProduct: inventory.createProduct, receiveStock: inventory.receiveStock,
+    lookupOperation: inventory.lookupOperation, resendOperation: inventory.resendOperation,
+    readMovements: inventory.readMovements, nextInventoryPage: inventory.nextInventoryPage, nextMovementPage: inventory.nextMovementPage,
+    nextOperationsPage: inventory.nextOperationsPage,
+    dispose: () => { abort?.abort(); generation += 1; forget({ clearHints: false }); listeners.clear(); state = { ...blank }; },
   };
 }
+import { createInventoryActions } from './inventory-client.js';

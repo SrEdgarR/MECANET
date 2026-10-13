@@ -11,7 +11,7 @@ const DATABASES = [{ db: 'mecanet_control', owner: 'saas_owner' }, { db: 'mecane
 const quoted = (name) => { if (!NAME.test(name)) throw new Error('INVALID_FIXED_IDENTIFIER'); return `"${name}"`; };
 
 export function validatePreflight(p) {
-  if (!p || !['mecanet-qa-p1l1','mecanet-qa-p1l1-cp014'].includes(p.project) || p.dataClass !== 'synthetic' || p.allowBootstrap !== true || !/^[0-9]{10,24}$/.test(p.expectedSystemIdentifier) || p.expectedHost !== 'postgres') throw new Error('QA_PREFLIGHT_REQUIRED');
+  if (!p || !['mecanet-qa-p1l1','mecanet-qa-p1l1-cp014','mecanet-qa-p1l2-cp017'].includes(p.project) || p.dataClass !== 'synthetic' || p.allowBootstrap !== true || !/^[0-9]{10,24}$/.test(p.expectedSystemIdentifier) || p.expectedHost !== 'postgres') throw new Error('QA_PREFLIGHT_REQUIRED');
   return p;
 }
 

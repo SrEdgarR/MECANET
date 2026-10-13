@@ -1,10 +1,10 @@
-name: P1-L1 verification
+name: P1 verification
 
 on:
   pull_request:
     branches: [develop]
   push:
-    branches: [develop, codex/integrate-p1-l1]
+    branches: [develop, codex/integrate-p1-l1, codex/p1-l2]
 
 permissions:
   contents: read
@@ -63,7 +63,7 @@ jobs:
       - name: Verify locked SaaS lane, guarded tests, build and complete dependency audit
         run: node scripts/ci/saas-toolchain.mjs verify
 
-      - name: Compare the compiled SaaS assets with the archived verified release
+      - name: Compare the compiled SaaS assets with the accepted lot artifact
         run: node scripts/ci/p1-l1.mjs assets
 
       - name: Audit backend runtime dependencies
