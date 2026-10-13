@@ -11,6 +11,10 @@ export const sourceFiles = Object.freeze([
   'client/src/saas/RetryAccess.jsx', 'client/src/saas/RetryAccess.test.jsx',
   'client/src/saas/SaasApp.jsx', 'client/src/saas/SaasApp.test.jsx',
   'client/src/saas/styles.css', 'client/src/saas/test-setup.js',
+  // DEC-061: closed additions for the approved P1-L2 flow and its tests.
+  'client/src/saas/Inventory.jsx', 'client/src/saas/Inventory.test.jsx',
+  'client/src/saas/inventory-client.js', 'client/src/saas/inventory-client.test.js',
+  'client/src/saas/operation-hints.js', 'client/src/saas/operation-hints.test.js',
   'client/saas.html', 'client/vite.saas.config.js',
   'client/src/utils/safeDocuments.js', 'client/src/__tests__/unit/safeDocuments.test.js',
   'scripts/ci/safe-documents.vitest.config.mjs', 'scripts/ci/tooling-isolation.mjs',

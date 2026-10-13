@@ -1,0 +1,14 @@
+{
+  "checkpoint": "CP-016",
+  "stage": "before-pr",
+  "classification": "DETECTED",
+  "at_utc": "2026-10-13T17:39:16Z",
+  "result": "FAIL_PRIVATE_VALIDATOR",
+  "reason": "El arnés esperaba cero workflows hasta el merge. GitHub ya registró el workflow propio al publicar la rama.",
+  "observed": {
+    "total_count": 1,
+    "workflows": [{"name": "P1-L1 verification", "path": ".github/workflows/p1-l1-verify.yml", "state": "active"}]
+  },
+  "correction": "Exigir exactamente cero antes del primer push y exactamente un workflow propio después; conservar comprobaciones de hooks, despliegues, PR1 y contenido sin deploy.",
+  "product_or_service_changes": []
+}

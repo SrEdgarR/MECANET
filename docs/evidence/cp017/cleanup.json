@@ -1,0 +1,18 @@
+{
+  "status": "PASS FOR OWN QA CLEANUP ONLY",
+  "observedAt": "2026-10-13T22:35:19.751851Z",
+  "project": "mecanet-qa-p1l2-cp017",
+  "preservedOtherConsumers": 20,
+  "ownContainersStopped": 6,
+  "ownRunningContainers": 0,
+  "restorePublicPortBindings": false,
+  "backupJournalData": "KEEP PRIVATE",
+  "deletedData": false,
+  "sharedMutations": [],
+  "source": "REMOTE READ ONLY Docker narrow facts against initial preflight",
+  "ownTunnelPid": 4312,
+  "ownTunnelStopped": "PASS after executable and exclusive UNIX-forward identity verification",
+  "localLoopback18443Closed": true,
+  "restorePortProof": "Exact own restore-project filter and inspected container state/PortBindings",
+  "restorePortProofObservedAt": "2026-10-13T22:38:41.624046Z"
+}

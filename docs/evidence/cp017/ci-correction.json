@@ -1,0 +1,80 @@
+{
+  "checkpoint": "CP-017",
+  "classification": "DETECTED",
+  "observedAt": "2026-10-13T23:01:54.149393+00:00",
+  "sourceHeadBeforeCorrectionCommit": "c7335f9bc24b68b578c2a165bbab341962fa6854",
+  "status": "PASS LOCAL CORRECTION; CORRECTED REMOTE CI NOT VERIFIED YET",
+  "firstCI": {
+    "headSha": "c7335f9bc24b68b578c2a165bbab341962fa6854",
+    "pushRun": 38481264336,
+    "prRun": 38481275359,
+    "status": "FAIL RETAINED",
+    "pass": 255,
+    "fail": 3,
+    "cause": "Three drain test fixtures mkdir a child under missing ignored .qa-private parent in a fresh checkout; ENOENT occurs before assertions",
+    "rawLogs": {
+      "push": {
+        "sha256": "44f1bc50046b381c0092c02dc9c0695751700e76db9571bf070ecc661125b998",
+        "bytes": 66039
+      },
+      "pr": {
+        "sha256": "1d8d8a2246021f9f2effbed18d668e23e3af977a14f96cb1fb1db9103f6aa319",
+        "bytes": 66027
+      }
+    }
+  },
+  "correction": {
+    "path": "tests/qa/cp017/revocation-live.test.mjs",
+    "sha256": "096e0f89fed36fb6a1c09f00e23f36eb1495d5cca4fa6a2b09ef51b88f0ed3bd",
+    "change": "mkdtemp under os.tmpdir creates the unique owned fixture; same exact file allowlist/unlink/rmdir cleanup",
+    "runtimeHelperChanged": false,
+    "productChanged": false,
+    "assertionsWeakened": false
+  },
+  "cleanCheckoutReproduction": {
+    "source": "tracked archive c733, locked backend installed --ignore-scripts; no .env/private data copied",
+    "red": {
+      "exit": 1,
+      "pass": 12,
+      "fail": 3,
+      "privateParentExists": false,
+      "log": {
+        "sha256": "237769928ded3e9141fd616cf3df3e42f42170675494b9a7dfd8d4d32f038f56",
+        "bytes": 5737
+      }
+    },
+    "green": {
+      "exit": 0,
+      "pass": 15,
+      "fail": 0,
+      "privateParentExists": false,
+      "onlyDelta": "fixture correction above",
+      "log": {
+        "sha256": "8f921042900139ce6a6eefc526530a9696cc15de4928df22b8c5ae5df9b1c2ed",
+        "bytes": 1718
+      }
+    }
+  },
+  "workingFixture": {
+    "pass": 15,
+    "fail": 0,
+    "log": {
+      "sha256": "a22fbd508f752f6933bdebb1461ee6e817bce2811ebd7d8fac357da5b4e3157d",
+      "bytes": 1719
+    }
+  },
+  "completeLocalContracts": {
+    "pass": 258,
+    "fail": 0,
+    "skip": 0,
+    "durationMs": 16445.7162,
+    "source": "c733 tracked tree + sole corrected test file; not clean c733 attribution",
+    "log": {
+      "sha256": "b7d2c6becec513fb1c1e7e2435620b7d9b96071c32fce880ce7a60a65100823e",
+      "bytes": 25978
+    }
+  },
+  "qaRuntimeSource": "2b0 final QA remains actual producer; its product/helper files unchanged",
+  "resources": "No VPS/container/network/DNS/product mutation; own local archive KEEP, generated test temporary directories removed exactly",
+  "gate": "Integration remains NOT VERIFIED until corrected CI + merge + canonical CI"
+}

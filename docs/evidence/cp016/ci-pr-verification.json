@@ -1,0 +1,24 @@
+{
+  "checkpoint": "CP-016",
+  "classification": "DETECTED",
+  "source": "ci-pr-verification.txt",
+  "runId": 38440720838,
+  "headSha": "04c5d41299bffc15e201c168677079809feb6a0f",
+  "result": "PASS",
+  "at_utc": "2026-10-13T17:45:04.613245+00:00",
+  "log": "ci-pr-verification.txt",
+  "sourceSha256": "624fcb7d076e1dcae0e738e7c3efdf0bcc2b59bba741e71e86855867eee60564",
+  "limits": "Checkout/setup/credentials steps excluded; no real PostgreSQL/ARM64/browser/restore in this run",
+  "commands": [
+    "Audit all backend dependencies as well",
+    "Audit backend runtime dependencies",
+    "Check JavaScript syntax",
+    "Check pure QA controller regressions",
+    "Check the exact toolchain",
+    "Compare the compiled SaaS assets with the archived verified release",
+    "Run the explicit local contract suite",
+    "Verify locked SaaS lane, guarded tests, build and complete dependency audit",
+    "Verify the SaaS lane boundaries and tooling isolation negatives"
+  ],
+  "provenance": "GitHub Actions actual run log, allowlisted verification steps only"
+}

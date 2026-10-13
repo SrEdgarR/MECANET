@@ -1,0 +1,228 @@
+// Private, preregistered writer protocol assays. No API control endpoint,
+// Docker access, new actors, free DML, quota changes or automatic promotion.
+// capture-* deliberately finishes CLOSED and delegates credential/epoch changes
+// to the own-cohort controller; verify-* observes and exercises HTTP afterwards.
+import assert from 'node:assert/strict';
+import {readFile,writeFile,mkdir,stat,open,rename,unlink} from 'node:fs/promises';
+import {randomUUID,createHash} from 'node:crypto';
+import {setTimeout as sleep} from 'node:timers/promises';
+import {pathToFileURL} from 'node:url';
+import {dirname,basename,join,isAbsolute} from 'node:path';
+import {arch} from 'node:os';
+import {createPgPool} from '../../../server/saas/db/pools.js';
+import {createQaClient,assertStatus} from '../cp014/http-client.mjs';
+import {arm,waitEvent,release} from './faults.mjs';
+import {validateHostEndProof} from './resource-closure.mjs';
+import {syncDirectoryStrict} from '../recovery/journal.js';
+
+const PROJECT='mecanet-qa-p1l2-cp017',A='11111111-1111-4111-8111-111111111111',B='22222222-2222-4222-8222-222222222222';
+const OWNER_A='aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaa1',TEAMMATE='aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaa6';
+const UUID=/^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$/,HASH=/^[a-f0-9]{64}$/,SHA=/^[a-f0-9]{40}$/;
+const hash=value=>createHash('sha256').update(typeof value==='string'||Buffer.isBuffer(value)?value:JSON.stringify(value)).digest('hex');
+const fail=code=>Object.assign(Error(code),{code});
+const decimal=value=>typeof value==='string'&&/^[1-9][0-9]{0,18}$/.test(value)&&BigInt(value)<=9223372036854775807n;
+const SCENARIOS=Object.freeze({
+ 'share-logout':{criteria:['L2-A5','L2-A7','L2-A8','L2-A10'],expected:['actual writer SHARE blocks private CLOSE','no closure proof or ACK while blocked','known prior effect resolved before ACK','retry logout uses the same durable session restriction','local OPEN/central CLOSED is observed before CAS','late identical key reads one prior result without adopting v+2'],stopBefore:['writer held beyond 1400ms','foreign blocker','ACK while old SQL may execute']},
+ membership:{criteria:['L2-A5','L2-A8'],expected:['existing teammate delayed before tenant SQL','membership restriction closes v+1 and reopens v+2','old intent permanently NO_EFFECT with reservations until HTTP end','current owner confirms new v+2 intention'],stopBefore:['teammate receive permission already unavailable']},
+ identity:{criteria:['L2-A5','L2-A8'],expected:['owner A identity restriction after other A assays','delayed original intent NO_EFFECT','identity and all its sessions revoked','old context cannot regain a result or admission'],stopBefore:['other A-dependent assays unfinished; controller chooses this terminal ordering']},
+ 'capture-rotation':{criteria:['L2-A3','L2-A5','L2-A7','L2-A10'],expected:['one prior durable receipt via API','ROTATION barrier ACK with local and central CLOSED/v+1','same immutable inventory/results/keys','controller receives exact guards; no secret change or promotion'],stopBefore:['unsettled intent/ticket/growth','controller fin proof missing before credential change']},
+ 'capture-epoch':{criteria:['L2-A5','L2-A7','L2-A10'],expected:['one prior durable receipt via API','EPOCH barrier ACK with local and central CLOSED/v+1','same immutable inventory/results/keys','controller receives exact guards; no epoch change or promotion'],stopBefore:['unsettled intent/ticket/growth','controller fin proof missing before epoch change']},
+ 'verify-rotation':{criteria:['L2-A3','L2-A5','L2-A7','L2-A10'],expected:['live central/local metadata agrees after independently verified promotion','old own writer credential cannot authenticate','new bounded own writer connects','inventory and immutable intentions preserved','late identical key gives prior result and zero additional movement'],stopBefore:['closed preparer evidence or old credential custody missing','any old credential accepted']},
+ 'verify-epoch':{criteria:['L2-A5','L2-A7','L2-A10'],expected:['live central/local epoch advanced with monotonic v+2','inventory and old operation guard unchanged','old epoch and old key at new epoch conflict without effect','old known result consultable by current authorized actor','fresh current-epoch UUID confirms one new receipt'],stopBefore:['closed preparer evidence missing','old intention guard altered or old key produces another effect']},
+ drain:{criteria:['L2-A5','L2-A7','L2-A8','L2-A10'],expected:['private own controller signals exact api1 while original intent is live','ready denies api1 while api2 stays ready','new requests are DRAINING before admission','prior HTTP and SQL complete with unique durable effect','positive container/HTTP/SQL end within 30s without quota refund'],stopBefore:['controller marker missing before request deadline','wrong owner or container','any active SQL while reporting resource end']},
+ 'block-tenant-b':{criteria:['L2-A5','L2-A8','L2-A10'],expected:['B delayed intent closed with TENANT barrier','ACK leaves B CLOSED and directory blocked','old intent cannot execute; resources stay until actual SQL/HTTP/process end','A data unchanged'],stopBefore:['any reopening without verified controller promotion']}
+});
+export function scenarioPlan(phase){
+ if(!Object.hasOwn(SCENARIOS,phase))throw fail('FIXED_QA_SCENARIO_REQUIRED');
+ return {phase,...SCENARIOS[phase],status:'PREREGISTERED / NOT VERIFIED',maxHttpPerClient:160,maxObserverQueries:240,maxRuntimeMs:45000,maxShareHoldMs:1400,quotaChanges:false,newActors:false,automaticPromotion:false,realData:false};
+}
+export function assertShareWait({tenantId,generation,owner,guard,central,local,activities}){
+ const invalid=()=>{throw fail('SHARE_WAIT_NOT_PROVEN')};
+ if(![A,B].includes(tenantId)||!UUID.test(generation??'')||!UUID.test(owner??'')||!guard||!central||!local||!Array.isArray(activities)||!decimal(guard.open_version)||!decimal(guard.closed_version)||!decimal(guard.reopen_version)||BigInt(guard.closed_version)!==BigInt(guard.open_version)+1n||BigInt(guard.reopen_version)!==BigInt(guard.open_version)+2n||guard.close_proven!==false||!['PENDING','CLOSING'].includes(guard.status)||guard.generation!==generation||central.generation!==generation||local.generation!==generation||central.data_epoch!==guard.data_epoch||local.data_epoch!==guard.data_epoch||central.state!=='CLOSED'||central.writer_version!==guard.closed_version||local.state!=='OPEN'||local.writer_version!==guard.open_version)invalid();
+ const writer=activities.find(row=>Number.isInteger(row.pid)&&row.application_name===`mecanet-writer:${owner}`);
+ const blocked=activities.find(row=>row.application_name==='mecanet-tenant-write'&&row.wait_event_type==='Lock'&&Array.isArray(row.blocking_pids)&&row.blocking_pids.includes(writer?.pid));
+ if(!writer||!blocked)invalid();return {writerPid:writer.pid,maintenancePid:blocked.pid};
+}
+export function assertPromotedMetadata({phase,before,after,guard,generation}){
+ const invalid=()=>{throw fail('PROMOTION_NOT_PROVEN')};
+ if(!['rotation','epoch'].includes(phase)||!before||!after||!guard||!UUID.test(generation??'')||before.generation!==generation||after.generation!==generation||guard.generation!==generation||guard.close_proven!==true||guard.status!=='ACKNOWLEDGED'||before.schema_version!==2||after.schema_version!==2||before.state!=='OPEN'||after.state!=='OPEN'||before.writer_version!==guard.open_version||after.writer_version!==guard.reopen_version||!decimal(guard.open_version)||!decimal(guard.closed_version)||!decimal(guard.reopen_version)||BigInt(guard.closed_version)!==BigInt(guard.open_version)+1n||BigInt(guard.reopen_version)!==BigInt(guard.open_version)+2n||guard.data_epoch!==before.data_epoch||!decimal(before.data_epoch)||!decimal(after.data_epoch))invalid();
+ if(phase==='rotation'&&(after.data_epoch!==before.data_epoch||after.writer_secret_ref===before.writer_secret_ref||!decimal(before.writer_credential_version)||!decimal(after.writer_credential_version)||BigInt(after.writer_credential_version)!==BigInt(before.writer_credential_version)+1n))invalid();
+ if(phase==='epoch'&&BigInt(after.data_epoch)!==BigInt(before.data_epoch)+1n)invalid();
+ return {dataEpoch:after.data_epoch,writerVersion:after.writer_version};
+}
+export function validateDrainStartedProof(proof,context,{now=Date.now()}={}){
+ const invalid=()=>{throw fail('DRAIN_START_NOT_PROVEN')};
+ if(!proof||!context||context.project!==PROJECT||!SHA.test(context.sourceSha??'')||!UUID.test(context.generation??'')||context.instance!=='api1'||!UUID.test(context.owner??'')||!UUID.test(context.operationId??'')||!UUID.test(context.ticketId??''))invalid();
+ for(const key of ['project','sourceSha','generation','instance','owner','operationId','ticketId'])if(proof[key]!==context[key])invalid();
+ if(!HASH.test(proof.containerId??'')||! /^(?:sha256:)?[a-f0-9]{64}$/.test(proof.artifactDigest??'')||proof.signal!=='SIGTERM'||typeof proof.drainStartedAt!=='string'||!Number.isFinite(Date.parse(proof.drainStartedAt))||Date.parse(proof.drainStartedAt)>now+5000)invalid();return proof;
+}
+export function selectCurrentDrainStartedProof(text,context){
+ if(typeof text!=='string'||Buffer.byteLength(text,'utf8')>256*1024)return null;
+ try{return validateDrainStartedProof(JSON.parse(text),context)}catch(error){if(error instanceof SyntaxError||error.code==='DRAIN_START_NOT_PROVEN')return null;throw error}
+}
+export async function waitForCurrentDrainStartedProof(readCurrent,context,{timeoutMs=2500,pollMs=25,checkEnvelope=()=>{}}={}){
+ if(typeof readCurrent!=='function'||!Number.isInteger(timeoutMs)||timeoutMs<1||timeoutMs>2500||!Number.isInteger(pollMs)||pollMs<1||pollMs>25||pollMs>timeoutMs)throw fail('DRAIN_START_NOT_PROVEN');
+ const until=performance.now()+timeoutMs;
+ while(performance.now()<until){checkEnvelope();const proof=selectCurrentDrainStartedProof(await readCurrent(),context);if(proof)return proof;await sleep(pollMs)}
+ throw fail('DRAIN_START_NOT_PROVEN');
+}
+export function validatePromotionProvenance({phase,captured,proof,history,verifierSourceSha,generation,systemIdentifier}){
+ const invalid=()=>{throw fail('PROMOTION_PROVENANCE_NOT_PROVEN')},boundary=captured?.boundary;
+ if(!['rotation','epoch'].includes(phase)||!SHA.test(verifierSourceSha??'')||!UUID.test(generation??'')||
+  captured?.project!==PROJECT||captured.generation!==generation||captured.status!=='PASS FOR LISTED CASES ONLY'||!SHA.test(captured.sourceSha??'')||
+  boundary?.kind!==phase||boundary.tenantId!==A||boundary.systemIdentifier!==systemIdentifier||boundary.promoted!==false||boundary.credentialOrEpochChanged!==false||!UUID.test(boundary.guard?.id??'')||
+  proof?.project!==PROJECT||proof.kind!==phase.toUpperCase()||proof.generation!==generation||proof.systemIdentifier!==systemIdentifier||proof.tenantId!==A||proof.restrictionId!==boundary.guard.id||
+  !SHA.test(proof.sourceSha??'')||proof.sourceSha!==captured.sourceSha||proof.captureSourceSha!==captured.sourceSha||
+  proof.closedPreparerVerified!==true||proof.positiveProcessEndVerified!==true||proof.sqlOwnerAbsent!==true||proof.quotaCountersPreserved!==true||proof.immutableIntentAndBusinessDigestsPreserved!==true)invalid();
+ const accepted=history?.acceptedArtifacts;
+ if(!Array.isArray(accepted)||accepted.length<1||accepted.length>128||accepted.some(artifact=>!SHA.test(artifact?.codeSha??'')||!/^sha256:[a-f0-9]{64}$/.test(artifact?.digest??'')))invalid();
+ const producer=accepted.filter(artifact=>artifact.codeSha===proof.sourceSha),verifier=accepted.filter(artifact=>artifact.codeSha===verifierSourceSha);
+ if(producer.length!==1||verifier.length!==1)invalid();
+ return {captureSourceSha:captured.sourceSha,promotionSourceSha:proof.sourceSha,verifierSourceSha,promotionArtifactDigest:producer[0].digest,verifierArtifactDigest:verifier[0].digest};
+}
+export async function publishDrainRequest(file,value,{checkpoint=async()=>{},syncDirectory=syncDirectoryStrict,replaceFile=rename}={}){
+ const keys='generation,instance,operationId,owner,project,releaseDeadlineMs,requestedAt,signal,sourceSha,ticketId';
+ if(typeof file!=='string'||!isAbsolute(file)||basename(file)!=='drain-request.json'||!value||Object.getPrototypeOf(value)!==Object.prototype||Object.keys(value).sort().join(',')!==keys||
+  value.project!==PROJECT||!SHA.test(value.sourceSha??'')||!['generation','owner','operationId','ticketId'].every(key=>UUID.test(value[key]??''))||value.instance!=='api1'||value.signal!=='SIGTERM'||value.releaseDeadlineMs!==2500||
+  typeof value.requestedAt!=='string'||!Number.isFinite(Date.parse(value.requestedAt))||new Date(value.requestedAt).toISOString()!==value.requestedAt)throw fail('DRAIN_REQUEST_EXACT_SHAPE_REQUIRED');
+ const text=JSON.stringify(value);if(Buffer.byteLength(text,'utf8')>4096)throw fail('DRAIN_REQUEST_EXACT_SHAPE_REQUIRED');
+ const directory=dirname(file),temporary=join(directory,`.drain-request.${randomUUID()}.tmp`);let handle,created=false,published=false;
+ try{
+  handle=await open(temporary,'wx',0o600);created=true;await checkpoint('temporaryOpened');await handle.writeFile(text,'utf8');await handle.sync();await handle.close();handle=null;
+  await replaceFile(temporary,file);published=true;await syncDirectory(directory);
+ }finally{await handle?.close();if(created&&!published)await unlink(temporary)}
+}
+
+export async function runRevocationAssay(phase){
+ const plan=scenarioPlan(phase),sourceSha=process.env.QA_CODE_SHA;
+ if(process.env.QA_PROJECT!==PROJECT||!SHA.test(sourceSha??''))throw fail('EXACT_OWN_QA_SOURCE_REQUIRED');
+ const qa=JSON.parse(await readFile('/run/qa-secrets/connections.json','utf8'));
+ if(qa.project!==PROJECT||!UUID.test(qa.generation??'')||!qa.fixture?.identities.every(i=>i.email.endsWith('@qa.invalid'))||qa.fixture.sharedProduct!=='cccccccc-cccc-4ccc-8ccc-cccccccccccc')throw fail('SYNTHETIC_COHORT_REQUIRED');
+ const ca=await readFile('/run/qa-ca.crt'),bootstrap=(await readFile('/run/qa-secrets/bootstrap','utf8')).trim(),login=JSON.parse(await readFile('/run/qa-secrets/fixture-login.json','utf8'));
+ const runId=randomUUID(),started=performance.now(),file=`/run/qa-results/revocation-${phase}-${runId}.json`,pointer=`/run/qa-results/revocation-${phase}.json`;
+ const pools=new Map(),clients=[],gates=[];let queries=0,nextHttp=0;
+ const report={project:PROJECT,sourceSha,harnessSha256:hash(await readFile(new URL(import.meta.url))),generation:qa.generation,runId,startedAt:new Date().toISOString(),environment:'own synthetic PG18.6 ARM64/TLS/two API',plan,cases:[],status:'PREREGISTERED / NOT VERIFIED',infrastructureModified:false,secretsPrinted:false};
+ const persist=async()=>{await mkdir('/run/qa-results',{recursive:true});await writeFile(file,JSON.stringify(report,null,2),{mode:0o600});await writeFile(pointer,JSON.stringify({project:PROJECT,runId,sourceSha,file,status:report.status}),{mode:0o600})};
+ // The exact plan is durable BEFORE login, any effect, or any restriction request.
+ await persist();
+ const bounded=()=>{if(performance.now()-started>plan.maxRuntimeMs)throw fail('QA_RUNTIME_ENVELOPE_EXCEEDED')};
+ const poolFor=async database=>{bounded();if(!['mecanet_control','mecanet_tenant_a','mecanet_tenant_b'].includes(database))throw fail('FIXED_QA_DATABASE_REQUIRED');if(!pools.has(database))pools.set(database,await createPgPool({host:'postgres',port:5432,database,user:'qa_bootstrap',password:bootstrap,ssl:{ca,servername:'postgres',rejectUnauthorized:true},max:1,connectionTimeoutMillis:2000,statement_timeout:1200,lock_timeout:300,application_name:'mecanet-cp017-revocation-observer'}));return pools.get(database)};
+ const inspect=async(database,text,values=[])=>{bounded();if(++queries>plan.maxObserverQueries)throw fail('QA_QUERY_ENVELOPE_EXCEEDED');const client=await(await poolFor(database)).connect();try{await client.query('BEGIN READ ONLY');const rows=(await client.query(text,values)).rows;await client.query('COMMIT');return rows}catch(error){await client.query('ROLLBACK').catch(()=>{});throw error}finally{client.release()}};
+ const central=(text,values)=>inspect('mecanet_control',text,values),business=(text,values,id=A)=>inspect(id===A?'mecanet_tenant_a':'mecanet_tenant_b',text,values);
+ const pace=async()=>{bounded();const wait=nextHttp-performance.now();nextHttp=Math.max(nextHttp,performance.now())+150;if(wait>0)await sleep(wait)};
+ const send=async(client,path,options={})=>{await pace();return client.request(path,options)};
+ const clientFor=async(email,instance='api1')=>{const client=createQaClient({instance,purpose:'company',ca,login:{email,password:login.password},budget:160});clients.push({label:email.split('@')[0]+':'+instance,client});await pace();await client.login();return client};
+ const clone=(client,instance)=>{const copy=createQaClient({instance,purpose:'company',ca,budget:160});copy.setCookies(client.cookieHeader());copy.csrf=client.csrf;clients.push({label:'same-session:'+instance,client:copy});return copy};
+ const receipt=(client,id,input,{tenantId=A,epoch,productId=qa.fixture.sharedProduct}={})=>send(client,`/api/tenants/${tenantId}/products/${productId}/stock-receipts`,{method:'POST',body:input,headers:{'Idempotency-Key':id,'X-Data-Epoch':epoch}});
+ const waitFor=async(fn,predicate,ms=6000)=>{const end=performance.now()+ms;while(performance.now()<end){bounded();const result=await fn();if(predicate(result))return result;await sleep(25)}throw fail('QA_CONDITION_NOT_PROVEN')};
+ const metadata=async(id=A)=>(await central('SELECT w.generation,w.data_epoch::text,w.writer_version::text,w.state,d.schema_version,d.writer_secret_ref,d.writer_credential_version::text,d.data_epoch::text AS directory_epoch,d.status AS directory_status FROM saas.tenant_writer_state w JOIN saas.tenant_directory d ON d.id=w.tenant_id WHERE w.tenant_id=$1',[id]))[0];
+ const localFence=async(id=A)=>(await business('SELECT generation,data_epoch::text,writer_version::text,state FROM inventory.writer_fence WHERE id=1',[],id))[0];
+ const guards=async(id)=>(await central('SELECT r.id,r.status,r.reason_code,r.active,t.tenant_id,t.generation,t.data_epoch::text,t.open_version::text,t.closed_version::text,t.reopen_version::text,t.close_proven,t.stage FROM saas.write_restrictions r JOIN saas.write_restriction_tenants t ON t.restriction_id=r.id WHERE r.id=$1',[id]))[0];
+ const ack=async(id)=>waitFor(()=>guards(id),row=>row?.status==='ACKNOWLEDGED');
+ const intent=async(id,tenantId=A)=>(await central('SELECT i.*,r.status AS reservation_status,r.tenant_bytes_reserved::text,t.state AS ticket_state FROM saas.write_intents i JOIN saas.tickets t ON t.id=i.ticket_id JOIN saas.write_growth_reservations r ON r.tenant_id=i.tenant_id AND r.operation_id=i.operation_id WHERE i.tenant_id=$1 AND i.operation_id=$2',[tenantId,id]))[0];
+ const immutableIntent=row=>Object.fromEntries(['tenant_id','operation_id','idempotency_key','actor_id','action','data_epoch','request_hash','permission_versions','session_ref','generation','writer_version','ticket_id','owner_id','attempt_index'].map(key=>[key,row[key]]));
+ const request=async({reason,tenantId=A,identityId=null})=>{bounded();const id=randomUUID(),client=await(await poolFor('mecanet_control')).connect();try{await client.query('BEGIN');const row=(await client.query('SELECT * FROM saas.request_write_restriction($1,$2,NULL,$3,NULL,$4,$5)',[id,identityId,tenantId,qa.generation,reason])).rows[0];await client.query('COMMIT');assert.equal(row?.id,id);return id}catch(error){await client.query('ROLLBACK').catch(()=>{});throw error}finally{client.release()}};
+ const snapshot=async(id=A)=>{
+  // Encode every bigint as decimal text before JSON crosses into JavaScript;
+  // numeric JSON would lose adjacent stock values above Number.MAX_SAFE_INTEGER.
+  const data=await business("SELECT (SELECT coalesce(jsonb_agg(to_jsonb(p)||jsonb_build_object('version',p.version::text) ORDER BY p.id),'[]') FROM catalog.products p) AS products,(SELECT coalesce(jsonb_agg(to_jsonb(b)||jsonb_build_object('on_hand',b.on_hand::text,'version',b.version::text) ORDER BY b.product_id),'[]') FROM inventory.balances b) AS balances,(SELECT coalesce(jsonb_agg(to_jsonb(m)||jsonb_build_object('quantity',m.quantity::text,'on_hand_after',m.on_hand_after::text,'balance_version',m.balance_version::text) ORDER BY m.id),'[]') FROM inventory.movements m) AS movements,(SELECT coalesce(jsonb_agg(to_jsonb(o)||jsonb_build_object('data_epoch',o.data_epoch::text) ORDER BY o.id),'[]') FROM inventory.operations o) AS operations,(SELECT coalesce(jsonb_agg(to_jsonb(a) ORDER BY a.operation_id),'[]') FROM inventory.audit a) AS audit,inventory.logical_usage()::text AS actual,(SELECT logical_bytes::text FROM inventory.quota_state WHERE id=1) AS counted",[],id);
+  assert.equal(data[0].actual,data[0].counted);
+  for(const balance of data[0].balances){const moves=data[0].movements.filter(m=>m.product_id===balance.product_id);assert.equal(BigInt(balance.on_hand),moves.reduce((sum,m)=>sum+BigInt(m.quantity),0n));assert.equal(BigInt(balance.version),1n+BigInt(moves.length))}
+  const result={logicalBytes:data[0].actual};for(const key of ['products','balances','movements','operations','audit']){assert(data[0][key].length<=1000);result[key]={count:data[0][key].length,hash:hash(data[0][key])}}return result;
+ };
+ const sample=async(client,id=A)=>{const m=await metadata(id),operationId=randomUUID(),input={quantity:'1',reason:'Ensayo protocolario ficticio'},reply=await receipt(client,operationId,input,{tenantId:id,epoch:m.data_epoch});assertStatus(reply,201);const settled=await waitFor(()=>intent(operationId,id),row=>row?.reservation_status==='SETTLED'&&row.ticket_state==='FINISHED');return {operationId,input,result:reply.json,tenantId:id,epoch:m.data_epoch,intentGuard:immutableIntent(settled)}};
+ const settleResponse=async(id,tenantId=A)=>waitFor(()=>intent(id,tenantId),row=>row?.reservation_status==='SETTLED'&&['FINISHED','REJECTED','EXPIRED'].includes(row.ticket_state));
+ try{
+  const env=(await central("SELECT current_setting('server_version_num') AS version,current_setting('server_encoding') AS encoding,(SELECT ssl FROM pg_stat_ssl WHERE pid=pg_backend_pid()) AS tls,(SELECT system_identifier::text FROM pg_control_system()) AS system_id,(SELECT generation FROM saas.admission_fence WHERE id=1) AS generation"))[0];
+  assert.equal(env.version,'180006');assert.equal(env.encoding,'UTF8');assert.equal(env.tls,true);assert.equal(env.system_id,qa.systemIdentifier);assert.equal(env.generation,qa.generation);assert.equal(arch(),'arm64');report.cases.push({id:'exact-environment',status:'PASS',version:env.version,utf8:true,tls:true});await persist();
+  if(phase==='share-logout'){
+   const actor=await clientFor('a@qa.invalid'),logout=clone(actor,'api2'),retry=clone(actor,'api1'),oldSession=clone(actor,'api2'),current=await clientFor('a@qa.invalid','api2');
+   const cookie=/__Host-mecanet-session=([^;]+)/.exec(actor.cookieHeader());assert(cookie);const sid=/^s:([A-Za-z0-9_-]{43})\./.exec(decodeURIComponent(cookie[1]))?.[1];assert(sid);
+   const session=(await central('SELECT identity_id,generation,writer_session_ref FROM saas.session_registry WHERE sid=$1',[sid]))[0];assert.equal(session?.identity_id,OWNER_A);assert.equal(session.generation,qa.generation);
+   const before=await metadata(),previous=await snapshot(),id=randomUUID(),input={quantity:'1',reason:'SHARE/logout ficticio'},writeGate=await arm({instance:'api1',stage:'write.afterFunction',tenantId:A}),reopenGate=await arm({instance:'worker',stage:'restriction.localReopened',tenantId:A});gates.push(writeGate,reopenGate);
+   let writing,loggingOut,retrying;
+   try{
+    writing=receipt(actor,id,input,{epoch:before.data_epoch});writing.catch(()=>{});const event=await waitEvent(writeGate);assert.equal(event.operationId,id);assert(UUID.test(event.owner));const heldAt=performance.now();
+    loggingOut=send(logout,'/api/auth/logout',{method:'POST',body:{}});loggingOut.catch(()=>{});
+    const restriction=(await waitFor(()=>central("SELECT id FROM saas.write_restrictions WHERE session_ref=$1 AND reason_code='LOGOUT' AND generation=$2",[session.writer_session_ref,qa.generation]),rows=>rows.length===1,500))[0];
+    const guard=await guards(restriction.id),closedCentral=await metadata(),openLocal=await localFence();
+    const activities=await waitFor(()=>business('SELECT pid,application_name,wait_event_type,pg_blocking_pids(pid) AS blocking_pids FROM pg_stat_activity WHERE datname=current_database() AND application_name=ANY($1::text[])',[['mecanet-tenant-write',`mecanet-writer:${event.owner}`]]),rows=>rows.some(row=>row.wait_event_type==='Lock'&&row.blocking_pids.length),700);
+    const blocked=assertShareWait({tenantId:A,generation:qa.generation,owner:event.owner,guard,central:closedCentral,local:openLocal,activities});assert(performance.now()-heldAt<plan.maxShareHoldMs);await release(writeGate);
+    const reply=await writing;assertStatus(reply,201);const reopenedEvent=await waitEvent(reopenGate,{timeout:4500});assert.equal(reopenedEvent.tenantId,A);
+    const intervalCentral=await metadata(),intervalLocal=await localFence(),pendingGuard=await guards(restriction.id);assert.equal(intervalCentral.state,'CLOSED');assert.equal(intervalLocal.state,'OPEN');assert.equal(intervalCentral.writer_version,intervalLocal.writer_version);assert.equal(pendingGuard.status,'CLOSED');assert.equal(pendingGuard.close_proven,true);assert.equal((await central('SELECT saas.writer_readiness($1) AS ready',[qa.generation]))[0].ready,false);
+    retrying=send(retry,'/api/auth/logout',{method:'POST',body:{}});retrying.catch(()=>{});await sleep(200);assert.equal((await guards(restriction.id)).status,'CLOSED');assert.equal((await central("SELECT count(*)::int AS n FROM saas.write_restrictions WHERE session_ref=$1 AND reason_code='LOGOUT'",[session.writer_session_ref]))[0].n,1);await release(reopenGate);
+    assertStatus(await loggingOut,200);assertStatus(await retrying,200);const finalGuard=await ack(restriction.id);assert.equal(finalGuard.close_proven,true);assert.equal(finalGuard.reopen_version,String(BigInt(before.writer_version)+2n));
+    const deniedId=randomUUID(),denied=await receipt(oldSession,deniedId,{quantity:'1',reason:'Sesión cerrada ficticia'},{epoch:before.data_epoch});
+    // The deleted session's stale CSRF is denied before the write authority.
+    // Verify both exact denials and that it created no new durable intention.
+    assertStatus(denied,403);assert.equal(denied.json.error,'CSRF_REJECTED');
+    assertStatus(await send(oldSession,'/api/tenants'),401);assert.equal(await intent(deniedId),undefined);
+    const record=await intent(id);assert.equal(record.writer_version,before.writer_version);assert.equal(record.status,'CONFIRMED');const replay=await receipt(current,id,input,{epoch:before.data_epoch});assertStatus(replay,201);assert.deepEqual(replay.json,reply.json);
+    const final=await snapshot();assert.equal(final.movements.count,previous.movements.count+1);assert.equal(final.operations.count,previous.operations.count+1);assert.equal(final.audit.count,previous.audit.count+1);assert.equal((await business('SELECT count(*)::int AS n FROM inventory.movements WHERE operation_id=$1',[id]))[0].n,1);
+    report.cases.push({id:'share-logout-and-retry',status:'PASS',operationId:id,restrictionId:restriction.id,writerOwner:event.owner,...blocked,closedWriterVersion:finalGuard.closed_version,reopenedWriterVersion:finalGuard.reopen_version,actualLockWait:true,ackAfterPriorCommit:true,oneDurableLogout:true,closedCentralDuringLocalOpen:true,immutableOriginalVersion:true,oneEffect:true,oldSessionDenied:true});
+   }finally{await Promise.all(gates.map(gate=>release(gate).catch(()=>{})));await Promise.allSettled([writing,loggingOut,retrying].filter(Boolean))}
+  }else if(['membership','identity','block-tenant-b'].includes(phase)){
+   const tenantId=phase==='block-tenant-b'?B:A,reason=phase==='membership'?'MEMBERSHIP':phase==='identity'?'IDENTITY':'TENANT',identityId=phase==='membership'?TEAMMATE:phase==='identity'?OWNER_A:null;
+   const actor=await clientFor(phase==='membership'?'teammate@qa.invalid':phase==='identity'?'a@qa.invalid':'b@qa.invalid'),current=phase==='membership'?await clientFor('a@qa.invalid','api2'):null;
+   const before=await metadata(tenantId),oldData=await snapshot(tenantId),otherData=await snapshot(tenantId===A?B:A),id=randomUUID(),gate=await arm({instance:'api1',stage:'write.beforeTenant',tenantId});gates.push(gate);let pending;
+   try{
+    pending=receipt(actor,id,{quantity:'1',reason:'Restricción demorada ficticia'},{tenantId,epoch:before.data_epoch});pending.catch(()=>{});assert.equal((await waitEvent(gate)).operationId,id);const original=await intent(id,tenantId);assert.equal(original.status,'EXECUTING');
+    const restrictionId=await request({reason,tenantId,identityId}),guard=await ack(restrictionId),closed=await intent(id,tenantId);assert.equal(guard.close_proven,true);assert.equal(guard.closed_version,String(BigInt(before.writer_version)+1n));assert.equal(closed.status,'REJECTED');assert.equal(closed.writer_version,original.writer_version);assert.equal(closed.reservation_status,'PROJECTED');assert.equal(closed.tenant_bytes_reserved,'32768');assert(['ACTIVE','UNCERTAIN'].includes(closed.ticket_state));
+    assert.equal((await business('SELECT count(*)::int AS n FROM inventory.operations WHERE id=$1',[id],tenantId))[0].n,0);await release(gate);const reply=await pending;assertStatus(reply,phase==='identity'?401:403);
+    const after=await metadata(tenantId);assert.equal(after.state,phase==='block-tenant-b'?'CLOSED':'OPEN');assert.equal(after.writer_version,phase==='block-tenant-b'?guard.closed_version:guard.reopen_version);assert.deepEqual(await snapshot(tenantId),oldData);assert.deepEqual(await snapshot(tenantId===A?B:A),otherData);
+    if(phase==='membership'){await settleResponse(id,tenantId);const fresh=await sample(current);assert.equal((await intent(fresh.operationId)).writer_version,guard.reopen_version)}
+    if(phase==='identity'){assert.equal((await central('SELECT status FROM saas.identities WHERE id=$1',[OWNER_A]))[0].status,'revoked');assert.equal((await central("SELECT count(*)::int AS n FROM saas.session_registry WHERE identity_id=$1 AND status='active'",[OWNER_A]))[0].n,0);await settleResponse(id,tenantId)}
+    if(phase==='block-tenant-b'){assert.equal(after.directory_status,'blocked');await settleResponse(id,tenantId)}
+    report.cases.push({id:phase,status:'PASS',operationId:id,ticketId:original.ticket_id,writerOwner:original.owner_id,restrictionId,originalVersion:original.writer_version,closedVersion:guard.closed_version,reopenedVersion:phase==='block-tenant-b'?null:guard.reopen_version,permanentNoEffect:true,reservesRetainedWhileHttpLive:true,otherTenantUnchanged:true,resourceEndVerified:true});
+   }finally{await release(gate).catch(()=>{});if(pending)await pending.catch(()=>{})}
+  }else if(phase==='drain'){
+   const actor=await clientFor('a@qa.invalid'),peer=await clientFor('a@qa.invalid','api2'),before=await metadata(),data=await snapshot(),id=randomUUID(),gate=await arm({instance:'api1',stage:'write.beforeTenant',tenantId:A});gates.push(gate);let pending;
+   try{
+    pending=receipt(actor,id,{quantity:'1',reason:'Drenaje ficticio'},{epoch:before.data_epoch});pending.catch(()=>{});const event=await waitEvent(gate);assert.equal(event.operationId,id);const original=await intent(id);assert.equal(original.status,'EXECUTING');
+    const quotaBefore=(await central('SELECT coalesce(sum(qh),0)::text AS qh,coalesce(sum(qc),0)::text AS qc,coalesce(sum(qt),0)::text AS qt FROM saas.windows WHERE scope_key=$1',[`tenant:${A}`]))[0];
+    const context={project:PROJECT,sourceSha,generation:qa.generation,instance:'api1',owner:original.owner_id,operationId:id,ticketId:original.ticket_id};
+    const requestFile='/run/qa-results/drain-request.json';await publishDrainRequest(requestFile,{...context,requestedAt:new Date().toISOString(),releaseDeadlineMs:2500,signal:'SIGTERM'});
+    const trustedText=async name=>{if(!['drain-started-proof.json','host-end-proof-api1.json'].includes(name))throw fail('DRAIN_START_NOT_PROVEN');const path=`/run/qa-results/${name}`;let info;try{info=await stat(path)}catch(error){if(error.code==='ENOENT')return null;throw error}if(!info.isFile()||(info.mode&0o222)!==0||info.size>256*1024)return null;return readFile(path,'utf8')};
+    const trustedJson=async name=>{const text=await trustedText(name);if(text===null)return null;try{return JSON.parse(text)}catch(error){if(error instanceof SyntaxError)return null;throw error}};
+    const start=await waitForCurrentDrainStartedProof(()=>trustedText('drain-started-proof.json'),context,{checkEnvelope:bounded});
+    const unavailable=await send(actor,'/api/health/ready');assertStatus(unavailable,503);assert.equal(unavailable.json.status,'unavailable');assertStatus(await send(peer,'/api/health/ready'),200);
+    const deniedId=randomUUID(),denied=await receipt(actor,deniedId,{quantity:'1',reason:'Durante drenaje ficticio'},{epoch:before.data_epoch});assertStatus(denied,503);assert.deepEqual(denied.json,{error:'DRAINING'});assert.equal((await central('SELECT count(*)::int AS n FROM saas.write_intents WHERE operation_id=$1',[deniedId]))[0].n,0);
+    await release(gate);const reply=await pending;assertStatus(reply,201);await settleResponse(id);
+    const stopped=await waitFor(()=>trustedJson('host-end-proof-api1.json'),proof=>proof?.project===context.project&&proof.sourceSha===context.sourceSha&&proof.generation===context.generation&&proof.instance===context.instance&&proof.owner===context.owner&&proof.containerId===start.containerId&&Array.isArray(proof.operations)&&proof.operations.some(op=>op.operationId===id&&op.ticketId===original.ticket_id&&op.tenantId===A),30000);
+    validateHostEndProof(stopped,{closureSourceSha:sourceSha,generation:qa.generation,instance:'api1',acceptedArtifacts:[{codeSha:sourceSha,digest:start.artifactDigest}]});assert.equal(stopped.containerId,start.containerId);assert.equal(stopped.sourceSha,sourceSha);assert(stopped.operations.some(op=>op.operationId===id&&op.ticketId===original.ticket_id&&op.tenantId===A));
+    const duration=Date.parse(stopped.containerStoppedAt)-Date.parse(start.drainStartedAt);assert(duration>=0&&duration<=30000);assert.equal((await central('SELECT count(*)::int AS n FROM pg_stat_activity WHERE application_name=ANY($1::text[])',[[`mecanet-writer:${context.owner}`,`mecanet-qa-api:${context.owner}`]]))[0].n,0);
+    const after=await snapshot();assert.equal(after.movements.count,data.movements.count+1);assert.equal(after.operations.count,data.operations.count+1);assert.equal(after.audit.count,data.audit.count+1);assert.equal((await business('SELECT count(*)::int AS n FROM inventory.movements WHERE operation_id=$1',[id]))[0].n,1);
+    const quotaAfter=(await central('SELECT coalesce(sum(qh),0)::text AS qh,coalesce(sum(qc),0)::text AS qc,coalesce(sum(qt),0)::text AS qt FROM saas.windows WHERE scope_key=$1',[`tenant:${A}`]))[0];for(const dimension of ['qh','qc','qt'])assert(BigInt(quotaAfter[dimension])>=BigInt(quotaBefore[dimension]));
+    report.cases.push({id:'real-own-api-drain',status:'PASS',operationId:id,ticketId:original.ticket_id,owner:context.owner,containerId:start.containerId,drainDurationMs:duration,ready503DuringDrain:true,otherApiReady:true,newIntentDeniedBeforeAdmission:true,oneDurableEffect:true,actualSqlOwnerAbsent:true,positiveHttpEnd:true,quotaNotRefunded:true});
+   }finally{await release(gate).catch(()=>{});if(pending)await pending.catch(()=>{})}
+  }else if(phase.startsWith('capture-')){
+   const kind=phase.slice(8),actor=await clientFor('a@qa.invalid'),known=await sample(actor),before=await metadata(),data=await snapshot();
+   const debts=(await central("SELECT count(*)::int AS n FROM saas.write_growth_reservations WHERE tenant_id=$1 AND status<>'SETTLED'",[A]))[0];assert.equal(debts.n,0);
+   const restrictionId=await request({reason:kind.toUpperCase()}),guard=await ack(restrictionId),closed=await metadata(),local=await localFence();assert.equal(guard.close_proven,true);assert.equal(closed.state,'CLOSED');assert.equal(local.state,'CLOSED');assert.equal(closed.writer_version,guard.closed_version);assert.equal(local.writer_version,guard.closed_version);assert.deepEqual(await snapshot(),data);
+   report.boundary={kind,tenantId:A,systemIdentifier:qa.systemIdentifier,before,guard,snapshot:data,sample:known,requiresPositiveControllerEndProof:true,credentialOrEpochChanged:false,promoted:false};report.cases.push({id:'operational-barrier-only',status:'PASS',restrictionId,closedWriterVersion:guard.closed_version,immutableData:true,automaticPromotion:false});
+  }else if(phase.startsWith('verify-')){
+   const kind=phase.slice(7),capturePointer=JSON.parse(await readFile(`/run/qa-results/revocation-capture-${kind}.json`,'utf8'));assert.equal(capturePointer.project,PROJECT);assert.match(capturePointer.file,new RegExp(`^/run/qa-results/revocation-capture-${kind}-[a-f0-9-]{36}\\.json$`));
+   const captured=JSON.parse(await readFile(capturePointer.file,'utf8'));assert.equal(captured.project,PROJECT);assert.equal(captured.generation,qa.generation);assert(SHA.test(captured.sourceSha));assert.equal(captured.status,'PASS FOR LISTED CASES ONLY');const boundary=captured.boundary;assert.equal(boundary.kind,kind);assert.equal(boundary.systemIdentifier,qa.systemIdentifier);assert.equal(boundary.promoted,false);
+   const proofFile=`/run/qa-results/${kind}-promotion-proof.json`,proofStat=await stat(proofFile);assert(proofStat.isFile()&&(proofStat.mode&0o777)===0o400);const proof=JSON.parse(await readFile(proofFile,'utf8'));assert.equal(proof.project,PROJECT);assert.equal(proof.generation,qa.generation);assert.equal(proof.restrictionId,boundary.guard.id);assert.equal(proof.closedPreparerVerified,true);assert.equal(proof.positiveProcessEndVerified,true);assert.equal(proof.sqlOwnerAbsent,true);assert.equal(proof.systemIdentifier,qa.systemIdentifier);
+   const historyFile='/run/qa-results/artifact-history.json',historyStat=await stat(historyFile);assert(historyStat.isFile()&&(historyStat.mode&0o777)===0o400);
+   const provenance=validatePromotionProvenance({phase:kind,captured,proof,history:JSON.parse(await readFile(historyFile,'utf8')),verifierSourceSha:sourceSha,generation:qa.generation,systemIdentifier:qa.systemIdentifier});
+   const after=await metadata(),guard=await guards(boundary.guard.id),local=await localFence();assert.equal(guard.active,false);assert.equal(after.directory_epoch,after.data_epoch);assert.equal(local.generation,after.generation);assert.equal(local.data_epoch,after.data_epoch);assert.equal(local.writer_version,after.writer_version);assert.equal(local.state,after.state);assertPromotedMetadata({phase:kind,before:boundary.before,after,guard,generation:qa.generation});assert.deepEqual(await snapshot(),boundary.snapshot);
+   if(kind==='rotation'){
+    const oldFile='/run/qa-secrets/rotation-old-writer.json',oldStat=await stat(oldFile);assert(oldStat.isFile()&&(oldStat.mode&0o077)===0);const old=JSON.parse(await readFile(oldFile,'utf8'));assert.equal(old.project,PROJECT);assert.equal(old.generation,qa.generation);assert.equal(old.tenantId,A);assert.equal(old.secretRef,boundary.before.writer_secret_ref);assert.equal(old.credentialVersion,boundary.before.writer_credential_version);
+    const fresh=qa.writerEntries[after.writer_secret_ref];assert(fresh);for(const connection of [old.connection,fresh.connection]){assert.equal(connection.host,'postgres');assert.equal(connection.database,'mecanet_tenant_a');assert.equal(connection.user,'saas_writer_a');assert.equal(connection.ssl.servername,'postgres');assert.equal(connection.ssl.rejectUnauthorized,true)}
+    const connection={max:1,connectionTimeoutMillis:1500,statement_timeout:500,application_name:'mecanet-cp017-rotation-credential-probe'},oldPool=await createPgPool({...old.connection,...connection});try{await assert.rejects(oldPool.query('SELECT 1'),error=>['28P01','28000','42501'].includes(error.code))}finally{await oldPool.end()}
+    const newPool=await createPgPool({...fresh.connection,...connection});try{await newPool.query('SELECT 1')}finally{await newPool.end()}
+   }
+   const actor=await clientFor('a@qa.invalid','api2'),known=boundary.sample,oldIntent=await intent(known.operationId);assert.deepEqual(immutableIntent(oldIntent),known.intentGuard);assert.equal(oldIntent.data_epoch,boundary.before.data_epoch);assert.equal(oldIntent.writer_version,boundary.before.writer_version);
+   const consulted=await send(actor,`/api/tenants/${A}/operations/${known.operationId}`);assertStatus(consulted,200);assert.deepEqual(consulted.json.result,known.result);
+   if(kind==='rotation'){const replay=await receipt(actor,known.operationId,known.input,{epoch:after.data_epoch});assertStatus(replay,201);assert.deepEqual(replay.json,known.result)}
+   else{assertStatus(await receipt(actor,known.operationId,known.input,{epoch:boundary.before.data_epoch}),409);assertStatus(await receipt(actor,known.operationId,known.input,{epoch:after.data_epoch}),409)}
+   assert.deepEqual(await snapshot(),boundary.snapshot);const fresh=await sample(actor),freshIntent=await intent(fresh.operationId);assert.equal(freshIntent.data_epoch,after.data_epoch);assert.equal(freshIntent.writer_version,guard.reopen_version);
+   report.cases.push({id:`verified-${kind}-continuity`,status:'PASS',...provenance,restrictionId:guard.id,oldOperationId:known.operationId,newOperationId:fresh.operationId,currentEpoch:after.data_epoch,currentWriterVersion:guard.reopen_version,oldIntentGuardsUnchanged:true,oldResultNeverReexecuted:true,closedPreparerProofVerified:true,...(kind==='rotation'?{oldCredentialDenied:true,newCredentialConnected:true}:{oldEpochRejected:true,oldKeyAtNewEpochRejected:true})});
+  }
+  report.status='PASS FOR LISTED CASES ONLY';
+ }catch(error){report.status='FAIL';report.failureCode=typeof error.code==='string'&&/^[A-Z0-9_]{1,60}$/.test(error.code)?error.code:'REVOCATION_ASSERTION';report.failureLocations=[...String(error.stack??'').matchAll(/(?:revocation-live|coordinator|quota-live)\.(?:mjs|js):(\d+):(\d+)/g)].slice(0,5).map(m=>({line:Number(m[1]),column:Number(m[2])}));if(typeof error.position==='string'&&/^[1-9][0-9]{0,6}$/.test(error.position))report.sqlErrorPosition=Number(error.position);const mismatch=/^Expected HTTP (\d{3}), received (\d{3})\/([A-Z_]{1,60})(?:\r?\n|$)/.exec(error.message??'');if(mismatch)report.statusMismatch={expected:Number(mismatch[1]),actual:Number(mismatch[2]),publicCode:mismatch[3]};throw error}
+ finally{await Promise.all(gates.map(gate=>release(gate).catch(()=>{})));report.finishedAt=new Date().toISOString();report.observerQueries=queries;report.requests=clients.map(({label,client})=>({label,count:client.requests,max:160}));report.fullAcceptanceVerified=false;await persist();await Promise.all([...pools.values()].map(pool=>pool.end()));console.log(JSON.stringify({project:PROJECT,sourceSha,phase,status:report.status,cases:report.cases.map(({id,status})=>({id,status})),report:file,secretsPrinted:false}))}
+ return report;
+}
+if(process.argv[1]&&import.meta.url===pathToFileURL(process.argv[1]).href){try{await runRevocationAssay(process.argv[2])}catch(error){console.log(JSON.stringify({status:'FAIL',code:typeof error.code==='string'&&/^[A-Z0-9_]{1,60}$/.test(error.code)?error.code:'REVOCATION_ASSAY_FAILED',secretsPrinted:false}));process.exitCode=1}}

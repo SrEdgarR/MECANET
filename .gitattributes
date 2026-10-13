@@ -71,6 +71,7 @@ docs/methodology/Prompt_Maestro_v2.0.md -text
 
 # Immutable approved fragments exported directly from Git in CP-015
 docs/specs/p1-l1-approved/*.md -text
+docs/specs/p1-l2-approved/*.md -text
 
 # Reproduce CI module text and preserve raw CP-016 evidence file hashes.
 scripts/ci/*.mjs text eol=lf

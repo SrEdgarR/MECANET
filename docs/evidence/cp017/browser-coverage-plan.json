@@ -1,0 +1,215 @@
+{
+  "schema": "mecanet-browser-coverage-v1",
+  "type": "PRE_EXECUTION_COVERAGE_PLAN",
+  "status": "NOT VERIFIED",
+  "baseline": {
+    "approval": "docs/specs/P1-L2.md",
+    "protectedObject": "docs/specs/p1-l2-approved/baseline.md",
+    "version": "P1-L2 v0.2-CP016",
+    "approvedObjectSha256": "ca975dc822c0bd5e872d3debe824abc536f662007513170f327727878ff3ac71",
+    "criteria": "L2-A1…L2-A12, §9 del objeto completo aprobado por DEC-061/062",
+    "change": "ninguno; esta matriz no es una nueva baseline"
+  },
+  "runner": {
+    "path": "tests/qa/cp017/browser.mjs",
+    "sha256": "1c8121556ebeed75f817b02d888cdda1262d650d3a6e20a63ebc625578fe503c",
+    "configuration": ".qa-private/cp017-browser-config.json",
+    "configurationState": "pendiente de root; no se han leído configs históricos",
+    "environment": "Chromium dedicado local → HTTPS loopback18443 → API/PG reales de cohorte CP017 propia",
+    "maximumRequests": 150,
+    "requestDeadlineMs": 10000,
+    "output": "result.json, screenshots sintéticos y hashes de assets; sin cookie/secret/body dump ni trace",
+    "executionState": "NOT STARTED",
+    "preflight": [
+      "QA reabierta y túnel disponibles, confirmados por root antes de ejecución",
+      "Base URL exacta app.mecanet.test:18443 y resolución Chromium sólo loopback",
+      "CA nueva propia, hostname y SPKI verificados por Node; CA ajena y hostname incorrecto rechazados",
+      "Sin ignoreHTTPSErrors global; excepción Chromium restringida a SPKI público exacto",
+      "Config, CA, módulos, ejecutable y output dentro de worktree .qa-private sin escape por symlink",
+      "Credenciales nuevas owner A y member A sólo inventory.receive, nunca credentials legacy o stdout",
+      "SHA sourceCommit completo del código/artefacto aceptado y assets realmente recibidos"
+    ]
+  },
+  "runtime": {
+    "state": "bibliotecas propias copiadas, no ejecutadas",
+    "discovery": "metadata de primary .qa-private exclusivamente; sin archivos config históricos",
+    "copy": "PowerShell Copy-Item de las carpetas exactas playwright, playwright-core y chromium-1248; sin borrados, sin configs/resultados",
+    "worktreePaths": [
+      {
+        "path": ".qa-private/browser/node_modules/playwright/index.mjs",
+        "bytes": 704,
+        "sha256": "a0f5715ea22354f922791a9c53dc012d5d5c067ff9cc4cd35ffb7cd272071a9f"
+      },
+      {
+        "path": ".qa-private/browser/node_modules/playwright-core/index.mjs",
+        "bytes": 1063,
+        "sha256": "3d36e2132d3c8b62397d23f0bb4177336aaee503203ae2a2c90fbeb5bf3317dd"
+      },
+      {
+        "path": ".qa-private/browsers/chromium-1248/chrome-win64/chrome.exe",
+        "bytes": 4578816,
+        "sha256": "7f08161bbeb2853ffe1780a9ded4985087f52efb9725d7d8207aabdd42f7cfb9",
+        "fileProductVersion": "156.0.8078.4"
+      }
+    ],
+    "verification": "hash de cada entrada origen=destino; versión exe es metadata, no versión browser ejecutada"
+  },
+  "matrix": [
+    {
+      "criterion": "L2-A1",
+      "coverage": "SUPPORT_ONLY",
+      "plannedBrowserEvidence": "Contratos de formularios, acciones y estados a partir de la baseline existente",
+      "outsideBrowser": "A exacta, reviews Design/Specification/UI/Migration y coherencia F14; browser no los aprueba",
+      "status": "NOT VERIFIED"
+    },
+    {
+      "criterion": "L2-A2",
+      "coverage": "NONE",
+      "plannedBrowserEvidence": "ninguna migración ejecutada por este runner",
+      "outsideBrowser": "Migración aditiva/idempotente central/A/B, registro de hashes y fallo sin apertura parcial, preservación L1",
+      "status": "NOT VERIFIED"
+    },
+    {
+      "criterion": "L2-A3",
+      "coverage": "PARTIAL_HTTP_ONLY",
+      "plannedBrowserEvidence": "Miembro sin lectura no dispara GET inventory/movements y las llamadas directas reciben403",
+      "outsideBrowser": "HBA/CONNECT/DML/DDL/fence/grants, aislamiento DB/credencial, rotación y medición aggregate pools requieren SQL/QA separados",
+      "status": "NOT VERIFIED"
+    },
+    {
+      "criterion": "L2-A4",
+      "coverage": "PARTIAL",
+      "plannedBrowserEvidence": "Owner crea/recibe; member con única acción inventory.receive confirma recepción de referencia conocida sin lector; inventory/movements/empresa B403 sin items",
+      "outsideBrowser": "Demo/operador válidos, revocación de acción, guards/IDs/cuerpo forjados y cero pool/ticket/ledger requieren HTTP/SQL negativos adicionales",
+      "status": "NOT VERIFIED"
+    },
+    {
+      "criterion": "L2-A5",
+      "coverage": "PARTIAL_LOGOUT_ONLY",
+      "plannedBrowserEvidence": "Logout ordinario elimina hints/contenido y consulta posterior retorna401",
+      "outsideBrowser": "Writer en SHARE, restricción/ACK/exclusive close/v+2, bloqueo/rotación/muerte/COMMIT incierto y retry pendiente requieren intercalados reales separados",
+      "status": "NOT VERIFIED"
+    },
+    {
+      "criterion": "L2-A6",
+      "coverage": "PARTIAL",
+      "plannedBrowserEvidence": "Alta sintética sin precio y con stock0, versión1 y referencia de operación; validación sin POST",
+      "outsideBrowser": "Dos API/concurrencia misma clave y SKU competidor/último producto/reserva/hash/equivalencias canónicas requieren SQL y vectores separados",
+      "status": "NOT VERIFIED"
+    },
+    {
+      "criterion": "L2-A7",
+      "coverage": "PARTIAL_CLIENT_ACK_AND_RELOAD",
+      "plannedBrowserEvidence": "Recepción7 y miembro3 sobre la misma referencia producen10; movimiento opaco, ACK hacia cliente perdido conserva hint, recarga consulta referencia y no vuelve a POST ni reconstruye payload",
+      "outsideBrowser": "Stock/movimientos/auditoría en SQL, dos recepciones concurrentes, COMMIT incierto servidor, reinicio, conflictos producto/actor/epoch y overflow requieren protocolo/SQL separados",
+      "status": "NOT VERIFIED"
+    },
+    {
+      "criterion": "L2-A8",
+      "coverage": "SUPPORT_ONLY",
+      "plannedBrowserEvidence": "Sin POST inválido/automático, budget de150requests y foreign operations403",
+      "outsideBrowser": "Browser no demuestra ledger ni liberación segura; límites/last byte/product, logical costs/Unicode, deadlocks40001 y fin positivo requieren medición SQL",
+      "status": "NOT VERIFIED"
+    },
+    {
+      "criterion": "L2-A9",
+      "coverage": "PRIMARY_BROWSER_ACCEPTANCE",
+      "plannedBrowserEvidence": "Recorrido privado real, member sin lectura, UNKNOWN/hint estable/consulta reload, logout/selector, inputs/errores/foco, teclado, radios0,320/768/1440, texto200% en los tres tamaños, light/dark contrast y reduced motion, cero pageerror/egreso",
+      "outsideBrowser": "Tests unitarios frontend completan estados conflicto/cupo/epoch/identidad perdida/404/pistas32 y respuestas tardías; no sustituir sus invariantes por captura visual",
+      "status": "NOT VERIFIED"
+    },
+    {
+      "criterion": "L2-A10",
+      "coverage": "ASSET_PROVENANCE_ONLY",
+      "plannedBrowserEvidence": "SHA code de config y hashes JS/CSS recibidos desde artefacto aceptado, conexión HTTPS real",
+      "outsideBrowser": "Health/readiness, drenaje30s, ARM64/digest real, rollback y preservación productores ajenos requieren lifecycle/preflight root",
+      "status": "NOT VERIFIED"
+    },
+    {
+      "criterion": "L2-A11",
+      "coverage": "NONE",
+      "plannedBrowserEvidence": "no realiza copia, restore ni promoción de epoch",
+      "outsideBrowser": "Segundo destino sintético cerrado, WAL/journal/tombstones/grants/counters y negativos/replay requiere ensayo recuperación independiente",
+      "status": "NOT VERIFIED"
+    },
+    {
+      "criterion": "L2-A12",
+      "coverage": "SUPPORT_ONLY",
+      "plannedBrowserEvidence": "Output sanitizado, contexto browser efímero cerrado, referencias/hash de runner y assets",
+      "outsideBrowser": "Review completo, regresiones L1, CI/PR/merge/Integration Gate/checkpoint y cleanup remoto propio pertenecen a root; browser no autoriza integración",
+      "status": "NOT VERIFIED"
+    }
+  ],
+  "a9BrowserChecks": [
+    {
+      "scope": "Privacidad/contexto",
+      "lines": [
+        91,
+        119,
+        136,
+        142,
+        145
+      ],
+      "expected": "Owner sóloA, member único grant sin lecturas implícitas, selector/logout quitan contenido y hints, otro tenant denegado"
+    },
+    {
+      "scope": "Flujo",
+      "lines": [
+        93,
+        94,
+        95
+      ],
+      "expected": "labels/errores asociados/foco, alta sin precio con0unidades y receipt positiva/historia real"
+    },
+    {
+      "scope": "ACK cliente/recarga",
+      "lines": [
+        105,
+        111,
+        113,
+        115
+      ],
+      "expected": "UNKNOWN conserva la misma referencia que el resultado real; hint mínimo persistente, recarga GET y ceroPOSTnuevo, sin replay al faltar payload. Orden persist-before-send también requiere los tests unitarios explícitos."
+    },
+    {
+      "scope": "Diseño/accesibilidad",
+      "lines": [
+        123,
+        129,
+        130,
+        131
+      ],
+      "expected": "radios0,documento contenido,teclado/foco,contraste light/dark,320/768/1440,200% en todos,reduced motion"
+    },
+    {
+      "scope": "Ejecución/provenance",
+      "lines": [
+        86,
+        87,
+        149
+      ],
+      "expected": "TLS CA/hostname/SPKI real, negativosTLS,150request budget,cero pageerror/egreso,hashesassets"
+    }
+  ],
+  "ackScenarioLimit": "route.fetch recibe201 real del servidor y descarta sólo la entrega al navegador. Es ACK perdido del cliente; el backend pudo registrar fin positivo. No acredita COMMIT incierto ni liberación/reconciliación de reservas del servidor.",
+  "abort": [
+    "Destino, CA, sourceCommit, path runtime o identidad de fixture fuera del preflight",
+    "Cualquier origen externo o request budget excedido",
+    "Recepción/create sin permisos, respuesta no confirmada o hint que no persiste",
+    "Excepción de navegador, conflicto del contrato o screenshot con formulario de contraseña",
+    "No reejecutar automáticamente el runner que haya alcanzado efectos; primero evaluar fixture y recursos propios con root"
+  ],
+  "pendingBeforeExecution": [
+    "root confirma QA/túnel nuevos disponibles",
+    "config privada nueva dentro worktree",
+    "artefacto funcional aceptado con SHA/assets exactos"
+  ],
+  "infrastructureResourcesCreatedOrModifiedByThisPreparation": 0,
+  "metadata": {
+    "workingHead": "9d564a9b37954755db816fd633f4d12b3d7d3078",
+    "runnerSha256": "1c8121556ebeed75f817b02d888cdda1262d650d3a6e20a63ebc625578fe503c",
+    "preparedAt": "2026-10-13T15:27:48.7707893-04:00",
+    "baselineWrapperSha256": "776393ad96d1628b6c6e61ff8722257570b058147a94cdd71103419b8ece3cba",
+    "approvedObjectSha256": "ca975dc822c0bd5e872d3debe824abc536f662007513170f327727878ff3ac71"
+  }
+}

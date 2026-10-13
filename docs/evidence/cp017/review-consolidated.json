@@ -1,0 +1,688 @@
+{
+  "reviewId": "CP017-CONSOLIDATED-REVIEW",
+  "reviewer": "l2_service",
+  "status": "PASS DE REVISIÓN DEL ALCANCE CONSOLIDADO; NO ES INTEGRATION GATE",
+  "criticalFindingsOpen": 0,
+  "requiredFindingsOpen": 0,
+  "baseline": {
+    "path": "docs/specs/p1-l2-approved/baseline.md",
+    "sha256": "ca975dc822c0bd5e872d3debe824abc536f662007513170f327727878ff3ac71",
+    "scope": "Objeto completo aprobado A/DEC-061 y B/DEC-062, SC-009; se preserva P1-L1 y no se amplía a POS/pagos/producción"
+  },
+  "gitObject": {
+    "baseSha": "a0098178fc27467bf4c12da0e97723e0b80ce683",
+    "functionalCutSha": "8199a414ff06220e147b062ce37fa55709311627",
+    "patchPath": ".qa-private/cp017-diff-a009-8199.patch",
+    "patchSha256": "936421f8f8c163fc163aa85cb05596320030e74c224fa2d0901a2ab39b8ab3af",
+    "patchBytes": 858420,
+    "manifestPath": ".qa-private/cp017-diff-a009-8199.json",
+    "manifestSha256": "6c0cca3210c96edb68cffcc1a3218f01877e56732b14b78530f16cab0571a95f",
+    "changedPaths": 82,
+    "provenance": "Root exportó los objetos mediante Git; revisor comprobó hashes/bytes/encabezados/paths y examinó el diff sin ejecutar Git ni inferir HEAD",
+    "currentProductDeltaAfter8199": [],
+    "noProductDeltaProvenance": "Acreditado por la consulta Git de root y registrado en el manifiesto; no es una consulta Git ejecutada por este revisor"
+  },
+  "method": {
+    "skill": "agent-skills:code-review-and-quality",
+    "axes": [
+      "correctness",
+      "readability",
+      "architecture",
+      "security",
+      "performance",
+      "verification"
+    ],
+    "reuse": "Consolidación de revisiones existentes con hashes/límites y lectura focal de fuentes/patch; no se repiten inventarios generales ni se reescriben reviews históricos",
+    "collectiveIndependence": "Las partes de servicio/coordinador/recovery implementadas por este revisor se respaldan con peer SQL/UI existente. UI, app/auth/pools, SQL y CI se contrastan aquí como código de otros autores. El cierre no se basa sólo en autorevisión.",
+    "wholeRemoteTrialByReviewer": false,
+    "gitOrSshByReviewer": false
+  },
+  "axes": [
+    {
+      "axis": "correctness",
+      "status": "PASS SOURCE REVIEW / QA REPORTADA SEPARADA",
+      "evidence": [
+        "Matriz/hash UTF8 única y acciones/producto/actor/tenant/epoch guardados; SQL deriva el efecto de esa misma entrada",
+        "CAS escritor único, ticketHTTP original inmutable y correctivo005 exige owner/ACTIVE/work_started/tenant/generation antes de ejecutar",
+        "Efecto/movimiento/balance/cuota/resultado/auditoría en una transacción y claves/resultados inmutables",
+        "Cierre SHARE→EXCLUSIVE y versionesv/v+1/v+2 no adoptables; cierre de efectos separado de fin de recursos",
+        "COMMIT/ROLLBACK sin ACK mantiene503/UNCERTAIN; sólo lectura declarada y SQL positivo usa cierre de socket para liberar el recurso lector",
+        "Listas propias revalidan acción por fila y escanean prefijo acotado sin declarar agotamiento después de un filtro parcial"
+      ]
+    },
+    {
+      "axis": "readability",
+      "status": "PASS SOURCE REVIEW",
+      "evidence": [
+        "Módulos acotados validation/service/coordinator/repository y factory de app con dependencias explícitas; no nuevo framework ni microservicio",
+        "Los guards y errores privados documentan la diferencia entre efecto cerrado y recurso terminado",
+        "CLI de QA tiene fases/proofs/planes explícitos; no se disfraza como instalación productiva",
+        "Hay expresiones compactas en SQL/coordinación, pero conservan contratos fijos y pruebas causales. No se añade una refactorización cosmética ni se baja el estándar para cerrar el lote"
+      ]
+    },
+    {
+      "axis": "architecture",
+      "status": "PASS SOURCE REVIEW",
+      "evidence": [
+        "React/Express/PostgreSQL central+DB/credencial empresarial y Compose independiente conservados; no dependencia operativa de Coolify",
+        "API recibe pools reader/writer y autoridad; maintenance/bootstrap/journal permanecen en proceso privado, sin Docker socket ni handler público de promoción/reconciliación",
+        "Lectores L1 y esquema/credencial de escritor separados, presupuesto agregado compartido",
+        "Cambio de UI limitado al recorrido inventario sintético aprobado, pistas opacas de32entradas y payload sólo en memoria",
+        "Preservación de la baseline y sus capas/gates; no se incorpora POS, dinero/fiscalidad/subscripciones por extensión"
+      ]
+    },
+    {
+      "axis": "security",
+      "status": "PASS SOURCE REVIEW / QA REPORTADA SEPARADA",
+      "evidence": [
+        "Cookie estándar por propósito, CSRF/Origin/Host/TLS y autoridad vigente; tenant/action antes de admisión empresarial y pool",
+        "Rolpolicy y grant explícito, writer-session reference interno, actor original en resultados/listas; nombreowner no concede por sí mismo",
+        "Writer EXECUTE funciones fijas, propietarioNOLOGIN, search_path cualificado, sin DML/DDL/fence/grants/CONNECT ajeno; rol lector conservado",
+        "Campos desconocidos/NUL/surrogate/valores ambiguos denegados antes de intención/reserva; SQL vuelve a validar",
+        "Ninguna credencial/cuerpo empresarial en storage del navegador, central ni reportes públicos; errores y diagnósticos tienen allowlists",
+        "SC-008 conserva carril SaaS aislado y auditoría completa estricta; no se oculta el FAIL heredado/TD-21",
+        "Harnessprivado nuevo agrega sóloX/Y del fixture con permisos exactos, no reactiva autoridades antiguas ni sube cuotas"
+      ]
+    },
+    {
+      "axis": "performance",
+      "status": "PASS SOURCE REVIEW DE LÍMITES; CAPACIDAD NOT VERIFIED",
+      "evidence": [
+        "Budget compartido4pools/8leases, retiro idempotente y eviction de pool idle entre managers sin duplicar cota; préstamo vivo se mantiene hasta fin real",
+        "Ingreso64, queries/acquisitions finitas, deadlines heredados8s/500ms/2s y drenaje30s no alargados",
+        "Respuestas64KiB/listas/cursor y textos/cuerpos acotados; crecimiento32KiB/16KiB y used=sumC sin reembolsoQH/QC/Qt",
+        "SQL usa locks/UNIQUE/cupo atómico y retry central acotado; ningún retry tenant automático dentro del retry serializable",
+        "Concurrencia y focal tienen envolturas finitas; mediciones observadas no se convierten en capacidad de20empresas ni garantías CPU/RAM individuales"
+      ]
+    },
+    {
+      "axis": "verification",
+      "status": "PASS DE TRAZABILIDAD CONSOLIDADA; QUALITY/INTEGRATION POR ROOT",
+      "evidence": [
+        "Mantiene FAIL histórico252/8199SKU/drain e hipótesis de finish252 sin atribuirles una causa nueva inventada",
+        "Reutiliza peers locales con sus propios hashes y límites; no transforma SQL simulado/local en PostgreSQL real",
+        "Navegador252, integración8199 y QAb7/b14/2b0 conservan productores distintos; root acredita producto inmutable después8199",
+        "Focal real2b0 cierra clases§3.1 por unión de capas; no afirma Unicodecausal de dos name409 contraanchorASCII",
+        "Restore real2b0 cierra segundo destinoCLOSED con canario/journal posterior, generation/epoch y negativos; no afirma reapertura/RPO-RTO productivo",
+        "CItest/build/audit es diferente de QA real y de integración. PR/merge aún requieren política/checks actuales, SrEdgarR/MECANET y ausencia acreditada de despliegue accidental"
+      ]
+    }
+  ],
+  "resolvedIssuesKeptVisible": [
+    {
+      "id": "ROOT-R1/R3",
+      "scope": "Logout durable reanudable y columna reason_code",
+      "status": "RESUELTO EN FUENTE/LOCAL, SHARE/logout real reportado"
+    },
+    {
+      "id": "ROOT-R2",
+      "scope": "Autorizacióntenant antes de consumir cuota enconsulta/lista",
+      "status": "RESUELTO EN FUENTE/LOCAL, negativaA-B real reportada"
+    },
+    {
+      "id": "ROOT-R4",
+      "scope": "Continuación de lista propia al revocar grant entre selección/revalidación",
+      "status": "RESUELTO EN FUENTE Y NEGATIVAS LOCALES"
+    },
+    {
+      "id": "READ-ABORT/ROLLBACK",
+      "scope": "Socket lector terminado sólo libera con SQL confirmado; ROLLBACK noACK no se degrada a4xx",
+      "status": "RESUELTO RED/LOCAL/PEER; ruta real/browser posterior reportados"
+    },
+    {
+      "id": "TICKET-CLAIM",
+      "scope": "OtroHTTP/owner no adopta ticket original;005 aditivo con firma/ACL conservados",
+      "status": "RESUELTO RED/LOCAL/PEER/QA CORRECTIVO Y RACE POSTERIOR"
+    },
+    {
+      "id": "SQL004",
+      "scope": "VariableSKU ambigua sin modificar003 registrada",
+      "status": "CORRECTIVO ADITIVO Y QA REAL REPORTADO"
+    },
+    {
+      "id": "QA-SKU-ORACLE/DRAIN/RESTORE-REGISTRY",
+      "scope": "Normalización del oracle, publicación atómica deproof/owner actual y registro central/tenant en hashes de recuperación",
+      "status": "RESUELTO CON FUENTES/PRUEBAS/QA POSTERIOR; FAIL ANTERIORES CONSERVADOS"
+    },
+    {
+      "id": "CONCURRENCY-ROLE/ENVELOPE",
+      "scope": "Hash roles/membresías y techo final45s/80cmd/2leases",
+      "status": "RESUELTO LOCAL/PEER; SQL REAL b14 REPORTADO"
+    }
+  ],
+  "localMutationEvidence": [
+    {
+      "scope": "POLICYselection",
+      "method": "Copia privada sin guardidentity-scoped",
+      "outcome": "7PASS/1FAIL esperado; originales intactos",
+      "source": "review-policy-helper.json"
+    },
+    {
+      "scope": "Concurrencia",
+      "method": "Copia privada sin workerStopped",
+      "outcome": "3PASS/1FAIL esperado; originales intactos",
+      "source": "review-concurrency.json"
+    },
+    {
+      "scope": "Focalcanónico",
+      "method": "Copia privada sin comprobarreason exacto delmovimiento",
+      "outcome": "5PASS/1FAIL esperado; originales intactos",
+      "source": "gap-review.json / peer-canonical final"
+    }
+  ],
+  "qaAfterFunctionalCut": {
+    "scope": "Correcciones/pruebas/controladores posteriores no cambian producto8199, según manifiesto Git de root",
+    "reviewedChanges": [
+      "Oracle SKU y modo --sku-only",
+      "Proof source capturado/promotor/verificador separados",
+      "POLICY1..2targets y flag --blocked-b explícito conservaB/hash y readinessfalse",
+      "Publicación atomic drain/started/end y espera delowner actual",
+      "Concurrencia40001/40P01 real usando biblioteca de producto",
+      "Focalcanónico prepareClosed/verify conX/Y, NFC/transport/case y replaySQLknown",
+      "Recuperación incluye ambosschema_migrations, journal/custodia, canario y targetclosed",
+      "CI allowlist incluye pruebas nuevas locales sin invocarVPS ni secretosQA"
+    ],
+    "executionSourceSha": "2b0dd67f7f19fa563ae5eae802da533572da7abe",
+    "runtimeResultsByReviewer": "NOT RUN; root ejecuta y custodia, copias locales y provenance quedan referenciadas en gap-review followUp",
+    "negativeInvocation": "resources-api2 con0operaciones fue rechazado END_NOT_PROVEN antes de mutación; no se convierte enPASS ni defecto funcional y no se debilita la utilidad"
+  },
+  "gateLimits": [
+    "No declara P1-L2TERMINAL, CIremotaPASS, mergeSHA ni lanzamiento por esta revisión",
+    "La matriz12 y cierreQA/consumidores ajenos/Quality Gate pertenecen a root y autor de matriz",
+    "Readinessgeneralfalse con Bbloqueada se reporta como entorno focal, no SaaS público operativo",
+    "No reabre decisiones comerciales, locallegacy, hosting/motor, estética ni requiere nueva A/B",
+    "Sourcehashlocal y patchhash no son remoteoutputhash; no se inventa fecha/commit de aprobación"
+  ],
+  "reviewerActions": {
+    "functionalFilesChanged": "ninguno en esta revisión",
+    "infrastructureCreatedOrModified": "ninguno",
+    "GitOrSshExecuted": false,
+    "secretsReadOrPrinted": false
+  },
+  "remainingRequiredSourceChanges": [],
+  "nextEnabledStep": "Root concluye Quality Gate, matriz12, cleanup propio y precheckGit/deploy; Integration Gate separado habilita PR/CI/merge sólo al acreditar sus condiciones. No se necesita otra implementación o especificación del lote para resolver las lagunas cerradas.",
+  "currentSourceFiles": [
+    {
+      "path": ".github/workflows/p1-l1-verify.yml",
+      "localFileSha256": "9126d290385ec36ebf29ebfcf3480523ae06d291edff7782595ca0e9877f500e",
+      "scope": "CI/tests/QA"
+    },
+    {
+      "path": "client/src/saas/Inventory.jsx",
+      "localFileSha256": "484bc97b1aa696ffd719af8e3c2cc7c5eb557e3d5b8ab0890bbb1d5113b070cb",
+      "scope": "producto"
+    },
+    {
+      "path": "client/src/saas/Inventory.test.jsx",
+      "localFileSha256": "70b2586c54886d7e519f4bc9435db2cecc1fdbb215d0e6b22a99ddd123d62031",
+      "scope": "CI/tests/QA"
+    },
+    {
+      "path": "client/src/saas/SaasApp.jsx",
+      "localFileSha256": "7b9ed183ec5a9a825cff8bf0a9aa87a463f088516439bfc61ca0472ad550e92f",
+      "scope": "producto"
+    },
+    {
+      "path": "client/src/saas/client.js",
+      "localFileSha256": "c957fe2de623f6bc54efd10cd79806424024f0269efb7ccfaa4a927900539901",
+      "scope": "producto"
+    },
+    {
+      "path": "client/src/saas/inventory-client.js",
+      "localFileSha256": "330e781f824ed4459468f7903c9f9a958d683c475c2a39550101bb9274c09f18",
+      "scope": "producto"
+    },
+    {
+      "path": "client/src/saas/inventory-client.test.js",
+      "localFileSha256": "5cbc6ae238f51fc67abccc5c0eed926fca8724edad08d6220fa5b021eb16be34",
+      "scope": "CI/tests/QA"
+    },
+    {
+      "path": "client/src/saas/operation-hints.js",
+      "localFileSha256": "c82814792fcefbb95a5efca9919ebae4ee347de59b19e26b8341af9e032decc5",
+      "scope": "producto"
+    },
+    {
+      "path": "client/src/saas/operation-hints.test.js",
+      "localFileSha256": "9ddaf316f749d5eff6ff94dc0f837e697a517db3030b4d8611fa4adc3d9f1284",
+      "scope": "CI/tests/QA"
+    },
+    {
+      "path": "client/src/saas/styles.css",
+      "localFileSha256": "37e672713da278a67ab456f770d8dabad207068dc068a8c555dce2e5384cebc3",
+      "scope": "producto"
+    },
+    {
+      "path": "scripts/ci/p1-l1.mjs",
+      "localFileSha256": "1a0be8febc9404ab41db849488328041078656d0b7f8618edf8c3b54f1eea987",
+      "scope": "CI/tests/QA"
+    },
+    {
+      "path": "scripts/ci/saas-toolchain.mjs",
+      "localFileSha256": "9732d26495912256c9533b5786a4b303100da2f3c4188bae11d6fe71578c01ca",
+      "scope": "CI/tests/QA"
+    },
+    {
+      "path": "server/saas/admission/index.js",
+      "localFileSha256": "6a29f8481d325256277a19f90132b0b35d1690aa461fb485c3f15330d6da929b",
+      "scope": "producto"
+    },
+    {
+      "path": "server/saas/admission/transaction.js",
+      "localFileSha256": "34d91817001beb2de7d5037b65903b79e4c6646543829d73b3e56097dd6036e8",
+      "scope": "producto"
+    },
+    {
+      "path": "server/saas/app.js",
+      "localFileSha256": "6084485a80ad1c4037f94ccc50ce2a55807c8036dff0d0873b56b4f975dc2276",
+      "scope": "producto"
+    },
+    {
+      "path": "server/saas/auth/authority.js",
+      "localFileSha256": "5ecc04bdbb570f40a9bac6a2a370676bc37e74e547cc3fa9687d281e34baebdb",
+      "scope": "producto"
+    },
+    {
+      "path": "server/saas/db/migrations/003-control-writers.sql",
+      "localFileSha256": "c5036db5fd1a71ea94e7d7feee25e299dcb074e25108465304ac6dff92955d07",
+      "scope": "producto"
+    },
+    {
+      "path": "server/saas/db/migrations/003-tenant-writers.sql",
+      "localFileSha256": "5fe454b89dbc5f821f742456deb2ebde08b9142048b2eac33ef9352eb87bce06",
+      "scope": "producto"
+    },
+    {
+      "path": "server/saas/db/migrations/004-tenant-writers-fix.sql",
+      "localFileSha256": "df6f2229217479c45ec21ef31165ed8e16d939300c76f313e3f2d2b79555d854",
+      "scope": "producto"
+    },
+    {
+      "path": "server/saas/db/migrations/005-control-claim-ticket.sql",
+      "localFileSha256": "6f50da1b59b6f2c73733aa6c2c5f1698bdb3b8afab679e854f0705f030438e1e",
+      "scope": "producto"
+    },
+    {
+      "path": "server/saas/db/pools.js",
+      "localFileSha256": "b8eebead8655a0b6eae42df6d923d119ca2648457175e43d80e6e28ef4fb76f3",
+      "scope": "producto"
+    },
+    {
+      "path": "server/saas/repositories/inventory.js",
+      "localFileSha256": "25f48036e0ba50ce8b7211c7399480b27f5380911c4ed41c4f9b0133bf5967a3",
+      "scope": "producto"
+    },
+    {
+      "path": "server/saas/writes/coordinator.js",
+      "localFileSha256": "ae14c70b24eefca6a6f30b5981cc2dea56811ee16456fe7b44c03d9484ca39f4",
+      "scope": "producto"
+    },
+    {
+      "path": "server/saas/writes/service.js",
+      "localFileSha256": "6643afd4dfcbd2ba7ae5efeabe05206f920c36cf6280d6e07d22f43a641751da",
+      "scope": "producto"
+    },
+    {
+      "path": "server/saas/writes/validation.js",
+      "localFileSha256": "84f6138f357a2e58bb7ddd537dba38c1ec635775ae4a9d927c92a99b48e2bf13",
+      "scope": "producto"
+    },
+    {
+      "path": "tests/qa/cp017/artifact.mjs",
+      "localFileSha256": "af8f8827574c19c702d719ba1ff880296eec473004d8422422c3fdea619a6a74",
+      "scope": "CI/tests/QA"
+    },
+    {
+      "path": "tests/qa/cp017/browser.mjs",
+      "localFileSha256": "ee796f884576e9f0506f2fbebcd92ba6815112e325a870733e5753bc72bddc2e",
+      "scope": "CI/tests/QA"
+    },
+    {
+      "path": "tests/qa/cp017/claim-corrective.mjs",
+      "localFileSha256": "7119ea86ad774786bf5a59fbd29a00a157408c8e3ff1296cad97c7453d1a3a83",
+      "scope": "CI/tests/QA"
+    },
+    {
+      "path": "tests/qa/cp017/claim-corrective.test.mjs",
+      "localFileSha256": "c17574aee10815404cafb9c56a496b22a54e4d6898ecce21f552aeb815724575",
+      "scope": "CI/tests/QA"
+    },
+    {
+      "path": "tests/qa/cp017/corrective.mjs",
+      "localFileSha256": "3ab74177ba3b850f3ebe8574f9bc9fd2b79a29e3a14b999e00e9253c905701b9",
+      "scope": "CI/tests/QA"
+    },
+    {
+      "path": "tests/qa/cp017/entry.mjs",
+      "localFileSha256": "12de4e46370650177fc2bc7f13ccb0e323d9bbd5eecb72101ff4e49421a233bb",
+      "scope": "CI/tests/QA"
+    },
+    {
+      "path": "tests/qa/cp017/faults.mjs",
+      "localFileSha256": "7786a9c7066230bdd20c8c982123d73760cfcca33b7b1ac57051e1ab91a266da",
+      "scope": "CI/tests/QA"
+    },
+    {
+      "path": "tests/qa/cp017/host.py",
+      "localFileSha256": "9f2328e00aca0b843c184b2a829a741a48cde54535731cccfa0ae7d359fd8941",
+      "scope": "CI/tests/QA"
+    },
+    {
+      "path": "tests/qa/cp017/integration.mjs",
+      "localFileSha256": "3ec0742a6131ac63f2ab516f23c04befbec0f63ab78b6dc93d9d0f2cb9be4008",
+      "scope": "CI/tests/QA"
+    },
+    {
+      "path": "tests/qa/cp017/logout.test.mjs",
+      "localFileSha256": "a2259d8c331d5a3fb149049bccee4c80dbf1900758202cab693bd045a8a3c524",
+      "scope": "CI/tests/QA"
+    },
+    {
+      "path": "tests/qa/cp017/metadata-live.mjs",
+      "localFileSha256": "e8aa31c64dad2fb6bc4e6effade1caa31f076562669d0bfbcf5b0f708905922b",
+      "scope": "CI/tests/QA"
+    },
+    {
+      "path": "tests/qa/cp017/metadata-vectors.mjs",
+      "localFileSha256": "fa5148bbbaab8162a45a31345adaba3cc072d585e5a8287b3b260d684750ded1",
+      "scope": "CI/tests/QA"
+    },
+    {
+      "path": "tests/qa/cp017/metadata.unit.test.mjs",
+      "localFileSha256": "7895ff71643eba94428d71aa464217fec3e8599d646c314b773e3838759f3a1e",
+      "scope": "CI/tests/QA"
+    },
+    {
+      "path": "tests/qa/cp017/migrate.mjs",
+      "localFileSha256": "de00f0756161965c2e85611f420fda06e039074856ad80e758cb483d54791941",
+      "scope": "CI/tests/QA"
+    },
+    {
+      "path": "tests/qa/cp017/migrate.unit.test.mjs",
+      "localFileSha256": "5184ff06772ea67dd623d64ce7d054745ae8aac0e6c90680a455b86e05918374",
+      "scope": "CI/tests/QA"
+    },
+    {
+      "path": "tests/qa/cp017/migration-live.mjs",
+      "localFileSha256": "13140d2b1cc42155cd752ee9fab69abfe66787e43bc2a0c7c42980a6a0713247",
+      "scope": "CI/tests/QA"
+    },
+    {
+      "path": "tests/qa/cp017/pools.test.mjs",
+      "localFileSha256": "e22415b1772db21f4425f8ef1f89af65dc8888a86296c2d6b4026aa165f4a0ab",
+      "scope": "CI/tests/QA"
+    },
+    {
+      "path": "tests/qa/cp017/prepare.mjs",
+      "localFileSha256": "deeab3c9a2a110e0741b1775a407b52b5c3ab67a9f7e0cc8a380350f78c28dd0",
+      "scope": "CI/tests/QA"
+    },
+    {
+      "path": "tests/qa/cp017/promote.mjs",
+      "localFileSha256": "e8944fd15d25495d710b54ce88c69f1e01b82b0fd20f457ee4c27e1b3c45298f",
+      "scope": "CI/tests/QA"
+    },
+    {
+      "path": "tests/qa/cp017/promotion.mjs",
+      "localFileSha256": "0b43157b28a5d37cb1279564c70a31beff011d53f10c7589b30ae9573037ca88",
+      "scope": "CI/tests/QA"
+    },
+    {
+      "path": "tests/qa/cp017/promotion.unit.test.mjs",
+      "localFileSha256": "9e4b0e6646c06a9c072b6afcb28dda65747d55eee90e35ab04e35ec1af7f15d9",
+      "scope": "CI/tests/QA"
+    },
+    {
+      "path": "tests/qa/cp017/quota-boundary.mjs",
+      "localFileSha256": "6c34815ff194e0bd1fa0f337b5be6af3fb45aaf82cab55be311ea90c3f1fecab",
+      "scope": "CI/tests/QA"
+    },
+    {
+      "path": "tests/qa/cp017/quota-boundary.test.mjs",
+      "localFileSha256": "0b18abbeee4a896adab6006c788d85aed9948c6f5b1a4525429aa0b4b954d8ee",
+      "scope": "CI/tests/QA"
+    },
+    {
+      "path": "tests/qa/cp017/quota-growth-boundary.mjs",
+      "localFileSha256": "e3ef0ad61a71c6f44b7b49a3f459258afb713cd3c5876a156b2b5c9d37f5c41a",
+      "scope": "CI/tests/QA"
+    },
+    {
+      "path": "tests/qa/cp017/quota-growth-boundary.test.mjs",
+      "localFileSha256": "567faf81b33244b529edcd3ffe3051aea1825c63369677f90b7ac84c4f0949b2",
+      "scope": "CI/tests/QA"
+    },
+    {
+      "path": "tests/qa/cp017/quota-live.mjs",
+      "localFileSha256": "1e0c71a9ab19268a21ddfe291496c9967733b905fdeb9ae60a8f8abf43eb5fc4",
+      "scope": "CI/tests/QA"
+    },
+    {
+      "path": "tests/qa/cp017/quota.unit.test.mjs",
+      "localFileSha256": "574f0af5457aaf0a88fb68e9f3802f93244c133ec52caeb439ad0aae018521dc",
+      "scope": "CI/tests/QA"
+    },
+    {
+      "path": "tests/qa/cp017/read-closure.mjs",
+      "localFileSha256": "a55ea20c8a90de917a3f2b3798783ae0a0de377cd7c9f93a957262fe5abaf516",
+      "scope": "CI/tests/QA"
+    },
+    {
+      "path": "tests/qa/cp017/read-closure.test.mjs",
+      "localFileSha256": "6719d8d262e20a70941d43e95e6ebe85db730f7dd5135778b6baa8cfbbc5259a",
+      "scope": "CI/tests/QA"
+    },
+    {
+      "path": "tests/qa/cp017/recovery-check.mjs",
+      "localFileSha256": "7d263519f5938a2e7b7c79cd9a243fcd8f8f679fac12b04968479a77e4b87929",
+      "scope": "CI/tests/QA"
+    },
+    {
+      "path": "tests/qa/cp017/recovery-check.test.mjs",
+      "localFileSha256": "7585ca3fe391b4d6dea7b2fbd022924c9c6ebdfe09e76c3af22f5d236275f420",
+      "scope": "CI/tests/QA"
+    },
+    {
+      "path": "tests/qa/cp017/recovery.mjs",
+      "localFileSha256": "344281ec4e0f8c54f49682453eecf47b69b52aa37c38753602cd7fc20ad6bc65",
+      "scope": "CI/tests/QA"
+    },
+    {
+      "path": "tests/qa/cp017/recovery.unit.test.mjs",
+      "localFileSha256": "849c78edd7bc14c4082563de318a4f81fc23a2b0869291137a5ac4c742de62ec",
+      "scope": "CI/tests/QA"
+    },
+    {
+      "path": "tests/qa/cp017/resource-closure.mjs",
+      "localFileSha256": "5eafbb35a8b2804d4a358f08ebe57351e4504b139562ca8e00fa31a5a621458c",
+      "scope": "CI/tests/QA"
+    },
+    {
+      "path": "tests/qa/cp017/resource-closure.test.mjs",
+      "localFileSha256": "cb783f3f101a9cd3962bfed0ff827390c0dd832d7ecd27205a0c510497ad877d",
+      "scope": "CI/tests/QA"
+    },
+    {
+      "path": "tests/qa/cp017/revocation-live.mjs",
+      "localFileSha256": "753367320de5ea9fc199df95b189e9771c6f0055b5de147c2386576523f69ea6",
+      "scope": "CI/tests/QA"
+    },
+    {
+      "path": "tests/qa/cp017/revocation-live.test.mjs",
+      "localFileSha256": "f061f96c540183c9fd577fe7ab3adb07fe55705e049b1aeb36bcde67a50f024a",
+      "scope": "CI/tests/QA"
+    },
+    {
+      "path": "tests/qa/cp017/rollback.mjs",
+      "localFileSha256": "a0d7345a9fcb4d9e1501db995f099e22a0346f9d88e8f14e87df95e27a3f49b1",
+      "scope": "CI/tests/QA"
+    },
+    {
+      "path": "tests/qa/cp017/rollback.unit.test.mjs",
+      "localFileSha256": "75527e4abd260931ee8abec430a16a8aa1c593930ffd480d7313fb5f19591c4a",
+      "scope": "CI/tests/QA"
+    },
+    {
+      "path": "tests/qa/cp017/routes.test.mjs",
+      "localFileSha256": "23300065ca609c2fbd0843e61734fe18e620d977c894b3b45359578037a32008",
+      "scope": "CI/tests/QA"
+    },
+    {
+      "path": "tests/qa/cp017/sql-live.mjs",
+      "localFileSha256": "4b9e5ce9c95a46135903684ddfce2732681f021285caf7a3830db29686c2072c",
+      "scope": "CI/tests/QA"
+    },
+    {
+      "path": "tests/qa/cp017/sql-vectors.mjs",
+      "localFileSha256": "5aeafc73415d70e1ea44e9992626aa501623ba270ba940d0fdd8c8f42c1813fe",
+      "scope": "CI/tests/QA"
+    },
+    {
+      "path": "tests/qa/cp017/sql-vectors.unit.test.mjs",
+      "localFileSha256": "cedbbe533c39eea6b5bf84659bfdcd4d2133dcee87e73a0cc5a1d4c8500fb957",
+      "scope": "CI/tests/QA"
+    },
+    {
+      "path": "tests/qa/cp017/sql-writers.test.mjs",
+      "localFileSha256": "378a92fd9c09d6153993f2299c7c82bc786aeacb641bcadfcfe8dad37cd78a44",
+      "scope": "CI/tests/QA"
+    },
+    {
+      "path": "tests/qa/cp017/uncertain-retention.mjs",
+      "localFileSha256": "32542b6ca5502ff49251dc0e6ec94dec13afcb8a376d08c7dfe5905a2de6296a",
+      "scope": "CI/tests/QA"
+    },
+    {
+      "path": "tests/qa/cp017/uncertain-retention.test.mjs",
+      "localFileSha256": "2d4a28e3109509832e182dcdaf084997db425efffef6fef6a894bc9316d8d6a2",
+      "scope": "CI/tests/QA"
+    },
+    {
+      "path": "tests/qa/cp017/worker.mjs",
+      "localFileSha256": "9a5e7c3119ea164658ba1b35a9c192368ca5cd19b40b028a73a0e883751e6e1a",
+      "scope": "CI/tests/QA"
+    },
+    {
+      "path": "tests/qa/issuer.js",
+      "localFileSha256": "58c91f43d8a8616841b346fcb884abb4e674aee70c181a3df74c1e7d910f47b0",
+      "scope": "CI/tests/QA"
+    },
+    {
+      "path": "tests/qa/post-response-diagnostic.test.js",
+      "localFileSha256": "15a3f8e43485633c939e35d5372a364331fcbe270a806312d391bd5b71ea7b0d",
+      "scope": "CI/tests/QA"
+    },
+    {
+      "path": "tests/qa/read-abort-lifecycle.test.js",
+      "localFileSha256": "bafdd48ab292eec5263dc7daaf116612a27ff64d5012b41c802a1ecbdcb6a060",
+      "scope": "CI/tests/QA"
+    },
+    {
+      "path": "tests/qa/read-rollback-lifecycle.test.js",
+      "localFileSha256": "3507d86ef2a02dbbbca18b4fc3dcc592df31e83c0c51aba14b81f787aad16056",
+      "scope": "CI/tests/QA"
+    },
+    {
+      "path": "tests/qa/schema/fixture.js",
+      "localFileSha256": "49b95e2678cf580acba7c0b0446154123575ed013eb25f42ec18b9de50036a39",
+      "scope": "CI/tests/QA"
+    },
+    {
+      "path": "tests/qa/write-app.test.js",
+      "localFileSha256": "eaa96365af67845818a8b1a83801ac181d9abe8bd73e3e55a080e460c1e77ff5",
+      "scope": "CI/tests/QA"
+    },
+    {
+      "path": "tests/qa/write-coordinator.test.js",
+      "localFileSha256": "caf7f28261ead7bc4a25ae51c2f1decf67ad493e8f402ed2dfbf49728a827c8c",
+      "scope": "CI/tests/QA"
+    },
+    {
+      "path": "tests/qa/write-service.test.js",
+      "localFileSha256": "3052fc5e470c132f43b5614d8daa5385e97b9d597cb12bdbd62b48e1b5e9f39e",
+      "scope": "CI/tests/QA"
+    },
+    {
+      "path": "tests/qa/write-ticket-owner.test.js",
+      "localFileSha256": "18eb6ea78762a363068188e71bba3ba3e33e578a1e325072b191a7f2020922ed",
+      "scope": "CI/tests/QA"
+    },
+    {
+      "path": "tests/qa/write-validation.test.js",
+      "localFileSha256": "ec1bb5b3e7e846ed8d9391dd3b4de5bd2ba7dabd2f1786cb4ed7f8d96ff1c84c",
+      "scope": "CI/tests/QA"
+    }
+  ],
+  "reusedReviews": [
+    {
+      "path": "docs/evidence/cp017/review-root-delta.json",
+      "localFileSha256": "823be025b347d78cbf4e32ea0166f290aed4ac4c6402075aea955c8481cafa4f",
+      "originalPreserved": true
+    },
+    {
+      "path": "docs/evidence/cp017/review-auth-root.json",
+      "localFileSha256": "c729ca5ad8a37287b913388e8b7ede68e67cb56a1531e8fdd43b10717f02786c",
+      "originalPreserved": true
+    },
+    {
+      "path": "docs/evidence/cp017/review-writes-recovery.json",
+      "localFileSha256": "36bb111c6c1f8068276f423e05be5f9b1c27614de1459fa600045b7e2bac2f0c",
+      "originalPreserved": true
+    },
+    {
+      "path": "docs/evidence/cp017/review-read-abort.json",
+      "localFileSha256": "861edffcaf520d2087169397301fa3416a99836c0fc32d4890e81260f9276f25",
+      "originalPreserved": true
+    },
+    {
+      "path": "docs/evidence/cp017/review-read-closure.json",
+      "localFileSha256": "b299d4d287bb6f9a28aae5aa602389b052ea03c22b882779bd630306ed821bc2",
+      "originalPreserved": true
+    },
+    {
+      "path": "docs/evidence/cp017/review-claim-ticket.json",
+      "localFileSha256": "438f85821fb8f5cb5abdd084d1cbc18cc9cd7f578c201a414587d770116b05d3",
+      "originalPreserved": true
+    },
+    {
+      "path": "docs/evidence/cp017/review-recovery-root.json",
+      "localFileSha256": "0814cf2c30c5a7bce151ce1210d075b7a12c9f1510916f444f0d4236a3ad28b3",
+      "originalPreserved": true
+    },
+    {
+      "path": "docs/evidence/cp017/review-restore-registry.json",
+      "localFileSha256": "f7aee7c616ebe999bcc61a016a619ead83379166e86bd01dd173085c6edebdff",
+      "originalPreserved": true
+    },
+    {
+      "path": "docs/evidence/cp017/review-harness.json",
+      "localFileSha256": "77ea5a5ba1d99e5ed2f281498f8e2dcd55f9566ea248439e99c223c7bfb9e1f3",
+      "originalPreserved": true
+    },
+    {
+      "path": "docs/evidence/cp017/review-policy-helper.json",
+      "localFileSha256": "29b7869873c19019e7e9c998f9d17bf1c4ad68e68567bae93c79216f5735e366",
+      "originalPreserved": true
+    },
+    {
+      "path": "docs/evidence/cp017/review-policy-blocked-b.json",
+      "localFileSha256": "87c92cd4ba9fc74ffdcd17a3fb662fab289d6fdf3655f658ebac8f1938b864f4",
+      "originalPreserved": true
+    },
+    {
+      "path": "docs/evidence/cp017/review-drain-atomic.json",
+      "localFileSha256": "d7fb1e361c259e82900d0a0e696fa6f49b41dbebc62ca4bd33e55fdcb5f6c71f",
+      "originalPreserved": true
+    },
+    {
+      "path": "docs/evidence/cp017/review-concurrency.json",
+      "localFileSha256": "a914c5fbce586d940e16b40f34a32c2dc44561f2ceab7e39761babe85ee5eb72",
+      "originalPreserved": true
+    },
+    {
+      "path": "docs/evidence/cp017/gap-review.json",
+      "localFileSha256": "213f1bc208727c32e38d4b1b175016386f88af3150e3d8b3b16c8b9af653b4af",
+      "originalPreserved": true
+    }
+  ]
+}

@@ -1,0 +1,64 @@
+{
+  "repository": "SrEdgarR/MECANET",
+  "classification": "DETECTED",
+  "tested_code_sha": "0d8285cef117d6174a6053f18ceaac180f8aa1c5",
+  "premerge_checkpoint_sha": "54da15c05b781d531e5156766f3831d91c3fa0ca",
+  "merge_sha": "a0098178fc27467bf4c12da0e97723e0b80ce683",
+  "canonical_sha": "a0098178fc27467bf4c12da0e97723e0b80ce683",
+  "verified_at_utc": "2026-10-13T17:50:39.177694+00:00",
+  "pr": {
+    "number": 2,
+    "url": "https://github.com/SrEdgarR/MECANET/pull/2",
+    "head_sha": "04c5d41299bffc15e201c168677079809feb6a0f",
+    "head_branch": "codex/integrate-p1-l1",
+    "base_branch": "develop",
+    "state": "MERGED",
+    "merged_at": "2026-10-13T17:48:16Z"
+  },
+  "ci_push": {
+    "run_id": 38440714202,
+    "url": "https://github.com/SrEdgarR/MECANET/actions/runs/38440714202",
+    "head_sha": "04c5d41299bffc15e201c168677079809feb6a0f",
+    "conclusion": "success",
+    "source": "ci-run-38440714202.json"
+  },
+  "ci_pr": {
+    "run_id": 38440720838,
+    "url": "https://github.com/SrEdgarR/MECANET/actions/runs/38440720838",
+    "head_sha": "04c5d41299bffc15e201c168677079809feb6a0f",
+    "conclusion": "success",
+    "source": "ci-run-38440720838.json"
+  },
+  "ci_canonical": {
+    "run_id": 38441611717,
+    "url": "https://github.com/SrEdgarR/MECANET/actions/runs/38441611717",
+    "head_sha": "a0098178fc27467bf4c12da0e97723e0b80ce683",
+    "conclusion": "success",
+    "source": "ci-run-38441611717.json"
+  },
+  "review": {
+    "result": "PASS",
+    "required_open": 0,
+    "source": "published-review.json",
+    "sourceSha256": "c65c6c849464e635d24d46b82332ccfd38bcbc9e52e980c1761523fb5f1595aa"
+  },
+  "safety": {
+    "result": "PASS",
+    "source": "git-preflight-before-merge.json / coolify-trigger-before-merge.json / vercel-before-merge.json; after-merge equivalents; no new GitHub deployments; PR1 unchanged"
+  },
+  "git_identity": {
+    "base_sha": "010aab670c638d168c971df3e3e53b97e72ff443",
+    "merge_parents": [
+      "010aab670c638d168c971df3e3e53b97e72ff443",
+      "04c5d41299bffc15e201c168677079809feb6a0f"
+    ],
+    "head_and_merge_tree": "6465bb82df55d87b0fd40307a51e4a1afdb42bc5",
+    "tree_identical": true,
+    "old_pr_commits_excluded": true,
+    "integration_worktree_clean": true
+  },
+  "ci_adjustment": "Workflow-only04c5 installs npm11.9 explicitly; Linux Node24.21 bundles npm11.19. Local0d and documentary54 evidence remain separate.",
+  "limits": "Linux x64 CI contracts/build/audits; no new ARM64/PostgreSQL/browser/restore/capacity or deployment. Agent technical review is not human GitHub approval.",
+  "infrastructure_resources_created_or_modified": [],
+  "service_mutations": []
+}

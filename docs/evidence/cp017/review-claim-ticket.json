@@ -1,0 +1,74 @@
+{
+  "reviewId": "CP017-REVIEW-CLAIM-TICKET",
+  "reviewer": "l2_ui",
+  "recordedAt": "2026-10-13T21:30:53.7787002Z",
+  "status": "PASS FOR STATIC DELTA REVIEW ONLY",
+  "environment": "Local Windows worktree; source inspection only; no PostgreSQL, SSH, Git or infrastructure operation by this reviewer",
+  "sourceProvenance": {
+    "parentReportedCommitPrefix": "8199",
+    "fullCommitNotIndependentlyRead": true,
+    "authority": "Parent source report plus independently computed SHA-256 input hashes",
+    "historicalMigration003Preserved": true
+  },
+  "inputs": [
+    {"path":"server/saas/db/migrations/003-control-writers.sql","sha256":"c5036db5fd1a71ea94e7d7feee25e299dcb074e25108465304ac6dff92955d07","bytes":41459},
+    {"path":"server/saas/db/migrations/005-control-claim-ticket.sql","sha256":"6f50da1b59b6f2c73733aa6c2c5f1698bdb3b8afab679e854f0705f030438e1e","bytes":2407},
+    {"path":"server/saas/writes/service.js","sha256":"6643afd4dfcbd2ba7ae5efeabe05206f920c36cf6280d6e07d22f43a641751da","bytes":16296},
+    {"path":"server/saas/admission/index.js","sha256":"6a29f8481d325256277a19f90132b0b35d1690aa461fb485c3f15330d6da929b","bytes":13449},
+    {"path":"server/saas/writes/coordinator.js","sha256":"ae14c70b24eefca6a6f30b5981cc2dea56811ee16456fe7b44c03d9484ca39f4","bytes":20359},
+    {"path":"tests/qa/write-ticket-owner.test.js","sha256":"18eb6ea78762a363068188e71bba3ba3e33e578a1e325072b191a7f2020922ed","bytes":5212},
+    {"path":"tests/qa/cp017/claim-corrective.test.mjs","sha256":"c17574aee10815404cafb9c56a496b22a54e4d6898ecce21f552aeb815724575","bytes":5433},
+    {"path":"tests/qa/cp017/quota-growth-boundary.mjs","sha256":"e3ef0ad61a71c6f44b7b49a3f459258afb713cd3c5876a156b2b5c9d37f5c41a","bytes":26600},
+    {"path":"tests/qa/cp017/claim-corrective.mjs","sha256":"7119ea86ad774786bf5a59fbd29a00a157408c8e3ff1296cad97c7453d1a3a83","bytes":17673}
+  ],
+  "checks": [
+    {
+      "id":"SIGNATURE-ACL",
+      "status":"PASS",
+      "scope":"Static comparison of migration 003 and 005",
+      "evidence":"CREATE OR REPLACE retains five argument types, SETOF saas.write_intents, SECURITY DEFINER, qualified references and pg_catalog,saas search_path. The delta adds no GRANT/REVOKE, role, relation or DROP. Original 003 removes PUBLIC execute and grants saas_api explicitly.",
+      "limit":"Live ownership, ACL, pg_proc definition and registry preservation require the separate corrective QA snapshot; this review does not execute or claim that evidence."
+    },
+    {
+      "id":"TICKET-GUARD",
+      "status":"PASS",
+      "scope":"Static before-CAS guard",
+      "evidence":"The registered original ticket is locked and its tenant, generation, original intent generation, owner, ACTIVE state and work_started=true are checked with NULL-safe IS DISTINCT FROM before PENDING becomes EXECUTING. Failed guards return without a transition or attempt change."
+    },
+    {
+      "id":"HTTP-REQUEST-BINDING",
+      "status":"PASS",
+      "scope":"Combined service and SQL enforcement",
+      "evidence":"The service rejects a different current HTTP ticket with OPERATION_PENDING before claim, including when a second request uses the same process owner. The SQL guard binds the registered ticket to its live owner. Terminal known-result replay is processed before this nonterminal claim guard and produces no second writer effect.",
+      "limit":"The preserved five-argument SQL signature alone cannot identify a second HTTP ticket belonging to the same process owner; the service guard is an essential part of the invariant and must not be removed."
+    },
+    {
+      "id":"LOCK-ORDER",
+      "status":"PASS",
+      "scope":"Inspected claim, admission and coordinator paths",
+      "evidence":"Claim takes admission_fence before authority and intent, then the original ticket. Inspected admission ticket mutations take the same fence before scopes and ticket; coordinator central mutations also start with the fence. The added lock does not introduce a reverse ticket-to-fence acquisition in these inspected paths.",
+      "limit":"This is a delta lock-order review, not proof that all runtime schedules are free of deadlocks or that configured deadlines suffice under saturation."
+    },
+    {
+      "id":"TEST-COVERAGE-DESIGN",
+      "status":"PASS",
+      "scope":"Source inspection of new tests and closed corrective runner",
+      "evidence":"Unit fixtures distinguish same-process and different-process ticket theft, preserve terminal replay and require positive resource settlement. Planned real SQL negative savepoints cover wrong owner, FINISHED, UNCERTAIN and work-not-started ticket states and assert unchanged intent/guards before the positive original-ticket claim. The corrective runner tests transactional rollback before registry insertion, exact old migration hashes, apply and idempotent rerun with data/ACL/function snapshots and CLOSED own-cohort proof.",
+      "limit":"No test was executed by this reviewer for this review. Source coverage is not a SQL or HTTP PASS."
+    }
+  ],
+  "findings": [],
+  "requiredFindingCount": 0,
+  "runtimeVerification": {
+    "status":"NOT VERIFIED BY THIS REVIEW",
+    "pendingSeparateEvidence":["Closed-cohort corrective rollback/apply/rerun and live ACL/registry snapshots","Original-ticket SQL positive and negative cases","Two-API same-key race and literal HTTP completion after the corrective migration"]
+  },
+  "references":[
+    {"url":"https://www.postgresql.org/docs/18/sql-createfunction.html","usedFor":"CREATE OR REPLACE argument/return restrictions and retention of existing ownership and permissions"},
+    {"url":"https://www.postgresql.org/docs/18/explicit-locking.html","usedFor":"Consistent lock acquisition order as deadlock mitigation; not evidence of runtime absence of deadlocks"}
+  ],
+  "productFilesModified":false,
+  "infrastructureModified":false,
+  "secretsReadOrPrinted":false,
+  "wholeL2GatePassed":false
+}

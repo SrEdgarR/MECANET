@@ -1,0 +1,99 @@
+{
+  "schemaVersion": 1,
+  "reviewer": "/root/l2_sql",
+  "observedAt": "2026-10-13T21:05:05.4264946Z",
+  "scope": "Revisión focal independiente del preparador privado que concilia un único ticket lector histórico sin write intent",
+  "source": {
+    "historicalStoppedSourceSha": "299ce3c0b6c821f03d0383b7da4d394af1e36475",
+    "reviewedMode": "working tree actual reforzado por root; SHA de captura pendiente",
+    "files": [
+      {
+        "path": "tests/qa/cp017/read-closure.mjs",
+        "sha256": "a55ea20c8a90de917a3f2b3798783ae0a0de377cd7c9f93a957262fe5abaf516"
+      },
+      {
+        "path": "tests/qa/cp017/read-closure.test.mjs",
+        "sha256": "6719d8d262e20a70941d43e95e6ebe85db730f7dd5135778b6baa8cfbbc5259a"
+      },
+      {
+        "path": "tests/qa/cp017/resource-closure.mjs",
+        "sha256": "5eafbb35a8b2804d4a358f08ebe57351e4504b139562ca8e00fa31a5a621458c"
+      },
+      {
+        "path": "tests/qa/cp017/resource-closure.test.mjs",
+        "sha256": "cb783f3f101a9cd3962bfed0ff827390c0dd832d7ecd27205a0c510497ad877d"
+      },
+      {
+        "path": "tests/qa/cp017/promotion.mjs",
+        "sha256": "0b43157b28a5d37cb1279564c70a31beff011d53f10c7589b30ae9573037ca88"
+      },
+      {
+        "path": "server/saas/admission/maintenance.js",
+        "sha256": "e037cfe6333e7cc8fe75ff23a7e3d9ebb7f5895595a1ff91f025e2fb44e43357"
+      },
+      {
+        "path": "server/saas/admission/transaction.js",
+        "sha256": "34d91817001beb2de7d5037b65903b79e4c6646543829d73b3e56097dd6036e8"
+      }
+    ]
+  },
+  "method": {
+    "skill": "agent-skills:code-review-and-quality",
+    "axes": [
+      "correctness",
+      "readability",
+      "architecture",
+      "security",
+      "performance",
+      "verification"
+    ],
+    "readonlyProductAndHarness": true,
+    "SSH": false
+  },
+  "outcome": "PASS FOR REVIEWED STATIC AND LOCAL CONTRACT FRAGMENT ONLY",
+  "findings": [],
+  "reviewedChecks": [
+    "Ticket b631be8a-4609-4c88-8d18-c338e61cd7f6 y owner68fa268f-f6f9-4970-a2a5-a773d18dc829 exactos, empresaA, generation vigente, estadoUNCERTAIN, work_started=true, sin intent, QC0/Qtpositivo",
+    "Proof lector min0 separado; proof escritor conserva mínimo1 y negativas respectivas",
+    "Proofs/historial/operacional mode400 exacto; fuentes detenidas aceptadas una sola vez y source299ce3c del owner histórico",
+    "validatePromotionHostProof enlaza proyecto/generation/sysid/source actual y owners distintos; CID únicos; matchinstance/CID/owner/stoppedSourceSha para ambos procesos",
+    "Worker/webStopped y cero rolesSaaS excepto reconciler se acreditan positivamente, sin TTL ni heartbeat como proof",
+    "PG18.6 UTF8 TLS sysid exacto; dos writer states centrales CLOSED y fences A/B locales matchingtenant/gen/epoch/version/state",
+    "Negativa canonicalreconcile sin fin de proceso positivo deja ticket incierto; positivo usa createReconciler y audit único",
+    "Hashes de windows y metadata central de intenciones/crecimiento/quota se calculan desde JSONB::text en SQL, sin pérdida bigint por JSON.stringify",
+    "Ningún registro/operación writer, cambio de cuota, reseteo de ledger o reapertura; sólo cierre del ticket y reconciliation_audit autorizados"
+  ],
+  "priorHardeningFeedback": {
+    "status": "RESOLVED STATIC",
+    "items": [
+      "mode400 exacto",
+      "Emparejamiento de pruebas de proceso con cohorte/source/CID/owner",
+      "sysid/PG18.6/UTF8/TLS y fences locales",
+      "Hash SQL exacto en lugar de JSONB parseado por JS"
+    ]
+  },
+  "axes": {
+    "correctness": "PASS STATIC: firma canónica, ticket/guard/proof positivo exactos y negativos antes del DML",
+    "readability": "PASS STATIC: helper privado limitado a una lectura histórica y reporte explícito",
+    "architecture": "PASS STATIC: fuera de API/worker, reconciler existente; prueba lectora no relaja writer",
+    "security": "PASS STATIC: credenciales propias privadas, proof400 emparejados, ausencia real de propietarios y roles",
+    "performance": "PASS STATIC: una operación, pools finitos1 por DB y timeouts2000/500ms; sin carga ni capacidad general inferida",
+    "verification": "PASS LOCAL CONTRACT: 31 tests focales compartidos incluyendo2read-closure/5resource; ejecución PG real pendiente"
+  },
+  "localVerification": {
+    "command": "node --test tests/qa/read-rollback-lifecycle.test.js tests/qa/read-abort-lifecycle.test.js tests/qa/cp017/read-closure.test.mjs tests/qa/cp017/resource-closure.test.mjs tests/qa/write-service.test.js",
+    "pass": 31,
+    "fail": 0,
+    "environment": "Node24.21.0 Windows x64; socket loopback HTTP real, SQL/admission en memoria",
+    "PGReal": false
+  },
+  "limitations": [
+    "La revisión estática/unitaria no ejecutó closeHistoricalRead contra PG ni modifica estado real del ticket",
+    "El checksum llamado business en helper cubre metadata central de intenciones/growth/controlquota; no se atribuye como fingerprint de todo el negocio tenant",
+    "No aprobación de todo A8/A9 ni Integration Gate",
+    "Provenance de ejecución real debe conservar source de cierre y fuente histórica detenida por separado"
+  ],
+  "functionalFilesModified": [],
+  "infrastructureResourcesModified": 0,
+  "wholeQualityGateApproved": false
+}

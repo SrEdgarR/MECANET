@@ -61,6 +61,26 @@ p { margin: 0 0 1rem; }
 .catalog-tools { display: flex; align-items: center; justify-content: space-between; gap: 1.5rem; flex-wrap: wrap; margin-bottom: 1.5rem; }
 .catalog-tools .eyebrow { margin-bottom: .25rem; }
 .company-name { font-weight: 600; margin: 0; overflow-wrap: anywhere; }
+.inventory-panel, .operation-state { background: var(--surface); border: 1px solid var(--line); padding: 1.5rem; margin: 1.5rem 0; }
+.inventory-panel h2, .inventory-section h2, .operation-state h2 { font-size: 1.25rem; line-height: 1.3; margin: 0 0 1rem; overflow-wrap: anywhere; }
+.inventory-form { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 1rem; align-items: start; }
+.inventory-form > button, .inventory-form > .button-row { grid-column: 1 / -1; justify-self: start; }
+.field-error { color: var(--error); font-size: .875rem; margin: 0; }
+.operation-reference { font-size: .875rem; overflow-wrap: anywhere; font-family: ui-monospace, SFMono-Regular, Consolas, monospace; }
+.operation-list, .movement-list { margin: 0 0 1rem; padding: 0; list-style: none; }
+.operation-list li, .movement-list li { display: grid; gap: .5rem; padding: 1rem 0; border-top: 1px solid var(--line); }
+.operation-list button { justify-self: start; }
+.stock-number { font-variant-numeric: tabular-nums; }
+.inventory-section .sku { width: auto; }
+.inventory-section td .button-row { display: grid; min-width: 0; width: 8rem; }
+.inventory-section table { min-width: 56rem; table-layout: fixed; }
+.inventory-section th:nth-child(1) { width: 12rem; }
+.inventory-section th:nth-child(2) { width: 18rem; }
+.inventory-section th:nth-child(3) { width: 6rem; }
+.inventory-section th:nth-child(4) { width: 20rem; }
+.inventory-section .table-region { scroll-padding-inline: .25rem; }
+.inventory-section td button { scroll-margin-inline: .25rem; padding: .625rem; overflow-wrap: anywhere; }
+.inventory-section td button:focus-visible { outline-offset: -3px; }
 .button-row { display: flex; flex-wrap: wrap; gap: .5rem; }
 .table-region { overflow-x: auto; background: var(--surface); border: 1px solid var(--line); }
 table { width: 100%; border-collapse: collapse; text-align: left; }
@@ -83,7 +103,13 @@ tbody tr:last-child td { border-bottom: 0; }
   .header-actions { gap: .5rem; }
   .environment-label { font-size: .625rem; }
   .button-row { width: 100%; }
+  .inventory-form { grid-template-columns: minmax(0, 1fr); }
+  .inventory-panel, .operation-state { padding: 1rem; }
   .button-row button { flex: 1; padding: .625rem; }
+  .inventory-section table { min-width: 44rem; }
+  .inventory-section th:nth-child(4) { width: 8rem; }
+  .inventory-section td .button-row { min-width: 0; width: 7rem; }
+  .inventory-section td .button-row button { flex: 1 0 100%; min-width: 0; }
   th, td { padding: .75rem .5rem; }
 }
 @media (prefers-color-scheme: dark) {

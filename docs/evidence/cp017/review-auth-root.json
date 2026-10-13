@@ -1,0 +1,177 @@
+{
+  "schemaVersion": 1,
+  "reviewer": "/root/l2_sql",
+  "scope": "Revisión independiente focal de composición raíz, autenticación, sesiones, rutas HTTP y presupuesto agregado de pools",
+  "observedAt": "2026-10-13T20:24:52.112Z",
+  "source": {
+    "base": "a0098178fc27467bf4c12da0e97723e0b80ce683",
+    "initialReferencedCommit": "1783fd40f26104ed1dd2d8c36f02abafd5e05e3f",
+    "headAtReview": "7edf30ece2bc76dd396535d66bfaeac609c082a2",
+    "mode": "working tree sobre HEAD; delta de pools autorizado por root; SHA de captura pendiente",
+    "artifactSha": null,
+    "files": [
+      {
+        "path": "server/saas/app.js",
+        "sha256": "de371edbb25eece0a1edf567f0fa471ec768151cd962bb9cf208d2871c74117c"
+      },
+      {
+        "path": "server/saas/auth/authority.js",
+        "sha256": "5ecc04bdbb570f40a9bac6a2a370676bc37e74e547cc3fa9687d281e34baebdb"
+      },
+      {
+        "path": "server/saas/auth/sessions.js",
+        "sha256": "7b5274e9e8c1c5227ffd086c48e5482f6bfd0a22970893d3ce17a647c2ca03f5"
+      },
+      {
+        "path": "server/saas/auth/validation.js",
+        "sha256": "76c621d5030b0d2e275cb8898bafe3c656da91bbff26cc8db22589e8ea570b64"
+      },
+      {
+        "path": "server/saas/db/pools.js",
+        "sha256": "b8eebead8655a0b6eae42df6d923d119ca2648457175e43d80e6e28ef4fb76f3"
+      },
+      {
+        "path": "server/saas/writes/service.js",
+        "sha256": "42421d155c228995aafac8aca510fd74ffdf77ef4befdeedff1a69fd6aacb93b"
+      },
+      {
+        "path": "server/saas/writes/validation.js",
+        "sha256": "84f6138f357a2e58bb7ddd537dba38c1ec635775ae4a9d927c92a99b48e2bf13"
+      },
+      {
+        "path": "server/saas/repositories/inventory.js",
+        "sha256": "25f48036e0ba50ce8b7211c7399480b27f5380911c4ed41c4f9b0133bf5967a3"
+      },
+      {
+        "path": "server/saas/repositories/catalog.js",
+        "sha256": "46ed0ee3668b0d24a4564f2415e189ba441dee08c83470a58f0c909d2d868f17"
+      },
+      {
+        "path": "tests/qa/issuer.js",
+        "sha256": "58c91f43d8a8616841b346fcb884abb4e674aee70c181a3df74c1e7d910f47b0"
+      },
+      {
+        "path": "tests/qa/cp017/routes.test.mjs",
+        "sha256": "23300065ca609c2fbd0843e61734fe18e620d977c894b3b45359578037a32008"
+      },
+      {
+        "path": "tests/qa/cp017/logout.test.mjs",
+        "sha256": "a2259d8c331d5a3fb149049bccee4c80dbf1900758202cab693bd045a8a3c524"
+      },
+      {
+        "path": "tests/qa/cp017/pools.test.mjs",
+        "sha256": "e22415b1772db21f4425f8ef1f89af65dc8888a86296c2d6b4026aa165f4a0ab"
+      },
+      {
+        "path": "tests/qa/cp014/deadlines.test.mjs",
+        "sha256": "42b028294d2a00180b39ffe311a9058bf65923bcc25c2a4d73c0c5d4b8d141b6"
+      }
+    ]
+  },
+  "method": {
+    "skill": "agent-skills:code-review-and-quality",
+    "axes": [
+      "correctness",
+      "readability",
+      "architecture",
+      "security",
+      "performance",
+      "verification"
+    ],
+    "readonlyReview": true,
+    "exception": "Root autorizó explícitamente corregir P1 encontrado, exclusivamente pools.js + pools.test.mjs. Sin Git/SSH ni otras escrituras funcionales.",
+    "conditionMutation": "No realizada: alcance inicial READONLY. Regresiones de comportamiento RED→GREEN para el fix autorizado."
+  },
+  "findings": [
+    {
+      "id": "REV-AUTH-ROOT-01",
+      "priority": "P1",
+      "severity": "Required",
+      "status": "RESOLVED LOCAL / PEER STATIC REVIEW PASS; QA REGRESSION PENDING",
+      "file": "server/saas/db/pools.js",
+      "originalSourceCommit": "1783fd40f26104ed1dd2d8c36f02abafd5e05e3f",
+      "originalLine": 66,
+      "originalEndLine": 71,
+      "title": "Los pools inactivos de un propósito bloquean permanentemente el otro propósito al llenar la cota compartida",
+      "trigger": "Cuatro pools lectores inactivos consumen los cuatro tokens agregados; un escritor nuevo tiene cero pools propios y no puede expulsar una entrada del otro gestor. La situación inversa también bloquea lectores.",
+      "effect": "POOL_CAPACITY y 503 repetidos con cero préstamos; el timeout de conexiones PG no libera los tokens de la caché del gestor.",
+      "reproduction": {
+        "environment": "Node24.21.0 Windows x64 local; pool falso sin SQL ni base real",
+        "sharedLimit": {
+          "pools": 1,
+          "leases": 2
+        },
+        "before": {
+          "pools": 1,
+          "leased": 0
+        },
+        "attempt": "reader completado → primer writer",
+        "actualBeforeFix": "POOL_CAPACITY",
+        "realFourPoolLimitAnalogous": true
+      },
+      "resolution": "Mutex compartido de adquisición antes del lock del gestor, registro LRU finito de entradas inactivas entre lectores/escritores, retiro idempotente y token conservado hasta pool.end real. Ninguna entrada activa, drenando o retirándose es candidata.",
+      "unchangedLimits": {
+        "maxPools": 4,
+        "maxLeases": 8
+      },
+      "verification": [
+        "dos regresiones observadas RED antes del cambio y GREEN después",
+        "lectores inactivos → escritor y escritores inactivos → lector",
+        "SQL vencido conserva préstamo/token y no puede ser expulsado hasta fin real",
+        "cierre del propietario concurrente con expulsión retira el token una sola vez"
+      ],
+      "resolveBefore": "Quality Gate de integración requiere revisión independiente del fix y regresión QA sobre artefacto exacto nuevo"
+    }
+  ],
+  "axes": {
+    "correctness": {
+      "status": "PASS FOR REVIEWED LOCAL FRAGMENT",
+      "evidence": "UUID y epoch decimales exactos, límites/cuerpo canónico antes de clasificar/admitir el writer; propósito y concesión de acción exacta; contexto de logout pendiente sin descriptor; P1 de caché corregido localmente"
+    },
+    "readability": {
+      "status": "PASS FOR REVIEWED FRAGMENT",
+      "evidence": "Funciones de validación, autorización, efecto y conciliación separadas; estados y guardas explícitos. No limpieza cosmética ni refactor general propuesto."
+    },
+    "architecture": {
+      "status": "PASS FOR REVIEWED FRAGMENT",
+      "evidence": "Lector/escritor con resolver y propósito separados, misma cota agregada; composición API no recibe credenciales de mantenimiento; central guarda hashes/guardas y rutas derivan descriptor de autoridad"
+    },
+    "security": {
+      "status": "PASS STATIC FOR REVIEWED FRAGMENT",
+      "evidence": "Cookies Host/secure/httpOnly/sameSite, stores por propósito, CSRF/origen, SQL parametrizado, deny tenant/action antes de pool, lookup de operación por actor y acción original; diagnóstico sanitizado. No lectura de secretos reales ni datos productivos."
+    },
+    "performance": {
+      "status": "PASS LOCAL; LIVE CAPACITY NOT VERIFIED",
+      "evidence": "Cuatro tokens y ocho préstamos agregados; LRU compartido acotado; deadlines existentes y préstamo retenido ante timeout; paginación/bytes finitos. Ninguna afirmación de capacidad del VPS."
+    },
+    "verification": {
+      "status": "PARTIAL",
+      "evidence": "24 pruebas locales de rutas/logout/pools/deadlines PASS antes del fix; después 20 pools+deadlines PASS incluyendo cuatro escenarios nuevos. No nuevas pruebas PostgreSQL/ARM64 ni revisión de infraestructura por este agente."
+    }
+  },
+  "limitations": [
+    "La aprobación del gate completo no se emite por esta revisión",
+    "El fix de pools fue implementado por este revisor después de detectar P1; recibió revisión estática separada de /root/l2_service, sin atribuirle ejecución de las pruebas.",
+    "La evidencia runtime histórica no se atribuye al delta nuevo ni a la captura pendiente",
+    "No revisión visual completa de Inventory/styles en este alcance focal",
+    "No se practicó una mutación temporal de condición por instrucción READONLY; se ejecutaron pruebas y reproducciones sin alterar producto hasta autorización explícita del fix"
+  ],
+  "requiredNext": [
+    "Captura de fuente/artefacto exacto y pruebas QA apropiadas del delta sin subir límites",
+    "Completar matriz de salidas L2 y Quality/Integration Gates por el coordinador"
+  ],
+  "fullGateApproved": false,
+  "wholeSaaSApproved": false,
+  "infrastructureCreatedOrModified": 0,
+  "sharedServicesTouched": false,
+  "secretsPrinted": false,
+  "peerReview": {
+    "reviewer": "/root/l2_service",
+    "observedAt": "2026-10-13T20:25:50.288Z",
+    "scope": "Sólo el delta autorizado de pools: orden shared lock→manager lock, selección idle, retiro idempotente, préstamos tardíos y cierre simultáneo",
+    "status": "PASS STATIC FOR POOL FIX",
+    "requiredFindings": 0,
+    "testsRepeatedByPeer": false,
+    "editsByPeer": false
+  }
+}

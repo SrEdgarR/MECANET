@@ -1,0 +1,10 @@
+{
+  "stage": "after-merge",
+  "at_utc": "2026-10-13T17:48:30Z",
+  "classification": "DETECTED",
+  "teamId": "team_1Gnpg9ve2yCJNH2rTIjmIhOi",
+  "provenance": "Vercel connector list_projects authenticated team",
+  "filter": {"repoId": "1383698839", "limit": "100"},
+  "response": {"projects": [], "pagination": {"count": 0}},
+  "mutations": []
+}

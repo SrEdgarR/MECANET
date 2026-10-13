@@ -5,31 +5,35 @@
   "active_phase_name": "Fundación aislada y operable",
   "status": "EN CURSO",
   "last_updated": "2026-10-13",
-  "next_gate": "Publicar rama limpia, PR/review/CI, merge y CI canónica bajo recheck Q-42; después A/B exactas P1-L2 y entradas",
-  "readiness_scope": "P1-L1 v0.2-CP012/S-18/L-01 APPROVED por DEC-058; Development y Environment acreditados para QA limitada. SaaS general NOT APPROVED",
-  "progress_basis": "Estado cualitativo, sin porcentaje. P1-L1 COMPLETADA con ocho salidas PASS y trazabilidad por suite; esto no cierra P1 general ni el SaaS",
-  "implementation": "P1-L1 COMPLETADA: ocho cortes privados PostgreSQL/React/Express; P1 general EN CURSO, sin funcionalidad comercial pública",
-  "current_checkpoint": "CP-016",
+  "next_gate": "Integration Gate L2 condicionado DEC-062: rama limpia/PR/CI/review/merge y develop canónico; aceptación de doce criterios/review/Quality/restore cerrado/cleanup PASS, sin producción ni nueva B por corte",
+  "readiness_scope": "P1-L2 v0.2-CP016 APPROVED exacta DEC-061/B DEC-062; QA sintética propia con preflight. SaaS general NOT APPROVED",
+  "progress_basis": "Estado cualitativo, sin porcentaje. P1-L1 TERMINAL con ocho PASS e Integration Gate PASS; P1 general EN CURSO y SaaS general NOT APPROVED",
+  "implementation": "P1-L1 TERMINAL integrado; P1-L2 PRE-INTEGRATION en codex/p1-l2, doce PASS limitados, Integration Gate pendiente y NO TERMINAL; sin inventario comercial/publicación o B para L3",
+  "current_checkpoint": "CP-017 EN CURSO / PRE-INTEGRATION; último checkpoint cerrado CP-016",
   "hosting_target": "CONFIRMED DEC-021/SC-005: VPS existente, operación propia independiente de Coolify; PostgreSQL DEC-054. Dominio futuro mecanet.app DEC-059/SC-007",
-  "hosting_execution": "Cohorte CP-014 privada instalada y probada con Compose, PostgreSQL18.6 ARM64, dos API, worker y Nginx; sin puertos públicos. Cinco contenedores propios STOPPED al cierre, sin URL activa; aislamiento y diez consumidores ajenos preservados. Inventario/cleanup en auditoría CP-014; fuente CP-013 cerrada y hashes preservados",
+  "hosting_execution": "QA CP017 fuente/destino CLOSED y6 contenedores STOPPED/KEEP;20 consumidores ajenos intactos, túnel4312 detenido/18443 cerrado. CP013/CP014 preservadas detenidas; sin URL pública nueva",
   "progress_percent": null,
   "trace": {
-    "base_sha": "010aab670c638d168c971df3e3e53b97e72ff443, base limpia de integración; fuente CP-014 9fcdd9540848edbbdef1cfc94667491c9ab2ba92 preservada",
+    "base_sha": "a0098178fc27467bf4c12da0e97723e0b80ce683 — develop canónico verificado al iniciar L2",
     "research_head_sha": "9fcdd9540848edbbdef1cfc94667491c9ab2ba92; lectura focalizada sin reinventariar el VPS",
-    "tested_code_sha": "0d8285cef117d6174a6053f18ceaac180f8aa1c5 — SC-008 local21negativas/29+3/build/3assetsF/auditorías0/syntax69; evidencia DB/browser/restore histórica conserva sus SHA",
-    "qa_controller_sha": "409880a513bee1eff909caf68d23325af55e9be4; normalización del inventario ajeno y regresión del controlador QA, sin cambio del artefacto F desplegado/probado",
+    "tested_code_sha": "8199a414ff06220e147b062ce37fa55709311627 — producto L2 actual; resultados separados por fuente/entorno en docs/evidence/cp017. Local258/258 y sintaxis134/Python PASS reportados, sin atribuir pruebas históricas al artefacto actual",
+    "historical_tested_code_sha": "0d8285cef117d6174a6053f18ceaac180f8aa1c5 — SC-008/L1 local; código/QA de CP-013…016 conservan sus propios SHA",
+    "qa_artifact_sha": "2b0dd67f7f19fa563ae5eae802da533572da7abe — artefacto QA actual, distinto del producto/base y del checkpoint documental",
+    "qa_artifact_digest": "sha256:85f959d949897298450b49a705d30b9688bfbaf9573d142fe4e08acae010e75c",
+    "historical_qa_controller_sha": "409880a513bee1eff909caf68d23325af55e9be4 — cierre QA CP-014, sin reatribuirlo a CP017",
     "experimental_test_reference": "CP-006/010 históricos no repetidos ni atribuidos a PostgreSQL; las90 pruebas Mongo f5afaa2 no prueban este lote",
     "HEAD": "Resolver git rev-parse HEAD en cada worktree; checkpoint final no se escribe en su propio commit",
-    "checkpoint_sha": "CP-015 fuentea541f7bcab88f289fa2bc89f6c9c9d004283cff2/integración44e55714b30dca776bc6a7fe65cb389b67343738; CP-016 final se identifica externamente/Git sin autoSHA",
-    "approved_head_sha": "3b387b38784907b67e2209a35c3d5f400d70742e, solamente S-18/manifiestoL-01/ocho cortes por DEC-058",
-    "merge_sha": "Ninguno todavía: Integration Gate remoto por ejecutar; autorización vigente",
-    "current_main_baseline_sha": "010aab670c638d168c971df3e3e53b97e72ff443 — develop remoto comprobado; no nuevo merge todavía",
-    "next_phase_base_sha": "No definido hasta merge/CI canónica; A/B de L2 pendientes",
-    "local_branch": "codex/integrate-p1-l1 preparada en worktree propio; codex/saas-discovery conserva fuente y planificación siguiente",
-    "remote_branch": "Rama nueva aún no publicada al checkpoint previo; PR #1 y codex/deploy-vercel-coolify intactos",
+    "checkpoint_sha": "CP-016 documental premerge `54da15c05b781d531e5156766f3831d91c3fa0ca`, head remoto congelado `04c5d41299bffc15e201c168677079809feb6a0f`; cierre primary se identifica externamente/Git, sin autoSHA",
+    "approved_head_sha": "704b4ae22f1af7fe868d3faf6bdf17a227fb0f50 — objeto aprobado: archivo completo .agentic/NEXT_LOT_CANDIDATE.md v0.2-CP016, SHA-256 ca975dc822c0bd5e872d3debe824abc536f662007513170f327727878ff3ac71, DEC-061; no aprobación transitiva de todo el commit/código; B separada DEC-062",
+    "historical_approved_head_sha": "3b387b38784907b67e2209a35c3d5f400d70742e — solamente S-18/manifiestoL-01/ocho cortes L1 por DEC-058",
+    "merge_sha": "a0098178fc27467bf4c12da0e97723e0b80ce683",
+    "current_main_baseline_sha": "a0098178fc27467bf4c12da0e97723e0b80ce683 — develop verificado tras CI canónica PASS",
+    "next_phase_base_sha": "a0098178fc27467bf4c12da0e97723e0b80ce683 — base canónica de L2; no merge L2 ni baseline de un lote posterior",
+    "local_branch": "codex/p1-l2 en worktree adjunto reutilizado limpio desde develop; primary/fuente y worktree anterior preservados",
+    "remote_branch": "codex/integrate-p1-l1 publicada e integrada; PR #1/codex/deploy-vercel-coolify preservados",
     "worktree": "Primario fuente/planning y C:/Users/thede/.codex/worktrees/p1l1-integration/MECANET-develop; .kilo/worktrees/majestic-chiller conservado",
-    "integration_target": "develop 010aab670c638d168c971df3e3e53b97e72ff443; PR exacto L1 preparado localmente, sin candidato siguiente mezclado",
-    "CI": "SC-008 local/revisión/actionlint PASS, fullaudit backend/lane SaaS0; legacy FAIL conservado. CI PR/canónica NOT VERIFIED"
+    "integration_target": "develop; L2 todavía sin PR/merge nuevo. L1 integrado por [PR #2](https://github.com/SrEdgarR/MECANET/pull/2), head04c5d41299bffc15e201c168677079809feb6a0f y merge a0098178fc27467bf4c12da0e97723e0b80ce683; CI histórica L1 no verifica integración L2",
+    "CI": "L2 regresión local258/258 y sintaxis134/Python PASS reportados; CI remota L2 NOT VERIFIED. [CI push](https://github.com/SrEdgarR/MECANET/actions/runs/38440714202), [CI PR](https://github.com/SrEdgarR/MECANET/actions/runs/38440720838) y [CI develop](https://github.com/SrEdgarR/MECANET/actions/runs/38441611717) conservan PASS histórico L1; legacy FAIL/TD-21 conservado"
   },
   "readiness": [
     {
@@ -42,19 +46,19 @@
       "id": "R-02",
       "name": "Specification Gate del lote",
       "status": "PASS",
-      "evidence": "DEC-058, S-18/L-01/ocho cortes al SHA3b387b3; el resto del candidato no se aprueba por extensión"
+      "evidence": "P1-L2 v0.2-CP016 completo APPROVED DEC-061: snapshot SHA-256 ca975dc822c0bd5e872d3debe824abc536f662007513170f327727878ff3ac71; no baseline SaaS general por extensión. L1 DEC-058 conservada"
     },
     {
       "id": "R-03",
       "name": "Design Gates del lote",
       "status": "PASS",
-      "evidence": "A humana exacta incluye PostgreSQL y operación propia limitada; integración pública compartida pendiente"
+      "evidence": "Revisión focal F14-L2 y SQL/servicio/UI CP-017 sobre el objeto A exacto, PostgreSQL/Compose independiente; integración pública compartida pendiente"
     },
     {
       "id": "R-04",
       "name": "READY FOR DEVELOPMENT limitado",
       "status": "PASS",
-      "evidence": "Baseline A, B y QA explícitas; preflight, cadena Node24.21/PG18.6, cuotas, secretos y redes propios acreditados antes del uso"
+      "evidence": "DEC-062 autoriza B/QA propia; gates locales y preflight CP017 acreditados antes del uso. Doce criterios de aceptación limitada PASS; lote EN CURSO/NO TERMINAL hasta Integration Gate, sin permiso de producción"
     },
     {
       "id": "R-05",
@@ -70,21 +74,21 @@
       "status": "PARCIAL",
       "dependencies": "Ninguna; dependencias diferidas por RG-001",
       "summary": "Mantener candidato SaaS general y resolver diseños antes de sus módulos; no segunda fase activa",
-      "closure": "Gates globales antes de baselines posteriores; aceptar L1 no cierra SaaS general",
-      "blockers": "Restos Q-02/11/31/33, proveedores/fiscalidad/servicios en sus resolve-before; Q-36 resuelta por A exacta",
-      "evidence": "CP-016: DEC-058/060 y registro14pendientes únicos,0 BLOCKING y14 FUTURE; no cierre global",
+      "closure": "Gates globales antes de baselines posteriores; aceptar baselines limitadas no cierra SaaS general",
+      "blockers": "Restos Q-02/11/31/33 y proveedores/fiscalidad/servicios en sus resolve-before; Q-36 resuelta para los lotes aprobados",
+      "evidence": "CP-017: DEC-061/062 limitadas; registro14pendientes, Q-35 BLOCKING de salida P1 y13 FUTURE; no cierre global",
       "document": "../.agentic/PLANNING_STATE.md"
     },
     {
       "id": "P1",
       "name": "Fundación aislada y operable",
       "status": "EN CURSO",
-      "dependencies": "P0-L1-S/D/E acreditados para alcance actual según RG-001",
-      "summary": "Conservar fundación P1-L1 verificada y preparar su Integration Gate, sin ampliar el alcance autorizado",
-      "closure": "Salida P1-L1 PASS; Integration Gate y garantías restantes de P1 conservan sus criterios, sin cierre global por extensión",
-      "blockers": "Salida funcional L1 PASS; Q-42/43 localmente resueltas, integración Git/CI aún por ejecutar; baseline/gates antes de otro lote",
-      "evidence": "CP-014: ocho salidas PASS acotadas, QA propia PG18.6 ARM64/dos API/Nginx/worker, matriz por SHA",
-      "document": "specs/P1-L1.md"
+      "dependencies": "Entradas/gates propios L1/L2 acreditados según RG-001",
+      "summary": "Conservar L1 TERMINAL; L2 PRE-INTEGRATION exacto DEC-061/062, sin lote siguiente aprobado",
+      "closure": "Integration Gate por fuente/SHA antes de TERMINAL; doce criterios de aceptación/review/Quality PASS",
+      "blockers": "Q-35 único BLOCKING de PR/CI/merge/verificación canónica; restore cerrado/cleanup PASS acotados. A/B L2 no pendientes, ninguna A/B L3",
+      "evidence": "L1 PR #2; L2 matriz doce PASS limitados, review0 críticos/0 REQUIRED y Quality258/134/55/3/4/audits0/cleanup PASS",
+      "document": "specs/P1-L2.md"
     },
     {
       "id": "P2",
@@ -221,8 +225,8 @@
       "phase": "P1",
       "id": "P1-L1-INT",
       "name": "Integration Gate del lote (§8.5)",
-      "status": "NOT VERIFIED",
-      "criterion": "CP-016 rama limpia/SC-008/revisión/regresión/gates locales PASS; PR/CI remoto/merge/canónica por ejecutar. No baseline de L2 o fase por extensión"
+      "status": "PASS",
+      "criterion": "[PR #2](https://github.com/SrEdgarR/MECANET/pull/2), head `04c5d41299bffc15e201c168677079809feb6a0f`, merge/develop `a0098178fc27467bf4c12da0e97723e0b80ce683`; [CI push](https://github.com/SrEdgarR/MECANET/actions/runs/38440714202), [CI PR](https://github.com/SrEdgarR/MECANET/actions/runs/38440720838) y [CI develop](https://github.com/SrEdgarR/MECANET/actions/runs/38441611717) PASS; L1 TERMINAL. No baseline de L2 o fase por extensión"
     }
   ],
   "screens": [
@@ -651,6 +655,30 @@
       "title": "Cadena de compilación y verificación SaaS propia",
       "status": "APPROVED",
       "detail": "- Fecha/estado/tipo: 2026-10-13, CP-016 / APPROVED / SPEC CHANGE SC-008, alcance L-06 y gate de dependencias de P1-L1.\n- Fuente humana directa: respuesta actual «Aprobar SC-008 e implementarlo (recomendado)» a la propuesta concreta de manifiesto/lock SaaS, materialización temporal de allowlist y auditoría completa estricta. A y B de este cambio quedan expresas; no autoriza P1-L2.\n- Problema/evidencia: audit completo del cliente heredado FAIL, siete paquetes de tooling afectados por dos GHSA; no corrección compatible acreditada. Caracterización previa aislada: 20 archivos copiados byte exactos, diez dependencias directas fijadas, auditorías completa/runtime sin hallazgos, 29 pruebas SaaS + 3 sanitización, cuatro negativas y tres assets iguales a F. Es caracterización local, no un PASS anticipado de implementación/CI.\n- Decisión exacta: incorporar manifiesto y lock exclusivos para construir/probar SaaS; staging temporal con lista cerrada de fuentes/config, sin .env/public/paquetes heredados. Conservar React18.3.1/Vite6.4.3/Vitest4.1.11 y el cliente heredado/Tailwind3.4.18 sin cambios. Auditar estrictamente todas las dependencias del backend y de la nueva cadena SaaS; no filtrar advisories, rebajar umbral, ignorar exit ni aceptar riesgo por extensión.\n- Límites: la auditoría legacy permanece FAIL visible y su tooling no se usa en esta lane. Remediarla antes de volver a depender de ella. Vite contiene código bundled que npm audit y los hooks de paquetes no inventarían como limpio; evaluar rutas reales/entradas versionadas, no usar servidor de desarrollo público ni contenido tenant como configuración/CSS/patrón. Los hooks fail closed y las negativas limitan cargas externas/fallback, sin prometer inspección de llamadas internas.\n- Impacto/reverse-impact: actualización aditiva de docs/specs/P1-L1.md, scripts/ci/manifiesto/lock/runner/barrera y callers de verificación/build propios; CI conserva tests y audit completo de su alcance real. No bytes funcionales, permisos SQL, sesiones, cuotas, recovery, Compose/QA ni cliente legacy alterados. CP-013/014 conserva provenance; regresión de assets no sustituye DB/browser/restore. L2 y lotes futuros deben acreditar su cadena cuando cambien entradas/dependencias.\n- Alternativa descartada para esta ejecución: major Tailwind4 afectaría el cliente heredado y no elimina automáticamente código bundled de Vite. No se aplica excepción humana indefinida ni se presenta audit0 del fixture como solución ya integrada.\n- Rollback: revertir commit del runner/manifiesto/gate devuelve Q-43 BLOCKING; no ejecutar tooling afectado ni alegar reversión de datos. Gate: instalar lock sin lifecycle, negativas de allowlist/symlink/fallback, hashes de copia, tests reales y build/F, auditorías nativas, revisión independiente y CI del SHA exacto antes de merge. No QA ni recursos compartidos nuevos."
+    },
+    {
+      "id": "DEC-061",
+      "title": "A exacta de P1-L2 v0.2-CP016",
+      "status": "APPROVED",
+      "detail": "- Fecha/estado/tipo: 2026-10-13, CP-017 / APPROVED / baseline limitada; SPEC CHANGE SC-009.\n- Fuente humana directa: adjunto `58f74b6d-fed5-482c-b395-07767df134f9`, «APRUEBO A Y AUTORIZO B para P1-L2 v0.2-CP016». A cubre TODO `.agentic/NEXT_LOT_CANDIDATE.md`, SHA256 `ca975dc822c0bd5e872d3debe824abc536f662007513170f327727878ff3ac71`, verificado antes de registro. [Baseline protegida](specs/P1-L2.md); snapshot íntegro del checkpoint fuente704b4ae.\n- Alcance: doce criterios, ajuste fundacional P1/P2, altas y recepciones ficticias sin importes, permisos, pool writer, protocolo monotónico restrictivo, idempotencia, cuotas, migración aditiva, recuperación/rollback y UI cuadrada. No A global ni otros módulos por referencia transitiva. Conserva PostgreSQL/React/Express/Compose independiente y decisiones comerciales/fiscales previas.\n- SC-009: cambio real de mecanismo respecto a L1 lector y asignación limitada de escritores a P1, expresamente incluido en A. Impacto inverso: sesión/emisor/logout, autoridad central, grants, schema/directorio/credenciales/pools, efecto empresarial, ledger/reservas, barrera/recovery, UI y artefacto. Revocación tiene preparación restrictiva durable y cierre local exclusivo antes de acuse; conserva garantía de ningún efecto posterior al cierre probado y separación de prueba de fin de recursos. No modifica bytes protegidos L1 ni reutiliza sus PASS como salida writer.\n- Revisión/entrada: F14-L2 CP-016 y revisiones focales separadas SQL/servicio/UI CP-017, contrato HTTP aprobado intacto, sin defectos críticos detectados. Environment Gate antes de QA propia; toda salida nueva inicialmente NOT VERIFIED. Metodología intacta."
+    },
+    {
+      "id": "DEC-062",
+      "title": "B e integración condicionada de P1-L2",
+      "status": "APPROVED",
+      "detail": "- Fecha/estado/tipo: 2026-10-13, CP-017 / APPROVED / ejecución diferenciada de A.\n- Fuente: mismo adjunto humano §§3…8. Autoriza implementar y verificar TODO el lote DEC-061, sin pedir otra B por corte/prueba/corrección. Permite QA ficticia propia con preflight/credenciales nuevas/límites y cleanup; PR contra develop/CI/revisión/fixes/merge solo cuando todas las salidas y gates, incluida ausencia acreditada de despliegue accidental, pasen.\n- Límites: no P2, producción, datos reales, DNS/TLS públicos, recursos compartidos, Coolify/Traefik, Nexora/Mecanet-EAK, pagos/cobros/contratos ni coste. No tocar PR #1. P1-L2 TERMINAL únicamente tras integración y CI canónica verificados; siguiente baseline independiente de checkpoint documental/código probado.\n- Próximo trabajo: gates de entrada por alcance y entorno, implementación completa autorizada; [plan previo](../.agentic/P1-L2_PLAN.md). Ninguna prueba funcional se acredita por esta decisión."
+    },
+    {
+      "id": "DEC-063",
+      "title": "Entrada futura exclusiva del operador Mecanet",
+      "status": "APPROVED",
+      "detail": "- Fecha/estado/tipo: 2026-10-13, CP-017 / APPROVED / dirección de producto futura.\n- Fuente: adjunto actual; `admin.mecanet.app` será panel independiente exclusivo del operador, con identidad/permisos separados de tenants. Conserva DEC-045 y sus restricciones; no concede acceso POS/ventas/contenido, infraestructura, impersonación o soporte por extensión.\n- Resolve-before: diseño del primer handler/pantalla operador/P4 DG-ADMIN y entrada pública Q-41; DNS/HTTPS/implementación NOT VERIFIED, no autorizados en P1-L2. No consume este lote ni bloquea writers QA."
+    },
+    {
+      "id": "DEC-064",
+      "title": "PayPal como candidato adicional recurrente",
+      "status": "PROPOSED",
+      "detail": "- Fecha/estado/tipo: 2026-10-13, CP-017 / PROPOSED / evaluación externa futura.\n- Fuente humana: adjunto actual solicita considerar PayPal además de CardNET/AZUL; CONFIRMED únicamente su incorporación a la evaluación. No proveedor aprobado ni sustitución de DEC-008/alternativas actuales.\n- Pendiente técnico/contractual/comercial Q-03/38 antes de primer código de pagos/P3: disponibilidad para el comerciante concreto RD, recurrencia/monedas/fees/cancelación/webhooks y condiciones verificables. No conexión/cobro/contratación ni afirmación de disponibilidad en esta ejecución; no bloquea QA sintética L2."
     }
   ],
   "pending": [
@@ -658,7 +686,7 @@
       "id": "Q-02",
       "title": "diseño técnico — Arquitectura relacional y operación de módulos restantes",
       "priority": "FUTURE",
-      "resolve_before": "Design Gate antes del primer módulo dependiente fuera de L1; reauth sensible5min antes del primer handler operador/P4 DG-ADMIN"
+      "resolve_before": "Design Gate antes del primer módulo dependiente fuera de L1/L2; reauth sensible5min antes del primer handler operador/P4 DG-ADMIN"
     },
     {
       "id": "Q-03",
@@ -676,7 +704,7 @@
       "id": "Q-11",
       "title": "diseño técnico — Ingeniería y cadena de módulos restantes",
       "priority": "FUTURE",
-      "resolve_before": "Diseño antes del primer desarrollo dependiente fuera de L1; integridad/advisories antes de usar cada nueva herramienta"
+      "resolve_before": "Diseño antes del desarrollo dependiente fuera de L1/L2; integridad/advisories antes de cada herramienta nueva"
     },
     {
       "id": "Q-18",
@@ -692,21 +720,21 @@
     },
     {
       "id": "Q-31",
-      "title": "diseño técnico — Pantallas e interacciones restantes fuera de L1",
+      "title": "diseño técnico — Pantallas e interacciones restantes fuera de L1/L2",
       "priority": "FUTURE",
-      "resolve_before": "UI Design Gate antes de cada pantalla/módulo no incluido en S-18"
+      "resolve_before": "UI Design Gate antes de cada pantalla/módulo fuera de las baselines protegidas"
     },
     {
       "id": "Q-32",
       "title": "evidencia — Capas y entornos posteriores a la QA actual",
       "priority": "FUTURE",
-      "resolve_before": "Environment Gate antes de cada nuevo recurso/entorno; entrada pública y producción por separado"
+      "resolve_before": "Environment Gate antes de cada recurso/entorno nuevo; entrada pública y producción separadas"
     },
     {
       "id": "Q-33",
       "title": "diseño técnico — Coherencia F14 de entregas restantes",
       "priority": "FUTURE",
-      "resolve_before": "Antes de baseline posterior y cierre global; revisar cambios materiales del lote si aparecen"
+      "resolve_before": "Antes de baseline posterior y cierre global; revisar cambios materiales del lote"
     },
     {
       "id": "Q-34",
@@ -716,9 +744,9 @@
     },
     {
       "id": "Q-35",
-      "title": "evidencia — Garantías posteriores por fase; fragmento L1 resuelto",
-      "priority": "FUTURE",
-      "resolve_before": "Salidas restantes P1 y P2 POS/P3 pagos/P4 panel/P5 experiencia/P6 conjunto; antes de declarar cada garantía verificada"
+      "title": "evidencia — Integration Gate L2; aceptación/review/Quality/restore cerrado/cleanup PASS",
+      "priority": "BLOCKING",
+      "resolve_before": "Antes de declarar L2 TERMINAL: PR/CI/review remoto/merge y rama canónica acreditados; garantías P2…P6 conservan sus límites"
     },
     {
       "id": "Q-38",
@@ -3417,20 +3445,20 @@
     {
       "id": "C-243",
       "name": "Publicación/PR/revisión y CI del PR",
-      "status": "NOT VERIFIED",
-      "evidence": "Pendiente ejecución GitHub autorizada tras QG/preflight; no PASS de Linux por ensayo Windows",
-      "environment": "REMOTE por ejecutar",
-      "sha": "PR nuevo ninguno aún",
+      "status": "PASS",
+      "evidence": "[PR #2](https://github.com/SrEdgarR/MECANET/pull/2), head `04c5d41299bffc15e201c168677079809feb6a0f`, merge/develop `a0098178fc27467bf4c12da0e97723e0b80ce683`; [CI push](https://github.com/SrEdgarR/MECANET/actions/runs/38440714202), [CI PR](https://github.com/SrEdgarR/MECANET/actions/runs/38440720838) y [CI develop](https://github.com/SrEdgarR/MECANET/actions/runs/38441611717) PASS; revisión PASS/0REQUIRED: published-review.json; recheck: git-preflight-before-merge.json / coolify-trigger-before-merge.json / vercel-before-merge.json; after-merge equivalents; no new GitHub deployments; PR1 unchanged",
+      "environment": "REMOTE GitHub / CI Linux por sus SHA",
+      "sha": "04c5d41299bffc15e201c168677079809feb6a0f",
       "date": "2026-10-13",
       "provenance": "DETECTED"
     },
     {
       "id": "C-244",
       "name": "Merge/CI canónica y baseline siguiente",
-      "status": "NOT VERIFIED",
-      "evidence": "develop010aab, L1 noTERMINAL; registrar mergeexacto y CIcanónica antes de transición",
-      "environment": "REMOTE por ejecutar",
-      "sha": "merge_sha ninguno aún",
+      "status": "PASS",
+      "evidence": "[PR #2](https://github.com/SrEdgarR/MECANET/pull/2), head `04c5d41299bffc15e201c168677079809feb6a0f`, merge/develop `a0098178fc27467bf4c12da0e97723e0b80ce683`; [CI push](https://github.com/SrEdgarR/MECANET/actions/runs/38440714202), [CI PR](https://github.com/SrEdgarR/MECANET/actions/runs/38440720838) y [CI develop](https://github.com/SrEdgarR/MECANET/actions/runs/38441611717) PASS; L1TERMINAL, base siguiente acreditada sin A/B L2",
+      "environment": "REMOTE GitHub / CI Linux por sus SHA",
+      "sha": "a0098178fc27467bf4c12da0e97723e0b80ce683",
       "date": "2026-10-13",
       "provenance": "DETECTED"
     },
@@ -3473,6 +3501,206 @@
       "sha": "code0d8285cef117d6174a6053f18ceaac180f8aa1c5 / checkpoint identificado en Git",
       "date": "2026-10-13",
       "provenance": "DETECTED"
+    },
+    {
+      "id": "C-249",
+      "name": "A/B exactas P1-L2 y alcance protegido",
+      "status": "PASS",
+      "evidence": "DEC-061/062, SC-009, [approval](evidence/cp017/approval.json); snapshot ca975dc… exacto",
+      "environment": "HUMAN + LOCAL",
+      "sha": "baseline v0.2-CP016",
+      "date": "2026-10-13",
+      "provenance": "HUMAN-ASSISTED"
+    },
+    {
+      "id": "C-250",
+      "name": "Gates de entrada y QA propia acreditados",
+      "status": "PASS",
+      "evidence": "[design-entry](evidence/cp017/design-entry.json), [preflight](evidence/cp017/preflight.json); recursos privados propios, sin Coolify",
+      "environment": "LOCAL + QA propia ARM64",
+      "sha": "8199 funcional / 2b0 QA",
+      "date": "2026-10-13",
+      "provenance": "DETECTED"
+    },
+    {
+      "id": "C-251",
+      "name": "L2-A1: Diseño/protocolo de escritor revisado",
+      "status": "PASS",
+      "evidence": "[Matriz](evidence/cp017/matrix.md) L2-A1: fuentes reales por capa; PASS de aceptación antes de Integration Gate. No transferir PASS histórico a nueva fuente",
+      "environment": "LOCAL + QA propia ARM64",
+      "sha": "8199 funcional / 2b0 QA",
+      "date": "2026-10-13",
+      "provenance": "DETECTED"
+    },
+    {
+      "id": "C-252",
+      "name": "L2-A2: Migraciones aditivas y registro íntegro",
+      "status": "PASS",
+      "evidence": "[Matriz](evidence/cp017/matrix.md) L2-A2: fuentes reales por capa; PASS de aceptación antes de Integration Gate. No transferir PASS histórico a nueva fuente",
+      "environment": "LOCAL + QA propia ARM64",
+      "sha": "8199 funcional / 2b0 QA",
+      "date": "2026-10-13",
+      "provenance": "DETECTED"
+    },
+    {
+      "id": "C-253",
+      "name": "L2-A3: Privilegios/credenciales/pools separados",
+      "status": "PASS",
+      "evidence": "[Matriz](evidence/cp017/matrix.md) L2-A3: fuentes reales por capa; PASS de aceptación antes de Integration Gate. No transferir PASS histórico a nueva fuente",
+      "environment": "LOCAL + QA propia ARM64",
+      "sha": "8199 funcional / 2b0 QA",
+      "date": "2026-10-13",
+      "provenance": "DETECTED"
+    },
+    {
+      "id": "C-254",
+      "name": "L2-A4: Permisos e identidades por acción",
+      "status": "PASS",
+      "evidence": "[Matriz](evidence/cp017/matrix.md) L2-A4: fuentes reales por capa; PASS de aceptación antes de Integration Gate. No transferir PASS histórico a nueva fuente",
+      "environment": "LOCAL + QA propia ARM64",
+      "sha": "8199 funcional / 2b0 QA",
+      "date": "2026-10-13",
+      "provenance": "DETECTED"
+    },
+    {
+      "id": "C-255",
+      "name": "L2-A5: Revocación/fences y versiones monotónicas",
+      "status": "PASS",
+      "evidence": "[Matriz](evidence/cp017/matrix.md) L2-A5: fuentes reales por capa; PASS de aceptación antes de Integration Gate. No transferir PASS histórico a nueva fuente",
+      "environment": "LOCAL + QA propia ARM64",
+      "sha": "8199 funcional / 2b0 QA",
+      "date": "2026-10-13",
+      "provenance": "DETECTED"
+    },
+    {
+      "id": "C-256",
+      "name": "L2-A6: Alta canónica e idempotente de productos",
+      "status": "PASS",
+      "evidence": "[Matriz](evidence/cp017/matrix.md) L2-A6: fuentes reales por capa; PASS de aceptación antes de Integration Gate. No transferir PASS histórico a nueva fuente",
+      "environment": "LOCAL + QA propia ARM64",
+      "sha": "8199 funcional / 2b0 QA",
+      "date": "2026-10-13",
+      "provenance": "DETECTED"
+    },
+    {
+      "id": "C-257",
+      "name": "L2-A7: Recepción positiva y resultado durable",
+      "status": "PASS",
+      "evidence": "[Matriz](evidence/cp017/matrix.md) L2-A7: fuentes reales por capa; PASS de aceptación antes de Integration Gate. No transferir PASS histórico a nueva fuente",
+      "environment": "LOCAL + QA propia ARM64",
+      "sha": "8199 funcional / 2b0 QA",
+      "date": "2026-10-13",
+      "provenance": "DETECTED"
+    },
+    {
+      "id": "C-258",
+      "name": "L2-A8: Cuotas/transacciones/contadores acotados",
+      "status": "PASS",
+      "evidence": "[Matriz](evidence/cp017/matrix.md) L2-A8: fuentes reales por capa; PASS de aceptación antes de Integration Gate. No transferir PASS histórico a nueva fuente",
+      "environment": "LOCAL + QA propia ARM64",
+      "sha": "8199 funcional / 2b0 QA",
+      "date": "2026-10-13",
+      "provenance": "DETECTED"
+    },
+    {
+      "id": "C-259",
+      "name": "L2-A9: Interfaz cuadrada y recuperación de UUID",
+      "status": "PASS",
+      "evidence": "[Matriz](evidence/cp017/matrix.md) L2-A9: fuentes reales por capa; PASS de aceptación antes de Integration Gate. No transferir PASS histórico a nueva fuente",
+      "environment": "LOCAL + QA propia ARM64",
+      "sha": "8199 funcional / 2b0 QA",
+      "date": "2026-10-13",
+      "provenance": "DETECTED"
+    },
+    {
+      "id": "C-260",
+      "name": "L2-A10: Drenaje/rollback/operación propios",
+      "status": "PASS",
+      "evidence": "[Matriz](evidence/cp017/matrix.md) L2-A10: fuentes reales por capa; PASS de aceptación antes de Integration Gate. No transferir PASS histórico a nueva fuente",
+      "environment": "LOCAL + QA propia ARM64",
+      "sha": "8199 funcional / 2b0 QA",
+      "date": "2026-10-13",
+      "provenance": "DETECTED"
+    },
+    {
+      "id": "C-261",
+      "name": "L2-A11: Restore sintético cerrado",
+      "status": "PASS",
+      "evidence": "[Matriz](evidence/cp017/matrix.md) L2-A11: fuentes reales por capa; PASS de aceptación antes de Integration Gate. No transferir PASS histórico a nueva fuente",
+      "environment": "LOCAL + QA propia ARM64",
+      "sha": "8199 funcional / 2b0 QA",
+      "date": "2026-10-13",
+      "provenance": "DETECTED"
+    },
+    {
+      "id": "C-262",
+      "name": "L2-A12: Review/Quality/cleanup de salida",
+      "status": "PASS",
+      "evidence": "[Matriz](evidence/cp017/matrix.md) L2-A12: fuentes reales por capa; PASS de aceptación antes de Integration Gate. No transferir PASS histórico a nueva fuente",
+      "environment": "LOCAL + QA propia ARM64",
+      "sha": "8199 funcional / 2b0 QA",
+      "date": "2026-10-13",
+      "provenance": "DETECTED"
+    },
+    {
+      "id": "C-263",
+      "name": "Revisión independiente consolidada",
+      "status": "PASS",
+      "evidence": "[review-consolidated](evidence/cp017/review-consolidated.json):82 rutas/14 reviews; 0 críticos/0 REQUIRED, independencia colectiva",
+      "environment": "LOCAL peer + QA reportada",
+      "sha": "8199 funcional / 2b0 QA",
+      "date": "2026-10-13",
+      "provenance": "DETECTED"
+    },
+    {
+      "id": "C-264",
+      "name": "Quality documental y mapa derivados",
+      "status": "PASS",
+      "evidence": "[documentation-quality](evidence/cp017/documentation-quality.json):referencias/14 pendientes/historia248/Prompt/snapshots/12criterios/una fase/mapa--check",
+      "environment": "LOCAL documental",
+      "sha": "checkpoint identificado externamente",
+      "date": "2026-10-13",
+      "provenance": "DETECTED"
+    },
+    {
+      "id": "C-265",
+      "name": "Cleanup y preservación de consumidores",
+      "status": "PASS",
+      "evidence": "[cleanup](evidence/cp017/cleanup.json):6 propios STOPPED/0running,20 anteriores exactos; túnel4312 y18443 cerrados",
+      "environment": "REMOTE + LOCAL",
+      "sha": "2b0dd67 QA",
+      "date": "2026-10-13",
+      "provenance": "DETECTED"
+    },
+    {
+      "id": "C-266",
+      "name": "Integration Gate y rama canónica",
+      "status": "NOT VERIFIED",
+      "evidence": "Aceptación previa permite PR/CI/review/merge condicional ya autorizados; CI develop aún no ejecutada. L2 aún NO TERMINAL",
+      "environment": "GitHub pendiente",
+      "sha": "sin merge L2",
+      "date": "2026-10-13",
+      "provenance": "DETECTED"
+    },
+    {
+      "id": "C-267",
+      "name": "Siguiente candidato acotado preparado",
+      "status": "PASS",
+      "evidence": "[P1-L3](../.agentic/P1-L3_CANDIDATE.md) v0.1-CP017-rev1/review:6criteriosNV, nueva fuente con margen; sin código ni recursos",
+      "environment": "LOCAL documental",
+      "sha": "SUGGESTED / NOT APPROVED",
+      "date": "2026-10-13",
+      "provenance": "DETECTED"
+    },
+    {
+      "id": "C-268",
+      "name": "A/B y salidas del siguiente lote",
+      "status": "NOT VERIFIED",
+      "evidence": "Design/Specification/A exacta/B/Development/Environment antes de implementar L3; no aprobación inferida",
+      "environment": "HUMAN + entorno futuro",
+      "sha": "ninguna baseline L3 aprobada",
+      "date": "2026-10-13",
+      "provenance": "DETECTED"
     }
   ],
   "feedback": [
@@ -3495,15 +3723,15 @@
   "source_files": [
     {
       "path": "docs/PROJECT_STATE.md",
-      "sha256": "cd997ab4f5d6042379b9223e262445e611db7a9bcc40dfd568ff9e5f5609a963"
+      "sha256": "c62a19539d17622a9c75b60fa5cf4ea1ea4665d0f8887fb344bd9585c3df2bcb"
     },
     {
       "path": "docs/ROADMAP.md",
-      "sha256": "3634a75465a1c3baafa8640627cceac45411482320a05bb740cbbccabb5d0b39"
+      "sha256": "b4f9ce693882a6237fdc72ad088d0d936579ca01382d7d6a3ae92e35d1892dad"
     },
     {
       "path": "docs/DECISIONS.md",
-      "sha256": "eb798b38af34d7f83ac5f4cb1a42604e981114ce805dba63d18d18fc0ce442dc"
+      "sha256": "4562901ebc3e98c3ff1386f1d00bdf07e0c1bd904ad3bc11f0f209be514b4c27"
     },
     {
       "path": "docs/TECH_DEBT.md",
@@ -3511,11 +3739,11 @@
     },
     {
       "path": "docs/CHECKPOINTS.md",
-      "sha256": "2a50436e35b0ce1f024da5107cad1c44102f6146640795f3b65d777acc1955d2"
+      "sha256": "569e03876c228082394c194bb47771ecd55b17323888963ab7d3c8b707ed6192"
     },
     {
       "path": ".agentic/PLANNING_STATE.md",
-      "sha256": "596b2816ad800952a9fb949b4ca30e8c7499cf764c9ea02bb086849210e08456"
+      "sha256": "e5cf82487d9d0694688e108992a0f5db9644217bddbf3eee6efb74558fd8b86f"
     },
     {
       "path": ".agentic/METHODOLOGY_FEEDBACK.md",

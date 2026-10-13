@@ -1,0 +1,53 @@
+{
+  "reviewId": "CP017-REVIEW-CONCURRENCY",
+  "reviewer": "l2_service",
+  "recordedAt": "2026-10-13T21:59:02Z",
+  "status": "PASS FOR STATIC REVIEW AND PURE LOCAL TESTS ONLY",
+  "requiredFindings": 0,
+  "criticalFindings": 0,
+  "realPostgresqlExecution": "NOT VERIFIED BY THIS REVIEW",
+  "wholeA8Acceptance": "NOT VERIFIED",
+  "environment": "Node24.21.0 Windows, independent source inspection and pure tests; no SSH, PostgreSQL, HTTP, Git or infrastructure operation by this reviewer",
+  "sources": [
+    {"path": "tests/qa/cp017/concurrency-live.mjs", "localFileSha256": "f5e60973d5e8a83942904a7fc3c9d406cf1989cd7420ad68d8dde258d014cb23", "provenance": "Final copy reported by SQL owner; original WIP and final import rebasing inspected independently"},
+    {"path": "tests/qa/cp017/concurrency.unit.test.mjs", "localFileSha256": "280c29328691953e31ed16a495d0fc16aa1fe95e4e02d265953f1ab300873a7a"},
+    {"path": ".qa-private/cp017-wip/concurrency-live.mjs", "localFileSha256": "19e3cebae1f4ba71c392dd2f315a89a286b9a30b7190ad5267a4923ca55f58de", "provenance": "Reviewed corrected WIP; final delta changes only relative imports"},
+    {"path": "server/saas/admission/transaction.js", "localFileSha256": "34d91817001beb2de7d5037b65903b79e4c6646543829d73b3e56097dd6036e8"},
+    {"path": "server/saas/admission/schema.sql", "localFileSha256": "554c5bf6c979f510d59997f65e0a7aeb54f9a7f8913e9d57dbabe4eecf78ec19"},
+    {"path": "tests/qa/cp017/promotion.mjs", "localFileSha256": "0b43157b28a5d37cb1279564c70a31beff011d53f10c7589b30ae9573037ca88"},
+    {"path": "tests/qa/cp017/sql-live.mjs", "localFileSha256": "4b9e5ce9c95a46135903684ddfce2732681f021285caf7a3830db29686c2072c"},
+    {"path": ".agentic/P1-L2_PLAN.md", "localFileSha256": "a0345dbd47144171c535af0387ea64b718a3bdb902d167a2c016979f10e21f01", "scope": "Preregistered A8 central conflict fragment; later host-drain appendix reread without changing this fragment"},
+    {"path": "docs/specs/p1-l2-approved/baseline.md", "localFileSha256": "ca975dc822c0bd5e872d3debe824abc536f662007513170f327727878ff3ac71"}
+  ],
+  "resolvedFindings": [
+    {"id": "CONCURRENCY-ROLE-FINGERPRINT", "priorSourceSha256": "73c52a1e04d97fda8317316a8bf3afbe108d55174321caed88119c347d372246", "finding": "The preregistered roles claim was not included in the original table fingerprints", "resolution": "Central snapshot now hashes explicit public pg_roles attributes and named pg_auth_members options for SaaS/bootstrap roles, with counts, before and after; no password column is selected. This fingerprint joins the same integral equality check", "status": "RESOLVED STATIC"},
+    {"id": "CONCURRENCY-FINAL-ENVELOPE", "priorSourceSha256": "73c52a1e04d97fda8317316a8bf3afbe108d55174321caed88119c347d372246", "finding": "A pre-query elapsed guard did not reject a last query finishing after the 45s ceiling", "resolution": "A final guard before PASS now requires elapsed<=45000ms, queries<=80, peak leases<=2 and no live leases. New negative cases cover 45000.001ms,81 commands,3 leases and one live lease", "status": "RESOLVED LOCAL / STATIC"}
+  ],
+  "checks": [
+    {"id": "own-closed-target", "status": "PASS STATIC", "evidence": "Fixed own QA project and three database names; trusted proof mode400 requires exact source/generation/systemIdentifier, distinct API CIDs/owners, exited processes, closed HTTP, SQL absence and worker/web stopped. Every before/after SQL snapshot rechecks PG180006, UTF8,TLS, systemIdentifier, zero SaaS clients and matching central/local CLOSED generation/epoch/version"},
+    {"id": "bounded-resources", "status": "PASS LOCAL / STATIC", "evidence": "Sequential one-lease snapshots close each pool; conflict phases retain one rival and acquire one production-library lease, with central max2 and global lease accounting. Query envelope80, work elapsed45s, statements2s, lock500ms and production retry500ms/3 attempts are preserved. Final equality alone cannot produce PASS outside the envelope"},
+    {"id": "real-40001-contract", "status": "PASS STATIC / REAL SQL NOT VERIFIED", "evidence": "Production serializable reads a preexisting policy under saas_policy; rival commits UPDATE limits=limits after that snapshot. Only the technical tuple changes; successful retry repeats the same no-op. Schema grants SELECT and UPDATE(limits) to that existing role. Evidence requires actual40001, positive ROLLBACK before the next BEGIN and final COMMIT ACK"},
+    {"id": "real-40p01-contract", "status": "PASS STATIC / REAL SQL NOT VERIFIED", "evidence": "Two own-cluster advisory_xact lock keys are acquired in inverse order. The rival observes itself in pg_blocking_pids(candidate) before entering the second wait; SET LOCAL deadlock_timeout50ms occurs before SET LOCAL ROLE saas_api in each transaction. Only a production callback40P01 with acknowledged rollback/retry qualifies; rival-only victim fails without searching for a favorable run"},
+    {"id": "failure-cleanup", "status": "PASS STATIC", "evidence": "The candidate blocked promise observes rejection immediately. If first-wait observation fails, production serializable cannot report success: rollback is queued or the bounded connection is discarded without claiming ACK. Rival pending work is observed, ROLLBACK ACK is required and lease release/end follows; failed cleanup does not satisfy the evidence checker. Commit/rollback uncertainty remain the production503 paths with no automatic tenant effect retry"},
+    {"id": "preservation", "status": "PASS STATIC / REAL SQL NOT VERIFIED", "evidence": "All protected tables in central/session_store/catalog/inventory, including both migration registries, are server-hashed as ordered JSONB text with row counts. Fences and public role attributes/memberships are also compared. QH/QC/Qt, policy versions, identities/grants, intents/projections, growth reservations, business effects and original guard ownership must remain equal. The physical xmin changes from technical no-op commits are intentionally outside logical row content"},
+    {"id": "privacy-boundary", "status": "PASS STATIC", "evidence": "The isolated private harness uses fixed SQL and parameterized policy/lock inputs. Identifier interpolation is restricted to listed own schemas and validated table names. Reported output contains source/provenance, bounded facts, hashes and SQLSTATE/event types; sanitizer excludes SQL payloads, cookies, passwords, connections and business result bodies. No new role, GRANT, HBA, global GUC or public API is introduced"}
+  ],
+  "localTests": {
+    "status": "PASS",
+    "environment": "Pure local functions; no real PostgreSQL or remote HTTP",
+    "pass": 5,
+    "fail": 0,
+    "skipped": 0,
+    "adversarialPrivateMutation": {"sourceSha256": "73c52a1e04d97fda8317316a8bf3afbe108d55174321caed88119c347d372246", "change": "Remove only workerStopped rejection in a private copy; final sources untouched", "observed": "3PASS/1FAIL expected: Missing expected exception", "status": "PASS FOR SENSITIVITY OF THAT NEGATIVE"}
+  },
+  "primarySource": {"url": "https://www.postgresql.org/docs/18/functions-info.html", "scope": "pg_blocking_pids identifies lock blockers of a backend; official documentation supports causal observation design, not QA role permissions or actual conflict occurrence"},
+  "limits": [
+    "Real SQLSTATE, timing, ACK ordering, two physical connections, role EXECUTE, fingerprint equality and proof custodia require the separate root-run PostgreSQL18.6 ARM64 own-QA trial.",
+    "This review does not establish complete A8, tenant HTTP races, absence of all deadlocks, host capacity, public deployment or Integration Gate.",
+    "The host proof is trusted input from the own controller; this reviewer did not inspect Docker or remote filesystem custodia. No timestamps or TTL are accepted as replacement end proofs.",
+    "Current-source hashes are local file identities. No commit or remote raw output hash is invented by this review."
+  ],
+  "productChangesByReviewer": "ninguno",
+  "infrastructureResourcesCreatedOrModifiedByReviewer": "ninguno",
+  "gitSshSecretOperationsByReviewer": "ninguno"
+}

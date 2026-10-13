@@ -24,6 +24,13 @@ const tests = [
   'tests/qa/cp014/admission-probe.test.mjs',
   'tests/qa/cp014/auth-login-failure.test.mjs',
   'tests/qa/cp014/deadlines.test.mjs',
+  'tests/qa/write-validation.test.js', 'tests/qa/write-service.test.js', 'tests/qa/write-coordinator.test.js',
+  'tests/qa/cp017/pools.test.mjs', 'tests/qa/cp017/routes.test.mjs', 'tests/qa/cp017/migrate.unit.test.mjs', 'tests/qa/write-app.test.js', 'tests/qa/cp017/logout.test.mjs', 'tests/qa/cp017/resource-closure.test.mjs', 'tests/qa/cp017/quota.unit.test.mjs', 'tests/qa/cp017/revocation-live.test.mjs', 'tests/qa/cp017/recovery.unit.test.mjs',
+  'tests/qa/cp017/promotion.unit.test.mjs', 'tests/qa/cp017/sql-vectors.unit.test.mjs', 'tests/qa/cp017/rollback.unit.test.mjs',
+  'tests/qa/cp017/metadata.unit.test.mjs', 'tests/qa/cp017/integration-sku.test.mjs', 'tests/qa/cp017/promote.unit.test.mjs',
+  'tests/qa/cp017/quota-boundary.test.mjs',
+  'tests/qa/cp017/quota-growth-boundary.test.mjs', 'tests/qa/cp017/claim-corrective.test.mjs', 'tests/qa/cp017/uncertain-retention.test.mjs', 'tests/qa/cp017/recovery-check.test.mjs',
+  'tests/qa/read-abort-lifecycle.test.js', 'tests/qa/write-ticket-owner.test.js', 'tests/qa/post-response-diagnostic.test.js', 'tests/qa/read-rollback-lifecycle.test.js', 'tests/qa/cp017/read-closure.test.mjs', 'tests/qa/cp017/concurrency.unit.test.mjs', 'tests/qa/cp017/canonical-gap.unit.test.mjs',
 ];
 
 // Allow only process support variables. No inherited DB URLs, session secrets,
@@ -79,6 +86,16 @@ switch (mode) {
     run(['scripts/ci/saas-toolchain.mjs', 'verify']);
     break;
   case 'assets': {
+    // P1-L2 has new approved UI. F remains the immutable historical L1 oracle.
+    if(readdirSync(resolve(root,'docs/evidence/cp017')).includes('accepted-ui-assets.json')){
+      const accepted=JSON.parse(readFileSync(resolve(root,'docs/evidence/cp017/accepted-ui-assets.json'),'utf8'));
+      assert.equal(accepted.baselineSha256,'ca975dc822c0bd5e872d3debe824abc536f662007513170f327727878ff3ac71');
+      assert.equal(accepted.entries.length,3);
+      const names=['client/dist-saas/saas.html',...readdirSync(resolve(root,'client/dist-saas/assets')).map(n=>'client/dist-saas/assets/'+n)];
+      assert.equal(names.length,3);const remaining=new Set(names);
+      for(const entry of accepted.entries){assert.match(entry.path,/^client\/dist-saas\/(?:saas\.html|assets\/saas-[A-Za-z0-9_-]+\.(?:js|css))$/);assert.equal(remaining.delete(entry.path),true);assert.equal(createHash('sha256').update(readFileSync(resolve(root,entry.path))).digest('hex'),entry.sha256)}
+      assert.equal(remaining.size,0);console.log('PASS: three assets match the accepted P1-L2 artifact; SQL/browser evidence remains separate');break;
+    }
     const oracle = JSON.parse(readFileSync(resolve(root, 'docs/evidence/cp015/archived-f-identity.json'), 'utf8'));
     const allowed = new Set([
       'client/dist-saas/saas.html',

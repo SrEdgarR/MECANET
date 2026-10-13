@@ -1,0 +1,260 @@
+{
+  "schemaVersion": 1,
+  "checkpoint": "CP-017",
+  "stage": "independent read-only pre-gate, fresh operation recheck required",
+  "classification": "DETECTED",
+  "source": "gh CLI 2.101.0 authenticated GitHub REST GETs; SrEdgarR/MECANET only",
+  "repository": "SrEdgarR/MECANET",
+  "account": {
+    "login": "SrEdgarR",
+    "provenance": "GET /user --jq .login; no auth config or token read"
+  },
+  "repository_metadata": {
+    "id": 1383698839,
+    "node_id": "R_kgDOUnmRlw",
+    "full_name": "SrEdgarR/MECANET",
+    "owner": {
+      "login": "SrEdgarR",
+      "id": 62525726,
+      "type": "User"
+    },
+    "default_branch": "develop",
+    "visibility": "public",
+    "archived": false,
+    "disabled": false,
+    "permissions": {
+      "admin": true,
+      "maintain": true,
+      "pull": true,
+      "push": true,
+      "triage": true
+    }
+  },
+  "branch": {
+    "name": "develop",
+    "protected": false,
+    "sha": "a0098178fc27467bf4c12da0e97723e0b80ce683",
+    "effective_rules": [],
+    "protection_endpoint": {
+      "status": "HTTP404",
+      "message": "Branch not protected",
+      "doesNotChangeHumanGate": true
+    }
+  },
+  "workflows": {
+    "total_count": 1,
+    "workflows": [
+      {
+        "id": 383488316,
+        "node_id": "W_kwDOUnmRl84W25E8",
+        "name": "P1-L1 verification",
+        "path": ".github/workflows/p1-l1-verify.yml",
+        "state": "active",
+        "created_at": "2026-10-13T13:39:04-04:00",
+        "updated_at": "2026-10-13T13:48:18-04:00"
+      }
+    ]
+  },
+  "hooks": [],
+  "rulesets": [],
+  "actions_permissions": {
+    "enabled": true,
+    "allowed_actions": "all",
+    "sha_pinning_required": false
+  },
+  "workflow_permissions": {
+    "default_workflow_permissions": "read",
+    "can_approve_pull_request_reviews": false
+  },
+  "self_hosted_runners": {
+    "runners": [],
+    "total_count": 0
+  },
+  "historical_deployments": [
+    {
+      "created_at": "2026-10-07T16:41:25Z",
+      "creator": "vercel[bot]",
+      "environment": "Production – mecanet-app",
+      "id": 6915510608,
+      "node_id": "DE_kwDOUnmRl88AAAABnDJRUA",
+      "production_environment": false,
+      "ref": "f5afaa23c54c968be249231f18e212b2b43a0c82",
+      "sha": "f5afaa23c54c968be249231f18e212b2b43a0c82",
+      "transient_environment": false,
+      "updated_at": "2026-10-07T16:41:25Z"
+    },
+    {
+      "created_at": "2026-10-07T16:40:44Z",
+      "creator": "vercel[bot]",
+      "environment": "Production – mecanet-web",
+      "id": 6915495489,
+      "node_id": "DE_kwDOUnmRl88AAAABnDIWQQ",
+      "production_environment": false,
+      "ref": "f5afaa23c54c968be249231f18e212b2b43a0c82",
+      "sha": "f5afaa23c54c968be249231f18e212b2b43a0c82",
+      "transient_environment": false,
+      "updated_at": "2026-10-07T16:40:45Z"
+    },
+    {
+      "created_at": "2026-10-07T16:35:54Z",
+      "creator": "vercel[bot]",
+      "environment": "Preview – mecanet-app",
+      "id": 6915391143,
+      "node_id": "DE_kwDOUnmRl88AAAABnDB-pw",
+      "production_environment": false,
+      "ref": "f5afaa23c54c968be249231f18e212b2b43a0c82",
+      "sha": "f5afaa23c54c968be249231f18e212b2b43a0c82",
+      "transient_environment": false,
+      "updated_at": "2026-10-07T16:35:54Z"
+    },
+    {
+      "created_at": "2026-10-07T16:35:19Z",
+      "creator": "vercel[bot]",
+      "environment": "Preview – mecanet-web",
+      "id": 6915378351,
+      "node_id": "DE_kwDOUnmRl88AAAABnDBMrw",
+      "production_environment": false,
+      "ref": "f5afaa23c54c968be249231f18e212b2b43a0c82",
+      "sha": "f5afaa23c54c968be249231f18e212b2b43a0c82",
+      "transient_environment": false,
+      "updated_at": "2026-10-07T16:35:19Z"
+    },
+    {
+      "created_at": "2026-10-07T16:14:42Z",
+      "creator": "vercel[bot]",
+      "environment": "Production – mecanet-app",
+      "id": 6914914868,
+      "node_id": "DE_kwDOUnmRl88AAAABnCk6NA",
+      "production_environment": false,
+      "ref": "3deccdfd307ff4cd186a9c6e6ceb78cc04566125",
+      "sha": "3deccdfd307ff4cd186a9c6e6ceb78cc04566125",
+      "transient_environment": false,
+      "updated_at": "2026-10-07T16:14:43Z"
+    },
+    {
+      "created_at": "2026-10-07T16:14:21Z",
+      "creator": "vercel[bot]",
+      "environment": "Production – mecanet-web",
+      "id": 6914907152,
+      "node_id": "DE_kwDOUnmRl88AAAABnCkcEA",
+      "production_environment": false,
+      "ref": "3deccdfd307ff4cd186a9c6e6ceb78cc04566125",
+      "sha": "3deccdfd307ff4cd186a9c6e6ceb78cc04566125",
+      "transient_environment": false,
+      "updated_at": "2026-10-07T16:14:22Z"
+    }
+  ],
+  "deployment_ids_exact": [
+    6915510608,
+    6915495489,
+    6915391143,
+    6915378351,
+    6914914868,
+    6914907152
+  ],
+  "expected_historical_ids_matched": true,
+  "new_github_deployments_observed": 0,
+  "remote_workflow": {
+    "path": ".github/workflows/p1-l1-verify.yml",
+    "gitBlobSha": "98752c61557d650cb97c7621d0e1e70397104d94",
+    "sourceRef": "a0098178fc27467bf4c12da0e97723e0b80ce683",
+    "sha256": "29d9c188d86643ea19e69bb0bca3becea234f69520bb17b007d6a8791299841f",
+    "suspiciousDeployPatterns": [],
+    "name": "P1-L1 verification",
+    "runner": "ubuntu-24.04",
+    "actions": [
+      "actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803",
+      "actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1"
+    ],
+    "inspection": "Hash equals CP016 previously reviewed remote workflow; fixed source a0098178; two action pins are full40SHA, hosted runner; local tests/build/audit only, no deploy/SSH/Coolify/Vercel/secret retrieval",
+    "provenance": "GET contents at exact develop SHA; base64 decoded only in memory, code not saved or secret read"
+  },
+  "own_workflow": {
+    "path": ".github/workflows/p1-l1-verify.yml",
+    "name": "P1 verification",
+    "triggers": [
+      "pull_request to develop",
+      "push develop/codex/integrate-p1-l1/codex/p1-l2"
+    ],
+    "runner": "ubuntu-24.04",
+    "permissions": {
+      "contents": "read"
+    },
+    "operations": "local contracts, controller pure regression, guarded frontend build and dependency audits; npm ci --ignore-scripts; no deploy or SSH",
+    "sha256": "9126d290385ec36ebf29ebfcf3480523ae06d291edff7782595ca0e9877f500e"
+  },
+  "apps_inventory_limit": {
+    "status": "NOT VERIFIED",
+    "source": "GET /user/installations",
+    "http_status": 403,
+    "reason": "GitHub App-authorized token required; current token cannot list installations. Does not imply absence of Apps; no token acquisition or secret read."
+  },
+  "known_external_paths": {
+    "human_disconnection": {
+      "classification": "CONFIRMED HUMAN",
+      "source": "Direct user message in current project conversation",
+      "projects": [
+        "mecanet-app",
+        "mecanet-web"
+      ],
+      "statement": "User manually disconnected GitHub and reported ChatGPT connector verification; projects remain; Nexora unchanged",
+      "approvalDateNotInferred": true
+    },
+    "vercel_current": {
+      "classification": "DETECTED REPORTED BY COORDINATOR",
+      "provenance": "Root assignment states repository filter returned0 for the inspected team; not independently queried by this reviewer",
+      "repoFilterCount": 0,
+      "scope": "Inspected team only, not all accounts or possible integrations"
+    },
+    "coolify_current": {
+      "classification": "DETECTED REPORTED BY COORDINATOR",
+      "sourceFile": "docs/evidence/cp017/coolify-trigger-precheck.json",
+      "provenance": "Root own read-only remote query; this reviewer reused saved evidence only",
+      "legacyApplication": "mecanet-api",
+      "repository": "SrEdgarR/MECANET.git",
+      "branch": "codex/deploy-vercel-coolify",
+      "autoDeploy": false,
+      "previewDeploy": false,
+      "sha256": "ac74ca7c04a94fd5a1cf96d03c4b5cf2b983caf6df5b99314780a99f159564b4"
+    }
+  },
+  "api_operations": [
+    "GET /user",
+    "GET /repos/SrEdgarR/MECANET",
+    "GET /repos/SrEdgarR/MECANET/branches/develop",
+    "GET /repos/SrEdgarR/MECANET/hooks?per_page=100 (paginated)",
+    "GET /repos/SrEdgarR/MECANET/rulesets?per_page=100 (paginated)",
+    "GET /repos/SrEdgarR/MECANET/rules/branches/develop",
+    "GET /repos/SrEdgarR/MECANET/branches/develop/protection",
+    "GET /repos/SrEdgarR/MECANET/actions/workflows",
+    "GET /repos/SrEdgarR/MECANET/actions/permissions",
+    "GET /repos/SrEdgarR/MECANET/actions/permissions/workflow",
+    "GET /repos/SrEdgarR/MECANET/actions/runners",
+    "GET /repos/SrEdgarR/MECANET/deployments?per_page=100 (paginated)",
+    "GET /repos/SrEdgarR/MECANET/contents/.github/workflows/p1-l1-verify.yml?ref=a0098178fc27467bf4c12da0e97723e0b80ce683",
+    "GET /user/installations (HTTP403)"
+  ],
+  "assessment": "Q-42 PASS bounded to observed GitHub mechanisms + direct human disconnection + root reported Vercel team/repo filter and saved Coolify known path metadata. Not proof of global absence of GitHub Apps, external polling or unknown deployment automation. Protected branch false does not replace approved gates.",
+  "mutations": [],
+  "infrastructureResourcesModified": 0,
+  "secretsReadOrPrinted": false,
+  "recheck_before": [
+    "push",
+    "create PR",
+    "merge"
+  ],
+  "stop_if": [
+    "account is not SrEdgarR",
+    "repository identity changes",
+    "new deployments or deploy-capable workflow/hook/runner integration appears",
+    "known Vercel/Coolify path reconnects or evidence is insufficient for the concrete operation"
+  ],
+  "limitations": [
+    "Preparatory evidence; no push/PR/merge authorized by this file",
+    "No SSH, Vercel or Coolify actions performed by reviewer",
+    "GitHub Apps inventory403 is not an empty inventory",
+    "Repository self-hosted runner inventory does not cover every external controller",
+    "No whole Integration Gate PASS or CI result for P1-L2 inferred"
+  ],
+  "atUtc": "2026-10-13T21:12:47.1694197Z"
+}

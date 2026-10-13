@@ -1,0 +1,15 @@
+Local contracts, frontend and dependency audit	Check the exact toolchain	﻿2026-10-13T17:39:10.6595790Z ##[group]Run node --version
+Local contracts, frontend and dependency audit	Check the exact toolchain	2026-10-13T17:39:10.6597089Z ^[[36;1mnode --version^[[0m
+Local contracts, frontend and dependency audit	Check the exact toolchain	2026-10-13T17:39:10.6598581Z ^[[36;1mnpm --version^[[0m
+Local contracts, frontend and dependency audit	Check the exact toolchain	2026-10-13T17:39:10.6599949Z ^[[36;1mtest "$(node --version)" = "v24.21.0"^[[0m
+Local contracts, frontend and dependency audit	Check the exact toolchain	2026-10-13T17:39:10.6601294Z ^[[36;1mtest "$(npm --version)" = "11.9.0"^[[0m
+Local contracts, frontend and dependency audit	Check the exact toolchain	2026-10-13T17:39:10.6602625Z ^[[36;1mnode scripts/ci/p1-l1.mjs provenance^[[0m
+Local contracts, frontend and dependency audit	Check the exact toolchain	2026-10-13T17:39:10.6864393Z shell: /usr/bin/bash -e {0}
+Local contracts, frontend and dependency audit	Check the exact toolchain	2026-10-13T17:39:10.6865693Z env:
+Local contracts, frontend and dependency audit	Check the exact toolchain	2026-10-13T17:39:10.6866734Z   CI: true
+Local contracts, frontend and dependency audit	Check the exact toolchain	2026-10-13T17:39:10.6867814Z   REAL_API: false
+Local contracts, frontend and dependency audit	Check the exact toolchain	2026-10-13T17:39:10.6869165Z   VITEST_REAL_API: false
+Local contracts, frontend and dependency audit	Check the exact toolchain	2026-10-13T17:39:10.6870428Z ##[endgroup]
+Local contracts, frontend and dependency audit	Check the exact toolchain	2026-10-13T17:39:10.7039126Z v24.21.0
+Local contracts, frontend and dependency audit	Check the exact toolchain	2026-10-13T17:39:10.7831560Z 11.19.0
+Local contracts, frontend and dependency audit	Check the exact toolchain	2026-10-13T17:39:10.8760472Z ##[error]Process completed with exit code 1.

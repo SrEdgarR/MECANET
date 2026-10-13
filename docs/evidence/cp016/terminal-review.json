@@ -1,0 +1,118 @@
+{
+  "schemaVersion": 1,
+  "checkpoint": "CP-016",
+  "at": "2026-10-13T17:56:35.616Z",
+  "classification": "DETECTED",
+  "reviewer": "/root/cp016_integration_review",
+  "result": "PASS cierre P1-L1 TERMINAL",
+  "requiredOpen": 0,
+  "independence": "Agente distinto de los autores; revisión focal técnica y documental, no aprobación humana GitHub. Sin mutaciones Git o remotas.",
+  "canonicalChain": {
+    "repository": "SrEdgarR/MECANET",
+    "prUrl": "https://github.com/SrEdgarR/MECANET/pull/2",
+    "prState": "MERGED",
+    "mergedAt": "2026-10-13T17:48:16Z",
+    "reviewedHead": "04c5d41299bffc15e201c168677079809feb6a0f",
+    "mergeSha": "a0098178fc27467bf4c12da0e97723e0b80ce683",
+    "parents": [
+      "010aab670c638d168c971df3e3e53b97e72ff443",
+      "04c5d41299bffc15e201c168677079809feb6a0f"
+    ],
+    "tree": "6465bb82df55d87b0fd40307a51e4a1afdb42bc5",
+    "treeEqualsReviewedHead": true,
+    "developShaVerified": "a0098178fc27467bf4c12da0e97723e0b80ce683",
+    "independentProvenance": "GET commit/head/develop/pull, API Actions y gh run logs; lectura exclusiva SrEdgarR/MECANET. No nuevo fullPR ni inventario."
+  },
+  "canonicalCi": {
+    "runId": 38441611717,
+    "url": "https://github.com/SrEdgarR/MECANET/actions/runs/38441611717",
+    "event": "push",
+    "branch": "develop",
+    "status": "completed",
+    "conclusion": "success",
+    "checkoutCommit": "a0098178fc27467bf4c12da0e97723e0b80ce683",
+    "jobId": 115449336243,
+    "allStepsSuccess": true,
+    "renderedGhRunLogsSha256": "29e403ca2e3158caec5096508a9f627a33e18184b5e00f7552ad8003192aacda",
+    "logBytes": 94219,
+    "environment": "Ubuntu24.04/Linuxx64, Node24.21.0/npm11.9.0",
+    "lane": {
+      "inputs": 22,
+      "fingerprint": "6d2aa03257522d1e0d42e16d53961ee1eb99fee8dc0543419a0c3df6aa32d678",
+      "result": "PASS",
+      "fullNativeAudit": "PASS0",
+      "runtimeNativeAudit": "PASS0",
+      "backendFullAndRuntimeAudit": "PASS0",
+      "cleanup": "PASS",
+      "assets": "Tres SHA256 iguales a F archivado"
+    },
+    "limits": "Contratos puros/frontend/build/audit; sin PostgreSQL real/ARM64/browser/restore/QA privada nuevos."
+  },
+  "priorReview": {
+    "source": "published-review.json",
+    "sourceSha256": "c65c6c849464e635d24d46b82332ccfd38bcbc9e52e980c1761523fb5f1595aa",
+    "result": "PASS head04c5 y CI push38440714202/PR38440720838",
+    "syntheticPrCheckout": "9380d06491d1fb3b4d414114abaf26f582b8b931",
+    "localTestedCodeSha": "0d8285cef117d6174a6053f18ceaac180f8aa1c5",
+    "premergeDocumentarySha": "54da15c05b781d531e5156766f3831d91c3fa0ca"
+  },
+  "documentReview": {
+    "result": "PASS",
+    "qg": {
+      "source": "qg.json",
+      "sourceSha256": "351560ac767552541649bc6556e3ecdd6b33c8f21e56f897f8d4708f91e49ed8",
+      "stage": "final",
+      "result": "PASS",
+      "checks": 65,
+      "failed": []
+    },
+    "history": "QG PASS conserva C001…232/CP001…015/auditorías/IDs/snapshots/Prompt. Se reutiliza su prueba de historia y se leen estados vivos afectados; no revisión documental completa repetida.",
+    "corrected": "source de ci-pr-verification.json apunta al archivo real, descripción movida a provenance, hash/stdout intactos; validator sin relajación. FAIL previo conservado qg-final-provenance-fail.json. ROADMAP F7 vivo corregido a L1TERMINAL/CI canónica,90tests históricos separados.",
+    "state": {
+      "p1l1": "TERMINAL",
+      "integrationGate": "PASS",
+      "activePhase": "P1 EN CURSO única",
+      "p0": "PARCIAL",
+      "p2": "NO INICIADA",
+      "saasGeneral": "NOT APPROVED",
+      "productionGate": "NOT VERIFIED",
+      "pending": 14,
+      "blocking": 0,
+      "future": 14
+    },
+    "canonicalAndNextExecutableBaseSha": "a0098178fc27467bf4c12da0e97723e0b80ce683",
+    "snapshot": "Integration HEAD04c5/premerge54da preservados; este cierre solo primary, sin SHA autorreferencial.",
+    "l2": {
+      "candidate": "P1-L2 v0.2-CP016",
+      "sha256": "ca975dc822c0bd5e872d3debe824abc536f662007513170f327727878ff3ac71",
+      "designReview": "PASS acotado anterior reutilizado",
+      "A": "PENDING",
+      "B": "PENDING",
+      "functionalCriteria": "12 NOT VERIFIED",
+      "next": "A exacta/ajuste P1-P2 y B diferenciada; gates propios antes de código/recursos"
+    },
+    "documentSha256": {
+      "docs/PROJECT_STATE.md": "8488c263e105310b0ea9f641c938e299fb87cb7ad201f2adf4547e5af74a297a",
+      "docs/ROADMAP.md": "5d9bea76e9ce48a1c4a7ef690b58969b24e1862b3ed9d50ba953fbe29365250c",
+      "docs/CHECKPOINTS.md": "5562738c6600690104d42b4be79ca9dada9fb6d70826051e79b4b5def77cc2be",
+      ".agentic/PLANNING_STATE.md": "cef9629f998396072635f77bf39039cf40e6fb8326e14cc703a919a4ae98a63c",
+      "docs/PROJECT_MAP_DATA.json": "d90136bff59c4f8c5dcae0a46dfd12df5a1b9e3e9c02d2c387ad48ad20d4677d",
+      "docs/audit/CP-016.md": "521733ec857f154fb08416e7fdd2e3786c520c949b38e6fd3b49c199fc208d77"
+    }
+  },
+  "safety": {
+    "source": "integration-final.json",
+    "sourceSha256": "c9c670873ee6dd1ae6faf469ff807bd189eca898e6f8e6cd72e255ec0683bdca",
+    "result": "PASS acotado antes/después merge según expediente del controlador",
+    "scope": "Vercel repo0, Coolify legacy auto/previewfalse, hooks0/workflow de verificación, sin nuevosdeploys, PR1OPEN/DRAFT preservado. Se reutilizan metadatos, sin inspección remota de infraestructura nueva por el revisor."
+  },
+  "limits": [
+    "L1TERMINAL no significa SaaS completo, producción o A/B L2.",
+    "Legacy7FAIL/TD21 y límites bundled Vite conservados; SC008 no waiver.",
+    "Diferencias raw WindowsCRLF/LinuxLF de manifiesto/lock conservadas por provenance; assetsF idénticos.",
+    "Evidencia DB/ARM64/browser/restore CP013/014 conserva SHA propio; no transferencia de PASS.",
+    "Solo escritura de este reporte; sin nuevos builds/tests, commits/push/merge/deploy/infra por el revisor."
+  ],
+  "resourcesCreatedOrModified": [],
+  "remoteMutations": []
+}

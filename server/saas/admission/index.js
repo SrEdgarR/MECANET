@@ -55,11 +55,12 @@ export function createAdmission({ pool, owner, generation, monotonicNow = () => 
     const { rows } = await pool.query('SELECT id,tenant_id,lane,state,generation,work_started FROM saas.tickets WHERE id=$1 AND owner=$2 AND generation=$3', [id, owner, generation]);
     return rows[0] ?? null;
   }
-  async function admit({ tenantId, lane = 'ordinary', kind = 'HTTP', reserveBytes = 1024 * 1024 }) {
+  async function admit({ tenantId, lane = 'ordinary', kind = 'HTTP', reserveBytes = 1024 * 1024,workUnits=1 }) {
     const entry = ['auth', 'operator'].includes(lane);
     if (entry && (tenantId !== null || kind !== 'HTTP' || reserveBytes > 65536)) throw new TypeError('Entry envelope has no tenant and a 64KiB response bound');
     const scopes = entry ? [`entry:${lane}`] : scopesFor(tenantId, lane);
     if (!['HTTP', 'JOB'].includes(kind) || !Number.isSafeInteger(reserveBytes) || reserveBytes < 0 || reserveBytes > 1024 * 1024) throw new TypeError('Unbounded admission request');
+    if(![1,3].includes(workUnits)||(entry&&workUnits!==1))throw new TypeError('Invalid fixed work classification');
     if (!clock.ready()) throw new AdmissionError('CLOCK_UNAVAILABLE');
     const id = randomUUID();
     try {
@@ -67,11 +68,11 @@ export function createAdmission({ pool, owner, generation, monotonicNow = () => 
         const current = await fence(client);
         const policies = await lockScopes(client, scopes);
         for (const policy of policies) {
-          const denied = checkBudget(policy.limits, await usage(client, policy.scope_key, current.tick), { qh: kind === 'HTTP' ? 1 : 0, qc: 1, qt: reserveBytes, waiting: 1 });
+          const denied = checkBudget(policy.limits, await usage(client, policy.scope_key, current.tick), { qh: kind === 'HTTP' ? 1 : 0, qc: workUnits, qt: reserveBytes, waiting: 1 });
           if (denied) throw new AdmissionError(policy.scope_key.startsWith('tenant:') ? 'TENANT_QUOTA' : 'GLOBAL_QUOTA', policy.scope_key.startsWith('tenant:') ? 429 : 503);
         }
         await addWindow(client, scopes, current.tick, { qh: kind === 'HTTP' ? 1 : 0 });
-        await client.query("INSERT INTO saas.tickets(id,tenant_id,lane,operation_kind,owner,generation,state,scopes,policy_versions,created_tick,queue_expires_at,reserved_qc,reserved_qt) VALUES($1,$2,$3,$4,$5,$6,'WAITING',$7,$8,$9,clock_timestamp()+interval '2 seconds',1,$10)", [id, tenantId, lane, kind, owner, generation, scopes, Object.fromEntries(policies.map(p => [p.scope_key, p.version])), current.tick, reserveBytes]);
+        await client.query("INSERT INTO saas.tickets(id,tenant_id,lane,operation_kind,owner,generation,state,scopes,policy_versions,created_tick,queue_expires_at,reserved_qc,reserved_qt) VALUES($1,$2,$3,$4,$5,$6,'WAITING',$7,$8,$9,clock_timestamp()+interval '2 seconds',$11,$10)", [id, tenantId, lane, kind, owner, generation, scopes, Object.fromEntries(policies.map(p => [p.scope_key, p.version])), current.tick, reserveBytes,workUnits]);
         return { id, state: 'WAITING', tenantId, lane, generation };
       });
     } catch (error) {

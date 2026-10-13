@@ -1,0 +1,157 @@
+{
+  "schemaVersion": 1,
+  "reviewer": "/root/l2_sql",
+  "observedAt": "2026-10-13T20:59:41.8335143Z",
+  "scope": "Revisión focal nueva del delta peer-aborted READ ONLY y su interacción con errores SQL4xx, timeout y writers",
+  "source": {
+    "referencedSourceSha": "299ce3c0b6c821f03d0383b7da4d394af1e36475",
+    "mode": "delta de root posterior a299ce3c, captura pendiente; hashes exactos leídos después del repro local",
+    "files": [
+      {
+        "path": "server/saas/app.js",
+        "sha256": "685594680a72119443fa33201bf9819af1e26488b479e62257f5cf11019e5288"
+      },
+      {
+        "path": "server/saas/admission/transaction.js",
+        "sha256": "5f8176ec4ef20af51f4d443ed498a078a245ed11ba78b9d04321d2b0b52f46fc"
+      },
+      {
+        "path": "server/saas/writes/service.js",
+        "sha256": "42421d155c228995aafac8aca510fd74ffdf77ef4befdeedff1a69fd6aacb93b"
+      },
+      {
+        "path": "tests/qa/read-abort-lifecycle.test.js",
+        "sha256": "bafdd48ab292eec5263dc7daaf116612a27ff64d5012b41c802a1ecbdcb6a060"
+      }
+    ]
+  },
+  "method": {
+    "skill": "agent-skills:code-review-and-quality",
+    "axes": [
+      "correctness",
+      "readability",
+      "architecture",
+      "security",
+      "performance",
+      "verification"
+    ],
+    "productReadonly": true,
+    "SQL": "sintético en memoria",
+    "network": "socket HTTP loopback local real",
+    "SSH": false
+  },
+  "outcome": "PASS FOR LOCAL CORRECTION AND REVIEWED FRAGMENT ONLY; historical P1 repro preserved, exact artifact QA pending",
+  "findings": [
+    {
+      "id": "REV-READ-ABORT-01",
+      "priority": "P1",
+      "severity": "Required",
+      "status": "RESOLVED LOCAL / INDEPENDENT STATIC REVIEW PASS; QA REGRESSION PENDING",
+      "file": "server/saas/app.js",
+      "line": 67,
+      "endLine": 68,
+      "title": "Un error4xx no acredita fin SQL cuando el ROLLBACK perdió su ACK",
+      "relatedLocations": [
+        {
+          "file": "server/saas/app.js",
+          "line": 85
+        },
+        {
+          "file": "server/saas/admission/transaction.js",
+          "line": 53,
+          "endLine": 54
+        },
+        {
+          "file": "server/saas/writes/service.js",
+          "line": 24,
+          "endLine": 41
+        }
+      ],
+      "trigger": "GET propio de operación: peer cierra el socket mientras own_write_intent devuelve P0001 WRITE_ACCESS_DENIED; ROLLBACK posterior rechaza ECONNRESET",
+      "cause": "serializable descarta el client pero relanza el error original; safeError lo clasifica ACCESS_DENIED403; respond captura4xx y marca sqlSettled=true. El nuevo camino readOnly + peerResponseClosed termina el ticket sin fin SQL positivo",
+      "effect": "Qt/cupo se liberarían indebidamente tras error con fin SQL no probado. El caso no demuestra un efecto de negocio porque usa lectura y SQL sintético, sí invalida el proof de liberación",
+      "reproduction": {
+        "environment": "Node24.21.0 Windows x64 local; createApp/createWriteService.status/serializable actuales y socket loopback real; SQL/admission sintéticos",
+        "clientDiscarded": true,
+        "rollbackAcknowledged": false,
+        "actualFinish": 1,
+        "actualUncertain": 0,
+        "expectedFinish": 0,
+        "expectedUncertain": 1,
+        "PGVerified": false
+      },
+      "recommendation": "Propagar incertidumbre cuando falta acuse ROLLBACK o pasar proof de fin independiente; no derivar sqlSettled del status4xx. Añadir negativa con peer abort + error4xx + rollbackACK perdido, preservando normal4xx con ROLLBACK confirmado",
+      "resolveBefore": "Quality Gate/ensayo A8-A9 sobre nueva fuente exacta",
+      "evidence": "Salida local: {discarded:true,finished:1,uncertain:0,expectedFinished:0,sqlEndProven:false,remote:false}",
+      "resolution": {
+        "observedAt": "2026-10-13T21:05:05.3989730Z",
+        "status": "RESOLVED LOCAL / INDEPENDENT STATIC REVIEW PASS; EXACT ARTIFACT QA PENDING",
+        "mode": "Fuentes congeladas por service/root; SHA de captura pendiente, hashes propios abajo",
+        "files": [
+          {
+            "path": "server/saas/app.js",
+            "sha256": "50ff64290dc06c8d6a196ce780f39f6f3c6796899177cd145eeb2acee6e7b38a"
+          },
+          {
+            "path": "server/saas/admission/transaction.js",
+            "sha256": "34d91817001beb2de7d5037b65903b79e4c6646543829d73b3e56097dd6036e8"
+          },
+          {
+            "path": "server/saas/writes/service.js",
+            "sha256": "2b6d86238b2b02718d9c45a42adbf6ee509a95201e435684c79278c54665468a"
+          },
+          {
+            "path": "tests/qa/read-rollback-lifecycle.test.js",
+            "sha256": "3507d86ef2a02dbbbca18b4fc3dcc592df31e83c0c51aba14b81f787aad16056"
+          },
+          {
+            "path": "tests/qa/read-abort-lifecycle.test.js",
+            "sha256": "bafdd48ab292eec5263dc7daaf116612a27ff64d5012b41c802a1ecbdcb6a060"
+          },
+          {
+            "path": "tests/qa/write-service.test.js",
+            "sha256": "3052fc5e470c132f43b5614d8daa5385e97b9d597cb12bdbd62b48e1b5e9f39e"
+          }
+        ],
+        "change": "serializable produce RollbackUncertainError503 si falta ACK ROLLBACK, descarta el client y no reintenta el conflicto original. safeError prioriza COMMIT_UNCERTAIN/ROLLBACK_UNCERTAIN sobre alias4xx y sólo conserva causas fijas no enumerables",
+        "verification": {
+          "command": "node --test tests/qa/read-rollback-lifecycle.test.js tests/qa/read-abort-lifecycle.test.js tests/qa/cp017/read-closure.test.mjs tests/qa/cp017/resource-closure.test.mjs tests/qa/write-service.test.js",
+          "environment": "Node24.21.0 Windows x64; socket loopback HTTP real, SQL/admission en memoria",
+          "pass": 31,
+          "fail": 0,
+          "newRegressionCases": 7,
+          "cases": [
+            "peer abort + rollback perdido mantiene finish0/uncertain1",
+            "respuesta normal + rollback perdido mantiene reserva y503 seguro",
+            "peer y normal con ACK rollback confirmado conservan finish1 y403",
+            "conflicto40001 no reintenta tras rollback perdido",
+            "deadline de ROLLBACK prevalece sobre403 y descarta client",
+            "COMMIT no se degrada a403; causas privadas fijas"
+          ],
+          "executionProvenance": "Ejecución propia de esta revisión; no evidencia PostgreSQL real"
+        },
+        "reportedRedEvidence": "Service reportó RED del repro exacto antes del fix; el revisor había reproducido finish1/uncertain0 con SQL sintético y socket local antes del cambio",
+        "limitations": [
+          "No Quality/Integration Gate completo",
+          "Ensayo real A8/A9 requiere nuevo artefacto exacto; el histórico299ce3c no prueba el fix"
+        ]
+      }
+    }
+  ],
+  "existingTests": {
+    "file": "tests/qa/read-abort-lifecycle.test.js",
+    "covered": [
+      "lectura con COMMIT confirmado y lease terminado",
+      "DB_DEADLINE sin COMMIT",
+      "COMMIT de bytes incierto",
+      "writer resultado perdido después de COMMIT"
+    ],
+    "gap": "error4xx conservado después de ROLLBACK no confirmado",
+    "reexecuted": false
+  },
+  "priorReviewClarification": "El nuevo P1 limita el PASS estático previo review-writes-recovery.json respecto al tratamiento de errores4xx del controlPool; aquella revisión no concedió Gate ni probó este intercalado. Conservar ambas fuentes e historial",
+  "functionalFilesModified": [],
+  "infrastructureResourcesModified": 0,
+  "wholeQualityGateApproved": false,
+  "closureObservedAt": "2026-10-13T21:05:05.3989730Z"
+}

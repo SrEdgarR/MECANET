@@ -1,13 +1,21 @@
 # Expediente Mecanet SaaS
 
-Última revisión: **CP-016, 2026-10-13: Q-42 RESUELTA con evidencia humana/plataforma y mecanismos conocidos; Q-43 RESUELTA localmente por SC-008/DEC-060 APPROVED, auditoría completa estricta de la lane SaaS/backend PASS, revisión y regresión al SHA 0d8285cef117d6174a6053f18ceaac180f8aa1c5. Auditoría legacy FAIL conservada/TD-21. P1 única fase activa; L1 ocho PASS, Integration Gate NOT VERIFIED hasta PR/CI/merge/CI canónica. P0 PARCIAL y SaaS general NOT APPROVED; P1-L2 v0.2 solo candidato revisado, A/B pendientes.**
+Última revisión: **CP-017 EN CURSO / PRE-INTEGRATION, 2026-10-13.** P1 es la única fase activa; P0 PARCIAL/RG-001 y SaaS general NOT APPROVED. P1-L1 permanece TERMINAL por PR #2. A exacta de [P1-L2 v0.2-CP016](specs/P1-L2.md) APPROVED DEC-061 y B/QA propia/integración condicionada DEC-062; snapshot SHA-256 `ca975dc822c0bd5e872d3debe824abc536f662007513170f327727878ff3ac71`. Rama `codex/p1-l2`, base `a0098178fc27467bf4c12da0e97723e0b80ce683`. Doce criterios PASS de aceptación local/QA/review/Quality dentro de la baseline limitada; **Integration Gate NOT VERIFIED y P1-L2 aún NO TERMINAL**. Q-35 único BLOCKING de PR/CI/merge/verificación canónica y otros trece IDs FUTURE. Restore cerrado y cleanup acreditados; sin PR/CI/merge L2 nuevo, lanzamiento ni cambios compartidos.
+
+Evidencia acotada CP-017: producto `8199a414ff06220e147b062ce37fa55709311627`; artefacto QA `2b0dd67f7f19fa563ae5eae802da533572da7abe` / `sha256:85f959d949897298450b49a705d30b9688bfbaf9573d142fe4e08acae010e75c`. [Regresión local](evidence/cp017/local-canonical.json):258/258, sintaxis134 y Python PASS, con hashes de archivos propios y estado anterior al commit del arnés; no ejecución limpia atribuida al HEAD2b0. Canonicalización real de2b0:14 HTTP/79 SQL PASS acotados, B con huella intacta y readiness global503 esperada; no PASS de salud general. Conflictos40001/40P01 y drain/identity/block B conservan sus fuentes previas. [Navegador](evidence/cp017/browser.md) conserva fuente252 y20 checks/56 HTTP/seis escenarios con assets exactos; no se reatribuye a2b0.
+
+Restore cerrado de2b0: tres fases PASS,20 resultados antes/después,40 llamadas writer antiguas rechazadas,6 sesiones antiguas rechazadas y18 credenciales antiguas rechazadas/18 nuevas verificadas. Generación nueva `90d78c7c-9efd-437e-844a-a134ce84e514`, destino CLOSED, sin reapertura. [Cleanup](evidence/cp017/cleanup.json):6 contenedores propios STOPPED,20 consumidores ajenos intactos, datos/backups/journal KEEP, túnel propio4312 detenido y loopback18443 cerrado. [P1-L3](../.agentic/P1-L3_CANDIDATE.md) es sólo SUGGESTED/NOT APPROVED, sin A/B o recursos nuevos.
+
+[Matriz final](evidence/cp017/matrix.md), SHA-256 `3a8fe79607abefb16f32c5f78b56fb34242d6ba89884ee3ba219f9063351af70`: doce PASS por la unión trazada de evidencias, separados de integración. [Review consolidado](evidence/cp017/review-consolidated.json):0 críticos/0 REQUIRED abiertos. [Quality local](evidence/cp017/quality-local.json) PASS:258 contratos/134 archivos de sintaxis/55 pruebas UI/3 sanitizador/4 preload; auditorías SaaS/backend0, assets idénticos y cleanup PASS. Próximo paso habilitado: rama limpia/PR/CI/review/merge condicionados DEC-062 y comprobación de develop; sin otra aprobación genérica del lote.
+
+Último checkpoint cerrado (histórico): **CP-016, 2026-10-13: P1-L1 TERMINAL, ocho salidas PASS y Integration Gate PASS con [PR #2](https://github.com/SrEdgarR/MECANET/pull/2), head `04c5d41299bffc15e201c168677079809feb6a0f`, merge/develop `a0098178fc27467bf4c12da0e97723e0b80ce683`; [CI push](https://github.com/SrEdgarR/MECANET/actions/runs/38440714202), [CI PR](https://github.com/SrEdgarR/MECANET/actions/runs/38440720838) y [CI develop](https://github.com/SrEdgarR/MECANET/actions/runs/38441611717) PASS. Código local probado `0d8285cef117d6174a6053f18ceaac180f8aa1c5`; evidencia remota por sus SHA propios. Q-42/Q-43 resueltas para la lane aprobada; legacy audit FAIL/TD-21 conservado. P1 única fase EN CURSO; P0 PARCIAL/RG-001 y SaaS general NOT APPROVED. P1-L2 v0.2 candidato revisado, A/B pendientes y doce salidas funcionales NOT VERIFIED. Sin despliegues o recursos de infraestructura modificados.**
 
 ## Autoridad
 
 1. Instrucciones y decisiones explícitas del usuario.
 2. [Prompt Maestro v2.0](methodology/Prompt_Maestro_v2.0.md), copia exacta del adjunto adoptado. SHA-256 `d2dafd5f75df32aae33e421953fab6e99e723aa88744b918b555562c7b6a550d`.
 3. [Decisiones](DECISIONS.md): APPROVED es vinculante en su alcance; PROPOSED no lo es.
-4. [Baseline protegida P1-L1](specs/P1-L1.md): A APPROVED exacta de S-18/manifiesto L-01 y ocho cortes al commit `3b387b38784907b67e2209a35c3d5f400d70742e` (DEC-058). El resto del candidato SaaS sigue sin aprobación; sus borradores no autorizan implementación.
+4. Baselines protegidas: [P1-L1](specs/P1-L1.md), DEC-058, S-18/manifiesto L-01 y ocho cortes al commit `3b387b38784907b67e2209a35c3d5f400d70742e`; [P1-L2](specs/P1-L2.md), A exacta DEC-061 sobre el archivo completo v0.2-CP016 y B diferenciada DEC-062. El resto del candidato SaaS sigue sin aprobación; sus borradores no autorizan implementación.
 5. Código/evidencia describen lo observado, no convierten el legado en requisito.
 6. Documentos vivos y mapa derivados. Ante discrepancias, corregirlos sin alterar evidencia histórica.
 
@@ -15,10 +23,10 @@
 
 | Documento | Propósito | Estado |
 |---|---|---|
-| [Auditoría CP-016](audit/CP-016.md) | Triggers acreditados, SC-008 y preparación L2; integración Git por acreditar | Vivo; gate local PASS, remoto NOT VERIFIED |
+| [Auditoría CP-016](audit/CP-016.md) | Seguridad, SC-008, integración terminal L1 y candidato L2 de ese checkpoint | Histórica; Integration Gate L1 PASS, A/B L2 pendientes entonces |
 | [PROJECT_STATE](PROJECT_STATE.md) | Fase, readiness, restricciones, trazabilidad | Vivo |
 | [INVENTORY](INVENTORY.md) | Estado real, brechas, infraestructura y fuentes | DETECTED / REPORTED identificados |
-| [CHECKPOINTS](CHECKPOINTS.md) | Adopción, decisiones, diseños y evidencia local | CP-001…014 históricos; CP-015 vivo, integración limpia local y siguiente candidato |
+| [CHECKPOINTS](CHECKPOINTS.md) | Decisiones y evidencia por SHA/entorno | CP-001…016 conservados; CP-017 EN CURSO, cierre aún pendiente |
 | [ROADMAP](ROADMAP.md) | Dependencias y gates del trabajo | RG-001 APPROVED para el lote; resto conserva gates |
 | [DECISIONS](DECISIONS.md) | Registro de decisiones independientes | Mezcla explícita APPROVED / PROPOSED |
 | [TECH_DEBT](TECH_DEBT.md) | Riesgos y deuda con resolve-before | Vivo |
@@ -27,12 +35,13 @@
 | [Alternativas de arquitectura](../.agentic/ARCHITECTURE_OPTIONS.md) | Contratos históricos MT/MC y DEP-IND operativo propio | Fragmentos relacionales/Compose aprobados en L1; restantes y capacidad general pendientes |
 | [Propuesta de planes](../.agentic/SUBSCRIPTION_PROPOSAL.md) | Catálogo DOP/anualidad, lifecycle y economía recalculable | Catálogo DOP/USD, recurrencia y calendario APPROVED; proveedor/coste final pendientes |
 | [Feedback](../.agentic/METHODOLOGY_FEEDBACK.md) | AUD del proceso, separado de defectos del producto | Pendiente de revisión humana |
-| [Plan de trabajo](../tasks/plan.md) / [tareas](../tasks/todo.md) | Ocho cortes autorizados P1-L1 y dependencias posteriores | L1 COMPLETADA, ocho PASS; integración Git y lotes posteriores separados |
+| [Plan de trabajo](../tasks/plan.md) / [tareas](../tasks/todo.md) | L1 integrado y L2 previo a integración | L1 TERMINAL; L2 doce PASS limitados, Integration Gate pendiente y NO TERMINAL |
 | [Mapa local](project-map/index.html) | Vista interactiva del avance y de UI real | Derivado; nunca producción |
 | [Datos del mapa](PROJECT_MAP_DATA.json) | Datos estructurados, sin porcentaje inventado | Derivado |
 | [Fuentes externas](evidence/SOURCES.md) | Proveedor, consulta, alcance y revalidación | VENDOR-DOCUMENTATION |
 | [Candidato de especificación](../.agentic/SPECIFICATION_CANDIDATE.md) | Candidato general v0.12-CP012; referencia histórica del fragmento limitado | SaaS general CANDIDATE / NOT APPROVED |
 | [Baseline protegida P1-L1](specs/P1-L1.md) | Versión v0.2-CP012/S-18, manifiesto L-01 y ocho cortes al Git aprobado | APPROVED DEC-058, alcance limitado |
+| [Baseline protegida P1-L2](specs/P1-L2.md) | Archivo completo v0.2-CP016 y snapshot byte exacto | APPROVED DEC-061; B/QA/integración condicionada DEC-062 |
 | [Auditoría CP-014](audit/CP-014.md) | Matriz integrada, negativas, admisión, ciclo, UI, aislamiento y trazabilidad por versión | Histórica; ocho PASS L1, Integration Gate local preparado |
 | [Auditoría CP-013](audit/CP-013.md) | A/B/QA, implementación y pendientes de salida de ese checkpoint | Histórica; cierre L1 NOT VERIFIED entonces, restore cerrado conservado |
 | [Auditoría CP-011](audit/CP-011.md) | RG-001 aplicado, S-18 limitado, F14-L1/entorno/A/B separados | Histórico bf28c45; no aprobación del candidato Mongo |
@@ -51,9 +60,9 @@
 
 ## Registro de especificaciones canónicas del SaaS general
 
-**Alcance aprobado para implementación:** [P1-L1 v0.2-CP012](specs/P1-L1.md), S-18, manifiesto L-01 y ocho cortes a la versión exacta `3b387b38784907b67e2209a35c3d5f400d70742e`. DEC-058 registra fuente humana directa para A, B y QA propia; no hace falta otra aprobación por corte. Diseño Mongo/gestión Coolify anterior no incorporado como mecanismo vigente. No se aprueba todo el SaaS ni infraestructura compartida por extensión.
+**Baselines limitadas aprobadas para implementación:** [P1-L1 v0.2-CP012](specs/P1-L1.md), S-18, manifiesto L-01 y ocho cortes a la versión exacta `3b387b38784907b67e2209a35c3d5f400d70742e`, por DEC-058; [P1-L2 v0.2-CP016](specs/P1-L2.md), archivo completo al checkpoint fuente `704b4ae22f1af7fe868d3faf6bdf17a227fb0f50`, [snapshot protegido](specs/p1-l2-approved/baseline.md) SHA-256 `ca975dc822c0bd5e872d3debe824abc536f662007513170f327727878ff3ac71`, A exacta DEC-061 y B/QA/integración condicionada DEC-062. Las autorizaciones no requieren otra aprobación por corte. L1 TERMINAL; L2 tiene doce criterios de aceptación limitada PASS e Integration Gate pendiente, NO TERMINAL. Diseño Mongo/gestión Coolify anterior no incorporado como mecanismo vigente. No se aprueba todo el SaaS ni infraestructura compartida por extensión.
 
-El [candidato v0.12-CP012](../.agentic/SPECIFICATION_CANDIDATE.md) reúne estas áreas con contratos detallados. El SaaS general sigue como borrador revisable; únicamente S-18 y las referencias selectivas de L-01/DEP-IND a la versión Git aprobada constituyen la baseline protegida. La revisión F14 del alcance limitado y sus gates de entrada están acreditados; F14 global permanece PARCIAL. Las verificaciones del código y la salida de L1 conservan sus criterios propios, separados de la aprobación del diseño.
+El [candidato v0.12-CP012](../.agentic/SPECIFICATION_CANDIDATE.md) reúne estas áreas con contratos detallados y conserva el antecedente de L1. El SaaS general sigue como borrador revisable. La baseline protegida L1 incorpora únicamente S-18 y las referencias selectivas de L-01/DEP-IND a su versión Git aprobada; L2 se protege por su archivo completo y snapshot exactos del párrafo anterior, sin incorporación transitiva del resto del SaaS. Las revisiones del alcance limitado y sus gates de entrada están acreditados; F14 global permanece PARCIAL. Aprobación del diseño, evidencia de salida e integración conservan sus criterios separados para cada lote.
 
 | Área canónica | Sección del candidato y contrato detallado | Cierre antes de |
 |---|---|---|

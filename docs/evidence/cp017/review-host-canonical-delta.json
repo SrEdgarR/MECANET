@@ -1,0 +1,61 @@
+{
+  "reviewId": "CP017-REVIEW-HOST-CANONICAL-DELTA",
+  "reviewer": "l2_sql",
+  "recordedAt": "2026-10-13T22:34:57.543Z",
+  "status": "PASS FOR FOCAL STATIC REVIEW ONLY",
+  "requiredFindings": 0,
+  "realQaExecutedByReviewer": false,
+  "sources": [
+    {
+      "path": "tests/qa/cp017/host.py",
+      "localFileSha256": "9f2328e00aca0b843c184b2a829a741a48cde54535731cccfa0ae7d359fd8941"
+    },
+    {
+      "path": "scripts/ci/p1-l1.mjs",
+      "localFileSha256": "1a0be8febc9404ab41db849488328041078656d0b7f8618edf8c3b54f1eea987"
+    },
+    {
+      "path": ".github/workflows/p1-l1-verify.yml",
+      "localFileSha256": "9126d290385ec36ebf29ebfcf3480523ae06d291edff7782595ca0e9877f500e"
+    }
+  ],
+  "scope": "Only the parent-identified b14-to-working canonical prepare/verify dispatch/profile and promote --blocked-b changes plus explicit CI unit entry; no Git diff fetched and no whole-host audit asserted",
+  "checks": [
+    "canonical accepts exactly four argv elements and only prepare|verify; fixed helper filename and accepted artifact QA_CODE_SHA are supplied as subprocess arguments",
+    "prepare uses harness and rejects API/web live overlap; helper independently additionally requires worker/web/API stopped proofs and actual SaaS0/CLOSED before insertion",
+    "verify uses existing private probe profile intentionally with runtime alive; no public port, shared host mount, build, pull or implicit dependency start added",
+    "promote accepts only default argc3 or the exact --blocked-b flag argc4; no implicit private mode",
+    "blocked-B promotion remains one exact POLICY A; B is RO/TENANT ACK/CLOSED/debt0 with identical exact JSONB-text hashes; global false is labeled explicitly",
+    "CI explicit file list names canonical-gap.unit.test.mjs at line33, not a remote runner; guarded import performs no connection or seeding",
+    "Workflow retains contents:read, pinned checkout/setup-node, no credentials persistence and local-only verification; no deploy step added"
+  ],
+  "resolvedRequired": [
+    {
+      "id": "CI-CANONICAL-FILENAME",
+      "observed": "Explicit list initially named nonexistent canonical-gap.test.mjs after the final file was named canonical-gap.unit.test.mjs",
+      "resolution": "Parent corrected exact entry; byte-current file1a0be8febc9404ab41db849488328041078656d0b7f8618edf8c3b54f1eea987 reread and final six units independently executed",
+      "status": "RESOLVED LOCAL"
+    }
+  ],
+  "sixAxes": {
+    "correctness": "Typed exact argv/profile dispatch and fixed helper path; final CI filename corrected",
+    "security": "Own-cohort entryguard and read-only accepted source/secrets mounts; no shared resources or arbitrary filename dispatch",
+    "compatibility": "Default promotion behavior retained; explicit blocked-B mode preserves original B restrictions",
+    "maintainability": "Small fixed allowlist additions, no generic shell-command extension",
+    "resources": "Existing probe/harness limits; helper finite envelope supplies operation bounds",
+    "verification": "Focal code inspection and six final pure units; parent reports full258/258 local suite,134 syntax files and hostAST PASS"
+  },
+  "reportedParentChecks": {
+    "classification": "REPORTED BY ROOT, not rerun in this review",
+    "localTests": 258,
+    "localFailures": 0,
+    "syntaxFiles": 134,
+    "hostAst": "PASS"
+  },
+  "limits": [
+    "No controller, Docker, PostgreSQL, HTTP, SSH or Git operation executed by this reviewer",
+    "Stopped-owner proof and accepted-artifact preflight remain external prerequisites; the dispatch does not itself establish them",
+    "No deploy-trigger absence or full Integration Gate PASS follows from this focal CI/controller review"
+  ],
+  "newInfrastructureResourcesByReviewer": 0
+}

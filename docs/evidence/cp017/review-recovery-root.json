@@ -1,0 +1,59 @@
+{
+  "reviewId": "CP017-RECOVERY-ROOT-DELTA-01",
+  "observedAtUtc": "2026-10-13T20:20:24Z",
+  "reviewer": "/root/l2_service",
+  "informationStatus": "DETECTED",
+  "scope": "Revisión independiente de la última corrección del controlador QA propio, copia física, destino aislado y rollback compatible cerrado. Las correcciones de recovery.mjs fueron escritas por este revisor y conservan su evidencia unitaria separada; no se presentan como una segunda revisión independiente completa.",
+  "source": {
+    "historicalRuntimeAnchor": "1783fd4",
+    "historicalRuntimeAnchorProvenance": "Reportado directamente por /root; no se inspeccionó Git ni se atribuye el delta actual a ese código probado.",
+    "localArtifactCodeSha": "7edf30ece2bc76dd396535d66bfaeac609c082a2",
+    "localArtifactDigest": "sha256:6de1423922b79172dc17fba64b6d06a3cc6b5d5ef5f52bc41a80a7f72285787c",
+    "localArtifactMetadata": ".qa-private/cp017-artifact.json",
+    "reviewedFileSha256": {
+      "tests/qa/cp017/host.py": "a0388e953a552e980780bf2c9d26048720536ac99d7e2cd8c027fa998deab622",
+      "tests/qa/cp017/rollback.mjs": "548cd2f01a499c4ecd3121782517a82f705570e5a807cdcac78024aae1508b7c",
+      "tests/qa/cp017/rollback.unit.test.mjs": "d25fbbd0bcf17ac887e48b87c3024e5b62ace065466020c36cdb07a8c3269fd1",
+      "tests/qa/cp017/recovery.mjs": "ea76eab00c136db4162851be795f7d8c9670ca321f5f1f5847cb4b5ec7b7ebab",
+      "tests/qa/cp017/recovery.unit.test.mjs": "a63e5bf9b9e3f9fad6d48f24a34197dd027e62d2c1cf61c820a6e782540e7257",
+      "server/saas/db/migrations/003-control-writers.sql": "c5036db5fd1a71ea94e7d7feee25e299dcb074e25108465304ac6dff92955d07",
+      "server/saas/db/migrations/003-tenant-writers.sql": "5fe454b89dbc5f821f742456deb2ebde08b9142048b2eac33ef9352eb87bce06",
+      "server/saas/db/migrations/004-tenant-writers-fix.sql": "df6f2229217479c45ec21ef31165ed8e16d939300c76f313e3f2d2b79555d854"
+    },
+    "artifactMembership": "Recovery, rollback, unidades y SQL indicados coinciden con el manifest local. host.py actual es un delta posterior: el manifest contiene f0dfde6a043a335739dfb9c6a70607ca331c581ea6e54af595a895a87b6d85fc. No se acredita su presencia remota por lectura local."
+  },
+  "resolvedFindings": [
+    {"id":"RRC-01","severity":"REQUIRED","state":"RESOLVED IN SOURCE","finding":"Copia ejecutada como root dejaba el destino sin acceso para PostgreSQL UID999.","resolution":"El controlador verifica la ruta exacta propia restore/data, rechaza symlinks y aplica/verifica UID/GID999 sólo en ese destino nuevo."},
+    {"id":"RRC-02","severity":"REQUIRED","state":"RESOLVED IN SOURCE","finding":"copytree podía seguir enlaces y copiar archivos no incluidos en el manifest.","resolution":"Rechazo de symlinks antes de copiar, inventario completo igual al manifest, rutas contenidas, tamaños y SHA256 exactos antes del destino."},
+    {"id":"RRC-03","severity":"REQUIRED","state":"RESOLVED IN SOURCE","finding":"El cierre general omitía el proyecto propio de restauración.","resolution":"stop_own verifica el nombre del Compose restore y detiene explícitamente ambos proyectos propios sin borrar persistencia ni tocar otros proyectos."},
+    {"id":"RRC-04","severity":"REQUIRED","state":"RESOLVED IN SOURCE","finding":"Cookie y CSRF del rollback se almacenaban en el directorio de evidencias.","resolution":"Custodia privada en /run/qa-journal/rollback-private.json, modo0600 y directorio propio0700; el probe sólo recibe el bind propio requerido. El journal privado y su contenido no deben formar parte de una recopilación documental."},
+    {"id":"RRC-05","severity":"REQUIRED","state":"RESOLVED IN SOURCE AND LOCAL UNIT","finding":"Una lista vacía o bandera booleana podía sustituir la procedencia de las API.","resolution":"Prueba sellada en modo400, controllerSourceSha exacto, dos instancias y CIDs distintos, runtimeSourceSha/digest válidos y montajes realmente observados por el controlador."},
+    {"id":"RRC-06","severity":"REQUIRED","state":"RESOLVED IN SOURCE AND LOCAL UNIT","finding":"Compatibilidad de rollback no exigía el inventario exacto de migraciones.","resolution":"Lista cerrada de cinco archivos registrados, incluyendo004, con igualdad de cada path/hash y rechazo del release schema1 antes de iniciar procesos."}
+  ],
+  "verification": {
+    "localEnvironment": "Windows x64, Node.js24.21.0; sin PostgreSQL real en esta revisión",
+    "rollbackUnit": {"state":"PASS","passed":3,"failed":0,"command":"node --test tests/qa/cp017/rollback.unit.test.mjs"},
+    "mutationProbe": {"state":"PASS FOR ONE GUARD","method":"Se deshabilitó únicamente controllerSourceSha en una copia del módulo mantenida en RAM. El caso negativo rechazado por la fuente original fue aceptado por la mutación, demostrando que la prueba existente detecta esa regresión. No se modificó ningún archivo fuente.","mutationScoreClaimed":false},
+    "recoveryUnitReused": {"state":"PASS","passed":10,"failed":0,"scope":"Evidencia local de la corrección anterior del revisor, ligada al hash recovery/unit indicado. No se repitió el ensayo completo ni se atribuyó PASS PostgreSQL.","syntax":"PASS"}
+  },
+  "pending": [
+    {"id":"RRC-P01","state":"NOT VERIFIED","resolveBefore":"Usar o atribuir al nuevo checkpoint el controlador host corregido","need":"Captura nueva del delta o comprobación separada del hash del controlador realmente transferido. El manifest7edf no acredita el host.py actual."},
+    {"id":"RRC-P02","state":"NOT VERIFIED","resolveBefore":"Salida L2-A11","need":"Ejecutar copia/destino/restore cerrado con integridad, cuotas, journal/tombstone causal, consultas de resultados y negativas de guardas/sesiones/credenciales en PostgreSQL18.6ARM64 propio."},
+    {"id":"RRC-P03","state":"NOT VERIFIED","resolveBefore":"Salida L2-A10","need":"Ejecutar capture/rollback/forward con barrera activa, identidad A vigente y prueba de las dos API/montajes; conservar las observaciones SQL exactas antes y después."},
+    {"id":"RRC-P04","state":"NOT VERIFIED","resolveBefore":"Cierre operativo del ensayo","need":"Verificar en el host que ambos proyectos propios quedaron detenidos y que los consumidores ajenos conservan sus hechos iniciales."}
+  ],
+  "limits": {
+    "remoteActionsPerformedByReviewer": false,
+    "sshUsed": false,
+    "gitChangedOrInspected": false,
+    "credentialsOrPrivateJournalReadByReviewer": false,
+    "functionalSourceChangedDuringThisReview": false,
+    "sharedInfrastructureChanged": false,
+    "productionOrNexoraChanged": false,
+    "baselineApprovalOrIntegrationGateGranted": false,
+    "generalCapacityVerified": false,
+    "publicLaunchVerified": false,
+    "externalBackupOrCommercialRpoRtoVerified": false,
+    "writerReopeningAfterRestore": "NOT VERIFIED; fuera del ensayo cerrado, no se utiliza como condición adicional inventada para L2-A11"
+  }
+}

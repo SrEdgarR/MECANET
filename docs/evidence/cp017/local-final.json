@@ -1,0 +1,42 @@
+{
+  "status": "PASS FOR LOCAL CONTRACTS AND SYNTAX ONLY",
+  "sourceHeadBeforeHarnessCommit": "b7e08cc2827d8426ff35bbcfdce8673095bfd3eb",
+  "functionalSource": "8199a414ff06220e147b062ce37fa55709311627",
+  "worktreeDirtyAtTest": true,
+  "environment": "Windows x64 / Node24.21.0",
+  "tests": 246,
+  "pass": 246,
+  "fail": 0,
+  "syntaxFiles": 132,
+  "pythonControllerCompile": "PASS",
+  "baselineHash": "ca975dc822c0bd5e872d3debe824abc536f662007513170f327727878ff3ac71",
+  "promptHash": "d2dafd5f75df32aae33e421953fab6e99e723aa88744b918b555562c7b6a550d",
+  "localLogHashes": {
+    "contracts": "bb23241136cffed92a3b8b73ee886fa71f891f04858f2e4e00c3fa72b899a05a",
+    "syntax": "4c5ec05984a3770c537783d3addf83be83bd179bf862ed6a1228dd9034f31d42"
+  },
+  "testedFiles": [
+    {
+      "path": "tests/qa/cp017/host.py",
+      "sha256": "57361890d67898bbf0b692d5e9af0076abd0723f7e7dc3ecddac55f28520b7a4"
+    },
+    {
+      "path": "tests/qa/cp017/recovery.mjs",
+      "sha256": "344281ec4e0f8c54f49682453eecf47b69b52aa37c38753602cd7fc20ad6bc65"
+    },
+    {
+      "path": "tests/qa/cp017/revocation-live.mjs",
+      "sha256": "753367320de5ea9fc199df95b189e9771c6f0055b5de147c2386576523f69ea6"
+    },
+    {
+      "path": "tests/qa/cp017/concurrency-live.mjs",
+      "sha256": "f5e60973d5e8a83942904a7fc3c9d406cf1989cd7420ad68d8dde258d014cb23"
+    },
+    {
+      "path": "scripts/ci/p1-l1.mjs",
+      "sha256": "a7583d701a793bcb30fa52df2eacf2b7a89381cc47442c61c4d23287636cd6b1"
+    }
+  ],
+  "remoteQA": "NOT ATTRIBUTED TO THIS LOCAL RUN",
+  "wholeCriteria": "NOT VERIFIED BY TEST COUNT"
+}
