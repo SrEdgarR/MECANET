@@ -155,11 +155,11 @@ def accept_artifact():
  print(json.dumps({'artifactAccepted':True,'codeSha':manifest['codeSha'],'digest':manifest['digest'],'files':len(expected)}))
 
 def own_tool():
- own();assert len(sys.argv)>=3 and sys.argv[2] in ['foundation','migration','sql','integration','recovery-check','corrective','resources-api1','resources-api2','promote','quota','revocation','quota-boundary','quota-growth','read-closure']
+ own();assert len(sys.argv)>=3 and sys.argv[2] in ['foundation','migration','sql','integration','recovery-check','corrective','resources-api1','resources-api2','promote','quota','revocation','quota-boundary','quota-growth','read-closure','claim-corrective']
  action=sys.argv[2];live=any(x['running'] for x in facts() if x['project']==PROJECT and x['name'].endswith(('-api1-1','-api2-1','-web-1')))
  service='probe' if action in ['sql','integration','revocation','recovery-check'] or action=='quota' and (len(sys.argv)<5 or sys.argv[4]!='closed') else 'harness';assert service=='probe' or not live,'HARNESS_RUNTIME_OVERLAP'
  artifact=json.loads((ROOT/'evidence/artifact.json').read_text())
- files={'foundation':'prepare.mjs','migration':'migration-live.mjs','sql':'sql-live.mjs','integration':'integration.mjs','recovery-check':'recovery-check.mjs','corrective':'corrective.mjs','resources-api1':'resource-closure.mjs','resources-api2':'resource-closure.mjs','promote':'promote.mjs','quota':'quota-live.mjs','revocation':'revocation-live.mjs','quota-boundary':'quota-boundary.mjs','quota-growth':'quota-growth-boundary.mjs','read-closure':'read-closure.mjs'}
+ files={'foundation':'prepare.mjs','migration':'migration-live.mjs','sql':'sql-live.mjs','integration':'integration.mjs','recovery-check':'recovery-check.mjs','corrective':'corrective.mjs','resources-api1':'resource-closure.mjs','resources-api2':'resource-closure.mjs','promote':'promote.mjs','quota':'quota-live.mjs','revocation':'revocation-live.mjs','quota-boundary':'quota-boundary.mjs','quota-growth':'quota-growth-boundary.mjs','read-closure':'read-closure.mjs','claim-corrective':'claim-corrective.mjs'}
  args=['run','--rm','--no-deps','-e','QA_CODE_SHA='+artifact['codeSha']]
  if action=='foundation':args+=['-e','QA_STAGE=foundation']
  if action=='quota':
@@ -321,7 +321,7 @@ def rollback_target():
  current=json.loads((ROOT/'evidence/artifact.json').read_text());target=ROOT/'artifacts'/sys.argv[2].split(':')[1];assert target.resolve().parent==ROOT/'artifacts'
  desired=json.loads((target/'artifact.json').read_text());assert desired['digest']==sys.argv[2]
  latest=json.loads((ROOT/'artifacts'/current['digest'].split(':')[1]/'artifact.json').read_text());expected=[e for e in latest['entries'] if e['path'].startswith('server/saas/db/migrations/')]
- names=['001-control.sql','002-tenant.sql','003-control-writers.sql','003-tenant-writers.sql','004-tenant-writers-fix.sql'];assert len(expected)==len(names) and {e['path'].split('/')[-1] for e in expected}==set(names)
+ names=['001-control.sql','002-tenant.sql','003-control-writers.sql','003-tenant-writers.sql','004-tenant-writers-fix.sql','005-control-claim-ticket.sql'];assert len(expected)==len(names) and {e['path'].split('/')[-1] for e in expected}==set(names)
  assert len([e for e in desired['entries'] if e['path'].startswith('server/saas/db/migrations/')])==len(names)
  for entry in expected:assert any(e['path']==entry['path'] and e['sha256']==entry['sha256'] for e in desired['entries']),'ROLLBACK_SCHEMA_INCOMPATIBLE'
  config=json.loads(compose('--profile','*','config','--format','json'))

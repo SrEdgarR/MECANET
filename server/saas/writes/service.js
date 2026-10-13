@@ -70,6 +70,10 @@ export function createWriteService({controlPool,authority,writerPools,readerPool
    if(intent.status==='REJECTED'){const projections=await control('SELECT * FROM saas.own_write_projection($1::uuid,$2::uuid,$3::text,$4::uuid)',[canonical.tenantId,operationId,sid,a.generation],deadline);intent.reason_code=projections[0]?.reason_code}
    return (await localResult(await authorize(a,sid,canonical.tenantId,action),intent,deadline)).result;
   }
+  // Registration preserves its original HTTP ticket. Even a duplicate in
+  // this same API process must not claim using another request's end proof.
+  // A terminal same-key replay above remains an authorized result read.
+  if(canonicalUuid(intent.ticket_id)!==ticketId)throw failure('OPERATION_PENDING',409);
   let claimed;
   try{const rows=await control('SELECT * FROM saas.claim_write_intent($1::uuid,$2::uuid,$3::text,$4::uuid,$5::uuid)',[canonical.tenantId,operationId,sid,a.generation,ownerId],deadline);claimed=rows[0]}
   catch(error){throw safeError(error)}

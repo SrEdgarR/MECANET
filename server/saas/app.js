@@ -186,7 +186,6 @@ export function createApp({origin,sessionPool,sessionSecret,authority,admission,
  app.use('/api',(_req,res)=>res.status(404).json({error:'NOT_FOUND'}));
  app.use((_req,res)=>res.status(404).json({error:'NOT_FOUND'}));
  app.use((error,_req,res,_next)=>{
-  if(res.headersSent||res.destroyed)return;
   const allowed=new Set(['INVALID_LOGIN','INVALID_CREDENTIALS','PURPOSE_MISMATCH','INVALID_TENANT','INVALID_QUERY','INVALID_ORIGIN','CSRF_REJECTED','SESSION_EXPIRED','ACCESS_DENIED','TENANT_UNAVAILABLE','TENANT_QUOTA','GLOBAL_QUOTA','CLOCK_UNAVAILABLE','QUEUE_EXPIRED','ADMISSION_CLOSED','DRAINING','AUTHORITY_UNAVAILABLE','AUTHORITY_CHANGED','INVALID_WRITE','EPOCH_CONFLICT','KEY_CONFLICT','SKU_CONFLICT','OPERATION_PENDING','PRODUCT_LIMIT','LOGICAL_QUOTA','WRITE_CLOSED','WRITE_UNCERTAIN','NOT_FOUND']);
   const code=allowed.has(error.code)?error.code:'SERVICE_UNAVAILABLE';
   const status=Number.isInteger(error.status)&&error.status>=400&&error.status<=599?error.status:503;
@@ -199,6 +198,9 @@ export function createApp({origin,sessionPool,sessionSecret,authority,admission,
   const causeReason=new Set(['CANONICAL_INPUT_INVALID','IDEMPOTENCY_CONFLICT','WRITER_FENCE_CLOSED','WRITE_SESSION_EXPIRED','WRITE_ACCESS_DENIED','WRITE_GUARDS_CHANGED','GROWTH_QUOTA','CONTROL_GROWTH_QUOTA','OPERATION_ACCESS_DENIED']).has(error.causeReason)?error.causeReason:undefined;
   const causeRelation=new Set(['balances','movements','writer_fence','quota_state','operations','audit','products','write_intents','write_growth_reservations','write_projections','tenant_writer_state']).has(error.causeRelation)?error.causeRelation:undefined;
   try{reportError({requestId:res.getHeader('X-Request-Id'),code:diagnostic.has(error.code)?error.code:'UNCLASSIFIED',status,errorType,...(location?{location}:{}),...(causeCode?{causeCode}:{}),...(causeReason?{causeReason}:{}),...(causeRelation?{causeRelation}:{})})}catch{}
+  // A post-response settlement error still needs a safe diagnostic. It must
+  // never attempt to send another response or include request/body/SQL data.
+  if(res.headersSent||res.destroyed)return;
   if(status===429||status===503)res.set('Retry-After','1');
   res.status(status).json({error:code});
  });

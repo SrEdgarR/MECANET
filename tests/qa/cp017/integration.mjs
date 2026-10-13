@@ -68,7 +68,7 @@ async function counters(tenantId=TENANT_A){
 }
 async function operationRows(operationId,tenantId=TENANT_A){
  const local=(await tenant('SELECT id,actor_id,action,data_epoch,request_hash,status,result FROM inventory.operations WHERE id=$1',[operationId],tenantId))[0]??null;
- const intent=(await central('SELECT i.operation_id,i.actor_id,i.action,i.status,i.request_hash,i.writer_version,i.ticket_id,r.status AS reservation_status,r.tenant_bytes_reserved,r.products_reserved,r.control_bytes_reserved,t.state AS ticket_state FROM saas.write_intents i JOIN saas.write_growth_reservations r USING(tenant_id,operation_id) JOIN saas.tickets t ON t.id=i.ticket_id WHERE i.tenant_id=$1 AND i.operation_id=$2',[tenantId,operationId]))[0]??null;
+ const intent=(await central('SELECT i.operation_id,i.actor_id,i.action,i.status,i.request_hash,i.writer_version,i.owner_id,t.owner AS ticket_owner,i.ticket_id,r.status AS reservation_status,r.tenant_bytes_reserved,r.products_reserved,r.control_bytes_reserved,t.state AS ticket_state FROM saas.write_intents i JOIN saas.write_growth_reservations r USING(tenant_id,operation_id) JOIN saas.tickets t ON t.id=i.ticket_id WHERE i.tenant_id=$1 AND i.operation_id=$2',[tenantId,operationId]))[0]??null;
  return {local,intent};
 }
 async function waitFor(fn,predicate,timeout=6500){const until=performance.now()+timeout;while(performance.now()<until){const value=await fn();if(predicate(value))return value;await sleep(50)}throw Error('QA_CONDITION_NOT_PROVEN')}
@@ -117,9 +117,11 @@ try{
  });
  await caseOf('same-create-key-two-api-concurrent',['L2-A6'],async()=>{
   const id=randomUUID(),input={sku:`DUP-${id.slice(0,8)}`,name:'Concurrent synthetic'},before=(await tenant('SELECT count(*)::int AS n FROM catalog.products'))[0].n;
+  report.races??={};report.races.sameKey={operationId:id,stage:'concurrent-post'};
   const replies=await Promise.all([write(a,id,input),write(a2,id,{name:input.name,sku:input.sku})]);
   const publicCode=reply=>typeof reply.json?.error==='string'&&/^[A-Z_]{1,60}$/.test(reply.json.error)?reply.json.error:null;
   const initialReplies=replies.map(reply=>({status:reply.status,publicCode:publicCode(reply)}));
+  report.races.sameKey.initialReplies=initialReplies;report.races.sameKey.stage='consult';
   for(const reply of replies)assert(reply.status===201||reply.status===409&&publicCode(reply)==='OPERATION_PENDING'||reply.status===503,'CONCURRENT_RESPONSE_OUTSIDE_APPROVED_CONTRACT');
   // A collision may return a bounded uncertain/dependency response before the
   // other executor projects. The UUID/canonical input are never replaced. Query
@@ -130,7 +132,7 @@ try{
    if(reply.status===200&&reply.json.state==='CONFIRMED'){assertStatus(reply,200);consulted=reply.json.result;break}
    assert([200,404,409,429,503].includes(reply.status),'QUERY_RESPONSE_OUTSIDE_APPROVED_CONTRACT');await sleep(150);
   }
-  assert(consulted,'CONCURRENT_RESULT_NOT_VERIFIED');
+  assert(consulted,'CONCURRENT_RESULT_NOT_VERIFIED');report.races.sameKey.stage='explicit-replay';
   for(let index=0;index<replies.length;index++){
    if(replies[index].status===201){assert.deepEqual(replies[index].json,consulted);continue}
    for(let attempt=0;attempt<4;attempt++){
@@ -141,17 +143,19 @@ try{
   }
   replies.forEach(r=>assertStatus(r,201));assert.deepEqual(replies[0].json,replies[1].json);assert.deepEqual(replies[0].json,consulted);otherProduct=replies[0].json.productId;
   const rows=(await tenant('SELECT (SELECT count(*) FROM catalog.products)::int AS products,(SELECT count(*) FROM inventory.operations WHERE id=$1)::int AS operations,(SELECT count(*) FROM inventory.audit WHERE operation_id=$1)::int AS audits',[id]))[0];
-  assert.deepEqual(rows,{products:before+1,operations:1,audits:1});const settled=await waitFor(()=>operationRows(id),value=>value.intent?.reservation_status==='SETTLED');assert.equal(settled.intent.status,'CONFIRMED');
+  assert.deepEqual(rows,{products:before+1,operations:1,audits:1});report.races.sameKey.stage='original-growth-settlement';report.races.sameKey.beforeSettlement=(await operationRows(id)).intent;const settled=await waitFor(()=>operationRows(id),value=>value.intent?.reservation_status==='SETTLED');assert.equal(settled.intent.status,'CONFIRMED');
   return {operationId:id,initialReplies,twoApiHttpConcurrency:true,singleProduct:true,singleAudit:true,knownIdQueryBeforeExplicitSameKeyReplay:true,originalGrowthSettled:true};
  },{dependsOn:['normalized-canonical-two-api-and-uc']});
  await caseOf('competing-sku-distinct-keys-two-api',['L2-A6','L2-A8'],async()=>{
   const ids=[randomUUID(),randomUUID()],sku=`RACE-${ids[0].slice(0,8)}`,inputs=[{sku,name:'SKU race A ficticio'},{sku,name:'SKU race B ficticio'}];
+  report.races??={};report.races.sku={operationIds:ids,stage:'concurrent-post'};
   const replies=await Promise.all(ids.map((id,index)=>write(index===0?a:a2,id,inputs[index])));
   const initialReplies=replies.map(r=>({status:r.status,publicCode:r.json?.error??null}));
   for(let index=0;index<2;index++)for(let attempt=0;[429,503].includes(replies[index].status)&&attempt<4;attempt++){
    const observed=await operationRows(ids[index]);assert.notEqual(observed.intent?.status,'UNKNOWN','UNCERTAIN_SKU_REQUIRES_RECONCILIATION');
    await sleep(200);replies[index]=await write(index===0?a:a2,ids[index],inputs[index]);
   }
+  report.races.sku.finalReplies=replies.map(r=>({status:r.status,publicCode:r.json?.error??null,resultState:r.json?.state??null,resultCode:r.json?.code??null}));report.races.sku.stage='verify-terminal-results';
   assert.deepEqual(replies.map(r=>r.status).sort(),[201,409]);
   const rejected=replies.find(r=>r.status===409);assert.equal(rejected.json.state,'REJECTED');assert.equal(rejected.json.code,'SKU_CONFLICT');
   const rows=(await tenant('SELECT (SELECT count(*) FROM catalog.products WHERE sku=$1)::int AS products,(SELECT count(*) FROM inventory.operations WHERE id=ANY($2::uuid[]))::int AS operations,(SELECT count(*) FROM inventory.audit WHERE operation_id=ANY($2::uuid[]))::int AS audits',[sku,ids]))[0];

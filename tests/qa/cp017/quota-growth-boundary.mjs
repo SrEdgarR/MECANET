@@ -12,7 +12,7 @@ import {sanitizeSqlFailure} from './sql-live.mjs';
 const PROJECT='mecanet-qa-p1l2-cp017',A='11111111-1111-4111-8111-111111111111',B='22222222-2222-4222-8222-222222222222';
 const MAX=9223372036854775807n,SHA=/^[a-f0-9]{64}$/,UUID=/^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$/;
 const fail=code=>{throw Object.assign(Error(code),{code})},digest=value=>createHash('sha256').update(value).digest('hex');
-export const GROWTH_PLAN=Object.freeze({project:PROJECT,criteria:['L2-A8 tenant conservative reservation last byte','L2-A8 reduced quota under causally retained uncertain growth'],outerRollbackRequired:true,httpAcceptance:false,businessPersistentMutations:0,quotaPersistentIncreases:0,permissionChanges:0,newRoles:0,noRefund:true,maxRuntimeMs:45000,maxQueries:180,poolPerDatabase:1,maxDatabases:3,sqlMs:2000,lockMs:500,reservationBytes:'32768',controlBytes:'16384',globalMaximum:'16777216',barrierMaximum:'2097152',ephemeralTicketCount:1,preparation:'bounded fixture inside private TX; real saas_api functions register/claim/mark_unknown; no grant or identity activation',policy:'CLOSED local real set_writer_policy under SET LOCAL maintainer, always ROLLBACK; central private policy version +1 and no counter adjustment',stillNotVerified:['HTTP/admission orchestration','coordinator live policy interleaving','whole A8 and capacity']});
+export const GROWTH_PLAN=Object.freeze({project:PROJECT,criteria:['L2-A8 tenant conservative reservation last byte','L2-A8 reduced quota under causally retained uncertain growth','L2-A3/A8 original-ticket owner/ACTIVE/started claim guards'],outerRollbackRequired:true,httpAcceptance:false,businessPersistentMutations:0,quotaPersistentIncreases:0,permissionChanges:0,newRoles:0,noRefund:true,maxRuntimeMs:45000,maxQueries:180,poolPerDatabase:1,maxDatabases:3,sqlMs:2000,lockMs:500,reservationBytes:'32768',controlBytes:'16384',globalMaximum:'16777216',barrierMaximum:'2097152',ephemeralTicketCount:1,claimNegatives:['wrong-owner','FINISHED-ticket','UNCERTAIN-ticket','work-not-started'],preparation:'bounded fixture inside private TX; real saas_api functions register/claim/mark_unknown; no grant or identity activation',policy:'CLOSED local real set_writer_policy under SET LOCAL maintainer, always ROLLBACK; central private policy version +1 and no counter adjustment',stillNotVerified:['HTTP/admission orchestration','coordinator live policy interleaving','whole A8 and capacity']});
 function number(value){if(typeof value!=='string'||!/^(0|[1-9][0-9]{0,18})$/.test(value)||BigInt(value)>MAX)fail('GROWTH_COUNTER_INVALID');return BigInt(value)}
 export function tenantReserveBoundary({used,reserved,max}){
  const u=number(used),r=number(reserved),m=number(max),exact=u+r+32768n;
@@ -31,6 +31,9 @@ export function assertRetainedDebt(before,after){
  if(!SHA.test(before?.guardHash??'')||!SHA.test(before?.resourceHash??'')||!UUID.test(before?.owner??'')||before.status!=='UNKNOWN'||before.attempt!=='1'||before.projectionState!=='UNKNOWN'||before.projectionReason!=='UNCERTAIN'||before.resultHash!==null||before.growthState!=='RESERVED'||before.tenantReserved!=='32768'||before.controlReserved!=='16384'||before.productsReserved!=='0')fail('GROWTH_CAUSAL_UNCERTAINTY_REQUIRED');
  for(const k of ['usedBytes','reservedBytes','usedProducts','reservedProducts'])number(before[k]);
  if(number(before.reservedBytes)<32768n||!after||Object.keys(before).some(k=>after[k]!==before[k]))fail('GROWTH_DEBT_OR_GUARD_CHANGED');return true;
+}
+export function assertClaimStayedPending(row,originalGuard){
+ if(row?.status!=='PENDING'||row.owner_id!==null||row.attempt_index!=='0'||row.events!=='REGISTERED'||!SHA.test(originalGuard??'')||row.guardHash!==originalGuard)fail('GROWTH_PENDING_CLAIM_GUARD_CHANGED');return true;
 }
 async function durable(path,value){const h=await open(path,'w',0o600);try{await h.writeFile(JSON.stringify(value));await h.sync()}finally{await h.close()}}
 const centralTables=['identities','tenant_directory','tenant_writer_state','write_intents','write_growth_reservations','write_projections','write_transitions','write_restrictions','write_restriction_tenants','write_control_quota','session_registry','memberships','action_grants','role_policies','tickets','windows','policies','policy_audit','admission_scopes','admission_fence','time_authority','schema_migrations'];
@@ -109,6 +112,18 @@ export async function runGrowthBoundary(){
    report.cases.push({id:'tenant-last-conservative-reservation-byte',status:'PASS SQL REGISTER ONLY',confirmedAt:points.exact,rejectedAt:points.below,byteDenied,reservationBytes:'32768',productsReserved:'0',globalBudgetNotExhausted:true,actualCallerRole:'saas_api',businessDatabaseAlwaysClosed:true,HTTP:false});
    const guardHashSql="SELECT encode(sha256(convert_to(jsonb_build_object('tenant',i.tenant_id,'operation',i.operation_id,'idempotency',i.idempotency_key,'actor',i.actor_id,'action',i.action,'epoch',i.data_epoch,'hash',i.request_hash,'permissions',i.permission_versions,'session',i.session_ref,'generation',i.generation,'writerVersion',i.writer_version,'ticket',i.ticket_id,'createdAt',i.created_at)::text,'UTF8')),'hex') AS hash FROM saas.write_intents i WHERE tenant_id=$1 AND operation_id=$2";
    const originalGuard=(await command(c,guardHashSql,[a.tenant_id,op])).rows[0].hash;
+   for(const [id,prepare,claimOwner]of [
+    ['wrong-owner',null,randomUUID()],
+    ['FINISHED-ticket',"UPDATE saas.tickets SET state='FINISHED',reserved_qc=0,reserved_qt=0,finished_at=clock_timestamp() WHERE id=$1",ownerId],
+    ['UNCERTAIN-ticket',"UPDATE saas.tickets SET state='UNCERTAIN' WHERE id=$1",ownerId],
+    ['work-not-started','UPDATE saas.tickets SET work_started=false WHERE id=$1',ownerId],
+   ]){
+    await command(c,'SAVEPOINT original_ticket_guard');if(prepare)await command(c,prepare,[ticket]);
+    await role(c,'saas_api');const rows=(await command(c,'SELECT * FROM saas.claim_write_intent($1,$2,$3,$4,$5)',[a.tenant_id,op,sid,qa.generation,claimOwner])).rows;assert.equal(rows.length,0,'invalid original ticket cannot grant writer execution');
+    await role(c,'saas_owner');const unchanged=(await command(c,"SELECT i.status,i.owner_id,i.attempt_index::text,(SELECT string_agg(reason_code,',' ORDER BY event_index) FROM saas.write_transitions t WHERE t.tenant_id=i.tenant_id AND t.operation_id=i.operation_id) AS events FROM saas.write_intents i WHERE tenant_id=$1 AND operation_id=$2",[a.tenant_id,op])).rows[0];unchanged.guardHash=(await command(c,guardHashSql,[a.tenant_id,op])).rows[0].hash;assertClaimStayedPending(unchanged,originalGuard);
+    await command(c,'ROLLBACK TO SAVEPOINT original_ticket_guard');await command(c,'RELEASE SAVEPOINT original_ticket_guard');
+    report.cases.push({id:`original-ticket-claim-${id}`,status:'PASS REAL SQL GUARD ONLY',rows:0,unchangedPendingOwnerAttemptAndGuard:true,registeredTransitionOnly:true,actualCallerRole:'saas_api',fixtureRestoredBySavepoint:true,HTTP:false});
+   }
    await role(c,'saas_api');const claimed=(await command(c,'SELECT * FROM saas.claim_write_intent($1,$2,$3,$4,$5)',[a.tenant_id,op,sid,qa.generation,ownerId])).rows;assert.equal(claimed.length,1);assert.equal(claimed[0].status,'EXECUTING');assert.equal(claimed[0].owner_id,ownerId);assert.equal((await command(c,'SELECT saas.mark_write_unknown($1,$2,$3) AS uncertain',[a.tenant_id,op,ownerId])).rows[0].uncertain,true);
    await role(c,'saas_owner');
    const retained=async()=>{
