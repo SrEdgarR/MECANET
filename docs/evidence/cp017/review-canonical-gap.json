@@ -1,0 +1,91 @@
+{
+  "reviewId": "CP017-REVIEW-CANONICAL-GAP",
+  "reviewer": "l2_sql",
+  "recordedAt": "2026-10-13T22:34:57.540Z",
+  "status": "PASS FOR INDEPENDENT STATIC REVIEW AND SIX PURE LOCAL TESTS ONLY",
+  "requiredFindings": 0,
+  "criticalFindings": 0,
+  "realQaExecutedByReviewer": false,
+  "wholeLotAcceptance": "NOT VERIFIED BY THIS REVIEW",
+  "scope": "Approved baseline section3.1 and A6/A7 canonical gap; review of own-QA prepare/verify harness, not a new product mechanism",
+  "sources": [
+    {
+      "path": "tests/qa/cp017/canonical-gap.mjs",
+      "localFileSha256": "64bb01b07f78f5f70db22026ef50fe3073e154e11f1ab5a7bcfa732dace8a4b8"
+    },
+    {
+      "path": "tests/qa/cp017/canonical-gap.unit.test.mjs",
+      "localFileSha256": "b41005f7c5ca365e9f73030203be153c1049c1302356cac55ec908379d296606"
+    },
+    {
+      "path": "server/saas/writes/validation.js",
+      "localFileSha256": "84f6138f357a2e58bb7ddd537dba38c1ec635775ae4a9d927c92a99b48e2bf13"
+    },
+    {
+      "path": "server/saas/db/migrations/004-tenant-writers-fix.sql",
+      "localFileSha256": "df6f2229217479c45ec21ef31165ed8e16d939300c76f313e3f2d2b79555d854"
+    },
+    {
+      "path": "docs/specs/p1-l2-approved/baseline.md",
+      "localFileSha256": "ca975dc822c0bd5e872d3debe824abc536f662007513170f327727878ff3ac71"
+    }
+  ],
+  "scopeAuthority": "Root coordination within DEC-062 B: two additive application fixture identities X/Y with four exact A grants; no restoration of previous authority, PostgreSQL role, quota increase or production changes",
+  "sixAxes": {
+    "correctness": "Independent canonical-array checks plus NFC-positive/NFD-conflict cause and movement/balance/result exactness; SQL known CONFIRMED key negatives compare P0001 IDEMPOTENCY_CONFLICT, never another failure as a pass",
+    "security": "Prepare requires two positive stopped-process proof400 files, source/generation/systemID/TLS/UTF8/PG18.6, zero SaaS sessions and both CLOSED; fixed databases; writer role only for known-key business probes",
+    "compatibility": "Registered SQL004 file and prosrc hashes verified; original six authorities/tickets/intents and B data preserved; no old actor HTTP authorization is claimed",
+    "maintainability": "Two explicit modes; bounded isolated QA helper and pure units; no runtime application imports of the helper; source paths rebased only during final copy",
+    "resources": "45 seconds,80 HTTP,140 SQL,2 leases; final envelope and positive rollback before PASS; one admitted receipt, no new catalog effect",
+    "verification": "Six pure units independently run on final bytes with Node24.21.0 Windows; actual HTTP/SQL execution belongs to root and its artifact/report chain"
+  },
+  "resolvedRequired": [
+    {
+      "id": "CANON-EFFECT-EXACT",
+      "problem": "Hash and row count alone did not establish quantity/reason Unicode and actual balance change",
+      "resolution": "RO balance before/after plus movement id/product/actor/op/quantity/reason NFC+control+supplementary/onHandAfter/version and exact seven-field DTO; negative regression detects Unicode folding and field/counter/result divergence",
+      "status": "RESOLVED LOCAL"
+    }
+  ],
+  "layerUnion": {
+    "finding": "Baseline does not require every field multiplied by every layer; a traced union is sufficient",
+    "currentHttp": "NFC receipt201 then same key/reason NFD conflict; actor with valid own purpose/grant is denied403 for another actor key; action/quantity/epoch conflicts409; B403; real raw transport whitespace/order and case-changing product/key UUID replay201 from the other API",
+    "currentSql": "Real minimal writer calls current-epoch known CONFIRMED catalog key and rejects a changed SKU/name with no additional effect; NFC/NFD catalog probes against ASCII establish digest/name guards only",
+    "historicReadOnly": "Original accepted producer8199 canonical create hash and actual stored SKU/name with NFD/control/supplementary points are checked RO; original actor is never reauthenticated or reenabled",
+    "effectLink": "Current converter exact hash and SQL004 registry/body hash are recorded; new receipt operation/control hash and actual movement input/balance/result checked; preserved old guards prove no adopted original intent"
+  },
+  "limits": [
+    "This review does not execute PostgreSQL, HTTP, SSH, Git or infrastructure operations",
+    "SQL calls using a known original catalog actor are private function probes, not evidence that the revoked actor can authorize a new request",
+    "Global readiness503 with blocked B is expected and is not a general health PASS",
+    "Name-NFC/name-NFD SQL failures against an ASCII anchor are not labeled causal no-normalization proof",
+    "Full A6/A7 and Integration Gate require the union with all other listed evidence and final independent acceptance"
+  ],
+  "localVerification": {
+    "command": "node --test tests/qa/cp017/canonical-gap.unit.test.mjs",
+    "passed": 6,
+    "failed": 0
+  },
+  "subsequentParentEvidence": {
+    "classification": "REPORTED BY ROOT; collector copies read after review, no remote execution by reviewer",
+    "codeSha": "2b0dd67f7f19fa563ae5eae802da533572da7abe",
+    "prepare": {
+      "status": "PASS FOR CLOSED FIXTURE PREPARATION ONLY",
+      "copySha256": "61f637f51b82c5a93880be81785a2d1c0ad33e3ee6872f5b2ff2508626b7dd3e",
+      "observedAt": "2026-10-13T22:31:30.132Z",
+      "sql": 34,
+      "http": 0
+    },
+    "verify": {
+      "status": "PASS FOR LISTED CANONICAL GAP VECTORS ONLY",
+      "copySha256": "1ef0cfc795d5b03bbd147a25389e512422d486a6a45a008f9512f5346d8d3448",
+      "observedAt": "2026-10-13T22:31:50.873Z",
+      "sql": 79,
+      "http": 14,
+      "durationMs": 12931,
+      "maxObservedLeases": 1,
+      "leasesEnded": true
+    },
+    "interpretation": "Reported fragments close the specifically reviewed canonical gaps by the traced union; they do not independently close every A6/A7 criterion"
+  }
+}

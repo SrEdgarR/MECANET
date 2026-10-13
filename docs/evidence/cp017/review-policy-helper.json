@@ -1,0 +1,39 @@
+{
+  "review": "Peer estático independiente del adaptador POLICY de uno o dos targets",
+  "status": "STATIC REVIEW PASS / QA NOT VERIFIED BY THIS REVIEW",
+  "criticalFindings": 0,
+  "requiredFindings": 0,
+  "reportedCommitPrefix": "38cfe8b",
+  "commitProvenance": "Reportado por root; no Git ejecutado en esta revisión",
+  "sources": [
+    {"path": "tests/qa/cp017/promote.mjs", "localFileSha256": "939ecc7abf72d6662b8fb8ca8e966a0ab388fdf60e1e5991310d980d14514639"},
+    {"path": "tests/qa/cp017/promote.unit.test.mjs", "localFileSha256": "aa6ebb12d1a41157d879797694d32fd734f186128372c23ff5dc6c193e896a24"},
+    {"path": ".agentic/P1-L2_PLAN.md", "localFileSha256": "3421b746d032be6ef32ac5cdf189cfd9eae260534dadfdeef23543038cc6fc39", "scope": "Plan preregistrado POLICY y continuidad del harness; no se modifica"},
+    {"path": "server/saas/writes/coordinator.js", "localFileSha256": "ae14c70b24eefca6a6f30b5981cc2dea56811ee16456fe7b44c03d9484ca39f4", "scope": "Contrato existente resumeOperationalBarrier/reopen; sólo lectura"}
+  ],
+  "checks": [
+    {"id": "selection", "status": "PASS STATIC", "evidence": "Acepta únicamente1..2 restricciones/tenants A/B distintos, de esta generación y POLICY active ACK. Cero, duplicados, tenant ajeno o subject/session/action scope fallan antes de promover."},
+    {"id": "immutable-guard", "status": "PASS STATIC", "evidence": "Target, guard y central coinciden en tenant/generación/epoch. Central CLOSED v+1, guardACK/close_proven y relación v→v+1→v+2 exacta; enteros positivos sin adoptar una versión nueva."},
+    {"id": "retained-capacity", "status": "PASS STATIC", "evidence": "Exige cero intenciones no terminales, reservas no SETTLED, reserved_products y reserved_bytes. La corrección de cardinalidad no elimina ese requisito ni devuelve QH/QC/Qt."},
+    {"id": "fresh-private-callback", "status": "PASS STATIC", "evidence": "verifyPromotion selecciona la misma restricción/tenant, reconsulta estado central, directorio/schema2/epoch/credencial y deuda; comprueba hash registrado004, localCLOSED/v+1 y logical_bytes igual a uso real bajo READ ONLY con systemIdentifier propio."},
+    {"id": "coordinator-boundary", "status": "PASS STATIC", "evidence": "La reapertura reutiliza el coordinador canónico y sólo desactiva la barrera operativa expresamente verificada; se conserva la secuencia monotónica local/central y readiness global final. No promueve otras razones, inicia API ni altera límites/grants/datos."},
+    {"id": "output-scope", "status": "PASS STATIC", "evidence": "Sólo metadata de barrera/fuente/tiempo/status y código de error acotado; ninguna conexión, contraseña, cuerpo, cookie o error SQL crudo sale al reporte."}
+  ],
+  "localTests": {
+    "environment": "Node24.21.0 Windows; funciones puras y mocks, sin PostgreSQL/HTTP remoto",
+    "command": "node --test tests/qa/cp017/promote.unit.test.mjs",
+    "status": "PASS",
+    "pass": 8,
+    "fail": 0,
+    "skipped": 0,
+    "adversarialPrivateMutation": {"source": "Copia privada en .qa-private; fuente final intacta", "change": "Desactivar exclusivamente el rechazo de identity_id scoped en validatePolicyTargets", "expectedResult": "La negativa de scope debe fallar", "observedResult": "7 PASS / 1 FAIL esperado: Missing expected exception", "status": "PASS para sensibilidad de esa negativa"}
+  },
+  "limits": [
+    "La selección B aislada después de ROTATION A se acredita aquí como contrato local/estático, no como ejecución PostgreSQL real.",
+    "No se verificaron remotamente CIDs, finSQL/HTTP, custodia de proof, credenciales, reapertura ni readiness de la cohorte. Root conserva su Environment Gate y ensayo preregistrado.",
+    "No equivale a PASS completo de A5/A10/A11/A12, capacidad del VPS, lanzamiento ni Integration Gate. No se revisan ni modifican los nuevos archivos de revocation en esta contribución."
+  ],
+  "infrastructureResourcesCreatedOrModified": "ninguno",
+  "productChanges": "ninguno",
+  "gitSshSecretOperations": "ninguno"
+}

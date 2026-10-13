@@ -1,6 +1,12 @@
 # Estado del proyecto — Mecanet SaaS
 
-CP-017 en curso, 2026-10-13: A exacta P1-L2 v0.2-CP016/DEC-061 y B diferenciada DEC-062 recibidas del adjunto58f74b6d, hash verificado. P1 única fase EN CURSO; P0 PARCIAL/RG-001 y SaaS general NOT APPROVED. Base develop a0098178fc27467bf4c12da0e97723e0b80ce683/PR #2; P1-L1 TERMINAL conservado. Specification/Design/Development locales acreditados para el lote; QA nueva exclusiva CP017 con preflight ARM64/pins/headroom/redes/secretos propios PASS. Implementación P1-L2 EN CURSO; doce salidas funcionales aún NOT VERIFIED, sin heredar PASS L1. Sin lanzamiento ni cambio de infraestructura compartida. DEC-063 admin.mecanet.app futuro y DEC-064 PayPal candidato, ambos fuera del lote.
+CP-017 EN CURSO / PRE-INTEGRATION, 2026-10-13: A exacta P1-L2 v0.2-CP016/DEC-061 y B diferenciada DEC-062 recibidas del adjunto58f74b6d, hash verificado. P1 única fase EN CURSO; P0 PARCIAL/RG-001 y SaaS general NOT APPROVED. Base develop a0098178fc27467bf4c12da0e97723e0b80ce683/PR #2; P1-L1 TERMINAL conservado. Specification/Design/Development locales acreditados para el lote; QA nueva exclusiva CP017 con preflight ARM64/pins/headroom/redes/secretos propios PASS. P1-L2 PRE-INTEGRATION; doce criterios PASS de aceptación limitada local/QA/review/Quality, sin heredar PASS L1; Integration Gate NOT VERIFIED y lote NO TERMINAL. Sin lanzamiento ni cambio de infraestructura compartida. DEC-063 admin.mecanet.app futuro y DEC-064 PayPal candidato, ambos fuera del lote.
+
+Registro vigente:14 pendientes únicos, Q-35 único BLOCKING del Integration Gate L2 y trece FUTURE; no otra A/B genérica. Canonicalización de2b0 PASS acotada:14 HTTP/79 SQL, B preservado/readiness global503 esperada. Restore de tres fases PASS:20 resultados antes/después,40 writers antiguos/6 sesiones antiguas/18 credenciales antiguas rechazados y18 nuevas verificadas; generación90d78c7c-9efd-437e-844a-a134ce84e514 CLOSED, sin reapertura. Doce criterios PASS de aceptación limitada local/QA/review/Quality; PR/CI/merge/verificación canónica aún NOT VERIFIED, P1-L2 NO TERMINAL.
+
+[Cleanup CP017](evidence/cp017/cleanup.json) PASS:6 contenedores propios STOPPED,20 consumidores ajenos intactos, datos/copias/journal KEEP, túnel propio4312 detenido y18443 cerrado. P1-L3 sólo [candidato](../.agentic/P1-L3_CANDIDATE.md) SUGGESTED/NOT APPROVED; ninguna A/B o implementación siguiente.
+
+[Matriz final](evidence/cp017/matrix.md), SHA-256 `3a8fe79607abefb16f32c5f78b56fb34242d6ba89884ee3ba219f9063351af70`, separa doce PASS de aceptación previa e Integration Gate. [Review consolidado](evidence/cp017/review-consolidated.json):0 críticos/0 REQUIRED abiertos. [Quality local](evidence/cp017/quality-local.json) PASS:258 contratos/134 sintaxis/55 UI/3 sanitizador/4 preload, auditorías completas SaaS/backend0 y assets idénticos; cleanup PASS. Esta unión conserva cada fuente y los FAIL históricos; no acredita SaaS general, reapertura o CI remota.
 
 Revisión CP-016, 2026-10-13: P1-L1 TERMINAL, ocho salidas PASS y Integration Gate PASS con [PR #2](https://github.com/SrEdgarR/MECANET/pull/2), head `04c5d41299bffc15e201c168677079809feb6a0f`, merge/develop `a0098178fc27467bf4c12da0e97723e0b80ce683`; [CI push](https://github.com/SrEdgarR/MECANET/actions/runs/38440714202), [CI PR](https://github.com/SrEdgarR/MECANET/actions/runs/38440720838) y [CI develop](https://github.com/SrEdgarR/MECANET/actions/runs/38441611717) PASS. Código local probado `0d8285cef117d6174a6053f18ceaac180f8aa1c5`; evidencia remota por sus SHA propios. Q-42/Q-43 resueltas para la lane aprobada; legacy audit FAIL/TD-21 conservado. P1 única fase EN CURSO; P0 PARCIAL/RG-001 y SaaS general NOT APPROVED. P1-L2 v0.2 candidato revisado, A/B pendientes y doce salidas funcionales NOT VERIFIED. Sin despliegues o recursos de infraestructura modificados.
 
@@ -13,22 +19,22 @@ Revisión CP-016, 2026-10-13: P1-L1 TERMINAL, ocho salidas PASS y Integration Ga
 | active_phase_name | Fundación aislada y operable |
 | status | EN CURSO |
 | last_updated | 2026-10-13 |
-| next_gate | Salidas reales L2-A1…A12 y Quality/Integration Gate condicionado; no producción ni nueva B por corte |
+| next_gate | Integration Gate L2 condicionado DEC-062: rama limpia/PR/CI/review/merge y develop canónico; aceptación de doce criterios/review/Quality/restore cerrado/cleanup PASS, sin producción ni nueva B por corte |
 | readiness_scope | P1-L2 v0.2-CP016 APPROVED exacta DEC-061/B DEC-062; QA sintética propia con preflight. SaaS general NOT APPROVED |
 | progress_basis | Estado cualitativo, sin porcentaje. P1-L1 TERMINAL con ocho PASS e Integration Gate PASS; P1 general EN CURSO y SaaS general NOT APPROVED |
-| implementation | P1-L1 TERMINAL integrado; P1-L2 EN CURSO en codex/p1-l2, sin inventario comercial o publicación |
-| current_checkpoint | CP-016 |
+| implementation | P1-L1 TERMINAL integrado; P1-L2 PRE-INTEGRATION en codex/p1-l2, doce PASS limitados, Integration Gate pendiente y NO TERMINAL; sin inventario comercial/publicación o B para L3 |
+| current_checkpoint | CP-017 EN CURSO / PRE-INTEGRATION; último checkpoint cerrado CP-016 |
 | hosting_target | CONFIRMED DEC-021/SC-005: VPS existente, operación propia independiente de Coolify; PostgreSQL DEC-054. Dominio futuro mecanet.app DEC-059/SC-007 |
-| hosting_execution | QA CP017 propia con Compose/PG18.6 ARM64, sin TCP público; preflight PASS. CP013/CP014 permanecen STOPPED. Recursos nuevos QA permitidos DEC-062, otros consumidores preservados. |
+| hosting_execution | QA CP017 fuente/destino CLOSED y6 contenedores STOPPED/KEEP;20 consumidores ajenos intactos, túnel4312 detenido/18443 cerrado. CP013/CP014 preservadas detenidas; sin URL pública nueva |
 
 ## Readiness
 
 | ID | Gate | Estado | Evidencia / pendiente |
 |---|---|---|---|
 | R-01 | READY FOR SPECIFICATION | PASS | Adopción y dirección registradas; no cierre de especificación general |
-| R-02 | Specification Gate del lote | PASS | DEC-058, S-18/L-01/ocho cortes al SHA3b387b3; el resto del candidato no se aprueba por extensión |
-| R-03 | Design Gates del lote | PASS | A humana exacta incluye PostgreSQL y operación propia limitada; integración pública compartida pendiente |
-| R-04 | READY FOR DEVELOPMENT limitado | PASS | Baseline A, B y QA explícitas; preflight, cadena Node24.21/PG18.6, cuotas, secretos y redes propios acreditados antes del uso |
+| R-02 | Specification Gate del lote | PASS | P1-L2 v0.2-CP016 completo APPROVED DEC-061: snapshot SHA-256 ca975dc822c0bd5e872d3debe824abc536f662007513170f327727878ff3ac71; no baseline SaaS general por extensión. L1 DEC-058 conservada |
+| R-03 | Design Gates del lote | PASS | Revisión focal F14-L2 y SQL/servicio/UI CP-017 sobre el objeto A exacto, PostgreSQL/Compose independiente; integración pública compartida pendiente |
+| R-04 | READY FOR DEVELOPMENT limitado | PASS | DEC-062 autoriza B/QA propia; gates locales y preflight CP017 acreditados antes del uso. Doce criterios de aceptación limitada PASS; lote EN CURSO/NO TERMINAL hasta Integration Gate, sin permiso de producción |
 | R-05 | READY FOR PRODUCTION | NOT VERIFIED | No producto SaaS completo, pagos/fiscalidad, capacidad, custodia externa, operación ni autorización de corte públicos |
 
 ## Trazabilidad
@@ -37,22 +43,29 @@ Revisión CP-016, 2026-10-13: P1-L1 TERMINAL, ocho salidas PASS y Integration Ga
 |---|---|
 | base_sha | a0098178fc27467bf4c12da0e97723e0b80ce683 — develop canónico verificado al iniciar L2 |
 | research_head_sha | 9fcdd9540848edbbdef1cfc94667491c9ab2ba92; lectura focalizada sin reinventariar el VPS |
-| tested_code_sha | 0d8285cef117d6174a6053f18ceaac180f8aa1c5 — SC-008 local21negativas/29+3/build/3assetsF/auditorías0/syntax69; evidencia DB/browser/restore histórica conserva sus SHA |
-| qa_controller_sha | 409880a513bee1eff909caf68d23325af55e9be4; normalización del inventario ajeno y regresión del controlador QA, sin cambio del artefacto F desplegado/probado |
+| tested_code_sha | 8199a414ff06220e147b062ce37fa55709311627 — producto L2 actual; resultados separados por fuente/entorno en docs/evidence/cp017. Local258/258 y sintaxis134/Python PASS reportados, sin atribuir pruebas históricas al artefacto actual |
+| historical_tested_code_sha | 0d8285cef117d6174a6053f18ceaac180f8aa1c5 — SC-008/L1 local; código/QA de CP-013…016 conservan sus propios SHA |
+| qa_artifact_sha | 2b0dd67f7f19fa563ae5eae802da533572da7abe — artefacto QA actual, distinto del producto/base y del checkpoint documental |
+| qa_artifact_digest | sha256:85f959d949897298450b49a705d30b9688bfbaf9573d142fe4e08acae010e75c |
+| qa_controller_sha256 | 9f2328e00aca0b843c184b2a829a741a48cde54535731cccfa0ae7d359fd8941 — bytes actuales y local-canonical; controlador privado separado de producto/artefacto API |
+| historical_qa_controller_sha | 409880a513bee1eff909caf68d23325af55e9be4 — cierre QA CP-014, sin reatribuirlo a CP017 |
 | experimental_test_reference | CP-006/010 históricos no repetidos ni atribuidos a PostgreSQL; las90 pruebas Mongo f5afaa2 no prueban este lote |
 | HEAD | Resolver git rev-parse HEAD en cada worktree; checkpoint final no se escribe en su propio commit |
 | checkpoint_sha | CP-016 documental premerge `54da15c05b781d531e5156766f3831d91c3fa0ca`, head remoto congelado `04c5d41299bffc15e201c168677079809feb6a0f`; cierre primary se identifica externamente/Git, sin autoSHA |
-| approved_head_sha | 3b387b38784907b67e2209a35c3d5f400d70742e, solamente S-18/manifiestoL-01/ocho cortes por DEC-058 |
+| approved_head_sha | 704b4ae22f1af7fe868d3faf6bdf17a227fb0f50 — objeto aprobado: archivo completo .agentic/NEXT_LOT_CANDIDATE.md v0.2-CP016, SHA-256 ca975dc822c0bd5e872d3debe824abc536f662007513170f327727878ff3ac71, DEC-061; no aprobación transitiva de todo el commit/código; B separada DEC-062 |
+| historical_approved_head_sha | 3b387b38784907b67e2209a35c3d5f400d70742e — solamente S-18/manifiestoL-01/ocho cortes L1 por DEC-058 |
 | merge_sha | a0098178fc27467bf4c12da0e97723e0b80ce683 |
 | current_main_baseline_sha | a0098178fc27467bf4c12da0e97723e0b80ce683 — develop verificado tras CI canónica PASS |
-| next_phase_base_sha | a0098178fc27467bf4c12da0e97723e0b80ce683 — base L2 aprobada; siguiente lote necesita su A/B |
+| next_phase_base_sha | a0098178fc27467bf4c12da0e97723e0b80ce683 — base canónica de L2; no merge L2 ni baseline de un lote posterior |
 | local_branch | codex/p1-l2 en worktree adjunto reutilizado limpio desde develop; primary/fuente y worktree anterior preservados |
 | remote_branch | codex/integrate-p1-l1 publicada e integrada; PR #1/codex/deploy-vercel-coolify preservados |
 | worktree | Primario fuente/planning y C:/Users/thede/.codex/worktrees/p1l1-integration/MECANET-develop; .kilo/worktrees/majestic-chiller conservado |
-| integration_target | develop integrado mediante [PR #2](https://github.com/SrEdgarR/MECANET/pull/2), head `04c5d41299bffc15e201c168677079809feb6a0f`, merge/develop `a0098178fc27467bf4c12da0e97723e0b80ce683`; [CI push](https://github.com/SrEdgarR/MECANET/actions/runs/38440714202), [CI PR](https://github.com/SrEdgarR/MECANET/actions/runs/38440720838) y [CI develop](https://github.com/SrEdgarR/MECANET/actions/runs/38441611717) PASS |
-| CI | SC-008 local/revisión PASS; [CI push](https://github.com/SrEdgarR/MECANET/actions/runs/38440714202), [CI PR](https://github.com/SrEdgarR/MECANET/actions/runs/38440720838) y [CI develop](https://github.com/SrEdgarR/MECANET/actions/runs/38441611717) PASS; fullaudit lane/backend0, legacy FAIL conservado |
+| integration_target | develop; L2 todavía sin PR/merge nuevo. L1 integrado por [PR #2](https://github.com/SrEdgarR/MECANET/pull/2), head04c5d41299bffc15e201c168677079809feb6a0f y merge a0098178fc27467bf4c12da0e97723e0b80ce683; CI histórica L1 no verifica integración L2 |
+| CI | L2 regresión local258/258 y sintaxis134/Python PASS reportados; CI remota L2 NOT VERIFIED. [CI push](https://github.com/SrEdgarR/MECANET/actions/runs/38440714202), [CI PR](https://github.com/SrEdgarR/MECANET/actions/runs/38440720838) y [CI develop](https://github.com/SrEdgarR/MECANET/actions/runs/38441611717) conservan PASS histórico L1; legacy FAIL/TD-21 conservado |
 
 ## UI actual
+
+CP-017: [navegador privado](evidence/cp017/browser.md) sobre producto `252b089343ccb5d91c0cd111471c69c4371c8924` obtuvo20 checks/56 HTTP y seis escenarios320/768/1440×100/200%. Alta sin precio, recepción, historial, clave/ACK perdido, permisos y foco se verifican sólo en ese recorrido. Assets finales: HTML `c7687b27d7359c17eb49d1ea13ba54c46228152d48cfda32e9e16447157bd4b2`, JS `bd0a3ceeeb89aa8bc145432269820613b907eb97f35221be94183f21a1e78d9d` y CSS `ad6fe416fc0d157c3b762c9ff580c962178d3ddeb5cc2e5c3af6d516bbe0ca27`; no auditoría global ni reensayo completo sobre 2b0.
 
 | ID | Módulo | Fidelidad | Verificación | Preview | Evidencia |
 |---|---|---|---|---|---|
@@ -65,7 +78,7 @@ Revisión CP-016, 2026-10-13: P1-L1 TERMINAL, ocho salidas PASS y Integration Ga
 | UI-07 | Demo gratuita limitada | PENDING | NOT VERIFIED; registro/email/1activa/3inicios24h/30min/10-5-10 confirmados; mecanismo comercial no implementado | — | DEC-025/027; SAAS_DISCOVERY |
 | UI-08 | Login, empresa y catálogo QA ficticio | IMPLEMENTED | VERIFIED limitado: browser15 en CP-014/C, 320/768/1440, teclado/foco, radio0, tema, texto200% y reduced-motion; reintentos/deadlines con regresión local, sin auditoría a11y completa | evidence/cp014/catalog-1440.png | CP-014 · LOCAL + REMOTE · Ce25a9f3; frontend idéntico D/E/F |
 
-Objetivo CONFIRMED DEC-055: UI totalmente cuadrada, sin bordes redondeados; NCF/e-CF CONFIRMED DEC-056 en el alcance SaaS. La UI mínima privada de L1 sí está implementada; NCF/e-CF continúan fuera del lote. Sistema visual heredado DETECTED: landing CSS estático; POS React/Tailwind, estilos glass y temas claro/oscuro. UI Q-31 completa como candidata, sin diseño SaaS aprobado. Responsive y reduced motion verificados solo para UI-08; accesibilidad completa y resto de producto NOT VERIFIED. El mapa documental tiene su propia verificación, separada de la UI del producto.
+Objetivo CONFIRMED DEC-055: UI totalmente cuadrada, sin bordes redondeados; NCF/e-CF CONFIRMED DEC-056 en el alcance SaaS. UI privadas L1/L2 implementadas dentro de sus baselines; NCF/e-CF fuera del lote. Sistema visual heredado DETECTED: landing CSS estático; POS React/Tailwind, estilos glass y temas claro/oscuro. El resto de UI Q-31 permanece candidato sin aprobación global. Responsive/foco y demás comprobaciones se limitan a UI-08 y al recorrido L2 del párrafo previo por sus propias fuentes; accesibilidad completa y resto del producto NOT VERIFIED. El mapa documental tiene verificación separada de la UI del producto.
 
 ## Resultado histórico CP-011
 

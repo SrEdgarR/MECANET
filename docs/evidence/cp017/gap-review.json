@@ -44,6 +44,24 @@
     "localVerification": {"testsPass": 6, "testsFail": 0, "syntax": "PASS", "mutation": "Copia privada sin comprobarreason exacto:5PASS/1FAIL esperado; fuente WIP intacta"}
   },
   "reviewerActions": {"productionChanges": "ninguno", "infrastructureChanges": "ninguno", "gitSshRemoteQaOperations": "ninguno", "canonicalMatrixChanges": "ninguno"},
+  "followUp": {
+    "classification": "DETECTED AS REPORTED; ROOT EJECUTA/CUSTODIA QA, REVISOR LEE COPIAS LOCALES",
+    "sourceSha": "2b0dd67f7f19fa563ae5eae802da533572da7abe",
+    "originalCutPreserved": "Las filas anteriores conservan el corte22:24 y sus pendientes; este apéndice acredita el cierre posterior de las lagunas funcionales focal/restore, sin reescribir FAIL históricos ni asignar PASS global.",
+    "reports": [
+      {"path": ".qa-private/cp017-evidence/canonical-gap-prepare-2b0dd67f.json", "localFileSha256": "61f637f51b82c5a93880be81785a2d1c0ad33e3ee6872f5b2ff2508626b7dd3e", "status": "PASS REPORTADO", "observedAt": "2026-10-13T22:31:30.132Z", "scope": "Preparación CLOSED propia;34SQL/0HTTP según root; seis autoridades previas intactas"},
+      {"path": ".qa-private/cp017-evidence/canonical-gap-verify-2b0dd67f.json", "localFileSha256": "1ef0cfc795d5b03bbd147a25389e512422d486a6a45a008f9512f5346d8d3448", "status": "PASS REPORTADO", "observedAt": "2026-10-13T22:31:50.873Z", "scope": "14HTTP/79SQL/12931ms; unión por capas y huellas/efecto exactos, no catálogo nuevo ni quota aumentada"},
+      {"path": ".qa-private/cp017-evidence/recovery-close-2b0dd67f.json", "localFileSha256": "2cc909a497613b7c09860ced18054c1e7193b2b6dd9a275d5c8335aa30a24cba", "status": "PASS REPORTADO", "finishedAt": "2026-10-13T22:32:54.222Z", "scope": "Cierre positivo de source, crecimiento/tickets0 antes de copia"},
+      {"path": ".qa-private/cp017-evidence/recovery-post-copy-2b0dd67f.json", "localFileSha256": "a87b372b98743040766ebc0243d1164515c6231d5373a2b2a24b292daf7a88be", "status": "PASS REPORTADO", "finishedAt": "2026-10-13T22:33:10.034Z", "scope": "Canario restrictivo posterior a copia con journal independiente durable"},
+      {"path": ".qa-private/cp017-evidence/recovery-verify-target-2b0dd67f.json", "localFileSha256": "3eaff13c95717a69b859aa372d8c5a1fd90ec27492d317f0baacc02fb3f0be0c", "status": "PASS REPORTADO", "finishedAt": "2026-10-13T22:33:26.285Z", "scope": "Segundo destino cerrado, generation/epoch nuevos; efectos/grants/cupos/registros exactos y negativos/replay"}
+    ],
+    "closedGaps": ["Vectores faltantes§3.1 de A6/A7 por unión HTTP/SQL causal", "Vínculo de entrada/matriz con efecto Unicode persistido y recepción exacta", "Restore cerrado A11 con journal/canario posterior y guardas antiguas no ejecutables"],
+    "recoveryCountsReportedByRoot": {"originalKnownResults": 20, "restoredKnownResults": 20, "staleWriterDenials": 40, "oldSessionDenials": 6, "oldCredentialDenials": 18, "newCredentialsValid": 18},
+    "safeRejectedInvocation": {"action": "resources-api2 invocado con cero operaciones originales", "outcome": "END_NOT_PROVEN antes de mutación, según root", "classification": "Invocación innecesaria rechazada con seguridad, conservada como observación operativa; no se rotula como defecto funcional ni PASS de esa utilidad", "independentEndEvidence": "Process/SQL API2 terminado acreditado por controlador y recovery-close observa deuda/tickets0; no se debilitó la utilidad para admitir proof insuficiente"},
+    "currentPending": ["Consolidación final de fuentes y doce criterios por root/autor de matriz", "Quality Gate/regresiones/review completo final", "Cleanup propio y verificación ajenos", "Integration Gate y GitHub/CI/merge autorizados condicionalmente"],
+    "newImplementationOrHumanApprovalNeededForTheseClosedGaps": false,
+    "wholeLotAcceptanceByReviewer": "NOT VERIFIED; no es competencia de esta revisión acotada"
+  },
   "remainingCriticalHumanDecisionsForThisApprovedLot": [],
   "nextEnabledStep": "Peer SQL final del focal y ejecución root de prepare→promoción POLICY sóloA→verify; después copia/restore cerrado y consolidación final de las doce salidas. No hace falta otro descubrimiento ni otra aprobación A/B."
 }

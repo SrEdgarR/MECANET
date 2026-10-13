@@ -1,0 +1,141 @@
+{
+  "checkpoint": "CP-017",
+  "status": "PASS FOR LOCAL QUALITY CHECKS; independent review and Integration Gate remain separate",
+  "observedAt": "2026-10-13T22:39:17.075100Z",
+  "sourceCodeSha": "2b0dd67f7f19fa563ae5eae802da533572da7abe",
+  "functionalSourceSha": "8199a414ff06220e147b062ce37fa55709311627",
+  "node": "v24.21.0",
+  "npm": "11.9.0",
+  "environment": "Windows x64, no VPS build or database during these local checks",
+  "localContracts": {
+    "pass": 258,
+    "fail": 0,
+    "syntaxFiles": 134,
+    "pythonControllerAST": "PASS",
+    "evidence": "local-canonical.json"
+  },
+  "saasLane": {
+    "result": "PASS",
+    "fullAudit": "PASS",
+    "runtimeAudit": "PASS",
+    "cleanup": "PASS",
+    "inputFingerprintSha256": "bb07cb6959557ef75f019d89a8a839450190f1c39dea090c831fd10bd262d0d4",
+    "assets": [
+      {
+        "path": "client/dist-saas/saas.html",
+        "sha256": "c7687b27d7359c17eb49d1ea13ba54c46228152d48cfda32e9e16447157bd4b2",
+        "bytes": 525
+      },
+      {
+        "path": "client/dist-saas/assets/saas-BJsNePUp.js",
+        "sha256": "bd0a3ceeeb89aa8bc145432269820613b907eb97f35221be94183f21a1e78d9d",
+        "bytes": 182756
+      },
+      {
+        "path": "client/dist-saas/assets/saas-mSB78BVf.css",
+        "sha256": "ad6fe416fc0d157c3b762c9ff580c962178d3ddeb5cc2e5c3af6d516bbe0ca27",
+        "bytes": 7470
+      }
+    ],
+    "acceptedAssetsEqual": true,
+    "checks": [
+      {
+        "command": [
+          "node",
+          "C:\\Program Files\\nodejs\\node_modules\\npm\\bin\\npm-cli.js",
+          "--version"
+        ],
+        "exitCode": 0,
+        "signal": null
+      },
+      {
+        "command": [
+          "node",
+          "C:\\Program Files\\nodejs\\node_modules\\npm\\bin\\npm-cli.js",
+          "ci",
+          "--prefix",
+          "client",
+          "--ignore-scripts",
+          "--bin-links=false",
+          "--no-audit",
+          "--no-fund"
+        ],
+        "exitCode": 0,
+        "signal": null
+      },
+      {
+        "command": [
+          "node",
+          "C:\\Program Files\\nodejs\\node_modules\\npm\\bin\\npm-cli.js",
+          "audit",
+          "--prefix",
+          "client",
+          "--json"
+        ],
+        "exitCode": 0,
+        "signal": null
+      },
+      {
+        "command": [
+          "node",
+          "C:\\Program Files\\nodejs\\node_modules\\npm\\bin\\npm-cli.js",
+          "audit",
+          "--prefix",
+          "client",
+          "--json",
+          "--omit=dev"
+        ],
+        "exitCode": 0,
+        "signal": null
+      },
+      {
+        "command": [
+          "node",
+          "--max-old-space-size=512",
+          "--test",
+          "scripts/ci/tooling-isolation.test.mjs"
+        ],
+        "exitCode": 0,
+        "signal": null
+      },
+      {
+        "command": [
+          "node",
+          "--max-old-space-size=512",
+          "scripts/ci/tooling-isolation-check.mjs"
+        ],
+        "exitCode": 0,
+        "signal": null
+      }
+    ],
+    "frontendTests": {
+      "pass": 55,
+      "fail": 0
+    },
+    "sanitizerTests": {
+      "pass": 3,
+      "fail": 0
+    },
+    "preloadGuardTests": {
+      "pass": 4,
+      "fail": 0
+    }
+  },
+  "backendFullAudit": {
+    "info": 0,
+    "low": 0,
+    "moderate": 0,
+    "high": 0,
+    "critical": 0,
+    "total": 0
+  },
+  "localLogHashes": {
+    "toolchain": "04b807bea8092b8ca61943c050b5bca86599d9478eaa5dbc20014cb8213b9697",
+    "backendAudit": "fc8c5f9404a8641c57ae7fc328772467727af525df1e30bc9fdc5d3289e13191"
+  },
+  "legacyAudit": "FAIL TD-21 conserved outside approved SC-008 lane; not rerun or waived",
+  "remoteQA": "final-qa.json has separate source/run provenance",
+  "ci": "NOT VERIFIED BY LOCAL QUALITY RUN",
+  "wholeLotTerminal": "NOT VERIFIED BY THIS REPORT",
+  "secretOrBusinessDataPublished": false
+}

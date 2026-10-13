@@ -1,0 +1,82 @@
+{
+  "reviewer": "/root/l2_ui",
+  "reviewedAtUtc": "2026-10-13T20:47:21.6622087Z",
+  "scope": "Independent read-only review of current SKU competitor/capacity retry, measured aggregate pools, last-product same-key retry, worker/web stop proof and B/quota-boundary CLI wiring",
+  "provenance": {
+    "acceptedArtifactSourceShaFromParent": "299ce3c0b6c821f03d0383b7da4d394af1e36475",
+    "workingHead": "NOT QUERIED; Git owned by parent; do not equate accepted artifact with current HEAD",
+    "inputs": [
+      {
+        "path": "tests/qa/cp017/integration.mjs",
+        "sha256": "67ec0233113c6e258328adc84e64aafb3b7cdd2e7a1496f305a2cc86211e510d"
+      },
+      {
+        "path": "tests/qa/cp017/quota-live.mjs",
+        "sha256": "1e0c71a9ab19268a21ddfe291496c9967733b905fdeb9ae60a8f8abf43eb5fc4"
+      },
+      {
+        "path": "tests/qa/cp017/host.py",
+        "sha256": "495888b75975a1811da5151e7eae09e7086334c8995c02f66eca35d04f42f1fd"
+      },
+      {
+        "path": "tests/qa/cp017/metadata-live.mjs",
+        "sha256": "e8aa31c64dad2fb6bc4e6effade1caa31f076562669d0bfbcf5b0f708905922b"
+      },
+      {
+        "path": "tests/qa/cp017/metadata-vectors.mjs",
+        "sha256": "fa5148bbbaab8162a45a31345adaba3cc072d585e5a8287b3b260d684750ded1"
+      },
+      {
+        "path": "tests/qa/cp017/promotion.mjs",
+        "sha256": "0b43157b28a5d37cb1279564c70a31beff011d53f10c7589b30ae9573037ca88"
+      },
+      {
+        "path": "tests/qa/cp017/quota-boundary.mjs",
+        "sha256": "6c34815ff194e0bd1fa0f337b5be6af3fb45aaf82cab55be311ea90c3f1fecab"
+      }
+    ]
+  },
+  "findings": [],
+  "requiredFindings": 0,
+  "observations": [
+    {
+      "line": 146,
+      "area": "SKU distinct-key competitor",
+      "path": "tests/qa/cp017/integration.mjs",
+      "evidence": "Both original UUIDs and exact original inputs are retained across at most four capacity retries; UNKNOWN aborts; final 201/409 requires SKU_CONFLICT with one SKU row, two local operations/audits and both reservations SETTLED."
+    },
+    {
+      "line": 199,
+      "area": "Measured aggregate pools",
+      "path": "tests/qa/cp017/integration.mjs",
+      "evidence": "Measured assay is invoked after actual bounded HTTP reads and preceding write fragment; five snapshots validate configured role ceilings, two API owners, reader/writer/worker presence, global current connection bound. Saturation and full ceiling remain explicitly NOT VERIFIED; fixedApiPools/fixedApiLeases are fixed design values, not measured saturation."
+    },
+    {
+      "line": 163,
+      "area": "Last-product capacity retry",
+      "path": "tests/qa/cp017/quota-live.mjs",
+      "evidence": "Two distinct API callers retain each original key and body. Only 503 is retried, at most four times, after checking the exact central intent is not UNKNOWN. LOGICAL_QUOTA429 is terminal; rejected UUID has no central/local operation. Final effect delta is one product and used_products equals the reduced maximum."
+    },
+    {
+      "line": 277,
+      "area": "Own process/SQL end proof",
+      "path": "tests/qa/cp017/host.py",
+      "evidence": "Proof requires every own non-PostgreSQL container stopped, two distinct API owners/container IDs in exited state with prior HTTP/SQL end proof, and zero saas_* SQL clients. workerStopped/webStopped are emitted only after this check. Boundary consumer requires immutable proof, exact source/cohort and independently checks zero live saas SQL clients plus CLOSED central/local fences before and after rollback."
+    },
+    {
+      "line": 165,
+      "area": "B selector and boundary CLI",
+      "path": "tests/qa/cp017/host.py",
+      "evidence": "Live quota tenant selector permits only the two fixed synthetic A/B UUIDs and is passed as QA_QUOTA_TENANT. Quota-boundary is confined to tenant/global, routed to closed harness with owned result mount. No arbitrary shell interpolation or shared service target is introduced."
+    }
+  ],
+  "testsExecuted": [],
+  "testAttribution": "No local, SQL, HTTP, ARM64 or historical PASS is attributed to this source review. Browser/local fixtures are separate evidence.",
+  "verdict": "NO REQUIRED FINDINGS WITHIN REVIEWED DELTA; NOT A RUNTIME PASS OR INTEGRATION APPROVAL",
+  "limitations": [
+    "Static read-only review only; no SSH, host inspection or credentials read",
+    "Bounded connection samples do not prove capacity or saturation",
+    "SKU/last-product persistence and resource settlement require their own final runtime reports",
+    "No product, infrastructure or reviewed harness source edits were made"
+  ]
+}

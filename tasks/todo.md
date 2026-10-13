@@ -1,6 +1,6 @@
 # Tareas de adopción SaaS y P1 limitado
 
-Estado vigente CP-014: **P1 EN CURSO**, única fase activa; P1-L1 COMPLETADA con ocho salidas PASS dentro de DEC-058. P0 general PARCIAL/RG-001; SaaS general NOT APPROVED. Las casillas de T-01…17 conservan su estado histórico. El cierre vigente y el trabajo siguiente están en T-18; no convierten PR/CI remoto/merge en PASS.
+Estado vigente **CP-017 EN CURSO / PRE-INTEGRATION**: P1 única activa; P0 PARCIAL/RG-001 y SaaS general NOT APPROVED. P1-L1 TERMINAL/PR #2; P1-L2 completo v0.2-CP016 APPROVED DEC-061 y B/QA/integración condicionada DEC-062, snapshot ca975dc822c0bd5e872d3debe824abc536f662007513170f327727878ff3ac71. Rama codex/p1-l2, base a0098178fc27467bf4c12da0e97723e0b80ce683. Doce criterios PASS de aceptación limitada local/QA/review/Quality; Integration Gate NOT VERIFIED, P1-L2 NO TERMINAL. Q-35 único BLOCKING de PR/CI/merge/verificación canónica, trece FUTURE. Restore sintético cerrado y cleanup acreditados, sin reapertura. Las casillas T-01…19 y los bloques CP-016 conservan sus estados históricos; la cola CP-017 siguiente es vigente, sin PR/CI/merge nuevo ni producción.
 
 ## T-01 — Inventario desde el despliegue existente
 
@@ -221,6 +221,24 @@ Verificación: [auditoría CP-014](../docs/audit/CP-014.md), evidencia de `docs/
 
 No despertar QA, cambiar infraestructura/Prompt, integrar PR1 o publicar por efecto lateral. El candidato siguiente permanece fuera del PR funcional L1, en la rama fuente de planificación.
 
-## CP-016 — seguridad de integración y preparación focal
+## CP-016 — seguridad de integración y preparación focal (historia previa al cierre)
 
 Q-42 resuelta por evidencia humana/plataforma. SC-008/DEC-060 aprobada/implementada: lane propia, audit completo0, tests/build/3assetsF y revisión al SHA0d8285cef117d6174a6053f18ceaac180f8aa1c5; legacy FAIL sigue TD-21 antes del uso afectado. Integration Gate remoto pendiente de ejecución autorizada. L2 v0.2 conserva A/B pendientes y doce criterios funcionales NV; R4/R5 corregidos y15 comprobaciones puras/review documental PASS. Ninguna infraestructura, datos reales, producción o L2 funcional modificados.
+
+El [cierre CP-016](../docs/audit/CP-016.md) posterior acredita PR #2/CI/merge L1. A/B L2 pendientes entonces se resolvieron por DEC-061/062; no se cambian las casillas ni el relato histórico para fingir aprobación anterior.
+
+## CP-017 — cola vigente P1-L2 PRE-INTEGRATION
+
+- [x] Recuperar base develop a0098178fc27467bf4c12da0e97723e0b80ce683 y rama propia codex/p1-l2; conservar PR #1 y trabajo previo.
+- [x] Registrar A exacta DEC-061 y B/QA/integración condicionada DEC-062, snapshot protegido byte exacto; gates locales y preflight QA acreditados antes del trabajo dependiente.
+- [x] Implementar el lote aprobado y ejecutar verificaciones locales afectadas; [258/258, sintaxis134 y AST Python PASS](../docs/evidence/cp017/local-canonical.json), ligados a hashes y estado anterior al commit del arnés, sin atribuir una ejecución limpia al HEAD2b0 ni declarar doce salidas PASS por conteo.
+- [x] Conservar browser252:20 checks/56 HTTP y seis escenarios320/768/1440×100/200%, con fuente/runner/assets propios y fallos anteriores visibles.
+- [x] Ejecutar fragmento SQL40001/40P01 b14 con70 comandos/dos leases/huellas iguales; drain/identity/block B conservan PASS acotados y fuentes propias, sin convertirlos en aceptación global.
+- [x] Verificar vectores canónicos de hash/actor/acción en2b0:14 HTTP/79 SQL PASS, rollback exterior probado, ningún alta nueva efectiva, huella de B bloqueada intacta y readiness global503 esperado; no reabrir identidades/grants ni declarar A6/A7 completos PASS.
+- [x] Verificar restore sintético cerrado nuevo en tres fases: registro/journal/guardas y20 resultados antes/después preservados;40 llamadas de writer obsoleto y seis sesiones antiguas rechazadas;18 credenciales antiguas rechazadas y18 nuevas verificadas. Generación90d78c7c-9efd-437e-844a-a134ce84e514 CLOSED; no heredar PASS L1 ni declarar reapertura.
+- [x] Cerrar aceptación limitada de los doce criterios L2-A1…A12 en [matriz final](../docs/evidence/cp017/matrix.md), SHA-2563a8fe79607abefb16f32c5f78b56fb34242d6ba89884ee3ba219f9063351af70; local/QA/review/Quality PASS por unión trazada, sin convertir Integration Gate en PASS ni declarar L2 TERMINAL.
+- [x] Consolidar [revisión](../docs/evidence/cp017/review-consolidated.json):0 críticos/0 REQUIRED abiertos; [Quality local](../docs/evidence/cp017/quality-local.json) PASS:258 contratos/134 sintaxis/55 UI/3 sanitizador/4 preload, auditorías completas SaaS/backend0, assets idénticos y cleanup PASS.
+- [x] Verificar [cleanup propio](../docs/evidence/cp017/cleanup.json): seis contenedores STOPPED/KEEP,20 consumidores ajenos preservados, datos/copia/journal privados conservados, túnel propio PID4312 detenido y loopback18443 cerrado.
+- [ ] Ejecutar rama limpia/PR/CI/review/merge condicionados DEC-062 y comprobar develop/SHA canónica. Ninguno acreditado todavía para L2; Q-35 bloquea sólo cierre del Integration Gate/TERMINAL, no iniciar esta operación ya habilitada ni el restore funcional cerrado ya probado.
+
+Artefacto QA actual 2b0dd67f7f19fa563ae5eae802da533572da7abe / sha256:85f959d949897298450b49a705d30b9688bfbaf9573d142fe4e08acae010e75c; producto8199a414ff06220e147b062ce37fa55709311627. [Plan previo](../.agentic/P1-L2_PLAN.md) y [baseline protegida](../docs/specs/P1-L2.md) delimitan el alcance. P1 continúa EN CURSO; P2 NO INICIADA, SaaS general NOT APPROVED, sin cambios a producción, DNS, Coolify, Nexora, Mecanet-EAK o Prompt Maestro. [P1-L3](../.agentic/P1-L3_CANDIDATE.md) permanece SUGGESTED / NOT APPROVED, sin A/B ni creación de recursos.

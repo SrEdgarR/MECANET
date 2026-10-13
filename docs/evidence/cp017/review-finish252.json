@@ -1,0 +1,33 @@
+{
+  "review": "Revisión estática delimitada del cierre PROJECTED en integración252",
+  "classification": "DETECTED para contrato; SUGGESTED para causa concreta",
+  "status": "ROOT CAUSE NOT VERIFIED",
+  "scope": "Sin QA remota, modificación de producto, SQL, cuotas ni liberación de deuda",
+  "reportedRuntimeSourceSha": "252b089343ccb5d91c0cd111471c69c4371c8924",
+  "localEvidenceCopies": [
+    {"path": ".qa-private/cp017-evidence/integration-252b0893.json", "localFileSha256": "bf7b80014c3e55c9d839410e92b88556509611f90a3232b91fd23d9d308dfc2d", "remoteRawHash": "NOT VERIFIED", "status": "FAIL conservado"},
+    {"path": ".qa-private/cp017-evidence/integration-8199a414.json", "localFileSha256": "cc60cea61bc3386a5676fea42d1eab909eacec776a7f93f23e3c74766bcb559d", "remoteRawHash": "NOT VERIFIED", "status": "12 PASS / 1 FAIL SKU según reporte; no reemplaza252"}
+  ],
+  "sourceFilesReviewed": [
+    {"path": "server/saas/app.js", "sha256": "6084485a80ad1c4037f94ccc50ce2a55807c8036dff0d0873b56b4f975dc2276"},
+    {"path": "server/saas/admission/transaction.js", "sha256": "34d91817001beb2de7d5037b65903b79e4c6646543829d73b3e56097dd6036e8"},
+    {"path": "server/saas/writes/service.js", "sha256": "6643afd4dfcbd2ba7ae5efeabe05206f920c36cf6280d6e07d22f43a641751da"},
+    {"path": "server/saas/writes/coordinator.js", "sha256": "ae14c70b24eefca6a6f30b5981cc2dea56811ee16456fe7b44c03d9484ca39f4"},
+    {"path": "server/saas/db/migrations/003-control-writers.sql", "sha256": "c5036db5fd1a71ea94e7d7feee25e299dcb074e25108465304ac6dff92955d07"}
+  ],
+  "sourceLimit": "Hashes de archivos locales actualmente revisados, incluidos guards/diagnóstico posteriores; no se atribuyen al artefacto252 sin su propio manifiesto",
+  "observations": [
+    {"classification": "DETECTED / parent RO report", "fact": "Root informó intención CONFIRMED con executor igual al owner del ticket original, ticket FINISHED y crecimiento PROJECTED; ningún ticket vivo. Esta revisión no repitió esa observación SQL."},
+    {"classification": "DETECTED / source", "fact": "El cierre HTTP positivo llama admission.finish antes de onSettled. La finalización lógica usa otra transacción central. Un error o rechazo de esa segunda operación puede dejar FINISHED y PROJECTED juntos."},
+    {"classification": "DETECTED / source", "fact": "finish_write_resources devuelve false si owner o ticket de la llamada no coinciden con la intención. serializable tiene tres intentos como máximo y deadline central500ms; no reintenta tenant SQL."},
+    {"classification": "DETECTED / source", "fact": "El coordinador ordinario atiende restricciones pendientes. Una proyección terminal no causa por sí sola liberación de QL; el cierre privado exige sus pruebas de fin. El replay tampoco sustituye el ticket original."}
+  ],
+  "hypotheses": [
+    {"id": "H252-01", "classification": "SUGGESTED", "hypothesis": "Un HTTP distinto del mismo proceso pudo reclamar un PENDING conservando el ticket anterior. La igualdad de owner no elimina esta posibilidad de contrato.", "evidence": "Dos pruebas locales RED→GREEN acreditaron el defecto general y el guard de ticket; no acreditan que haya sido la causa real252.", "resolveBefore": "Atribuir causalidad: obtener el ticket efectivamente pasado a finish y compararlo con el original, sin adoptarlo ni modificarlo"},
+    {"id": "H252-02", "classification": "SUGGESTED", "hypothesis": "La transacción central de finalización pudo agotar su presupuesto, fallar o quedar con ACK incierto después del201 y de admission.finish.", "evidence": "La secuencia de llamadas permite exactamente FINISHED/PROJECTED. No se dispone aquí del diagnóstico del hook252; el diagnóstico posterior de respuestas ya terminadas no acredita retroactivamente la causa.", "resolveBefore": "Atribuir causalidad: diagnóstico allowlisted de onSettled/finalización, resultado del guard y transición SETTLED/ROLLBACK, con fuente y ventana exactas"},
+    {"id": "H252-03", "classification": "SUGGESTED / no evidence", "hypothesis": "Un error de transición o coste podría abortar la finalización.", "evidence": "No se detectó una carrera nueva en la sección SQL que bloquea intención/reserva ni evidencia real de ese error. Los límites y razón SETTLED única hacen idempotente el cierre confirmado.", "resolveBefore": "Sólo investigar más si el diagnóstico exacto muestra TRANSITION_BUDGET_EXHAUSTED o CONTROL_ROW_BOUND_EXCEEDED; no repetir inventario ni elevar límites"}
+  ],
+  "laterEvidenceLimit": "El caso same-key8199 reporta crecimiento original SETTLED y PASS. Esto acredita esa ejecución; no identifica la causa252 ni convierte el FAIL histórico en PASS.",
+  "decision": "No cambiar finish, coordinador, reservas ni políticas con una causa no acreditada. Conservar seguridad y evidencia histórica; root mantiene la clasificación del criterio/gate.",
+  "infrastructureResourcesCreatedOrModified": "ninguno"
+}

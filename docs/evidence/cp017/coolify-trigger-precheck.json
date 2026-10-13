@@ -1,0 +1,11 @@
+{
+  "stage": "bounded pre-gate read",
+  "atUtc": "2026-10-13T21:07:32.643514+00:00",
+  "classification": "DETECTED",
+  "provenance": "REMOTE SQL READ ONLY",
+  "sql": "BEGIN READ ONLY; SELECT a.name,a.git_repository,a.git_branch,s.is_auto_deploy_enabled,s.is_preview_deployments_enabled FROM applications a LEFT JOIN application_settings s ON s.application_id=a.id WHERE a.git_repository ILIKE '%SrEdgarR/MECANET.git' OR a.git_repository ILIKE '%SrEdgarR/MECANET'; ROLLBACK;",
+  "exitCode": 0,
+  "stdout": "mecanet-api|SrEdgarR/MECANET.git|codex/deploy-vercel-coolify|f|f\n",
+  "stderr": "",
+  "mutations": []
+}
