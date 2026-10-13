@@ -184,7 +184,10 @@ export function createApp({origin,sessionPool,sessionSecret,authority,admission,
   // Only these built-in source locations can enter a diagnostic, never a raw
   // stack/message, SQL or request/session data.
   const location=String(error.stack??'').match(/server\/saas\/(?:app|auth\/(?:authority|sessions)|admission\/(?:index|transaction))\.js:\d+:\d+/)?.[0];
-  try{reportError({requestId:res.getHeader('X-Request-Id'),code:diagnostic.has(error.code)?error.code:'UNCLASSIFIED',status,errorType,...(location?{location}:{})})}catch{}
+  const causeCode=new Set(['P0001','40001','40P01','42501','42702','42703','23505','23503','23514','22003','53300','57014','57P01','COMMIT_UNCERTAIN','DB_DEADLINE']).has(error.causeCode)?error.causeCode:undefined;
+  const causeReason=new Set(['CANONICAL_INPUT_INVALID','IDEMPOTENCY_CONFLICT','WRITER_FENCE_CLOSED','WRITE_SESSION_EXPIRED','WRITE_ACCESS_DENIED','WRITE_GUARDS_CHANGED','GROWTH_QUOTA','CONTROL_GROWTH_QUOTA','OPERATION_ACCESS_DENIED']).has(error.causeReason)?error.causeReason:undefined;
+  const causeRelation=new Set(['balances','movements','writer_fence','quota_state','operations','audit','products','write_intents','write_growth_reservations','write_projections','tenant_writer_state']).has(error.causeRelation)?error.causeRelation:undefined;
+  try{reportError({requestId:res.getHeader('X-Request-Id'),code:diagnostic.has(error.code)?error.code:'UNCLASSIFIED',status,errorType,...(location?{location}:{}),...(causeCode?{causeCode}:{}),...(causeReason?{causeReason}:{}),...(causeRelation?{causeRelation}:{})})}catch{}
   if(status===429||status===503)res.set('Retry-After','1');
   res.status(status).json({error:code});
  });

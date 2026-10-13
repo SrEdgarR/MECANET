@@ -1,6 +1,6 @@
 // Real own-QA inspection and bounded HTTP->SQL tests; never production data.
 import assert from 'node:assert/strict';
-import { readFile } from 'node:fs/promises';
+import { readFile,writeFile,chmod } from 'node:fs/promises';
 import { createHash } from 'node:crypto';
 import { spawn } from 'node:child_process';
 import { pathToFileURL } from 'node:url';
@@ -61,7 +61,36 @@ export async function collectWriterSqlFacts({qa,sourceSha}){
  return{sourceSha,observedAt:new Date().toISOString(),runtimeArch:arch(),environment:'own synthetic PostgreSQL18.6/TLS real',migrationHashes,central:{aggregate:central.aggregate,debt:central.debt,noBusinessPayload:true},tenants,secretsPrinted:false};
 }
 
+const knownTestNames=new Set([
+ 'writer has no free DML, DDL, fence mutation, role elevation or foreign connection',
+ 'SQL validates the same exact canonical UTF8 digest and derives the effect from it',
+ 'concurrent receipts add once each, replay cannot change product and used is the real logical sum',
+]);
+const knownSqlMessages=new Set(['IDEMPOTENCY_CONFLICT','CANONICAL_INPUT_INVALID','OPERATION_ACCESS_DENIED','WRITER_FENCE_CLOSED','LOGICAL_COUNTER_INCONSISTENT','LOGICAL_QUOTA','WRITE_RESULT_INVALID','WRITE_TICKET_INVALID','AUTHORITY_CHANGED','WRITE_UNCERTAIN','OWN_QA_INSPECTION_REQUIRED','OWN_QA_CLUSTER_PROVENANCE_MISMATCH']);
+const publicCodes=new Set(['NO_PUBLIC_CODE','INVALID_WRITE','INVALID_QUERY','EPOCH_CONFLICT','KEY_CONFLICT','SKU_CONFLICT','OPERATION_PENDING','AUTHORITY_CHANGED','ACCESS_DENIED','SESSION_EXPIRED','PRODUCT_LIMIT','LOGICAL_QUOTA','GLOBAL_QUOTA','WRITE_CLOSED','TENANT_UNAVAILABLE','WRITE_UNCERTAIN','ADMISSION_BUSY']);
+export function sanitizeSqlFailure(error){
+ const errorCode=/^[0-9A-Z]{5}$/.test(error?.code??'')||['ERR_ASSERTION','ENOENT','ECONNRESET','ECONNREFUSED','ETIMEDOUT'].includes(error?.code)?error.code:'QA_SQL_FAILED';
+ return{errorCode,...(knownSqlMessages.has(error?.message)?{fixedFailure:error.message}:{}),...(/^\d{1,8}$/.test(error?.position??'')?{sqlPosition:error.position}:{})};
+}
+export function sanitizeTapDiagnostics(stdout){
+ return stdout.split(/(?=^not ok \d+ - )/m).filter(section=>/^not ok \d+ - /.test(section)).map(section=>{
+  const first=section.split('\n')[0],name=/^not ok \d+ - (.*)$/.exec(first)?.[1];
+  const diagnostics={test:knownTestNames.has(name)?name:'UNIDENTIFIED_TEST'};
+  const codes=[...section.matchAll(/^\s*code: ['"]?([A-Z0-9_]+)['"]?\s*$/gm)].map(m=>m[1]).filter(value=>/^[0-9A-Z]{5}$/.test(value)||['ERR_ASSERTION','ERR_TEST_FAILURE','ENOENT','ECONNRESET','ECONNREFUSED','ETIMEDOUT'].includes(value));
+  if(codes.length)diagnostics.codes=[...new Set(codes)];
+  const http=/Expected HTTP (\d{3}), received (\d{3})\/([A-Z_]{1,60})/.exec(section);
+  if(http)diagnostics.http={expected:Number(http[1]),received:Number(http[2]),publicCode:publicCodes.has(http[3])?http[3]:'UNKNOWN_PUBLIC_CODE'};
+  const locations=[...section.matchAll(/(sql-writers\.test\.mjs|sql-live\.mjs|http-client\.mjs):(\d{1,6}):(\d{1,6})/g)].map(([,file,line,column])=>({file,line:Number(line),column:Number(column)}));
+  if(locations.length)diagnostics.locations=locations.slice(0,4);
+  const fixed=[...section.matchAll(/\b[A-Z][A-Z_]{3,79}\b/g)].map(m=>m[0]).filter(value=>knownSqlMessages.has(value));
+  if(fixed.length)diagnostics.fixedMessages=[...new Set(fixed)];
+  const permissions=/permission denied for (table|schema|function|relation|database) ([a-z_][a-z0-9_.]*)/.exec(section);
+  if(permissions&&/^(inventory|catalog|saas|mecanet_[a-z_]+|postgres)(?:\.[a-z_]+)?$/.test(permissions[2]))diagnostics.permission={kind:permissions[1],object:permissions[2]};
+  return diagnostics;
+ });
+}
 export async function runWriterSqlTests(){
+ if(process.env.QA_PROJECT!=='mecanet-qa-p1l2-cp017')throw new Error('OWN_QA_INSPECTION_REQUIRED');
  const file=new URL('./sql-writers.test.mjs',import.meta.url);
  return new Promise((resolve,reject)=>{
   const child=spawn(process.execPath,['--test','--test-reporter=tap',file.pathname],{stdio:['ignore','pipe','pipe'],env:process.env});
@@ -69,15 +98,24 @@ export async function runWriterSqlTests(){
   const timer=setTimeout(()=>{expired=true;child.kill('SIGKILL')},120000);
   const capture=which=>chunk=>{bytes+=chunk.length;if(bytes>1048576){child.kill('SIGKILL');return}if(which==='out')stdout+=chunk;else stderr+=chunk};
   child.stdout.on('data',capture('out'));child.stderr.on('data',capture('err'));child.on('error',error=>{clearTimeout(timer);reject(error)});
-  child.on('close',exitCode=>{
+  child.on('close',async exitCode=>{
    clearTimeout(timer);const counts={};for(const field of ['tests','pass','fail','cancelled','skipped'])counts[field]=Number(new RegExp(`^# ${field} (\\d+)`,'m').exec(stdout)?.[1]??0);
-   resolve({exitCode,expired,counts,stdoutSha256:createHash('sha256').update(stdout).digest('hex'),stderrSha256:createHash('sha256').update(stderr).digest('hex'),failedNames:stdout.split('\n').filter(line=>/^not ok \d+ - /.test(line)),rawOutputPrinted:false});
+   try{
+    const stdoutFile='/run/qa-results/sql-tests.tap',stderrFile='/run/qa-results/sql-tests.stderr';
+    await writeFile(stdoutFile,stdout,{mode:0o600});await chmod(stdoutFile,0o600);
+    await writeFile(stderrFile,stderr,{mode:0o600});await chmod(stderrFile,0o600);
+    resolve({exitCode,expired,counts,stdoutSha256:createHash('sha256').update(stdout).digest('hex'),stderrSha256:createHash('sha256').update(stderr).digest('hex'),diagnostics:sanitizeTapDiagnostics(stdout),rawOutputFiles:{stdout:stdoutFile,stderr:stderrFile,mode:'0600',private:true},rawOutputPrinted:false});
+   }catch(error){reject(error)}
   });
  });
 }
 if(process.argv[1]&&import.meta.url===pathToFileURL(process.argv[1]).href){
- const file=process.env.MECANET_QA_CONNECTIONS??'/run/qa-secrets/connections.json';if(!file.startsWith('/run/qa-secrets/'))throw new Error('PRIVATE_QA_CONNECTIONS_REQUIRED');
- const qa=JSON.parse(await readFile(file,'utf8'));const tests=await runWriterSqlTests();
- if(tests.exitCode!==0||tests.expired||tests.counts.fail!==0){console.log(JSON.stringify({status:'FAIL',tests,secretsPrinted:false}));process.exitCode=1}
- else{const facts=await collectWriterSqlFacts({qa,sourceSha:process.env.QA_CODE_SHA});console.log(JSON.stringify({status:'PASS',tests,facts}));}
+ const report={status:'FAIL',secretsPrinted:false};
+ try{
+  const file=process.env.MECANET_QA_CONNECTIONS??'/run/qa-secrets/connections.json';if(!file.startsWith('/run/qa-secrets/'))throw new Error('PRIVATE_QA_CONNECTIONS_REQUIRED');
+  const qa=JSON.parse(await readFile(file,'utf8'));report.tests=await runWriterSqlTests();
+  if(report.tests.exitCode===0&&!report.tests.expired&&report.tests.counts.fail===0){report.facts=await collectWriterSqlFacts({qa,sourceSha:process.env.QA_CODE_SHA});report.status='PASS'}
+ }catch(error){Object.assign(report,sanitizeSqlFailure(error))}
+ if(report.status!=='PASS')process.exitCode=1;
+ console.log(JSON.stringify(report));
 }

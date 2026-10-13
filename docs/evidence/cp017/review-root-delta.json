@@ -8,7 +8,7 @@
     "sha256": "ca975dc822c0bd5e872d3debe824abc536f662007513170f327727878ff3ac71",
     "approvalSource": "A/B humanas registradas por root en DEC-061/062; no nueva aprobación por este revisor"
   },
-  "verdict": "REQUEST_CHANGES",
+  "verdict": "NO_OPEN_SOURCE_FINDINGS; NOT_AN_INTEGRATION_APPROVAL",
   "evidenceClass": "STATIC_SOURCE_REVIEW_AND_LOCAL_HTTP_WITH_FAKE_SQL",
   "limitations": [
     "No se ejecutó PostgreSQL real, SSH, infraestructura ni navegador durante esta revisión.",
@@ -50,8 +50,8 @@
       "trigger": "Sesión companyA válida solicita operations o operations/:id con UUID tenantB. Sólo se verificaba propósito antes de admit; scopesFor debitaba QH y reservaba QC/Qt B antes del403/404 del servicio.",
       "impact": "Agotamiento de cuotas de B desde A con un UUID conocido, sin necesitar permiso B ni abrir su DB empresarial. La ausencia de fuga de contenido no resuelve el aislamiento de recursos A8.",
       "requiredFix": "tenantContext antes de admit y en su revalidate, manteniendo la comprobación de autor/acción original en el servicio.",
-      "status": "CORRECTED_SOURCE",
-      "verification": "Root cambió company(req) por contexto scoped. Negativas con ledger/tickets B inalterados: NOT VERIFIED por este revisor; necesarias antes de salida L2-A8."
+      "status": "CORRECTED_SOURCE_AND_LOCAL_TESTS",
+      "verification": "Source scoped antes de admit y revalidate; dos negativas HTTP fakeSQL comprobaron cero admissions/effects/lookups B. Ledger PostgreSQL real permanece NOT VERIFIED por este revisor."
     },
     {
       "id": "CP017-ROOT-R3",
@@ -83,8 +83,8 @@
       "trigger": "limit2; SQL selecciona create1,receive2,create3. Se revoca catalog.create antes de las revalidaciones JS; visible sólo receive2, fitPage produce nextCursor:null, aunque receive4 continúa autorizada después de create3.",
       "impact": "La recuperación propia tras recarga pierde la continuación de operaciones todavía autorizadas. No permite reejecución ni filtra datos ajenos, pero incumple el recorrido paginado sin saltos.",
       "requiredFix": "Conservar señal de más selección y escanear de forma acotada hasta prefijo autorizado/limit+1 o agotamiento real. No publicar fin de lista después de filtrar una selección parcial. Cursor público tras última fila incluida; si ninguna visible seguir con cursor interno o devolver503 al deadline, nunca fin inventado.",
-      "status": "OPEN",
-      "verification": "Hallazgo causal estático comunicado a root. Test de cambio de grant entre selección/revalidación con acciones mixtas y continuación: pendiente."
+      "status": "CORRECTED_SOURCE_AND_LOCAL_TESTS",
+      "verification": "Servicio ahora escanea hasta limit+1 visibles, agotamiento SQL o límite404/deadline; cursor público última incluida. Dos tests nuevos PASS: grant revocado entre selección/revalidación conserva continuación; presupuesto agotado devuelve WRITE_UNCERTAIN. Intercalado PostgreSQL real NOT VERIFIED por este revisor."
     }
   ],
   "positiveObservations": [
@@ -101,7 +101,14 @@
     "tests": 10,
     "failures": 0,
     "realDatabase": false,
-    "scope": "cinco logout, tres rutas, dos pools; SQL simulado"
+    "scope": "cinco logout, tres rutas, dos pools; SQL simulado",
+    "followup": {
+      "failures": 0,
+      "tests": 22,
+      "command": "node --test tests/qa/write-service.test.js tests/qa/write-app.test.js tests/qa/cp017/logout.test.mjs",
+      "realDatabase": false,
+      "result": "PASS"
+    }
   },
   "requiredExitEvidence": [
     {
@@ -125,9 +132,6 @@
   ],
   "infrastructureResourcesCreatedOrModified": 0,
   "metadata": {
-    "reviewedAt": "2026-10-13T14:56:25.5235345-04:00",
-    "branch": "codex/p1-l2",
-    "sourceState": "uncommitted working tree; hashes identify reviewed inputs, not only HEAD",
     "inputs": [
       {
         "sha256": "78e08a59d7b5712ffbfde90039cf09a7475de18a7ba919ce806198002abb5cc5",
@@ -142,7 +146,7 @@
         "path": "server/saas/db/pools.js"
       },
       {
-        "sha256": "ce4a25db90432350030ad9d1b4583e8e1f3bc42ab0e0789496448e0380083cff",
+        "sha256": "58c91f43d8a8616841b346fcb884abb4e674aee70c181a3df74c1e7d910f47b0",
         "path": "tests/qa/issuer.js"
       },
       {
@@ -170,7 +174,7 @@
         "path": "server/saas/repositories/inventory.js"
       },
       {
-        "sha256": "4a4252ec79c5a39ca520d1bb74559a24fc58055d36efe1d40f86d3bdd8c674b2",
+        "sha256": "a18f2c24a607462c9966b9430b3c51d4c4abca503e37c2137cbd260173b07203",
         "path": "server/saas/db/migrations/003-control-writers.sql"
       },
       {
@@ -200,8 +204,99 @@
       {
         "sha256": "ca975dc822c0bd5e872d3debe824abc536f662007513170f327727878ff3ac71",
         "path": ".agentic/NEXT_LOT_CANDIDATE.md"
+      },
+      {
+        "sha256": "a0b163b792bb76ee7d7315dfb80a8889b484e50fa1a61287640c492a5f79c350",
+        "path": "tests/qa/write-service.test.js"
+      },
+      {
+        "sha256": "eaa96365af67845818a8b1a83801ac181d9abe8bd73e3e55a080e460c1e77ff5",
+        "path": "tests/qa/write-app.test.js"
       }
     ],
-    "workingHead": "d609b816284d95320f748701351d789e8d1fcdf1"
+    "sourceState": "hash-bound source re-review after root corrections; no SQL functional PASS",
+    "initialReview": {
+      "reviewedAt": "2026-10-13T14:56:25.5235345-04:00",
+      "branch": "codex/p1-l2",
+      "sourceState": "uncommitted working tree; hashes identify reviewed inputs, not only HEAD",
+      "inputs": [
+        {
+          "sha256": "78e08a59d7b5712ffbfde90039cf09a7475de18a7ba919ce806198002abb5cc5",
+          "path": "server/saas/app.js"
+        },
+        {
+          "sha256": "97d5d9c1264044824358a5a46efe120d60ca98efcd280008827c1d5094b51ed6",
+          "path": "server/saas/auth/authority.js"
+        },
+        {
+          "sha256": "2d21352f612fea94591141017316d5c2adcf29d81b612f10d85758767cec449e",
+          "path": "server/saas/db/pools.js"
+        },
+        {
+          "sha256": "ce4a25db90432350030ad9d1b4583e8e1f3bc42ab0e0789496448e0380083cff",
+          "path": "tests/qa/issuer.js"
+        },
+        {
+          "sha256": "12de4e46370650177fc2bc7f13ccb0e323d9bbd5eecb72101ff4e49421a233bb",
+          "path": "tests/qa/cp017/entry.mjs"
+        },
+        {
+          "sha256": "9a5e7c3119ea164658ba1b35a9c192368ca5cd19b40b028a73a0e883751e6e1a",
+          "path": "tests/qa/cp017/worker.mjs"
+        },
+        {
+          "sha256": "688cd449152dc3422bc6cc2450e4edd200270f38670260e3c5a7f60a9933e45d",
+          "path": "server/saas/writes/service.js"
+        },
+        {
+          "sha256": "ae14c70b24eefca6a6f30b5981cc2dea56811ee16456fe7b44c03d9484ca39f4",
+          "path": "server/saas/writes/coordinator.js"
+        },
+        {
+          "sha256": "84f6138f357a2e58bb7ddd537dba38c1ec635775ae4a9d927c92a99b48e2bf13",
+          "path": "server/saas/writes/validation.js"
+        },
+        {
+          "sha256": "25f48036e0ba50ce8b7211c7399480b27f5380911c4ed41c4f9b0133bf5967a3",
+          "path": "server/saas/repositories/inventory.js"
+        },
+        {
+          "sha256": "4a4252ec79c5a39ca520d1bb74559a24fc58055d36efe1d40f86d3bdd8c674b2",
+          "path": "server/saas/db/migrations/003-control-writers.sql"
+        },
+        {
+          "sha256": "5fe454b89dbc5f821f742456deb2ebde08b9142048b2eac33ef9352eb87bce06",
+          "path": "server/saas/db/migrations/003-tenant-writers.sql"
+        },
+        {
+          "sha256": "6a29f8481d325256277a19f90132b0b35d1690aa461fb485c3f15330d6da929b",
+          "path": "server/saas/admission/index.js"
+        },
+        {
+          "sha256": "a10c8a37aeb90e952c2105e9142d5b69854ba517f3c25a1f32a4a5dae1fc1502",
+          "path": "server/saas/admission/policy.js"
+        },
+        {
+          "sha256": "b272a5a100648ec68d8d122683c551d24943979f152c6e5a5a5657514a56c704",
+          "path": "tests/qa/cp017/logout.test.mjs"
+        },
+        {
+          "sha256": "23300065ca609c2fbd0843e61734fe18e620d977c894b3b45359578037a32008",
+          "path": "tests/qa/cp017/routes.test.mjs"
+        },
+        {
+          "sha256": "d9ebece0256a09ad455b23d4a07fdc433432511b22a9304d01fdc2ea6e2e9d71",
+          "path": "tests/qa/cp017/pools.test.mjs"
+        },
+        {
+          "sha256": "ca975dc822c0bd5e872d3debe824abc536f662007513170f327727878ff3ac71",
+          "path": ".agentic/NEXT_LOT_CANDIDATE.md"
+        }
+      ],
+      "workingHead": "d609b816284d95320f748701351d789e8d1fcdf1"
+    },
+    "branch": "codex/p1-l2",
+    "workingHead": "15ebe118dd9e2d1d17a170cf340577741d4a7fc9",
+    "reviewedAt": "2026-10-13T15:03:31.2690391-04:00"
   }
 }

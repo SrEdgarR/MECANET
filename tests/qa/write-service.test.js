@@ -4,7 +4,7 @@ import {createWriteService} from '../../server/saas/writes/service.js';
 
 const tenantId='aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa',actorId='bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb',generation='cccccccc-cccc-4ccc-8ccc-cccccccccccc',operationId='dddddddd-dddd-4ddd-8ddd-dddddddddddd',ownerId='eeeeeeee-eeee-4eee-8eee-eeeeeeeeeeee',ticketId='ffffffff-ffff-4fff-8fff-ffffffffffff';
 const result={operationId,state:'CONFIRMED',productId:actorId,movementId:null,onHand:'0',balanceVersion:'1',dataEpoch:'1'};
-function fixture({uncertain=false,preimagePause=false,projectionFailure=false,replay=false,claimConflict=false,expiredBeforeFunction=false,rollbackFailure=false}={}){
+function fixture({uncertain=false,preimagePause=false,projectionFailure=false,replay=false,claimConflict=false,expiredBeforeFunction=false,rollbackFailure=false,writerError=null}={}){
  let effects=0,sqlEnded=false,responseEnded=false,state=replay?'CONFIRMED':'PENDING',retained=true;
  const row=()=>({operation_id:operationId,tenant_id:tenantId,actor_id:actorId,generation,data_epoch:'1',writer_version:'1',status:state,owner_id:ownerId,action:'catalog.create',ticket_id:ticketId});
  const control={async connect(){return {async query(text){
@@ -15,7 +15,7 @@ function fixture({uncertain=false,preimagePause=false,projectionFailure=false,re
   if(text.includes('finish_write_resources')){if(sqlEnded&&responseEnded)retained=false;return {rows:[{finished:!retained}]}}
   return {rows:[]};},release(){}}},async query(){return {rows:[]}}};
  const writerPools={async withTenant(_descriptor,callback){return callback({async query(command){const text=typeof command==='string'?command:command.text;
-  if(text.includes('inventory.create_product')){effects++;return {rows:[{result,logical_delta:'1024',result_hash:'a'.repeat(64),replay:false}]}}
+  if(text.includes('inventory.create_product')){if(writerError)throw writerError;effects++;return {rows:[{result,logical_delta:'1024',result_hash:'a'.repeat(64),replay:false}]}}
   if(text==='COMMIT'){sqlEnded=true;if(uncertain)throw Object.assign(new Error('ACK lost'),{code:'08006'})}
   if(text==='ROLLBACK'&&rollbackFailure)throw Object.assign(new Error('ROLLBACK acknowledgement lost'),{code:'08006'});
   return {rows:[]};}})}};
@@ -55,6 +55,16 @@ test('an unacknowledged rollback cannot turn a session rejection into a positive
 test('a positively rolled back session rejection may retain its sanitized 401',async()=>{
  const f=fixture({expiredBeforeFunction:true});await assert.rejects(()=>f.service.write(f.input),error=>error.code==='SESSION_EXPIRED'&&error.status===401);
  assert.deepEqual(f.state(),{effects:0,state:'UNKNOWN',retained:true});
+});
+
+test('private diagnostic retains only fixed database codes, reasons and known relations',async()=>{
+ for(const [original,expected] of [[Object.assign(Error('private SQL containing a synthetic secret'),{code:'42501',schema:'inventory',table:'quota_state'}),{causeCode:'42501',causeRelation:'inventory.quota_state'}],[Object.assign(Error('LOGICAL_COUNTER_INCONSISTENT'),{code:'P0001'}),{causeCode:'P0001',causeReason:'LOGICAL_COUNTER_INCONSISTENT'}],[Object.assign(Error('CANONICAL_INPUT_INVALID: untrusted suffix'),{code:'P0001',schema:'foreign',table:'secret'}),{causeCode:'P0001'}]]){
+  const f=fixture({writerError:original});await assert.rejects(()=>f.service.write(f.input),error=>{
+   assert.equal(error.code,'WRITE_UNCERTAIN');assert.equal(error.status,503);
+   for(const field of ['causeCode','causeReason','causeRelation'])assert.equal(error[field],expected[field]);
+   assert.equal(JSON.stringify(error).includes('cause'),false);assert.equal(JSON.stringify(error).includes('secret'),false);return true;
+  });
+ }
 });
 
 test('pending pagination continues past grants revoked between SQL selection and fresh authorization',async()=>{

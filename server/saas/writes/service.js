@@ -10,15 +10,26 @@ const publicState=state=>terminal.has(state)?state:state==='UNKNOWN'?'UNKNOWN':'
 const context=a=>({identityId:a.user.id,purpose:a.purpose,contextVersion:a.contextVersion});
 const envelope=a=>({tenantId:a.descriptor.tenantId,dataEpoch:String(a.descriptor.dataEpoch),context:context(a)});
 const ownCompany=a=>{if(a?.purpose!=='company'||!a.user?.id)throw failure('ACCESS_DENIED',403);return a};
+const databaseCodes=new Set(['P0001','42501','22P02','23502','23503','23505','23514','42702','42703','42P01','42883','25006','40001','40P01','53300','57014','57P01','08006']);
+const databaseReasons=new Set(['CANONICAL_INPUT_INVALID','LOGICAL_SHAPE_INVALID','LOGICAL_ROW_BOUND_EXCEEDED','LOGICAL_COUNTER_INCONSISTENT','OPERATION_INTEGRITY_UNPROVEN','WRITER_POLICY_UNAVAILABLE','WRITER_FENCE_CLOSED','WRITER_VERSION_CONFLICT','WRITER_POLICY_CONFLICT','IDEMPOTENCY_CONFLICT','CONTROL_ROW_BOUND_EXCEEDED','TRANSITION_BUDGET_EXHAUSTED','WRITE_GUARDS_IMMUTABLE','WRITE_ACCESS_DENIED','WRITE_SESSION_EXPIRED','WRITE_TICKET_INVALID','WRITE_GUARDS_CHANGED','WRITE_RESULT_INVALID','WRITE_RESULT_CONFLICT','GROWTH_QUOTA','CONTROL_GROWTH_QUOTA','LOGICAL_QUOTA','RECONCILIATION_REQUIRED','END_NOT_PROVEN','WRITER_CLOSE_NOT_PROVEN']);
+const databaseRelations=new Set(['catalog.products','inventory.writer_fence','inventory.quota_state','inventory.balances','inventory.movements','inventory.operations','inventory.audit','saas.role_policies','saas.action_grants','saas.session_registry','saas.tenant_directory','saas.tenant_writer_state','saas.write_control_quota','saas.write_intents','saas.write_growth_reservations','saas.write_projections','saas.write_transitions','saas.write_restrictions','saas.write_restriction_tenants','saas.admission_fence','saas.policies','saas.tickets','saas.windows','saas.admission_scopes']);
+function privateDiagnostic(result,error){
+ const code=databaseCodes.has(error.causeCode)?error.causeCode:error.code;
+ const reason=databaseReasons.has(error.causeReason)?error.causeReason:error.message;
+ const relation=databaseRelations.has(error.causeRelation)?error.causeRelation:`${error.schema}.${error.table}`;
+ // Non-enumerable and strictly fixed: never part of the public JSON/error DTO.
+ for(const [field,value,allowed] of [['causeCode',code,databaseCodes],['causeReason',reason,databaseReasons],['causeRelation',relation,databaseRelations]])if(allowed.has(value))Object.defineProperty(result,field,{value});
+ return result;
+}
 const safeError=error=>{
  const codes={INVALID_WRITE:400,INVALID_QUERY:400,EPOCH_CONFLICT:409,KEY_CONFLICT:409,SKU_CONFLICT:409,OPERATION_PENDING:409,AUTHORITY_CHANGED:409,ACCESS_DENIED:403,SESSION_EXPIRED:401,PRODUCT_LIMIT:429,LOGICAL_QUOTA:429,GLOBAL_QUOTA:429,WRITE_CLOSED:503,TENANT_UNAVAILABLE:503};
- if(Object.hasOwn(codes,error.code))return failure(error.code,codes[error.code]);
+ if(Object.hasOwn(codes,error.code))return privateDiagnostic(failure(error.code,codes[error.code]),error);
  // SECURITY DEFINER exceptions use fixed messages only; no raw SQL is returned.
  if(error.code==='P0001'){
   const aliases={WRITE_ACCESS_DENIED:'ACCESS_DENIED',OPERATION_ACCESS_DENIED:'ACCESS_DENIED',WRITE_SESSION_EXPIRED:'SESSION_EXPIRED',WRITER_FENCE_CLOSED:'WRITE_CLOSED',WRITE_INPUT_INVALID:'INVALID_WRITE',IDEMPOTENCY_CONFLICT:'KEY_CONFLICT',GROWTH_QUOTA:'LOGICAL_QUOTA',CONTROL_GROWTH_QUOTA:'GLOBAL_QUOTA',WRITE_GUARDS_CHANGED:'AUTHORITY_CHANGED'};
-  const code=aliases[error.message]??error.message;if(Object.hasOwn(codes,code))return failure(code,codes[code]);
+  const code=aliases[error.message]??error.message;if(Object.hasOwn(codes,code))return privateDiagnostic(failure(code,codes[code]),error);
  }
- return failure('WRITE_UNCERTAIN',503);
+ return privateDiagnostic(failure('WRITE_UNCERTAIN',503),error);
 };
 
 /** API-side protocol. This factory never receives a maintenance credential. */

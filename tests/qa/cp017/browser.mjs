@@ -74,6 +74,13 @@ async function assertHintShape(tab){
  assert(Array.isArray(hints)&&hints.length<=32);for(const hint of hints){assert.deepEqual(Object.keys(hint).sort(),['operationId','tenantId']);assert.match(hint.operationId,/^[0-9a-f-]{36}$/);assert.match(hint.tenantId,/^[0-9a-f-]{36}$/)}return hints;
 }
 async function screenshot(tab,name){await tab.screenshot({path:path.join(output,name),fullPage:true});evidence.screenshots.push(name)}
+async function textContrast(tab){
+ const palette=await tab.evaluate(()=>{const style=getComputedStyle(document.documentElement);return Object.fromEntries(['canvas','surface','ink','muted','accent','accent-ink','error','error-surface','focus'].map(key=>[key,style.getPropertyValue('--'+key).trim()]))});
+ const luminance=color=>{assert.match(color,/^#[0-9a-f]{6}$/i);const channels=[1,3,5].map(start=>parseInt(color.slice(start,start+2),16)/255).map(value=>value<=.04045?value/12.92:((value+.055)/1.055)**2.4);return channels[0]*.2126+channels[1]*.7152+channels[2]*.0722};
+ const ratio=(first,second)=>{const a=luminance(palette[first]),b=luminance(palette[second]);return(Math.max(a,b)+.05)/(Math.min(a,b)+.05)};
+ for(const [front,back]of[['ink','surface'],['muted','surface'],['ink','canvas'],['muted','canvas'],['accent','surface'],['accent-ink','accent'],['error','error-surface']])assert(ratio(front,back)>=4.5,front+' text contrast');
+ assert(ratio('focus','surface')>=3);assert(ratio('focus','canvas')>=3);
+}
 
 try{
  await check('TLS validates the exact private CA, hostname and SPKI',async()=>assert.equal(await handshake(),config.spkiSha256));
@@ -87,6 +94,7 @@ try{
  await check('A real product is created once with stock zero and known pre-send reference',async()=>{created=await createProduct(page,sku,name);const row=await ownRow(page,name);assert.equal((await row.getByRole('cell').allTextContents())[2],'0');assert.equal((await assertHintShape(page)).length,0);await screenshot(page,'inventory-created.png')});
  await check('Positive receipt changes real stock once and records an opaque movement',async()=>{
   await page.getByRole('button',{name:`Recibir unidades de ${name}`,exact:true}).click();assert(await page.getByLabel('Unidades recibidas').evaluate(node=>document.activeElement===node));
+  const before=postCount();await page.getByLabel('Unidades recibidas').fill('0');await page.getByRole('button',{name:'Registrar recepción',exact:true}).click();assert.equal(await page.getByLabel('Unidades recibidas').getAttribute('aria-invalid'),'true');assert.equal(postCount(),before);
   await page.getByLabel('Unidades recibidas').fill('7');await page.getByLabel('Motivo de la recepción').fill('Recepción sintética navegador');
   const received=page.waitForResponse(response=>response.request().method()==='POST'&&new URL(response.url()).pathname===productsPath+'/'+created.productId+'/stock-receipts');
   await page.getByRole('button',{name:'Registrar recepción',exact:true}).click();const reply=await received;assert.equal(reply.status(),201);const result=await reply.json();assert.equal(result.onHand,'7');assert.equal(result.balanceVersion,'2');assert.notEqual(result.movementId,null);
@@ -118,10 +126,11 @@ try{
   assert.equal(shape.overflow,false);assert.equal(shape.smallControls,0);assert.equal(shape.h1Count,1);assert.equal(shape.motion,true);assert(shape.radii.every(value=>value==='0px'));
   for(let step=0;step<8;step++){await page.keyboard.press('Tab');assert(await page.evaluate(()=>{const node=document.activeElement;if(!node||node===document.body)return true;const r=node.getBoundingClientRect();return r.left>=-1&&r.right<=innerWidth+1&&getComputedStyle(node).outlineStyle!=='none'}))}await screenshot(page,`inventory-${width}.png`);
  });
- await check('Dark mode preserves square controls and reduced motion',async()=>{await page.emulateMedia({colorScheme:'dark',reducedMotion:'reduce'});assert(await page.evaluate(()=>matchMedia('(prefers-color-scheme: dark)').matches));await screenshot(page,'inventory-dark.png')});
- await check('Text200% reflows without document or control clipping',async()=>{
-  await page.setViewportSize({width:768,height:960});await page.evaluate(()=>{document.documentElement.style.fontSize='32px'});
-  const shape=await page.evaluate(()=>({font:getComputedStyle(document.documentElement).fontSize,overflow:document.documentElement.scrollWidth>innerWidth,clipped:[...document.querySelectorAll('main>button,.inventory-form>button,.catalog-tools button')].filter(n=>{const r=n.getBoundingClientRect();return r.left<0||r.right>innerWidth}).length}));assert.equal(shape.font,'32px');assert.equal(shape.overflow,false);assert.equal(shape.clipped,0);await screenshot(page,'inventory-text-200-percent.png');await page.evaluate(()=>{document.documentElement.style.fontSize=''});
+ await check('Light text and focus palette meet contrast thresholds',async()=>{await page.emulateMedia({colorScheme:'light',reducedMotion:'reduce'});await textContrast(page)});
+ await check('Dark mode preserves contrast, square controls and reduced motion',async()=>{await page.emulateMedia({colorScheme:'dark',reducedMotion:'reduce'});assert(await page.evaluate(()=>matchMedia('(prefers-color-scheme: dark)').matches));await textContrast(page);await screenshot(page,'inventory-dark.png')});
+ for(const width of [320,768,1440])await check(`Text200% at ${width}px reflows without document or control clipping`,async()=>{
+  await page.setViewportSize({width,height:960});await page.evaluate(()=>{document.documentElement.style.fontSize='32px'});
+  const shape=await page.evaluate(()=>({font:getComputedStyle(document.documentElement).fontSize,overflow:document.documentElement.scrollWidth>innerWidth,clipped:[...document.querySelectorAll('main>button,.inventory-form>button,.catalog-tools button')].filter(n=>{const r=n.getBoundingClientRect();return r.left<0||r.right>innerWidth}).length}));assert.equal(shape.font,'32px');assert.equal(shape.overflow,false);assert.equal(shape.clipped,0);await screenshot(page,`inventory-text-200-percent-${width}.png`);await page.evaluate(()=>{document.documentElement.style.fontSize=''});
  });
  const writer=await dedicatedContext();const writerReads=[];writer.page.on('request',req=>{if(req.method()==='GET'&&/\/(?:inventory|stock-movements)(?:\?|$)/.test(new URL(req.url()).pathname))writerReads.push(req.url())});
  await check('A receive-only member reaches its form without inventory or movement reads',async()=>{

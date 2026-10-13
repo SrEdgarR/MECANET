@@ -23,12 +23,20 @@ const login=JSON.parse(await readFile('/run/qa-secrets/fixture-login.json','utf8
 const bootstrap=(await readFile('/run/qa-secrets/bootstrap','utf8')).trim();
 const pools=new Map(),clients=[];
 const report={sourceSha,harnessSha256:createHash('sha256').update(await readFile(new URL(import.meta.url))).digest('hex'),project:PROJECT,generation:qa.generation,startedAt:new Date().toISOString(),architecture:arch(),environment:'own synthetic PostgreSQL18.6/ARM64/TLS/two API',cases:[],notVerified:['simultaneous SQL writers beyond enforced ordinary capacity','last product and last logical byte','control/barrier worst-case metadata boundary','process-dead resource reconciliation','restart and rotation','closed restore and rollback','browser reload/accessibility'],resourcesModified:'only own synthetic fixed restriction requests',secretsPrinted:false};
-let nextHttp=0;
+let nextHttp=0;const passedCases=new Set();
 async function persist(){await mkdir('/run/qa-results',{recursive:true});await writeFile(reportFile,JSON.stringify(report,null,2),{mode:0o600})}
-async function caseOf(id,criteria,fn){
+async function caseOf(id,criteria,fn,{dependsOn=[]}={}){
  const startedAt=new Date().toISOString();
- try{const facts=await fn();report.cases.push({id,criteria,status:'PASS',startedAt,finishedAt:new Date().toISOString(),...facts})}
- catch(error){report.cases.push({id,criteria,status:'FAIL',startedAt,finishedAt:new Date().toISOString(),errorType:error instanceof assert.AssertionError?'ASSERTION':error instanceof Error?'EXECUTION':'UNKNOWN',code:typeof error.code==='string'&&/^[A-Z0-9_]{1,60}$/.test(error.code)?error.code:'INTEGRATION_ASSERTION',...(typeof error.message==='string'&&/^Expected HTTP \d+, received \d+\/[A-Z_]+$/.test(error.message)?{safeDetail:error.message}:{} )})}
+ try{
+  const missing=dependsOn.filter(dependency=>!passedCases.has(dependency));
+  if(missing.length)throw Object.assign(Error('DEPENDENCY_NOT_VERIFIED'),{code:'DEPENDENCY_NOT_VERIFIED',missing});
+  const facts=await fn();report.cases.push({id,criteria,status:'PASS',startedAt,finishedAt:new Date().toISOString(),...facts});passedCases.add(id);
+ }catch(error){
+  const mismatch=typeof error.message==='string'?/^Expected HTTP (\d{3}), received (\d{3})\/([A-Z_]{1,60})(?:\r?\n|$)/.exec(error.message):null;
+  const statusNumber=value=>Number.isInteger(value)&&value>=100&&value<=599;
+  const expected=mismatch?Number(mismatch[1]):statusNumber(error.expected)?error.expected:null,actual=mismatch?Number(mismatch[2]):statusNumber(error.actual)?error.actual:null;
+  report.cases.push({id,criteria,status:error.code==='DEPENDENCY_NOT_VERIFIED'?'NOT VERIFIED':'FAIL',startedAt,finishedAt:new Date().toISOString(),errorType:error instanceof assert.AssertionError?'ASSERTION':error instanceof Error?'EXECUTION':'UNKNOWN',code:typeof error.code==='string'&&/^[A-Z0-9_]{1,60}$/.test(error.code)?error.code:'INTEGRATION_ASSERTION',...(mismatch||expected!==null&&actual!==null?{statusMismatch:{expected,actual,...(mismatch?{publicCode:mismatch[3]}:{})}}:{}),...(error.code==='DEPENDENCY_NOT_VERIFIED'?{missingPrerequisites:error.missing}: {})});
+ }
  await persist();
 }
 async function observer(database='mecanet_control'){
@@ -111,7 +119,7 @@ try{
   replies.forEach(r=>assertStatus(r,201));assert.deepEqual(replies[0].json,replies[1].json);otherProduct=replies[0].json.productId;
   const rows=(await tenant('SELECT (SELECT count(*) FROM catalog.products)::int AS products,(SELECT count(*) FROM inventory.operations WHERE id=$1)::int AS operations,(SELECT count(*) FROM inventory.audit WHERE operation_id=$1)::int AS audits',[id]))[0];
   assert.deepEqual(rows,{products:before+1,operations:1,audits:1});return {operationId:id,twoApiHttpConcurrency:true,singleProduct:true,singleAudit:true};
- });
+ },{dependsOn:['normalized-canonical-two-api-and-uc']});
  await caseOf('two-receipts-sum-and-same-key-replay',['L2-A7'],async()=>{
   assert(product);const ids=[randomUUID(),randomUUID()],inputs=[{quantity:'7',reason:'Ficticio 1'},{quantity:'11',reason:'Ficticio 2'}];
   const replies=await Promise.all([write(a,ids[0],inputs[0],{productId:product}),write(a2,ids[1],inputs[1],{productId:product})]);replies.forEach(r=>assertStatus(r,201));
@@ -119,7 +127,7 @@ try{
   const balance=(await tenant('SELECT on_hand::text AS quantity,version::text,(SELECT count(*) FROM inventory.movements WHERE product_id=$1)::int AS movements FROM inventory.balances WHERE product_id=$1',[product]))[0];assert.deepEqual(balance,{quantity:'18',version:'3',movements:2});
   const ledger=(await tenant('SELECT logical_bytes::text AS counted,inventory.logical_usage()::text AS actual FROM inventory.quota_state WHERE id=1'))[0];assert.equal(ledger.counted,ledger.actual);
   return {operationIds:ids,twoApiHttpConcurrency:true,quantity:'18',movements:2,logicalCounterExact:true};
- });
+ },{dependsOn:['normalized-canonical-two-api-and-uc']});
  await caseOf('incompatible-key-and-own-result-privacy',['L2-A4','L2-A6','L2-A7'],async()=>{
   const id=randomUUID(),input={quantity:'3',reason:'Original ficticio'};assertStatus(await write(a,id,input,{productId:product}),201);
   const before=(await tenant('SELECT on_hand::text AS quantity,(SELECT count(*) FROM inventory.movements WHERE product_id=$1)::int AS movements FROM inventory.balances WHERE product_id=$1',[product]))[0];
@@ -127,15 +135,18 @@ try{
   const foreign=await send(teammate,`/api/tenants/${TENANT_A}/operations/${id}`);assertStatus(foreign,403);assert.deepEqual(foreign.json,{error:'ACCESS_DENIED'});
   assert.deepEqual((await tenant('SELECT on_hand::text AS quantity,(SELECT count(*) FROM inventory.movements WHERE product_id=$1)::int AS movements FROM inventory.balances WHERE product_id=$1',[product]))[0],before);
   return {operationId:id,productAndPayloadBound:true,otherActorHasNoResult:true,noAdditionalEffect:true};
- });
- await caseOf('a-b-independent-data-and-owned-reads',['L2-A4','L2-A7'],async()=>{
+ },{dependsOn:['normalized-canonical-two-api-and-uc','same-create-key-two-api-concurrent','two-receipts-sum-and-same-key-replay']});
+ await caseOf('a-b-independent-data',['L2-A4'],async()=>{
   const id=randomUUID();assertStatus(await write(b,id,{sku:`ONLY-B-${id.slice(0,8)}`,name:'Empresa B ficticia'},{tenantId:TENANT_B}),201);
   assert.equal((await tenant('SELECT count(*)::int AS n FROM inventory.operations WHERE id=$1',[id],TENANT_A))[0].n,0);
+  return {companyBOperationId:id,companyAHasNoForeignEffect:true};
+ });
+ await caseOf('owned-bounded-redacted-reads',['L2-A4','L2-A7'],async()=>{
   const read=await send(a,`/api/tenants/${TENANT_A}/inventory?limit=2`);assertStatus(read,200);assert.equal(read.json.tenantId,TENANT_A);assert(read.json.items.length<=2);assert(Buffer.byteLength(read.text)<=65536);
   const moves=await send(a2,`/api/tenants/${TENANT_A}/products/${product}/stock-movements?limit=2`);assertStatus(moves,200);assert(moves.json.items.length<=2);
   for(const row of moves.json.items)for(const field of ['actorId','email','reason','requestHash'])assert.equal(Object.hasOwn(row,field),false);
-  return {companyBOperationId:id,companyAHasNoForeignEffect:true,boundedRead:true,movementDtoRedacted:true};
- });
+  return {boundedRead:true,movementDtoRedacted:true};
+ },{dependsOn:['normalized-canonical-two-api-and-uc','two-receipts-sum-and-same-key-replay']});
  await caseOf('delayed-original-writer-revocation-close-v-plus-two',['L2-A5','L2-A8'],async()=>{
   assert(product);const id=randomUUID(),gate=await arm({instance:'api1',stage:'write.beforeTenant',tenantId:TENANT_A});let pending;
   const before=(await tenant('SELECT on_hand::text AS quantity FROM inventory.balances WHERE product_id=$1',[product]))[0].quantity;
@@ -151,7 +162,7 @@ try{
    const freshId=randomUUID();assertStatus(await write(a2,freshId,{quantity:'1',reason:'Miembro vigente'},{productId:product}),201);
    return {operationId:id,restrictionId,oldWriterVersion:old.intent.writer_version,closedWriterVersion:acknowledged.closed_version,reopenedWriterVersion:acknowledged.reopen_version,noEffectAfterAck:true,oldVersionPreserved:true,resourcesRetainedUntilResponse:true,currentMemberNewIntent:true};
   }finally{await release(gate).catch(()=>{});if(pending)await pending.catch(()=>{})}
- });
+ },{dependsOn:['normalized-canonical-two-api-and-uc','incompatible-key-and-own-result-privacy']});
  await caseOf('lost-after-tenant-commit-retains-unknown-and-durable-effect',['L2-A5','L2-A7','L2-A8'],async()=>{
   assert(product);const id=randomUUID(),gate=await arm({instance:'api1',stage:'write.afterTenantCommit',tenantId:TENANT_A,action:'reject'}),input={quantity:'2',reason:'ACK perdido ficticio'};
   try{
@@ -164,7 +175,7 @@ try{
    report.recovery={operationId:id,tenantId:TENANT_A,productId:product,ticketId:rows.intent.ticket_id,restrictionId,ownerInstance:'api1',httpFinished:true,requiresPositiveProcessAndSqlEnd:true,httpQueryAndReplay:'NOT VERIFIED until own ticket and resource reconciliation',inputHash:rows.local.request_hash};
    return {operationId:id,restrictionId,uuidKnownBeforeSend:true,tenantEffectDurable:true,centralUnknownObserved:true,projectedOnlyAfterProvenFence:true,noEffectRetry:true,uncertainTicketAndFullGrowthRetained:true};
   }finally{await release(gate).catch(()=>{})}
- });
+ },{dependsOn:['delayed-original-writer-revocation-close-v-plus-two']});
 }catch(error){report.runnerFailure={code:typeof error.code==='string'&&/^[A-Z0-9_]{1,60}$/.test(error.code)?error.code:'RUNNER_BLOCKED',completedCases:report.cases.length}}
 finally{
  report.finishedAt=new Date().toISOString();report.requests=clients.map(({label,client})=>({label,count:client.requests,max:160}));report.status=report.runnerFailure||report.cases.some(c=>c.status==='FAIL')?'FAIL':'PASS FOR LISTED CASES ONLY';

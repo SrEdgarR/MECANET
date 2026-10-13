@@ -1,5 +1,5 @@
 """Exclusive synthetic L2 cohort. No global proxy, network, daemon or build mutation."""
-import hashlib, ipaddress, json, os, pathlib, pwd, secrets, subprocess, sys, time, tarfile, shutil
+import hashlib, ipaddress, json, os, pathlib, pwd, secrets, subprocess, sys, time, tarfile, shutil, re
 ROOT=pathlib.Path('/opt/mecanet-qa-p1l2-cp017')
 PROJECT=ROOT.name
 BASE='a0098178fc27467bf4c12da0e97723e0b80ce683'
@@ -131,9 +131,11 @@ def accept_artifact():
  assert len(manifest['codeSha'])==40 and manifest['digest'].startswith('sha256:')
  assert all(not x['running'] for x in facts() if x['project']==PROJECT and not x['name'].endswith('-postgres-1')),'STOP_OWN_RUNTIME_FIRST'
  destination=ROOT/'artifacts'/manifest['digest'].split(':')[1]
- assert destination.parent.resolve()==ROOT/'artifacts' and not destination.exists()
+ assert destination.parent.resolve()==ROOT/'artifacts'
  expected={e['path']:e for e in manifest['entries']};assert len(expected)==len(manifest['entries'])
- destination.mkdir(mode=0o755)
+ if destination.exists():
+  stored=json.loads((destination/'artifact.json').read_text());assert stored==manifest
+ else:destination.mkdir(mode=0o755)
  with tarfile.open(archive,'r:gz') as bundle:
   members=bundle.getmembers();assert len(members)==len(expected)
   for m in members:
@@ -144,20 +146,25 @@ def accept_artifact():
  digest=hashlib.sha256(''.join(e['sha256']+'  '+e['path']+'\n' for e in manifest['entries']).encode()).hexdigest();assert manifest['digest']=='sha256:'+digest
  (destination/'artifact.json').write_text(json.dumps(manifest));os.chmod(destination/'artifact.json',0o444)
  for d,sub,files in os.walk(destination):os.chmod(d,0o755)
- config=(ROOT/'compose.yaml').read_text();config=config.replace(str(ROOT/'staging'),str(destination));(ROOT/'compose.yaml').write_text(config)
+ config=(ROOT/'compose.yaml').read_text();config=config.replace(str(ROOT/'staging'),str(destination))
+ config=re.sub(re.escape(str(ROOT/'artifacts'))+r'/[0-9a-f]{64}',str(destination),config)
+ assert len(set(re.findall(re.escape(str(ROOT/'artifacts'))+r'/([0-9a-f]{64})',config)))==1
+ assert manifest['digest'].split(':')[1] in config
+ (ROOT/'compose.yaml').write_text(config)
  compose('config','--quiet');(ROOT/'evidence/artifact.json').write_text(json.dumps({'digest':manifest['digest'],'codeSha':manifest['codeSha'],'files':len(expected),'bytes':sum(e['bytes']for e in expected.values()),'verified':True,'runtime':manifest['runtime']}))
  print(json.dumps({'artifactAccepted':True,'codeSha':manifest['codeSha'],'digest':manifest['digest'],'files':len(expected)}))
 
 def own_tool():
- own();assert len(sys.argv)==3 and sys.argv[2] in ['foundation','migration','sql','integration','recovery-check']
+ own();assert len(sys.argv)==3 and sys.argv[2] in ['foundation','migration','sql','integration','recovery-check','corrective','resources-api1','resources-api2','promote']
  action=sys.argv[2];live=any(x['running'] for x in facts() if x['project']==PROJECT and x['name'].endswith(('-api1-1','-api2-1','-web-1')))
  service='probe' if action in ['sql','integration'] else 'harness';assert service=='probe' or not live,'HARNESS_RUNTIME_OVERLAP'
  artifact=json.loads((ROOT/'evidence/artifact.json').read_text())
- files={'foundation':'prepare.mjs','migration':'migration-live.mjs','sql':'sql-live.mjs','integration':'integration.mjs','recovery-check':'recovery-check.mjs'}
+ files={'foundation':'prepare.mjs','migration':'migration-live.mjs','sql':'sql-live.mjs','integration':'integration.mjs','recovery-check':'recovery-check.mjs','corrective':'corrective.mjs','resources-api1':'resource-closure.mjs','resources-api2':'resource-closure.mjs','promote':'promote.mjs'}
  args=['run','--rm','--no-deps','-e','QA_CODE_SHA='+artifact['codeSha']]
  if action=='foundation':args+=['-e','QA_STAGE=foundation']
  # Add only the exclusive synthetic result destination; no shared host mount.
  args+=['-v',str(ROOT/'evidence')+':/run/qa-results',service,'node','tests/qa/cp017/'+files[action]]
+ if action.startswith('resources-'):args+=['host-end-proof-'+action.split('-')[1]+'.json']
  try:print(compose(*args),end='')
  except subprocess.CalledProcessError as error:
   print(error.output,end='');raise SystemExit(error.returncode)
@@ -185,11 +192,64 @@ def finish_config():
 def runtime():
  own();resources();compose('up','-d','--no-build','--pull','never','worker','api1','api2','web');preserve()
 
+def prove_stop():
+ own();assert len(sys.argv)==3 and sys.argv[2] in ['api1','api2'];instance=sys.argv[2]
+ cid=compose('ps','-q',instance).strip();assert re.fullmatch(r'[0-9a-f]{64}',cid)
+ record=json.loads(run('docker','exec',cid,'cat','/tmp/qa-owner.json'))
+ assert re.fullmatch(r'[0-9a-f-]{36}',record['owner'])
+ compose('stop',instance)
+ state=json.loads(run('docker','inspect','--format','{{json .State}}',cid))
+ assert not state['Running'] and state['Status']=='exited'
+ proof={'project':PROJECT,'sourceSha':json.loads((ROOT/'evidence/artifact.json').read_text())['codeSha'],
+  'generation':record['generation'],'instance':instance,'owner':record['owner'],'containerId':cid,'running':False,'exitCode':state['ExitCode'],
+  'containerStoppedAt':state['FinishedAt'],'httpClosed':True,'writerApplicationName':'mecanet-writer:'+record['owner']}
+ pg=compose('ps','-q','postgres').strip()
+ command='export PGPASSWORD; PGPASSWORD=$(cat /run/secrets/bootstrap); exec psql -h /var/run/postgresql -U qa_bootstrap -d mecanet_control -qAt -v ON_ERROR_STOP=1'
+ # Only fixed SQL with host-generated UUIDs, no credentials or HTTP input.
+ sql="BEGIN READ ONLY; SELECT json_build_object('absent',NOT EXISTS(SELECT 1 FROM pg_stat_activity WHERE application_name IN ('mecanet-writer:"+record['owner']+"','mecanet-qa-api:"+record['owner']+"')),'operations',(SELECT coalesce(json_agg(json_build_object('tenantId',i.tenant_id,'operationId',i.operation_id,'ticketId',i.ticket_id)),'[]') FROM saas.write_intents i JOIN saas.tickets t ON t.id=i.ticket_id WHERE t.owner='"+record['owner']+"'::uuid AND i.generation='"+record['generation']+"'::uuid)); ROLLBACK;"
+ observed=json.loads(run('docker','exec','-i',pg,'sh','-c',command,input=sql).strip());assert observed['absent'] is True,'SQL_OWNER_STILL_PRESENT'
+ proof.update({'sqlOwnerAbsent':True,'operations':observed['operations']})
+ p=ROOT/'evidence'/('host-end-proof-'+instance+'.json');p.write_text(json.dumps(proof));os.chmod(p,0o400);os.chown(p,999,999)
+ print(json.dumps({'instance':instance,'owner':record['owner'],'processExitProven':True,'sqlOwnerAbsent':True,'operations':len(proof['operations'])}))
+
+def corrective_proof():
+ own();apis=[]
+ for instance in ['api1','api2']:
+  proof=json.loads((ROOT/'evidence'/('host-end-proof-'+instance+'.json')).read_text())
+  state=json.loads(run('docker','inspect','--format','{{json .State}}',proof['containerId']))
+  assert not state['Running'] and state['Status']=='exited'
+  apis.append({'instance':instance,'state':'exited','containerId':proof['containerId'],'stoppedSourceSha':proof['sourceSha']})
+ q=json.loads((ROOT/'secrets/connections.json').read_text());manifest=json.loads((ROOT/'evidence/artifact.json').read_text())
+ p=ROOT/'evidence/corrective-proof.json';p.write_text(json.dumps({'project':PROJECT,'sourceSha':manifest['codeSha'],'systemIdentifier':q['systemIdentifier'],'generation':q['generation'],'observedAt':time.strftime('%Y-%m-%dT%H:%M:%SZ',time.gmtime()),'apis':apis}));os.chmod(p,0o400);os.chown(p,999,999)
+ history={'acceptedArtifacts':[]}
+ for directory in (ROOT/'artifacts').iterdir():
+  if directory.is_dir() and re.fullmatch('[0-9a-f]{64}',directory.name):
+   a=json.loads((directory/'artifact.json').read_text());assert a['digest']=='sha256:'+directory.name
+   history['acceptedArtifacts'].append({'codeSha':a['codeSha'],'digest':a['digest']})
+ p=ROOT/'evidence/artifact-history.json';p.write_text(json.dumps(history));os.chmod(p,0o400);os.chown(p,999,999)
+ print('CP017_CORRECTIVE_STOP_PROOF_VERIFIED_NO_SECRET_OUTPUT')
+
+def pause_own():
+ own();assert all(not x['running'] for x in facts() if x['project']==PROJECT and x['name'].endswith(('-api1-1','-api2-1')))
+ compose('stop','worker','web');preserve()
+
+def restart_proof():
+ own();cid=compose('ps','--all','-q','worker').strip();assert re.fullmatch(r'[0-9a-f]{64}',cid)
+ state=json.loads(run('docker','inspect','--format','{{json .State}}',cid));assert not state['Running'] and state['Status']=='exited'
+ pg=compose('ps','-q','postgres').strip()
+ command='export PGPASSWORD; PGPASSWORD=$(cat /run/secrets/bootstrap); exec psql -h /var/run/postgresql -U qa_bootstrap -d mecanet_control -qAt -v ON_ERROR_STOP=1'
+ observed=json.loads(run('docker','exec','-i',pg,'sh','-c',command,input="BEGIN READ ONLY; SELECT json_build_object('owner',owner,'generation',generation,'absent',NOT EXISTS(SELECT 1 FROM pg_stat_activity WHERE application_name IN ('mecanet-cp017-clock','mecanet-cp017-maintenance'))) FROM saas.time_authority WHERE id=1; ROLLBACK;").strip())
+ assert observed['absent'] is True and re.fullmatch(r'[0-9a-f-]{36}',observed['owner'])
+ p=ROOT/'secrets/worker.json';worker=json.loads(p.read_text());assert worker['generation']==observed['generation']
+ worker['clockTransfer']={'kind':'stopped-process','previousOwner':observed['owner'],'generation':observed['generation'],'confirmed':True,'reference':'cp017-own-worker-stopped-sql-absent','containerId':cid,'observedState':'exited','stoppedAt':state['FinishedAt']}
+ p.write_text(json.dumps(worker));os.chmod(p,0o400);os.chown(p,999,999)
+ print('CP017_CLOCK_RESTART_PROCESS_AND_SQL_END_PROVEN')
+
 def stop_own():
  own();compose('stop','api1','api2','web','worker','postgres');preserve();owner=own();owner['state']='STOPPED_PRIVATE_SYNTHETIC';(ROOT/'owner.json').write_text(json.dumps(owner))
  print('CP017_OWN_RUNTIME_STOPPED_NO_DATA_DELETION')
 if __name__=='__main__':
- action=sys.argv[1];assert action in ['preflight','bootstrap','preserve','configure','start-postgres','accept-artifact','tool','foundation-backup','finish-config','runtime','stop-own']
+ action=sys.argv[1];assert action in ['preflight','bootstrap','preserve','configure','start-postgres','accept-artifact','tool','foundation-backup','finish-config','runtime','stop-own','prove-stop','corrective-proof','pause-own','restart-proof']
  if action=='preflight':print(json.dumps(preflight()))
  elif action=='bootstrap':bootstrap()
  elif action=='configure':configure()
@@ -199,5 +259,9 @@ if __name__=='__main__':
  elif action=='foundation-backup':foundation_backup()
  elif action=='finish-config':finish_config()
  elif action=='runtime':runtime()
+ elif action=='prove-stop':prove_stop()
+ elif action=='corrective-proof':corrective_proof()
+ elif action=='pause-own':pause_own()
+ elif action=='restart-proof':restart_proof()
  elif action=='stop-own':stop_own()
  else:preserve()
