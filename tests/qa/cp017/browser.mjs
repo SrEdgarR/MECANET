@@ -80,7 +80,12 @@ async function login(tab,account){
 async function openOwnerInventory(tab){
  const started=performance.now(),deadline=started+8000;
  const remaining=()=>{const milliseconds=Math.ceil(deadline-performance.now());assert(milliseconds>0,'FINITE_ACCESS_RECOVERY_EXHAUSTED');return milliseconds};
- const activity=()=>tab.waitForResponse(response=>response.request().method()==='POST'&&new URL(response.url()).pathname==='/api/auth/activity',{timeout:remaining()});
+ const activity=()=>{
+  const pending=tab.waitForResponse(response=>response.request().method()==='POST'&&new URL(response.url()).pathname==='/api/auth/activity',{timeout:remaining()});
+  // The UI action can fail before this promise is awaited. Keep its original
+  // rejection for the explicit await, but never let it crash result finalizing.
+  pending.catch(()=>{});return pending;
+ };
  async function recover(reply,stage){
   assert.equal(reply.status(),503);assert.equal((await reply.json()).error,'ADMISSION_BUSY');
   assert.equal(evidence.accessRecoveries?.length??0,0,'ONLY_ONE_EXPLICIT_ACCESS_RECOVERY_ALLOWED');
@@ -88,7 +93,7 @@ async function openOwnerInventory(tab){
   await tab.getByRole('heading',{level:1,name:'Servicio no disponible',exact:true}).waitFor({timeout:remaining()});
   assert.equal(await tab.getByRole('table').count(),0);assert.equal(await tab.getByRole('link',{name:'Abrir inventario',exact:true}).count(),0);
   const retry=tab.getByRole('button',{name:'Reintentar acceso',exact:true});if(retryAt-Date.now()>100)assert.equal(await retry.isEnabled(),false);
-  const directory=tab.waitForResponse(response=>response.request().method()==='GET'&&new URL(response.url()).pathname==='/api/tenants'&&response.status()===200,{timeout:remaining()});
+  const directory=tab.waitForResponse(response=>response.request().method()==='GET'&&new URL(response.url()).pathname==='/api/tenants'&&response.status()===200,{timeout:remaining()});directory.catch(()=>{});
   await retry.click({timeout:remaining()});const refreshed=await directory,body=await refreshed.json();
   await tab.getByRole('heading',{level:1,name:'Tus empresas',exact:true}).waitFor({timeout:remaining()});
   const restored=body.tenants.find(tenant=>tenant.id===config.tenant.id);assert.equal(body.context.purpose,'company');
@@ -100,7 +105,10 @@ async function openOwnerInventory(tab){
   assert.equal(postCount(),before);assert.equal(activityPosts,beforeActivity);remaining();
   evidence.accessRecoveries=[{stage,firstStatus:503,errorCode:'ADMISSION_BUSY',explicitRecoveries:1,deadlineMs:8000,elapsedMs:Math.ceil(performance.now()-started),extraTenantPosts:0,extraActivityPosts:0}];
  }
- const company=tab.locator(`a[href="/app/${config.tenant.id}/catalogo"]`);const selected=activity();await company.focus();await tab.keyboard.press('Enter');
+ await tab.getByRole('heading',{level:1,name:'Tus empresas',exact:true}).waitFor({timeout:remaining()});
+ const company=tab.locator(`a[href="/app/${config.tenant.id}/catalogo"]`);
+ assert.equal(await company.count(),1,'OWNER_CATALOG_ENTRY_REQUIRED');assert.equal(await company.isVisible(),true);
+ const selected=activity();await company.focus();await tab.keyboard.press('Enter');
  const selection=await selected;if(selection.status()===503)return recover(selection,'catalog-selection');assert.equal(selection.status(),200);
  await tab.getByRole('heading',{level:1,name:'Catálogo'}).waitFor({timeout:remaining()});const entering=activity();
  await tab.getByRole('link',{name:'Abrir inventario'}).click({timeout:remaining()});const entry=await entering;
@@ -261,6 +269,7 @@ try{
  await Promise.allSettled(assetJobs);evidence.result='PASS';
 }catch(error){
  evidence.result='FAIL';evidence.checks.push({name:currentCheck,result:'FAIL',errorType:error?.constructor?.name??'Error',...(typeof error?.code==='string'&&/^[A-Z0-9_]+$/.test(error.code)?{errorCode:error.code}:{})});
+ if(page&&!page.isClosed())try{evidence.failureState=await page.evaluate(()=>({pathname:location.pathname,heading:document.querySelector('h1')?.textContent,companyLinks:[...document.querySelectorAll('.tenant-list a')].map(node=>new URL(node.href).pathname),tables:document.querySelectorAll('table').length,retryVisible:[...document.querySelectorAll('button')].some(node=>node.textContent==='Reintentar acceso')}))}catch{}
  // Avoid recording login forms or any failure text that could contain secrets.
  if(page&&!page.isClosed()&&!/login|initialization/i.test(currentCheck)){try{if(!await page.locator('input[type="password"]').count())await screenshot(page,'failure-state.png')}catch{}}
  process.exitCode=1;
