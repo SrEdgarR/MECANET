@@ -1,0 +1,1 @@
+PASS: three compiled SaaS assets equal archived F; no new PostgreSQL/browser/restore run

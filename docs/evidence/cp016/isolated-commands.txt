@@ -1,0 +1,39 @@
+
+ RUN  v4.1.11 C:/Users/thede/.codex/worktrees/p1l1-integration/MECANET-develop/.qa-private/cp016-tooling/isolated-client/client
+
+ ✓ src/saas/SaasApp.test.jsx (4 tests) 379ms
+ ✓ src/saas/client.test.js (14 tests) 166ms
+ ✓ src/saas/RetryAccess.test.jsx (1 test) 93ms
+ ✓ src/saas/retry.test.js (10 tests) 19ms
+
+ Test Files  4 passed (4)
+      Tests  29 passed (29)
+   Start at  12:58:07
+   Duration  12.72s (transform 114ms, setup 1.81s, import 464ms, tests 657ms, environment 8.66s)
+
+
+ RUN  v4.1.11 C:/Users/thede/.codex/worktrees/p1l1-integration/MECANET-develop/.qa-private/cp016-tooling/isolated-client/client
+
+ ✓ src/__tests__/unit/safeDocuments.test.js (3 tests) 11ms
+
+ Test Files  1 passed (1)
+      Tests  3 passed (3)
+   Start at  12:58:21
+   Duration  2.55s (transform 33ms, setup 36ms, import 50ms, tests 11ms, environment 2.15s)
+
+vite v6.4.3 building for production...
+transforming...
+✓ 31 modules transformed.
+rendering chunks...
+computing gzip size...
+dist-saas/saas.html                   0.53 kB │ gzip:  0.32 kB
+dist-saas/assets/saas-DclqrR_W.css    5.69 kB │ gzip:  1.94 kB
+dist-saas/assets/saas-DsjAOXZI.js   158.15 kB │ gzip: 51.22 kB
+✓ built in 505ms
+vite v6.4.3 building for production...
+transforming...
+✓ 31 modules transformed.
+rendering chunks...
+✓ built in 503ms
+TOOLING_ISOLATION_EVIDENCE:{"moduleIds":31,"standaloneBlockedPackagesInBrowser":0,"compiledAssetsIdentical":true,"assets":[{"path":"assets/saas-DclqrR_W.css","sha256":"cdb3b3885a4aea0c72204e0c7952eb8ebd7522c2767529eb824b487582d54159"},{"path":"assets/saas-DsjAOXZI.js","sha256":"846991792b1506d97706bca144f265874f79d17bba91d930dec4d45c3b7bbf04"},{"path":"saas.html","sha256":"ab3c357852ca07b8f4689fb5b23a8ddb093ab2bb4e0aa2d75ba98012b132ee51"}],"limit":"Vite bundled internals are not package-resolver hooks"}
+PASS: guarded SaaS tests, sanitizer tests and production build; workers acknowledged the preload

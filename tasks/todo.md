@@ -220,3 +220,7 @@ Verificación: [auditoría CP-014](../docs/audit/CP-014.md), evidencia de `docs/
 - [ ] Obtener A/B exactas del nuevo alcance, acreditar base/Development/Environment y después implementar; P2 no iniciada.
 
 No despertar QA, cambiar infraestructura/Prompt, integrar PR1 o publicar por efecto lateral. El candidato siguiente permanece fuera del PR funcional L1, en la rama fuente de planificación.
+
+## CP-016 — seguridad de integración y preparación focal
+
+Q-42 resuelta por evidencia humana/plataforma. SC-008/DEC-060 aprobada/implementada: lane propia, audit completo0, tests/build/3assetsF y revisión al SHA0d8285cef117d6174a6053f18ceaac180f8aa1c5; legacy FAIL sigue TD-21 antes del uso afectado. Integration Gate remoto pendiente de ejecución autorizada. L2 v0.2 conserva A/B pendientes y doce criterios funcionales NV; R4/R5 corregidos y15 comprobaciones puras/review documental PASS. Ninguna infraestructura, datos reales, producción o L2 funcional modificados.

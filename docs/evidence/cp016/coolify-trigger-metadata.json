@@ -1,0 +1,11 @@
+{
+  "at_utc": "2026-10-13T16:43:55.267572+00:00",
+  "classification": "DETECTED",
+  "provenance": "REMOTE read-only SQL metadata, no secret or environment columns",
+  "command_category": "sudo docker exec psql; transaction READ ONLY rolled back",
+  "sql": "BEGIN READ ONLY; SELECT a.name, a.git_repository, a.git_branch, s.is_auto_deploy_enabled, s.is_preview_deployments_enabled FROM applications a LEFT JOIN application_settings s ON s.application_id=a.id WHERE a.git_repository ILIKE '%SrEdgarR/MECANET.git' OR a.git_repository ILIKE '%SrEdgarR/MECANET'; ROLLBACK;",
+  "exit_code": 0,
+  "stdout": "BEGIN\nmecanet-api|SrEdgarR/MECANET.git|codex/deploy-vercel-coolify|f|f\nROLLBACK\n",
+  "stderr": "",
+  "mutations": []
+}

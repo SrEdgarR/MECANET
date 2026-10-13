@@ -380,3 +380,7 @@ Código final F `b0f5e199e5df457d7f901ff3a3dca5ab3a8d5701`; artefacto `sha256:59
 ## CP-015 — Integración limpia y candidato siguiente separado
 
 Integración local codex/integrate-p1-l1 desde develop010aab670; fuente9fcdd954 conservada. Revisión/copia/hash/regresión y CI de verificación propios, sin importar commitsPR1. Publicación/PR/merge detenidos porQ42/Q43; baselinecanónica siguiente no definida. Preparación focal P1-L2v0.1-CP015 en la rama fuente: alta+recepción ficticias para probarwriter/grants/idempotencia/revocación/crecimiento/restore, sinPOSfiscal ni fase nueva. AjusteP1/P2 y A/B pendientes; no implementación. Mantener las doce salidas futuras NOT VERIFIED y los resolve-before existentes.
+
+## CP-016 — seguridad de integración y preparación focal
+
+Q-42 resuelta por evidencia humana/plataforma. SC-008/DEC-060 aprobada/implementada: lane propia, audit completo0, tests/build/3assetsF y revisión al SHA0d8285cef117d6174a6053f18ceaac180f8aa1c5; legacy FAIL sigue TD-21 antes del uso afectado. Integration Gate remoto pendiente de ejecución autorizada. L2 v0.2 conserva A/B pendientes y doce criterios funcionales NV; R4/R5 corregidos y15 comprobaciones puras/review documental PASS. Ninguna infraestructura, datos reales, producción o L2 funcional modificados.

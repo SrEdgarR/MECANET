@@ -1,6 +1,6 @@
 # Checkpoints
 
-Actual: **CP-015**, P1 única fase activa, L1 ocho PASS conservados. Integration Gate NOT VERIFIED por Q-42/Q-43; candidato siguiente SUGGESTED/NOT APPROVED. P0 PARCIAL y SaaS general NOT APPROVED. Historia CP-001…014 intacta.
+Actual: **CP-016**. CP-016, 2026-10-13: Q-42 RESUELTA con evidencia humana/plataforma y mecanismos conocidos; Q-43 RESUELTA localmente por SC-008/DEC-060 APPROVED, auditoría completa estricta de la lane SaaS/backend PASS, revisión y regresión al SHA 0d8285cef117d6174a6053f18ceaac180f8aa1c5. Auditoría legacy FAIL conservada/TD-21. P1 única fase activa; L1 ocho PASS, Integration Gate NOT VERIFIED hasta PR/CI/merge/CI canónica. P0 PARCIAL y SaaS general NOT APPROVED; P1-L2 v0.2 solo candidato revisado, A/B pendientes. Historia CP-001…015/C-001…232 intacta.
 
 ## CP-001 — Inventario y adopción documental
 
@@ -479,3 +479,30 @@ Resultado: **23 PASS,0 FAIL,1 NOT VERIFIED,1 NOT APPLICABLE**. C-213 acredita re
 | C-232 | Integration Gate remoto y baseline canónica siguiente | NOT VERIFIED | No push/nuevoPR/reviewGitHub/CI PR/merge/CIcanónica porQ42/Q43; develop010aab intacto, L1noTERMINAL | REMOTE operación detenida | merge_sha ninguno | 2026-10-13 | LOCAL |
 
 Resultado CP-015: 13 PASS, 3 NOT VERIFIED, 1 FAIL. El Quality Gate documental PASS no oculta fullaudit FAIL/IntegrationGateNV ni aprueba L2. Historia C-001…215 intacta.
+
+## CP-016 — SC-008 y preparación de integración remota
+
+Fecha2026-10-13. Fuente humana directa actual desconecta Git Vercel y aprueba SC-008/DEC-060/implementación específica; no L2. Q-42/Q-43 localesPASS, IntegrationGateNV al checkpoint previo a publicar. Código probado 0d8285cef117d6174a6053f18ceaac180f8aa1c5, sourceCP015a541/integration44/base010aab. No datos reales, infraestructura, deploy o PR1 alterado. L2v0.2 solo propuesta revisada en rama fuente. Checkpoint documental final se registra externamente/Git sin autoSHA.
+
+## Matriz CP-016
+
+| ID | Criterio | Estado | Evidencia | Entorno | SHA | Fecha | Provenance |
+|---|---|---|---|---|---|---|---|
+| C-233 | Recuperación Git y alcance aprobado conservados | PASS | Primarya541/integration44/base010aab, SrEdgarR exclusivo; DEC-058/SC-008 fuente directa, sin PR1 | LOCAL | base010aab / code0d8285cef117d6174a6053f18ceaac180f8aa1c5 | 2026-10-13 | DETECTED |
+| C-234 | Q-42 desconexión Vercel confirmada y filtrada | PASS | vercel-disconnection.json; humano directo + repoUrl0/proyectos retenidos, límite Apps explícito | REMOTE + HUMAN | source CP016 | 2026-10-13 | DETECTED |
+| C-235 | Q-42 workflows/webhooks/Coolify conocidos | PASS | git-preflight/coolify-trigger-metadata; no nuevos deploys conocidos, recheck por acción | REMOTE lectura | base010aab | 2026-10-13 | DETECTED |
+| C-236 | Audit completo cliente heredado | FAIL | existing-client-full-audit.txt,5high/2moderate; no uso SaaS, conserva TD-21 antes de usar tooling legacy | LOCAL Windowsx64 | integration legacy lock44e5571 | 2026-10-13 | DETECTED |
+| C-237 | SC-008/DEC-060 aprobado, baseline aditiva | PASS | Respuesta humana directa Aprobar SC-008 e implementarlo; snapshots originales intactos, no L2 | HUMAN | docs/specs/P1-L1.md | 2026-10-13 | HUMAN-ASSISTED |
+| C-238 | Materializador allowlist/env/provenance/cleanup | PASS | local-verification.json:17 pruebas nuevas, bytes/copias y enlaces/hardlinks/limpieza, no fallback | LOCAL Node24.21/npm11.9 Windowsx64 | 0d8285cef117d6174a6053f18ceaac180f8aa1c5 | 2026-10-13 | DETECTED |
+| C-239 | Audit nativo completo SaaS/backend y runtime | PASS | local-verification.json + implemented-full-audit.json:0hallazgos, fullestricto sin filtrado; legacyFAIL separado | LOCAL Windowsx64 | 0d8285cef117d6174a6053f18ceaac180f8aa1c5 | 2026-10-13 | DETECTED |
+| C-240 | SaaS/sanitizador/build y tres assetsF | PASS | 29+3/31módulos/build/3SHAcontraF; no nuevo browser/PG/restore | LOCAL Windowsx64 | 0d8285cef117d6174a6053f18ceaac180f8aa1c5 | 2026-10-13 | DETECTED |
+| C-241 | Barrera ESM/CJS/fallback y sintaxis/CIlocal | PASS | 4negativas +17materializer=21, syntax69, actionlint1.7.12; arnésSystemRootFAIL previo preservado/corregido | LOCAL Windowsx64 | 0d8285cef117d6174a6053f18ceaac180f8aa1c5 | 2026-10-13 | DETECTED |
+| C-242 | Revisión independiente SC-008/L1 | PASS | independent-review.json,0REQUIRED;103/104objetosF, única excepción READMEqa documental; bundledlimitados | LOCAL reviewer distinto | 0d8285cef117d6174a6053f18ceaac180f8aa1c5 | 2026-10-13 | DETECTED |
+| C-243 | Publicación/PR/revisión y CI del PR | NOT VERIFIED | Pendiente ejecución GitHub autorizada tras QG/preflight; no PASS de Linux por ensayo Windows | REMOTE por ejecutar | PR nuevo ninguno aún | 2026-10-13 | DETECTED |
+| C-244 | Merge/CI canónica y baseline siguiente | NOT VERIFIED | develop010aab, L1 noTERMINAL; registrar mergeexacto y CIcanónica antes de transición | REMOTE por ejecutar | merge_sha ninguno aún | 2026-10-13 | DETECTED |
+| C-245 | P1-L2 v0.2 correcciones y revisión focal | PASS | L2-R4/R5,15checks puros/review independiente0REQUIRED/vector142bytes; no writerfuncional | LOCAL cálculo/documento | candidateSHA256ca975dc… | 2026-10-13 | DETECTED |
+| C-246 | P1-L2 A/B y doce salidas funcionales | NOT VERIFIED | A/B/ajusteP1P2 pendientes; L2-A1…12 NV, SQL/dosAPI/migración/restore después de B/entorno | HUMAN + entorno futuro | candidato solo rama fuente | 2026-10-13 | DETECTED |
+| C-247 | Infraestructura/producción/QA histórica preservadas | PASS | Ningún recurso modificado; solo SELECT/metadatos; STOPPEDKEEP reportadoCP014, no nuevo preflightfísico | REMOTE lectura + REPORTED histórico | CP014/runtimeF histórico | 2026-10-13 | DETECTED |
+| C-248 | QG documental, historia y mapa derivados | PASS | qg.json:referencias/historia/snapshots/Prompt/datosmapa/check; proporcional a código tools y docs, no cierre global | LOCAL documental | code0d8285cef117d6174a6053f18ceaac180f8aa1c5 / checkpoint identificado en Git | 2026-10-13 | DETECTED |
+
+Resultado CP-016 previo a integración:12PASS/1FAILlegacy/3NOTVERIFIED. C-001…232/CP-001…015 intactos. QG documental PASS no convierte legacyFAIL ni CIremotoNV o L2A/B pendientes enPASS.

@@ -1,0 +1,341 @@
+{
+  "schemaVersion": 1,
+  "checkpoint": "CP-016",
+  "at": "2026-10-13T17:21:32.178Z",
+  "classification": "DETECTED",
+  "reviewer": "/root/cp016_integration_review",
+  "independence": "Revisor distinto del autor del código, de la mitigación de dependencias y del candidato. Revisión local focal, no aprobación humana ni review aprobatoria de GitHub.",
+  "scope": {
+    "repository": "SrEdgarR/MECANET",
+    "integrationBranch": "codex/integrate-p1-l1",
+    "reviewedHead": "0d8285cef117d6174a6053f18ceaac180f8aa1c5",
+    "testedCodeShaHistorical": "a89cc2eee43a8f60f3464bea26a6ea4f9ddfc867",
+    "canonicalBase": "010aab670c638d168c971df3e3e53b97e72ff443",
+    "change": "Q42 evidencia nueva; SC008/DEC060 aprobada e implementada, revisión y gate local PASS; candidato L2v0.2 solo documental",
+    "historicalReview": "../cp015/independent-review.json",
+    "historicalEvidenceTreatment": "Se conserva la revisión CP-015 de objetos de producto, exclusión de PR1, snapshots y pruebas al SHA correspondiente; no se repite ni atribuye a una nueva ejecución.",
+    "testedCodeShaCurrent": "0d8285cef117d6174a6053f18ceaac180f8aa1c5"
+  },
+  "result": "PASS revisión técnica focal; publicación y CI habilitados condicionalmente",
+  "publicationSafety": "PASS acotado Q-42; revalidación obligatoria antes de push, PR y merge",
+  "dependencyGate": "PASS local de cadena SaaS exacta aprobada SC-008; cliente heredado full audit FAIL conservado, sin waiver; CI remoto pendiente",
+  "integrationGate": "NOT VERIFIED: aún falta CI remoto del SHA exacto, revisión del PR, merge y CI canónico. Esta revisión no declara integración terminal.",
+  "checks": [
+    {
+      "id": "Q42-HUMAN-AND-PLATFORM",
+      "result": "PASS",
+      "classification": "CONFIRMED humano / DETECTED plataforma",
+      "finding": "La desconexión Git de mecanet-app y mecanet-web está confirmada por mensaje humano directo; Vercel list_projects filtrado por la URL exacta del repositorio devuelve cero proyectos. La consulta sin ese filtro conserva ambos proyectos y Nexora. La consulta anterior de ChatGPT y el vínculo Git de Nexora son reportados por el humano, no una nueva observación del revisor.",
+      "source": "vercel-disconnection.json",
+      "sourceSha256": "f5736c6ab80e9564b62dbb1a0b93e30c38b13637e5273a5e0fe97633793bd20f",
+      "limits": "El conector get_project omite campos Git; se usa la evidencia complementaria del filtro repoUrl documentado por la herramienta. No se modificó ningún proyecto."
+    },
+    {
+      "id": "Q42-GITHUB-KNOWN-MECHANISMS",
+      "result": "PASS",
+      "finding": "Metadatos autenticados como SrEdgarR: workflows efectivos, webhooks, rulesets y runners propios vacíos; workflow propio de verificación sin despliegue, SSH, Docker o secrets. Permiso de workflow por defecto read, sin aprobación de PR por workflows; develop sin protección no es una autorización de bypass. Deployments Vercel observados son históricos del 7 de octubre y del PR1, no nuevos triggers efectivos.",
+      "source": "git-preflight.json",
+      "sourceSha256": "5d2292b39cc6a49f236f06d0c0ce0598d5ad4ab79d43f4c6eace90cf0da8617e",
+      "limits": "GET /user/installations HTTP403 no prueba ausencia de GitHub Apps. El PASS se limita a mecanismos conocidos y evidencia actual, no afirma ausencia absoluta de sistemas externos de polling.",
+      "historicalWorkflowSha256": "181841fdea5d03d1be7250f3add04736b4b0f210a1fadb941458596d937ce719",
+      "currentWorkflowSha256": "80f3f968f1dc63fffba9b5b5b17a3f4c0443063fdcdc58a17e3632ad24f34d27",
+      "workflowDelta": "Workflow actual integra guard/lane/audits/assets; read-only y sin deploy/SSH/Docker/secrets. Ausencia de workflows remotos corresponde al preflight anterior al push."
+    },
+    {
+      "id": "Q42-COOLIFY-LEGACY",
+      "result": "PASS",
+      "finding": "SELECT de metadatos en transacción READ ONLY: mecanet-api conserva SrEdgarR/MECANET.git y la rama codex/deploy-vercel-coolify; auto-deploy y preview-deploy false. Sin lectura de secretos ni cambios en Coolify.",
+      "source": "coolify-trigger-metadata.json",
+      "sourceSha256": "09765c8bae6216a37786386045e134435ab2ff8073350334c2b05229a7f546f1"
+    },
+    {
+      "id": "Q42-OPERATION-BOUNDARY",
+      "result": "PASS",
+      "finding": "Revalidar HEAD, workflows/hooks, filtro Vercel y condiciones observadas antes de push, creación de PR y merge. Un indicio nuevo de despliegue detiene la operación afectada y exige investigación. No modificar integraciones ajenas. La revisión recomienda completar Q-43 antes de publicar, respetando la condición humana actual de gates satisfactorios."
+    },
+    {
+      "id": "Q43-STANDALONE-REGRESSION-BARRIER",
+      "result": "PASS con límites",
+      "files": [
+        {
+          "path": "scripts/ci/tooling-isolation.mjs",
+          "sha256": "54717d1cffd10c8d41d3b1f9adc7d09781c396ac1de7c026407fa84f9a4d17ae"
+        },
+        {
+          "path": "scripts/ci/tooling-isolation-check.mjs",
+          "sha256": "4abde249a9880886d6c8b604e9920d328456aca6954fb5ecf48524e97a8e234e"
+        },
+        {
+          "path": "scripts/ci/tooling-isolation.test.mjs",
+          "sha256": "4f4857e01ddbf6f736d9dd72585a8a8c73e8caf41b9136937fcc859d03be485a"
+        }
+      ],
+      "review": "Lectura de cinco ejes: hooks ESM/CJS, propagación a workers, entorno limitado, cleanup de archivos propios, límites heap/plazo y grafo/identidad de assets; ningún REQUIRED nuevo de código",
+      "independentTest": {
+        "environment": "Node24.21.0 win32/x64",
+        "result": "PASS",
+        "tests": 3,
+        "exitCode": 0
+      },
+      "mutation": {
+        "result": "PASS: mutante detectado",
+        "kind": "solo en memoria mediante dataURL",
+        "disabledCondition": "if(name) en reject(value)",
+        "suite": "misma suite adaptando solo URLs de import para el módulo en memoria",
+        "baselinePass": 3,
+        "mutantFail": 2,
+        "mutantExit": 1,
+        "sourceFilesModified": false,
+        "network": false,
+        "sql": false
+      },
+      "limits": "Instantánea previa de tres tests y barrera inicialmente opt-in. Se preserva el mutante detectado al hash de entonces; no acredita el nuevo test de fallback. El caller vigente y sus 21 tests se revisan por separado a continuación. No inspecciona llamadas internas bundled ni demuestra seguridad universal.",
+      "historicalSnapshot": true
+    },
+    {
+      "id": "SC008-FINAL-CODE-AND-BOUNDARIES",
+      "result": "PASS",
+      "testedCodeSha": "0d8285cef117d6174a6053f18ceaac180f8aa1c5",
+      "authority": "DEC-060 / SC-008 APPROVED; no aprobación L2",
+      "fileSha256": {
+        "scripts/ci/saas-toolchain.mjs": "22f681f8db965f283199b49c39d0c2f171a11faa1f45a552bd81f19921ebbd08",
+        "scripts/ci/saas-toolchain.test.mjs": "6a68cd25f10c962c21e60ec18835bb357e227b85c457a3e7d82215f989b28794",
+        "scripts/ci/saas-toolchain/package.json": "6e49afa96eb1845f63d5eb9fc236dd90a4277bbcbf13236b184c05173abca994",
+        "scripts/ci/saas-toolchain/package-lock.json": "0c28b577fd2fc4334059a8d12b1ee1db07fd403d0718e858425533a935db8fb6",
+        "scripts/ci/tooling-isolation.mjs": "917d6bf61ff4d0cf2cd5c25fdf752f2cb0e4b7f22d4e834c40ba5efb4d55f3b3",
+        "scripts/ci/tooling-isolation.test.mjs": "c411c064420e2e27d94d396afd3064b4e1d5155fd828ff513c75bf5b7406253b",
+        "scripts/ci/tooling-isolation-check.mjs": "4abde249a9880886d6c8b604e9920d328456aca6954fb5ecf48524e97a8e234e",
+        "scripts/ci/p1-l1.mjs": "e7aec9686f4c80e69b1c026b0383d8ef8ca14e3828c2443ad6685fd51a6c3c29",
+        ".github/workflows/p1-l1-verify.yml": "80f3f968f1dc63fffba9b5b5b17a3f4c0443063fdcdc58a17e3632ad24f34d27",
+        "docs/DECISIONS.md": "eb798b38af34d7f83ac5f4cb1a42604e981114ce805dba63d18d18fc0ce442dc",
+        "docs/specs/P1-L1.md": "ca4507a1073b8a7be68ae984ef1912dab0de52578fcbdd810de939747511ea31"
+      },
+      "review": "Revisión focal de aislamiento de entradas/versiones/entorno, propiedad y límites del staging, copia y provenance, hooks ESM/CJS/fallback, limpieza fail-closed, escritura antes de truncar tras identidad/nlink, npm JS con Node exacto, audits nativos sin filtro y callers sin legacy tooling ni despliegue.",
+      "independentExecution": {
+        "environment": "Node24.21.0/npm11.9.0 win32/x64",
+        "tests": 21,
+        "materializer": 17,
+        "guard": 4,
+        "pass": 21,
+        "fail": 0,
+        "exitCode": 0,
+        "windowsWithoutNpmExecpath": "PASS npm JS --version11.9.0 exit0; shell:false",
+        "assetsMode": "PASS tres assets F",
+        "ambient": "Whitelist de soporte, sin DB/secretos/.env ni npm_execpath heredado",
+        "provenance": "Ejecución independiente directa de los archivos comprometidos; no código modificado por el revisor"
+      },
+      "limits": "No es sandbox OS ni protección contra autores maliciosos con capacidad de cambiar el repositorio. Linux y CI remoto pendientes."
+    },
+    {
+      "id": "SC008-FIXED-SHA-LOCAL-GATE",
+      "result": "PASS",
+      "testedCodeSha": "0d8285cef117d6174a6053f18ceaac180f8aa1c5",
+      "source": "local-verification.json",
+      "sourceSha256": "747a992008114672a82b222002b1175a172f87da2e1ac7f12b13893245e754f3",
+      "approvedLaneLog": "approved-lane.txt",
+      "approvedLaneLogSha256": "eef959528269bf5ac410b5312fc009e079cfc0540f57eb9172fd2c1bba33a569",
+      "checks": [
+        {
+          "id": "isolation-boundaries",
+          "result": "PASS",
+          "exitCode": 0,
+          "evidence": "isolation-boundaries.txt"
+        },
+        {
+          "id": "approved-lane",
+          "result": "PASS",
+          "exitCode": 0,
+          "evidence": "approved-lane.txt"
+        },
+        {
+          "id": "syntax",
+          "result": "PASS",
+          "exitCode": 0,
+          "evidence": "syntax.txt"
+        },
+        {
+          "id": "backend-full-audit",
+          "result": "PASS",
+          "exitCode": 0,
+          "evidence": "backend-full-audit.json"
+        },
+        {
+          "id": "workflow",
+          "result": "PASS",
+          "exitCode": 0,
+          "evidence": "workflow.txt"
+        },
+        {
+          "id": "archived-assets",
+          "result": "PASS",
+          "exitCode": 0,
+          "evidence": "archived-assets.txt"
+        }
+      ],
+      "sourceInputs": 22,
+      "sourceInputsHashVerifiedByReviewer": true,
+      "inputFingerprintSha256": "4a10d68f3740f4a87afdce9f70e194116890c67bfc696a4c4cd8bc765aabfddd",
+      "fullAudit": "PASS0 native complete exact SaaS lock",
+      "runtimeAudit": "PASS0 native omit=dev",
+      "backendFullAudit": "PASS0 native complete",
+      "guard": 4,
+      "frontend": 29,
+      "sanitizer": 3,
+      "assets": [
+        {
+          "path": "client/dist-saas/saas.html",
+          "sha256": "ab3c357852ca07b8f4689fb5b23a8ddb093ab2bb4e0aa2d75ba98012b132ee51",
+          "bytes": 525
+        },
+        {
+          "path": "client/dist-saas/assets/saas-DclqrR_W.css",
+          "sha256": "cdb3b3885a4aea0c72204e0c7952eb8ebd7522c2767529eb824b487582d54159",
+          "bytes": 5686
+        },
+        {
+          "path": "client/dist-saas/assets/saas-DsjAOXZI.js",
+          "sha256": "846991792b1506d97706bca144f265874f79d17bba91d930dec4d45c3b7bbf04",
+          "bytes": 158150
+        }
+      ],
+      "cleanup": "PASS",
+      "execution": "Rerun por controlador de integración al SHA fijado; el revisor leyó/validó evidencias, hashes, audit y assets y ejecutó independientemente las 21 negativas/local units y comparación F. No se presenta como autor de todo el rerun.",
+      "earlierFailure": "local-verification-environment-fail.json conserva fallo previo del harness privado por falta de SystemRoot; no se atribuye PASS a esa ejecución."
+    },
+    {
+      "id": "SC008-BUNDLED-EXPOSURE",
+      "result": "NO REACHABLE PATH FOUND WITH CURRENT EVIDENCE",
+      "source": "vite-bundled-coverage.json",
+      "sourceSha256": "8a47e9e9950cc11d369896419e94ba78e5d7b795880ef3b9042831ed304d1025",
+      "evidence": "Inspección estática y V8 coverage de tres comandos benignos en fixture previo: braces walkers/getDirParts con contador0; selector chunk no observado cargado. Nueva lane conserva fuentes versionadas, sin tenant/HTTP patrones/CSS/config ni devserver público; hooks no pueden interceptar llamadas internas bundled.",
+      "limits": "No se afirma patch de vendored code, ausencia universal de exposición, cobertura de configuraciones/plugins alternativos o autores maliciosos. Los datos de coverage pertenecen al fixture y hashes originales, no a un rerun físico nuevo. Audit0 del lock no borra esta limitación ni los siete paquetes heredados."
+    },
+    {
+      "id": "SC008-FUNCTIONAL-IDENTITY",
+      "result": "PASS",
+      "source": "../cp015/local-verification.json sameObjects y archived-f-identity.json",
+      "originalObjects": 104,
+      "identicalObjects": 103,
+      "exception": [
+        {
+          "path": "tests/qa/README.md",
+          "beforeBlob": "15879dbfe447e33e1848b8537c0d12d5e2f80949",
+          "afterBlob": "2d5541541d8812cdb1333100504038ca8bf2f2b9",
+          "reason": "Documento del comando SC008; no función del producto."
+        }
+      ],
+      "legacyClientPackageAndLock": "sin cambios",
+      "approvedSnapshots": "sin cambios; addendum SC008 en especificación protegido por aprobación directa",
+      "assets": "tres SHA256 iguales a F",
+      "limits": "No repetir ni atribuir nuevas pruebas PostgreSQL, ARM64, navegador o restore al nuevo código de tooling."
+    }
+  ],
+  "requiredFindings": [
+    {
+      "id": "Q-43",
+      "priority": "REQUIRED",
+      "state": "RESOLVED local approved scope",
+      "finding": "SC008/DEC060 aprobada por fuente humana actual. Fixture audit0 no cierra por sí solo el gate: faltan código final/negativas/lane audit estricta y CI del SHA exacto. Cliente legacy conserva7hallazgos, sin waiver.",
+      "resolveBefore": "Seguridad local antes de publicación; CI y review antes de merge",
+      "source": "docs/specs/P1-L1.md SC008 + expediente dependencia CP016",
+      "resolution": "SC008 aprobada; implementación estricta y rerun fijado PASS. CI remoto y Integration Gate permanecen como condiciones de integración, no como waiver."
+    },
+    {
+      "id": "CP16-R1",
+      "priority": "REQUIRED",
+      "state": "RESOLVED",
+      "finding": "Invocación Windows npm.cmd con shell:false fallaEINVAL; p1runner descarta npm_execpath al delegar. Resolver CLI JS confiable/propagar soporte mínimo y verificar entrypoint real.",
+      "resolveBefore": "Salida de implementación SC008 y publicación",
+      "source": "scripts/ci/saas-toolchain.mjs y scripts/ci/p1-l1.mjs, delta no commit inicial",
+      "independentEvidence": "Node24.21 win32/x64 spawnSync npm.cmd --version:statusnull,errorEINVAL; no comando ejecutado",
+      "resolution": "resolveNpmCli identifica JS regular npm11.9.0 mediante execPath/PATH y ejecuta con Node exacto shell:false; pruebas de PATH/versiones y ejecución Windows directa sin npm_execpath PASS."
+    },
+    {
+      "id": "CP16-R2",
+      "priority": "REQUIRED",
+      "state": "RESOLVED",
+      "finding": "last-result.json se escribe sin validar leafsymlink/hardlink. Validar destino propio y almacenar atómicamente sin seguir enlaces, añadir negativa benigna.",
+      "resolveBefore": "Salida de implementación SC008 y publicación",
+      "source": "scripts/ci/saas-toolchain.mjs finally, delta inicial no commit",
+      "resolution": "writeRegular valida ruta/leaf regular/nlink1 y fd+identidad antes de ftruncate; O_NOFOLLOW cuando está disponible, revalidación posterior. Negativa hardlink conserva target y negativa junction de destino PASS. Se resuelve sin seguir enlaces ni truncar antes de validar; no se afirma atomicidad universal frente a actor OS malicioso."
+    }
+  ],
+  "nextLotReview": {
+    "state": "PASS documental acotado",
+    "reviewer": "/root/cp016_integration_review",
+    "candidate": "P1-L2 v0.2-CP016, rama fuente fuera del PR L1",
+    "candidateSha256": "ca975dc822c0bd5e872d3debe824abc536f662007513170f327727878ff3ac71",
+    "scope": "Delta normativo §3.1 y L2-A6/A7; revisión CP015 preservada para protocolo/fence/cuotas/migración/restore",
+    "resolved": [
+      "L2-R4 representación canónica y productId de ruta",
+      "L2-R5 U+0000 y encoding UTF8"
+    ],
+    "requiredOpen": 0,
+    "criteria": 12,
+    "functionalCriteria": "12 NOT VERIFIED",
+    "approval": "SUGGESTED / NOT APPROVED; A y B pendientes",
+    "independentCalculation": {
+      "result": "PASS LOCAL CALCULATION AND DOCUMENT IDENTITY ONLY",
+      "environment": "Node24.21.0 win32/x64",
+      "vectorBytes": 142,
+      "vectorSha256": "d2e92c64f9ba7e2f55b29389879e86e99caeb2d62ac5afebeb0269b93c3f4b5b",
+      "utf8Source": "https://www.postgresql.org/docs/18/datatype-json.html",
+      "builtinShaSource": "https://www.postgresql.org/docs/18/functions-binarystring.html"
+    },
+    "limits": "Cálculo y fuentes públicas no acreditan dos API, grants, locks, COMMIT, migración, estado de cuotas, restore ni baseline aprobada."
+  },
+  "methodology": {
+    "references": [
+      "§8.3 Design Gate",
+      "§8.5 Integration Gate",
+      "§12 dependencias y exposición",
+      "§27 auditoría"
+    ],
+    "feedbackAdded": false
+  },
+  "resourcesCreatedOrModified": [],
+  "remoteMutations": [],
+  "reviewLimits": [
+    "Sin mutaciones Git ni servicios por el revisor; solo este informe permitido.",
+    "Sin nuevas pruebas físicas PostgreSQL, ARM64, restore o navegador de L1; evidencia histórica mantiene SHA y alcance.",
+    "Sin cambios de producción, secretos, Coolify, Nexora, Mecanet-EAK, DNS o Prompt Maestro.",
+    "La mutación del guard se evaluó únicamente en memoria con un proceso Node local: no cambió fuentes ni datos, y el FAIL del mutante fue el resultado esperado.",
+    "El revisor aprueba técnicamente el delta para publicación/CI condicional, no emite aprobación humana ni aprobación del PR propio como SrEdgarR. El merge solo tras checks y revisión al head vigente."
+  ],
+  "reviewHistory": [
+    {
+      "at": "2026-10-13T17:12:23.9617123Z",
+      "head": "44e55714b30dca776bc6a7fe65cb389b67343738",
+      "result": "NOT APPROVED FOR MERGE",
+      "dependencyGate": "NOT VERIFIED: SC008 aprobada; implementar y verificar lane exacta, audit legacy FAIL conservado",
+      "open": [
+        "CP16-R1",
+        "CP16-R2"
+      ],
+      "scope": "Instantánea previa a correcciones y rerun fijado; conservada mediante hallazgos/hashes históricos."
+    }
+  ],
+  "requiredOpen": 0,
+  "remainingIntegrationConditions": [
+    {
+      "item": "Q42",
+      "resolveBefore": "cada push/PR/merge",
+      "state": "PASS acotado; recheck"
+    },
+    {
+      "item": "CI/review PR SHA exacto",
+      "resolveBefore": "merge",
+      "state": "NOT VERIFIED"
+    },
+    {
+      "item": "merge + SHA canónico + CI canónico",
+      "resolveBefore": "P1-L1 TERMINAL",
+      "state": "NOT VERIFIED"
+    },
+    {
+      "item": "P1-L2 A y B",
+      "resolveBefore": "primer trabajo funcional L2",
+      "state": "pendientes, candidato ca975dc822c0bd5e872d3debe824abc536f662007513170f327727878ff3ac71"
+    }
+  ]
+}

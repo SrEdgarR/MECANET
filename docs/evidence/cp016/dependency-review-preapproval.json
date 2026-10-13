@@ -1,0 +1,471 @@
+{
+  "schemaVersion": 1,
+  "checkpoint": "CP-016",
+  "at": "2026-10-13T16:58:26.003228+00:00",
+  "classification": "DETECTED",
+  "scope": "Q-43 focused dependency triage; not a full application security audit",
+  "sourceCodeSha": "44e55714b30dca776bc6a7fe65cb389b67343738",
+  "worktreeState": "Three new CI scripts are uncommitted and identified by SHA256; canonical product/package/config blobs unchanged",
+  "environment": {
+    "node": "24.21.0",
+    "npm": "11.9.0",
+    "platform": "Windows",
+    "architecture": "x64",
+    "qa": "NOT USED",
+    "database": "NOT USED"
+  },
+  "q43Status": "UNRESOLVED / full audit FAIL; remediation candidate requires review/approval if material",
+  "existingFullAudit": {
+    "result": "FAIL",
+    "exitCode": 1,
+    "counts": {
+      "info": 0,
+      "low": 0,
+      "moderate": 2,
+      "high": 5,
+      "critical": 0,
+      "total": 7
+    },
+    "rootAdvisoryCount": 2,
+    "evidence": "existing-client-full-audit.json"
+  },
+  "existingRuntimeAudit": {
+    "result": "PASS",
+    "counts": {
+      "info": 0,
+      "low": 0,
+      "moderate": 0,
+      "high": 0,
+      "critical": 0,
+      "total": 0
+    },
+    "evidence": "existing-client-runtime-audit.json"
+  },
+  "affectedPackages": [
+    {
+      "package": "braces",
+      "version": "3.0.3",
+      "devOnlyInLock": true,
+      "npmSeverity": "high",
+      "via": [
+        {
+          "source": 1240992,
+          "name": "braces",
+          "dependency": "braces",
+          "title": "braces vulnerable to stack-exhaustion denial of service through deeply nested patterns",
+          "url": "https://github.com/advisories/GHSA-vfj7-8cjw-p6xm",
+          "severity": "high",
+          "cwe": [
+            "CWE-674"
+          ],
+          "cvss": {
+            "score": 7.5,
+            "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H"
+          },
+          "range": "<=3.0.3"
+        }
+      ],
+      "effects": [
+        "chokidar",
+        "micromatch"
+      ],
+      "fixAvailable": {
+        "name": "tailwindcss",
+        "version": "4.3.3",
+        "isSemVerMajor": true
+      }
+    },
+    {
+      "package": "chokidar",
+      "version": "3.6.0",
+      "devOnlyInLock": true,
+      "npmSeverity": "high",
+      "via": [
+        "braces"
+      ],
+      "effects": [
+        "tailwindcss"
+      ],
+      "fixAvailable": {
+        "name": "tailwindcss",
+        "version": "4.3.3",
+        "isSemVerMajor": true
+      }
+    },
+    {
+      "package": "fast-glob",
+      "version": "3.3.3",
+      "devOnlyInLock": true,
+      "npmSeverity": "high",
+      "via": [
+        "micromatch"
+      ],
+      "effects": [],
+      "fixAvailable": true
+    },
+    {
+      "package": "micromatch",
+      "version": "4.0.8",
+      "devOnlyInLock": true,
+      "npmSeverity": "high",
+      "via": [
+        "braces"
+      ],
+      "effects": [
+        "fast-glob",
+        "tailwindcss"
+      ],
+      "fixAvailable": {
+        "name": "tailwindcss",
+        "version": "4.3.3",
+        "isSemVerMajor": true
+      }
+    },
+    {
+      "package": "postcss-nested",
+      "version": "6.2.0",
+      "devOnlyInLock": true,
+      "npmSeverity": "moderate",
+      "via": [
+        "postcss-selector-parser"
+      ],
+      "effects": [],
+      "fixAvailable": true
+    },
+    {
+      "package": "postcss-selector-parser",
+      "version": "6.1.4",
+      "devOnlyInLock": true,
+      "npmSeverity": "moderate",
+      "via": [
+        {
+          "source": 1241232,
+          "name": "postcss-selector-parser",
+          "dependency": "postcss-selector-parser",
+          "title": "PostCSS: Quadratic complexity in flat selector parsing allows CPU exhaustion",
+          "url": "https://github.com/advisories/GHSA-rj75-hqrm-r3gf",
+          "severity": "moderate",
+          "cwe": [
+            "CWE-400",
+            "CWE-407"
+          ],
+          "cvss": {
+            "score": 5.9,
+            "vectorString": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:N/I:N/A:H"
+          },
+          "range": "<7.1.6"
+        }
+      ],
+      "effects": [
+        "postcss-nested",
+        "tailwindcss"
+      ],
+      "fixAvailable": {
+        "name": "tailwindcss",
+        "version": "4.3.3",
+        "isSemVerMajor": true
+      }
+    },
+    {
+      "package": "tailwindcss",
+      "version": "3.4.18",
+      "devOnlyInLock": true,
+      "npmSeverity": "high",
+      "via": [
+        "chokidar",
+        "fast-glob",
+        "micromatch",
+        "postcss-nested",
+        "postcss-selector-parser"
+      ],
+      "effects": [],
+      "fixAvailable": {
+        "name": "tailwindcss",
+        "version": "4.3.3",
+        "isSemVerMajor": true
+      }
+    }
+  ],
+  "compatibleUpdateAnalysis": [
+    {
+      "option": "braces patch",
+      "result": "UNAVAILABLE",
+      "evidence": "registry-braces.txt; GHSA-vfj7-8cjw-p6xm declares no patched version",
+      "latestPublished": "3.0.3"
+    },
+    {
+      "option": "Tailwind3 patch to3.4.19",
+      "result": "DOES NOT FIX THE TWO ROOT ADVISORIES",
+      "evidence": "registry-tailwindcss-3.4.19.txt: same chains braces and selector^6"
+    },
+    {
+      "option": "selector-parser6 patch",
+      "result": "UNAVAILABLE",
+      "latest6": "6.1.4",
+      "patched7": "7.1.6",
+      "evidence": "registry-postcss-selector-parser-6.txt; GHSA-rj75-hqrm-r3gf"
+    },
+    {
+      "option": "force selector7 into Tailwind3/postcss-nested6",
+      "result": "NOT APPLIED: outside declared ^6 contracts and does not fix braces"
+    },
+    {
+      "option": "remove Tailwind from client",
+      "result": "NOT APPLIED: required by client/postcss.config.js and legacy UI; not an unnecessary dependency for that client"
+    },
+    {
+      "option": "Tailwind4",
+      "result": "SUGGESTED alternative with broader impact: major pin/config/render change, requires SPEC CHANGE and approval"
+    },
+    {
+      "option": "SaaS-only toolchain staged from exact source allowlist",
+      "result": "RECOMMENDED SUGGESTED: local fixture full audit0 and three assets equal F; not implemented in product/CI"
+    }
+  ],
+  "exposure": [
+    {
+      "surface": "SaaS browser/Express runtime",
+      "classification": "NO REACHABLE PATH FOUND WITH CURRENT EVIDENCE",
+      "basis": "No affected package in31browser modules or backend npm tree; no HTTP/tenant input to tooling detected. Runtime audits do not cover bundled build-tool internals."
+    },
+    {
+      "surface": "P1-L1 local guarded build/tests/sanitizer",
+      "classification": "NO REACHABLE PATH FOUND WITH CURRENT EVIDENCE",
+      "basis": "ESM/CJS standalone packages fail closed; tests workers acknowledge preload; inline PostCSS plugins[] and no .env/public load; fixed versioned CSS/config inputs. Vite bundled internals still exist."
+    },
+    {
+      "surface": "legacy build/dev tooling",
+      "classification": "NOT VERIFIED for untrusted input reachability",
+      "basis": "Tailwind active via legacy PostCSS. No legacy build or public dev server ran; guard is opt-in and does not protect arbitrary commands."
+    },
+    {
+      "surface": "Vite6.4.3 bundled implementations",
+      "classification": "NOT VERIFIED for universal non-exposure",
+      "basis": "Braces used in watcher getDirParts; Vite sets disableGlobbing:true by default. Selector parser consumes versioned CSS in current build. No tenant-controlled pattern/CSS path found; different config/plugins/dev server can alter conditions."
+    }
+  ],
+  "newMitigation": {
+    "state": "IMPLEMENTED AND VERIFIED LOCAL OPT-IN ONLY",
+    "files": {
+      "scripts/ci/tooling-isolation.mjs": "917d6bf61ff4d0cf2cd5c25fdf752f2cb0e4b7f22d4e834c40ba5efb4d55f3b3",
+      "scripts/ci/tooling-isolation.test.mjs": "c411c064420e2e27d94d396afd3064b4e1d5155fd828ff513c75bf5b7406253b",
+      "scripts/ci/tooling-isolation-check.mjs": "4abde249a9880886d6c8b604e9920d328456aca6954fb5ecf48524e97a8e234e"
+    },
+    "guardTests": 4,
+    "benignBlockedLoads": 14,
+    "esmAndCjs": true,
+    "workerSentinel": true,
+    "fallbackNegative": "PASS: external node_modules rejected before fixture executes",
+    "noWorkflowCallerChange": true,
+    "noAuditException": true,
+    "limitations": [
+      "Guard cannot inspect Vite vendored internal functions",
+      "Guard is not an OS sandbox and does not defend malicious repository code",
+      "Guard not active in remote CI or arbitrary legacy dev/build until caller is explicitly integrated"
+    ]
+  },
+  "checks": [
+    {
+      "id": "guard-tests",
+      "command": [
+        "node",
+        "--test",
+        "scripts/ci/tooling-isolation.test.mjs"
+      ],
+      "cwdRelativeToWorktree": ".",
+      "exitCode": 0,
+      "at": "2026-10-13T16:57:41.377257+00:00",
+      "elapsedSeconds": 0.294147,
+      "log": "guard-tests.txt",
+      "timeoutSeconds": 180
+    },
+    {
+      "id": "guarded-existing-commands",
+      "command": [
+        "node",
+        "scripts/ci/tooling-isolation-check.mjs"
+      ],
+      "cwdRelativeToWorktree": ".",
+      "exitCode": 0,
+      "at": "2026-10-13T16:57:41.671418+00:00",
+      "elapsedSeconds": 25.141044,
+      "log": "guarded-existing-commands.txt",
+      "timeoutSeconds": 180
+    },
+    {
+      "id": "isolated-guard-tests",
+      "command": [
+        "node",
+        "--test",
+        "scripts/ci/tooling-isolation.test.mjs"
+      ],
+      "cwdRelativeToWorktree": ".qa-private\\cp016-tooling\\isolated-client",
+      "exitCode": 0,
+      "at": "2026-10-13T16:58:06.812472+00:00",
+      "elapsedSeconds": 0.316277,
+      "log": "isolated-guard-tests.txt",
+      "timeoutSeconds": 180
+    },
+    {
+      "id": "isolated-commands",
+      "command": [
+        "node",
+        "scripts/ci/tooling-isolation-check.mjs"
+      ],
+      "cwdRelativeToWorktree": ".qa-private\\cp016-tooling\\isolated-client",
+      "exitCode": 0,
+      "at": "2026-10-13T16:58:07.128759+00:00",
+      "elapsedSeconds": 18.276488,
+      "log": "isolated-commands.txt",
+      "timeoutSeconds": 180
+    }
+  ],
+  "currentBundleProof": {
+    "moduleIds": 31,
+    "standaloneBlockedPackagesInBrowser": 0,
+    "compiledAssetsIdentical": true,
+    "assets": [
+      {
+        "path": "assets/saas-DclqrR_W.css",
+        "sha256": "cdb3b3885a4aea0c72204e0c7952eb8ebd7522c2767529eb824b487582d54159"
+      },
+      {
+        "path": "assets/saas-DsjAOXZI.js",
+        "sha256": "846991792b1506d97706bca144f265874f79d17bba91d930dec4d45c3b7bbf04"
+      },
+      {
+        "path": "saas.html",
+        "sha256": "ab3c357852ca07b8f4689fb5b23a8ddb093ab2bb4e0aa2d75ba98012b132ee51"
+      }
+    ],
+    "limit": "Vite bundled internals are not package-resolver hooks"
+  },
+  "isolatedBundleProof": {
+    "moduleIds": 31,
+    "standaloneBlockedPackagesInBrowser": 0,
+    "compiledAssetsIdentical": true,
+    "assets": [
+      {
+        "path": "assets/saas-DclqrR_W.css",
+        "sha256": "cdb3b3885a4aea0c72204e0c7952eb8ebd7522c2767529eb824b487582d54159"
+      },
+      {
+        "path": "assets/saas-DsjAOXZI.js",
+        "sha256": "846991792b1506d97706bca144f265874f79d17bba91d930dec4d45c3b7bbf04"
+      },
+      {
+        "path": "saas.html",
+        "sha256": "ab3c357852ca07b8f4689fb5b23a8ddb093ab2bb4e0aa2d75ba98012b132ee51"
+      }
+    ],
+    "limit": "Vite bundled internals are not package-resolver hooks"
+  },
+  "isolatedProposalEvidence": {
+    "manifest": "isolated-toolchain-manifest.json",
+    "characterization": "isolated-toolchain-characterization.json",
+    "fullAudit": "isolated-full-audit.json",
+    "fullAuditResult": "PASS local fixture only",
+    "packages": 211,
+    "exactCopiedFiles": 20,
+    "notProductImplementation": true,
+    "lockSnapshot": "isolated-toolchain-lock.json",
+    "lockSha256": "4835748dc12c4bbdb3094f9c398cfaaee01ef4f5d2408c47989eb1cb4144e82a"
+  },
+  "bundledImplementations": [
+    {
+      "package": "vite",
+      "version": "6.4.3",
+      "path": "client/node_modules/vite/dist/node/chunks/dep-Dm0c1Wj2.js",
+      "sha256": "88f9adf5652dc907fa20c9bf936a91fbe1c1328ca3624c39c649692eccb301e6",
+      "staticObservation": [
+        "braces recursive walkers",
+        "chokidar watcher"
+      ],
+      "guardCoverage": "NOT COVERED: bundled code has no separate Node package load"
+    },
+    {
+      "package": "vite",
+      "version": "6.4.3",
+      "path": "client/node_modules/vite/dist/node/chunks/dep-DDtvSN7_.js",
+      "sha256": "484ba60a239c6d8739e111bfb442aaaea84fdb7e1614a20bf5e2f90f37efa5a9",
+      "staticObservation": [
+        "postcss-selector-parser splitWord/uniqs"
+      ],
+      "guardCoverage": "NOT COVERED: bundled code has no separate Node package load"
+    }
+  ],
+  "unchangedProductAndCallers": {
+    "client/package.json": {
+      "sameGitBlob": true,
+      "sourceBlob": "4a4215c1492cfa597ab349853ce7b90585cb1e4f"
+    },
+    "client/package-lock.json": {
+      "sameGitBlob": true,
+      "sourceBlob": "37a064b47c892ae74cba0e8964ff10407c6ec85a"
+    },
+    ".github/workflows/p1-l1-verify.yml": {
+      "sameGitBlob": true,
+      "sourceBlob": "4069a2644a8580f68b42d32e5b180004958af1bf"
+    },
+    "client/vite.saas.config.js": {
+      "sameGitBlob": true,
+      "sourceBlob": "2c3ee723653ffd38f053c8f88d1ca481f92aa307"
+    },
+    "scripts/ci/p1-l1.mjs": {
+      "sameGitBlob": true,
+      "sourceBlob": "438c9fc1ead720508d305f669bc34a120eec3e8b"
+    },
+    "scripts/ci/safe-documents.vitest.config.mjs": {
+      "sameGitBlob": true,
+      "sourceBlob": "f7f37034997f2b7f76acede34b328f36aaeee792"
+    }
+  },
+  "resolveBefore": "Satisfactory approved security/CI gate before publish/PR/merge per current user instruction; A/B for L2 still pending",
+  "necessaryHumanDecision": "Approve exact SC-008 separate SaaS toolchain/gate scope or a precise limited risk exception; no implicit waiver or general acceptance",
+  "infraResourcesChanged": 0,
+  "cleanup": {
+    "sentinelTemporaryFiles": "removed by exact list; controlled fallback scratch also removed",
+    "isolatedFixture": "KEEP ignored/private for reproducibility",
+    "npmCache": "KEEP ignored/private; no credentials configured"
+  },
+  "executionIssues": [
+    {
+      "issue": "First native npm invocation rejected identical user/global config path",
+      "resolution": "Separate empty user and global .npmrc, no secret read",
+      "evidence": "preflight-npm-config-failure.txt",
+      "notAuditOutcome": true
+    }
+  ],
+  "sources": [
+    {
+      "url": "https://github.com/advisories/GHSA-vfj7-8cjw-p6xm",
+      "kind": "PRIMARY ADVISORY",
+      "consulted": "2026-10-13"
+    },
+    {
+      "url": "https://github.com/advisories/GHSA-rj75-hqrm-r3gf",
+      "kind": "PRIMARY ADVISORY",
+      "consulted": "2026-10-13"
+    },
+    {
+      "url": "https://github.com/tailwindlabs/tailwindcss/releases/tag/v3.4.19",
+      "kind": "VENDOR RELEASE",
+      "consulted": "2026-10-13"
+    },
+    {
+      "url": "https://docs.npmjs.com/cli/v11/commands/npm-audit/",
+      "kind": "VENDOR DOCUMENTATION",
+      "consulted": "2026-10-13"
+    },
+    {
+      "url": "https://nodejs.org/api/module.html#moduleregisterhooksoptions",
+      "kind": "VENDOR DOCUMENTATION; behavior tested on local24.21.0",
+      "consulted": "2026-10-13"
+    },
+    {
+      "url": "https://v3.tailwindcss.com/docs/content-configuration",
+      "kind": "VENDOR DOCUMENTATION",
+      "consulted": "2026-10-13"
+    }
+  ]
+}

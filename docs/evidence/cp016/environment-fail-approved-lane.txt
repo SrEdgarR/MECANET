@@ -1,0 +1,14 @@
+
+  #  C:\Users\thede\Desktop\Proyectos de programacion\MECANET-develop\.qa-private\runtime\node.exe[18780]: std::shared_ptr<InitializationResultImpl> __cdecl node::InitializeOncePerProcessInternal(const std::vector<std::string> &, ProcessInitializationFlags::Flags) at src\node.cc:1266
+  #  Assertion failed: ncrypto::CSPRNG(nullptr, 0)
+
+----- Native stack trace -----
+
+ 1: 00007FF702A490C6 node::SetAbortHandler+54
+ 2: 00007FF702A48C77 node::MultiIsolatePlatform::DisposeIsolate+770039
+ 3: 00007FF702AAB00E node::InitializeOncePerProcess+2974
+ 4: 00007FF702AAB3CD node::Start+445
+ 5: 00007FF702B6D312 node::AsyncResource::CallbackScope::CallbackScope+610
+ 6: 00007FF702D7D3C4 node::AsyncResource::CallbackScope::CallbackScope+2163476
+ 7: 00007FFF7EA2CD87 BaseThreadInitThunk+23
+ 8: 00007FFF80D8CAEC RtlUserThreadStart+44

@@ -23,3 +23,7 @@ Validación local sobre `a89cc2eee43a8f60f3464bea26a6ea4f9ddfc867`:73backend,29S
 **Bloqueos:** acreditar Gitsettings Vercel antes de push/PR/merge(Q42) y resolver fullaudit(Q43). Sin waiver, cambio de integración ajena, forcepush, bypass o deploy. QA STOPPED/KEEP y sin recursos nuevos. Pagos/POSescritor/fiscal/demo comercial/panel completo/Sentry externo/capacidad/lanzamiento fuera del lote. El candidato siguiente permanece en la rama fuente de planificación, separado del PR funcional L1.
 
 No se vuelve a pedir A/B de L1. P1-L2 necesita su A exacta y B diferenciada/gates; un roadmap o PR mergeado no la concede. [Runbook QA](../tests/qa/README.md) solo si una prueba nueva justifica reanudación y preflight; no abrir QA para estos documentos/Git.
+
+## Continuación CP-016 — gates locales satisfechos
+
+Q-42 resuelta: fuente humana, filtros Vercel0 y metadatos conocidos GitHub/Coolify; recheck antes de push/PR/merge. Q-43 local PASS por SC-008/DEC-060 aprobada, manifiesto/lock propios, 21 negativas/29+3/build/3assetsF, audit completo backend/lane SaaS0 y revisión independiente al SHA0d8285cef117d6174a6053f18ceaac180f8aa1c5. Audit legacy FAIL/TD-21 permanece separado. No excepciones de audit o despliegue. Próximo paso autorizado: publicar rama limpia, PR a develop, CI/review/correcciones, merge y CI canónica. Integration Gate aún NOT VERIFIED, L1 no TERMINAL. Candidato L2 v0.2 solo en rama fuente, A/B pendientes.

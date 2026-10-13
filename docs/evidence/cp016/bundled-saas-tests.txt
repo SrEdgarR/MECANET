@@ -1,0 +1,13 @@
+
+ RUN  v4.1.11 C:/Users/thede/.codex/worktrees/p1l1-integration/MECANET-develop/.qa-private/cp016-tooling/isolated-client/client
+
+ ✓ src/saas/SaasApp.test.jsx (4 tests) 480ms
+     ✓ supports keyboard login, labeled inputs, selected company and empty catalog  355ms
+ ✓ src/saas/client.test.js (14 tests) 166ms
+ ✓ src/saas/RetryAccess.test.jsx (1 test) 88ms
+ ✓ src/saas/retry.test.js (10 tests) 22ms
+
+ Test Files  4 passed (4)
+      Tests  29 passed (29)
+   Start at  13:01:31
+   Duration  13.05s (transform 139ms, setup 1.81s, import 481ms, tests 755ms, environment 8.82s)

@@ -1,6 +1,6 @@
 # Estado del proyecto — Mecanet SaaS
 
-Este estado se refiere a la **evolución SaaS**, no invalida la evidencia funcional de la aplicación de un negocio ya publicada. Revisión: 2026-10-13; CP-015 registra integración limpia local y siguiente candidato, sin operaciones remotas. CP-014 conserva **P1-L1 COMPLETADA, ocho salidas PASS acotadas**. P1 continúa como única fase activa; CP-001…013 conservan su evidencia y alcance históricos.
+Revisión CP-016, 2026-10-13: P1-L1 conserva ocho salidas PASS; Q-42 y Q-43 locales resueltas mediante evidencia real y SC-008 aprobada/implementada. Integration Gate NOT VERIFIED hasta PR/CI/merge/canónica. P1 única fase EN CURSO; P0 PARCIAL/RG-001 y SaaS general NOT APPROVED. P1-L2 v0.2 candidato revisado, A/B pendientes.
 
 ## Estado global
 
@@ -11,11 +11,11 @@ Este estado se refiere a la **evolución SaaS**, no invalida la evidencia funcio
 | active_phase_name | Fundación aislada y operable |
 | status | EN CURSO |
 | last_updated | 2026-10-13 |
-| next_gate | Resolver Q-42 seguridad de publicación y Q-43 auditoría completa; después PR/review/CI/merge/CI canónica. P1-L2 solo candidato independiente pendiente de A/B |
+| next_gate | Publicar rama limpia, PR/review/CI, merge y CI canónica bajo recheck Q-42; después A/B exactas P1-L2 y entradas |
 | readiness_scope | P1-L1 v0.2-CP012/S-18/L-01 APPROVED por DEC-058; Development y Environment acreditados para QA limitada. SaaS general NOT APPROVED |
 | progress_basis | Estado cualitativo, sin porcentaje. P1-L1 COMPLETADA con ocho salidas PASS y trazabilidad por suite; esto no cierra P1 general ni el SaaS |
 | implementation | P1-L1 COMPLETADA: ocho cortes privados PostgreSQL/React/Express; P1 general EN CURSO, sin funcionalidad comercial pública |
-| current_checkpoint | CP-015 |
+| current_checkpoint | CP-016 |
 | hosting_target | CONFIRMED DEC-021/SC-005: VPS existente, operación propia independiente de Coolify; PostgreSQL DEC-054. Dominio futuro mecanet.app DEC-059/SC-007 |
 | hosting_execution | Cohorte CP-014 privada instalada y probada con Compose, PostgreSQL18.6 ARM64, dos API, worker y Nginx; sin puertos públicos. Cinco contenedores propios STOPPED al cierre, sin URL activa; aislamiento y diez consumidores ajenos preservados. Inventario/cleanup en auditoría CP-014; fuente CP-013 cerrada y hashes preservados |
 
@@ -35,20 +35,20 @@ Este estado se refiere a la **evolución SaaS**, no invalida la evidencia funcio
 |---|---|
 | base_sha | 010aab670c638d168c971df3e3e53b97e72ff443, base limpia de integración; fuente CP-014 9fcdd9540848edbbdef1cfc94667491c9ab2ba92 preservada |
 | research_head_sha | 9fcdd9540848edbbdef1cfc94667491c9ab2ba92; lectura focalizada sin reinventariar el VPS |
-| tested_code_sha | a89cc2eee43a8f60f3464bea26a6ea4f9ddfc867 — regresión local CI de integración; objetos SaaS/arnés y bundle idénticos a CP-014, evidencia PG/ARM64/browser/restore conservada con sus SHA |
+| tested_code_sha | 0d8285cef117d6174a6053f18ceaac180f8aa1c5 — SC-008 local21negativas/29+3/build/3assetsF/auditorías0/syntax69; evidencia DB/browser/restore histórica conserva sus SHA |
 | qa_controller_sha | 409880a513bee1eff909caf68d23325af55e9be4; normalización del inventario ajeno y regresión del controlador QA, sin cambio del artefacto F desplegado/probado |
 | experimental_test_reference | CP-006/010 históricos no repetidos ni atribuidos a PostgreSQL; las90 pruebas Mongo f5afaa2 no prueban este lote |
 | HEAD | Resolver git rev-parse HEAD en cada worktree; checkpoint final no se escribe en su propio commit |
-| checkpoint_sha | CP-014 9fcdd9540848edbbdef1cfc94667491c9ab2ba92; CP-015 documental final identificado en informe externo/Git |
+| checkpoint_sha | CP-015 fuentea541f7bcab88f289fa2bc89f6c9c9d004283cff2/integración44e55714b30dca776bc6a7fe65cb389b67343738; CP-016 final se identifica externamente/Git sin autoSHA |
 | approved_head_sha | 3b387b38784907b67e2209a35c3d5f400d70742e, solamente S-18/manifiestoL-01/ocho cortes por DEC-058 |
-| merge_sha | Ninguno: no push, PR nuevo, merge o CI remoto por safety gate pendiente |
-| current_main_baseline_sha | 010aab670c638d168c971df3e3e53b97e72ff443 — develop remoto consultado CP-015, sin cambio |
-| next_phase_base_sha | No definido: Integration Gate pendiente; a89cc2eee43a8f60f3464bea26a6ea4f9ddfc867 es candidato local, no baseline canónica fusionada |
+| merge_sha | Ninguno todavía: Integration Gate remoto por ejecutar; autorización vigente |
+| current_main_baseline_sha | 010aab670c638d168c971df3e3e53b97e72ff443 — develop remoto comprobado; no nuevo merge todavía |
+| next_phase_base_sha | No definido hasta merge/CI canónica; A/B de L2 pendientes |
 | local_branch | codex/integrate-p1-l1 preparada en worktree propio; codex/saas-discovery conserva fuente y planificación siguiente |
-| remote_branch | Sin rama SaaS publicada; codex/deploy-vercel-coolify y PR #1 intactos |
+| remote_branch | Rama nueva aún no publicada al checkpoint previo; PR #1 y codex/deploy-vercel-coolify intactos |
 | worktree | Primario fuente/planning y C:/Users/thede/.codex/worktrees/p1l1-integration/MECANET-develop; .kilo/worktrees/majestic-chiller conservado |
 | integration_target | develop 010aab670c638d168c971df3e3e53b97e72ff443; PR exacto L1 preparado localmente, sin candidato siguiente mezclado |
-| CI | Workflow propio sin deploy/secrets, regresión local PASS y auditoría runtime PASS; audit frontend completo FAIL por tooling heredado. CI PR/canónica NOT VERIFIED |
+| CI | SC-008 local/revisión/actionlint PASS, fullaudit backend/lane SaaS0; legacy FAIL conservado. CI PR/canónica NOT VERIFIED |
 
 ## UI actual
 
@@ -150,3 +150,7 @@ Bloqueo localizado: conector Vercel no expone triggers Git y navegador requiere 
 Siguiente candidato **P1-L2 v0.1-CP015**, en .agentic/NEXT_LOT_CANDIDATE.md de la rama fuente: writers aislados por alta+recepción ficticias, idempotencia/revocación/crecimiento/migración/restore/UI; ajuste P1/P2 SUGGESTED, no A/B ni implementación. Doce salidas futuras NOT VERIFIED. NCF/e-CF mantienen contrato antes del primer código fiscal. QA CP-013/014 conserva STOPPED/KEEP según evidenciaCP014; no se despertó ni reensayó. [Auditoría CP-015](audit/CP-015.md).
 
 Registro vigente:16pendientes,2BLOCKING/14FUTURE;4diseños/5evidencias/5decisiones humanas/2externas. P1únicaactiva, P0PARCIAL, SaaSgeneralNOTAPPROVED. No nueva fase/baseline canónica por copia, tests locales o aprobación funcional histórica.
+
+## Resultado CP-016 — gates locales y candidato siguiente
+
+Q-42 resuelta con fuente humana/filtroVercel/GitHub/Coolify y límites explícitos. SC-008/DEC-060 aprobada/implementada: manifests/lock/allowlist/guard propio, runtimeReact/Vite/Vitest conservado y strictfullaudit0; clientelegacy intacto/FAIL TD-21. Pruebas fijadas al SHA0d8285cef117d6174a6053f18ceaac180f8aa1c5 y review independiente PASS; arnés inicial falló al omitirSystemRoot y se corrigió sin producto, evidencia preservada. Integration Gate aún NV hasta ejecución remota. Candidato L2 v0.2 ca975dc822c0bd5e872d3debe824abc536f662007513170f327727878ff3ac71, 15 cálculos/review documental PASS, doce salidas NV y A/B pendientes. Infraestructura creada/modificada: ninguna; QA STOPPED/KEEP CP014 reportada, sin nuevo ensayo físico.

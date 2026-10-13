@@ -1,0 +1,18 @@
+{
+  "stage": "before-push",
+  "at_utc": "2026-10-13T17:37:58Z",
+  "classification": "DETECTED",
+  "provenance": "Vercel connector list_projects authenticated team",
+  "teamId": "team_1Gnpg9ve2yCJNH2rTIjmIhOi",
+  "filter": {
+    "repoId": "1383698839",
+    "limit": "100"
+  },
+  "response": {
+    "projects": [],
+    "pagination": {
+      "count": 0
+    }
+  },
+  "mutations": []
+}

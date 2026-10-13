@@ -1,0 +1,86 @@
+{
+  "schemaVersion": 1,
+  "checkpoint": "CP-016",
+  "date": "2026-10-13",
+  "classification": "DETECTED",
+  "provenance": "LOCAL_CALCULATION_ONLY",
+  "author": "/root/cp016_next_lot",
+  "sourceCheckpointSha": "a541f7bcab88f289fa2bc89f6c9c9d004283cff2",
+  "candidate": {
+    "path": ".agentic/NEXT_LOT_CANDIDATE.md",
+    "version": "P1-L2 v0.2-CP016",
+    "sha256": "ca975dc822c0bd5e872d3debe824abc536f662007513170f327727878ff3ac71",
+    "state": "SUGGESTED / CANDIDATE / NOT APPROVED",
+    "criteria": 12,
+    "functionalCriteria": "12 NOT VERIFIED",
+    "approvalA": "PENDING",
+    "authorizationB": "PENDING",
+    "previousVersion": "P1-L2 v0.1-CP015",
+    "previousSha256": "3cd5368860ad001a602d56cb8aee526053c38394f90eecac398542167016901c"
+  },
+  "environment": {
+    "node": "24.21.0",
+    "platform": "win32",
+    "architecture": "x64",
+    "database": "NOT USED",
+    "browser": "NOT USED",
+    "remote": "NOT USED"
+  },
+  "vector": {
+    "tuple": [
+      "mecanet-write-v1",
+      "aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa",
+      "bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb",
+      "catalog.create",
+      "1",
+      null,
+      ["ABC-1", "Café"]
+    ],
+    "encoding": "UTF-8 of JSON.stringify(tuple), no replacer/indentation/BOM/trailing newline",
+    "json": "[\"mecanet-write-v1\",\"aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa\",\"bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb\",\"catalog.create\",\"1\",null,[\"ABC-1\",\"Café\"]]",
+    "utf8Bytes": 142,
+    "sha256": "d2e92c64f9ba7e2f55b29389879e86e99caeb2d62ac5afebeb0269b93c3f4b5b",
+    "sensitivity": "Public synthetic constants only; no business records or credentials"
+  },
+  "checks": [
+    {"id": "JSON-ORDER-WHITESPACE", "result": "PASS", "scope": "local format calculation"},
+    {"id": "SKU-NORMALIZATION", "result": "PASS", "scope": "local format calculation"},
+    {"id": "UUID-CANONICAL-CASE", "result": "PASS", "scope": "local format calculation"},
+    {"id": "UNICODE-COMPOSITION-DISTINCT", "result": "PASS", "scope": "local format calculation"},
+    {"id": "PRODUCT-PATH-BINDING", "result": "PASS", "scope": "local format calculation"},
+    {"id": "TENANT-ACTOR-ACTION-EPOCH-BINDING", "result": "PASS", "scope": "local format calculation"},
+    {"id": "QUANTITY-REASON-BINDING", "result": "PASS", "scope": "local format calculation"},
+    {"id": "ESCAPED-CONTROL-SUPPLEMENTARY", "result": "PASS", "scope": "local format calculation"},
+    {"id": "TEXT-DOMAIN-NUL-SURROGATE", "result": "PASS", "scope": "local character classification only, not future API/SQL validation"},
+    {"id": "BIGINT-AS-STRING", "result": "PASS", "scope": "local format calculation"},
+    {"id": "NO-BOM-TRAILING-NEWLINE", "result": "PASS", "scope": "local format calculation"},
+    {"id": "RESERVATION-BOUNDS", "result": "PASS", "scope": "21760<32768 and16128<16384, design arithmetic only"},
+    {"id": "TWELVE-UNIQUE-CRITERIA-PENDING-A-B", "result": "PASS", "scope": "document consistency only"},
+    {"id": "LOCAL-REFERENCES", "result": "PASS", "scope": "local target existence, no URL or all-anchor verification"},
+    {"id": "RECTANGULAR-TABLES-WHITESPACE", "result": "PASS", "scope": "document formatting only"}
+  ],
+  "totalChecks": 15,
+  "independentReview": {
+    "reviewer": "/root/cp016_integration_review",
+    "result": "PASS DOCUMENTAL ACOTADO",
+    "source": "docs/evidence/cp016/independent-review.json",
+    "requiredOpenForL2": 0,
+    "independentVectorRecomputed": true
+  },
+  "sources": [
+    "https://tc39.es/ecma262/multipage/structured-data.html#sec-json.stringify",
+    "https://www.postgresql.org/docs/18/datatype-json.html",
+    "https://www.postgresql.org/docs/18/functions-binarystring.html"
+  ],
+  "notVerified": [
+    "SQL digest/function binding",
+    "two API converters",
+    "durable idempotency",
+    "permissions/fence/locks/COMMIT",
+    "migration/restore/resource availability",
+    "approval A and authorization B"
+  ],
+  "productChanges": [],
+  "infrastructureChanges": [],
+  "gitMutations": []
+}

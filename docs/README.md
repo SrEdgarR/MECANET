@@ -1,6 +1,6 @@
 # Expediente Mecanet SaaS
 
-Última revisión: **2026-10-13**, CP-015. P1 única fase activa, L1 conserva ocho PASS y Integration Gate **NOT VERIFIED**. Rama limpia/CI local preparados; remote safety Q-42 y audit completo Q-43 bloquean push/PR/merge. Próximo candidato P1-L2 de la rama fuente sigue SUGGESTED/NOT APPROVED; no implementación. P0 PARCIAL y SaaS general NOT APPROVED.
+Última revisión: **CP-016, 2026-10-13: Q-42 RESUELTA con evidencia humana/plataforma y mecanismos conocidos; Q-43 RESUELTA localmente por SC-008/DEC-060 APPROVED, auditoría completa estricta de la lane SaaS/backend PASS, revisión y regresión al SHA 0d8285cef117d6174a6053f18ceaac180f8aa1c5. Auditoría legacy FAIL conservada/TD-21. P1 única fase activa; L1 ocho PASS, Integration Gate NOT VERIFIED hasta PR/CI/merge/CI canónica. P0 PARCIAL y SaaS general NOT APPROVED; P1-L2 v0.2 solo candidato revisado, A/B pendientes.**
 
 ## Autoridad
 
@@ -15,7 +15,7 @@
 
 | Documento | Propósito | Estado |
 |---|---|---|
-| [Auditoría CP-015](audit/CP-015.md) | Integración limpia, triggers, CI/regresión y preparación focal siguiente | Vivo; remoto NOT VERIFIED y audit completo FAIL |
+| [Auditoría CP-016](audit/CP-016.md) | Triggers acreditados, SC-008 y preparación L2; integración Git por acreditar | Vivo; gate local PASS, remoto NOT VERIFIED |
 | [PROJECT_STATE](PROJECT_STATE.md) | Fase, readiness, restricciones, trazabilidad | Vivo |
 | [INVENTORY](INVENTORY.md) | Estado real, brechas, infraestructura y fuentes | DETECTED / REPORTED identificados |
 | [CHECKPOINTS](CHECKPOINTS.md) | Adopción, decisiones, diseños y evidencia local | CP-001…014 históricos; CP-015 vivo, integración limpia local y siguiente candidato |
