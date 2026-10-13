@@ -115,8 +115,23 @@ export function createWriteService({controlPool,authority,writerPools,readerPool
  async function listOperations({authorityContext,sid,tenantId=authorityContext?.descriptor?.tenantId,query,deadline=now()+8000}){
   const a=ownCompany(authorityContext);tenantId=canonicalUuid(tenantId);
   const scoped=await authority.tenantContext({sid,purpose:'company',tenantId});
-  const rows=await control('SELECT * FROM saas.own_pending_writes($1::uuid,$2::text,$3::uuid,$4::uuid,$5::integer)',[tenantId,sid,a.generation,query.cursor,query.limit+1],deadline);
-  const visible=[];for(const row of rows){try{await authorize(a,sid,tenantId,row.action)}catch(error){if(error.status===403)continue;throw error}visible.push({operationId:row.operation_id,action:row.action,state:publicState(row.status),createdAt:new Date(row.created_at).toISOString()})}
+  const visible=[];let cursor=query.cursor,scanned=0,exhausted=false;
+  // SQL filters at its snapshot; a grant may still be revoked before the fresh
+  // per-row check. Continue from the last scanned key to fill this page, while
+  // the public continuation remains the last INCLUDED key. A bounded scan
+  // which cannot prove exhaustion must fail rather than hide later rows.
+  while(visible.length<=query.limit&&!exhausted){
+   if(scanned>=404||now()>=deadline)throw failure('WRITE_UNCERTAIN');
+   const limit=Math.min(query.limit+1,404-scanned);
+   const rows=await control('SELECT * FROM saas.own_pending_writes($1::uuid,$2::text,$3::uuid,$4::uuid,$5::integer)',[tenantId,sid,a.generation,cursor,limit],deadline);
+   exhausted=rows.length<limit;
+   for(const row of rows){
+    if(now()>=deadline)throw failure('WRITE_UNCERTAIN');scanned++;cursor=row.operation_id;
+    try{await authorize(a,sid,tenantId,row.action)}catch(error){if(error.status===403)continue;throw error}
+    visible.push({operationId:row.operation_id,action:row.action,state:publicState(row.status),createdAt:new Date(row.created_at).toISOString()});
+    if(visible.length>query.limit)break;
+   }
+  }
   return fitPage(visible,envelope(scoped),'items',{maxRows:query.limit,cursorKey:'operationId'});
  }
  async function inventory({authorityContext,query,deadline=now()+8000}){
