@@ -158,7 +158,9 @@ def own_tool():
  if action=='foundation':args+=['-e','QA_STAGE=foundation']
  # Add only the exclusive synthetic result destination; no shared host mount.
  args+=['-v',str(ROOT/'evidence')+':/run/qa-results',service,'node','tests/qa/cp017/'+files[action]]
- print(compose(*args),end='')
+ try:print(compose(*args),end='')
+ except subprocess.CalledProcessError as error:
+  print(error.output,end='');raise SystemExit(error.returncode)
 
 def foundation_backup():
  own();assert not any(x['running'] for x in facts() if x['project']==PROJECT and x['name'].endswith(('-api1-1','-api2-1','-worker-1')))

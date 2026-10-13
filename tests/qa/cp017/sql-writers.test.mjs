@@ -5,6 +5,7 @@ import { readFile } from 'node:fs/promises';
 import { randomUUID, createHash } from 'node:crypto';
 import { createPgPool } from '../../../server/saas/db/pools.js';
 import { createQaClient,assertStatus } from '../cp014/http-client.mjs';
+import { withQaInspection } from './sql-live.mjs';
 const file = process.env.MECANET_QA_CONNECTIONS ?? '/run/qa-secrets/connections.json';
 if (!file.startsWith('/run/qa-secrets/')) throw new Error('PRIVATE_QA_CONNECTIONS_REQUIRED');
 const qa = JSON.parse(await readFile(file, 'utf8'));
@@ -40,7 +41,7 @@ test('writer has no free DML, DDL, fence mutation, role elevation or foreign con
   await withRole('saas_tenant_a', pool => assert.rejects(pool.query('SELECT * FROM inventory.create_product($1,$2,$3,$4,2,1)', [randomUUID(), matrix('catalog.create',null,['FORGED','forged']), '0'.repeat(64), qa.generation]), error => error.code === '42501'));
 });
 test('SQL validates the same exact canonical UTF8 digest and derives the effect from it', async () => {
-  await withRole('saas_maintainer_a', async maintenance => {
+  await withQaInspection(qa,'mecanet_tenant_a', async maintenance => {
     const guard = (await maintenance.query('SELECT * FROM inventory.writer_fence WHERE id=1')).rows[0];
     await withRole(role, async writer => {
       const op = randomUUID(); const text = matrix('catalog.create',null,[`PG-${op.slice(0,8)}`,'Texto 😀 e\u0301 \u0001'], String(guard.data_epoch));
@@ -55,7 +56,7 @@ test('SQL validates the same exact canonical UTF8 digest and derives the effect 
   });
 });
 test('concurrent receipts add once each, replay cannot change product and used is the real logical sum', async () => {
-  await withRole('saas_maintainer_a', async maintenance => {
+  await withQaInspection(qa,'mecanet_tenant_a', async maintenance => {
     const guard = (await maintenance.query('SELECT * FROM inventory.writer_fence WHERE id=1')).rows[0];
     const [first,second]=await httpPair();
     const createId = randomUUID(); const creation = await post(first,'catalog.create',createId,{sku:`SUM-${createId.slice(0,8)}`,name:'sum fixture'},guard);

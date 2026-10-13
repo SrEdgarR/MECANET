@@ -18,33 +18,48 @@ async function connection(adminConnection,database,operation) {
 async function migrateDb(adminConnection,database,owner,scope,bytes,afterSql,sourceCommit) {
   return connection(adminConnection,database,async pool => {
     const client = await pool.connect();
+    let statement='begin';
     try {
       await client.query('BEGIN');
+      statement='migration-lock';
       await client.query('SELECT pg_advisory_xact_lock(56321,3)');
+      statement='owner-role';
       await client.query(`SET LOCAL ROLE ${quote(owner)}`);
       const namespace = scope==='central'?'saas':'catalog';
+      statement='registry-create';
       await client.query(`CREATE TABLE IF NOT EXISTS ${namespace}.schema_migrations(version integer PRIMARY KEY,source_hash text NOT NULL CHECK(source_hash ~ '^[0-9a-f]{64}$'),source_commit text NOT NULL CHECK(source_commit ~ '^[0-9a-f]{40}$'),applied_at timestamptz NOT NULL DEFAULT clock_timestamp())`);
+      statement='registry-read';
       const existing = (await client.query(`SELECT source_hash,source_commit FROM ${namespace}.schema_migrations WHERE version=3 FOR UPDATE`)).rows[0];
       const digest = sha(bytes);
       if (existing) {
         if (existing.source_hash!==digest) throw new Error('MIGRATION_HASH_CONFLICT');
         await client.query('COMMIT'); return {database,scope,version:3,sourceHash:digest,reapplied:false};
       }
+      statement='source-count-before';
       const before = (await client.query(scope==='central'
         ? 'SELECT count(*)::int AS n FROM saas.tenant_directory'
         : 'SELECT count(*)::int AS n FROM catalog.products')).rows[0].n;
-      await client.query(bytes.toString('utf8'));
+      statement='source-migration';await client.query(bytes.toString('utf8'));
       // The SQL central migration RESET ROLE is deliberate; regain only the
       // named NOLOGIN owner, never a role supplied by an HTTP request.
-      await client.query(`SET LOCAL ROLE ${quote(owner)}`);
-      await afterSql(client);
+      statement='owner-role-restore';await client.query(`SET LOCAL ROLE ${quote(owner)}`);
+      let afterIndex=0;
+      await afterSql({query:(...args)=>{statement=`after-sql-${++afterIndex}`;return client.query(...args)}});
+      statement='source-count-after';
       const after = (await client.query(scope==='central'
         ? 'SELECT count(*)::int AS n FROM saas.tenant_directory'
         : 'SELECT count(*)::int AS n FROM catalog.products')).rows[0].n;
       if (before!==after) throw new Error('MIGRATION_SOURCE_COUNT_CHANGED');
-      await client.query(`INSERT INTO ${namespace}.schema_migrations(version,source_hash,source_commit) VALUES(3,$1,$2)`,[digest,sourceCommit]);
+      statement='registry-record';await client.query(`INSERT INTO ${namespace}.schema_migrations(version,source_hash,source_commit) VALUES(3,$1,$2)`,[digest,sourceCommit]);
+      statement='commit';
       await client.query('COMMIT');return {database,scope,version:3,sourceHash:digest,reapplied:true,beforeCount:before,afterCount:after};
-    } catch(error) { await client.query('ROLLBACK').catch(()=>{});throw error; }
+    } catch(error) {
+      const permission=/^(permission denied for|must be owner of) (table|schema|function|relation|database) ([a-z_][a-z0-9_.]*(?:\([a-z0-9_, ]*\))?)$/.exec(error.message??'');
+      error.migrationDiagnostics={database,scope,statement,sourceHash:sha(bytes),
+        ...(permission?{permissionFailure:`${permission[1]} ${permission[2]} ${permission[3]}`}:{})};
+      if(/^\d{1,8}$/.test(error.internalPosition??''))error.migrationDiagnostics.internalPosition=error.internalPosition;
+      await client.query('ROLLBACK').catch(()=>{});throw error;
+    }
     finally { client.release(); }
   });
 }

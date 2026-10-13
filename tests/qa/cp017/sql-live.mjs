@@ -9,16 +9,26 @@ import { createPgPool } from '../../../server/saas/db/pools.js';
 
 const TENANTS=['11111111-1111-4111-8111-111111111111','22222222-2222-4222-8222-222222222222'];
 const code=value=>{if(!/^[0-9a-f]{40}$/.test(value??''))throw new Error('EXACT_QA_CODE_SHA_REQUIRED');return value};
-async function withConnection(config,fn){
- if(config?.host!=='postgres'||!config.ssl?.rejectUnauthorized)throw new Error('OWN_QA_CONNECTION_REQUIRED');
- const pool=await createPgPool({...config,max:1,connectionTimeoutMillis:2000,statement_timeout:2000,application_name:'mecanet-private-writer-inspection'});
- try{return await fn(pool)}finally{await pool.end()}
+export async function withQaInspection(qa,database,fn){
+ if(process.env.QA_PROJECT!=='mecanet-qa-p1l2-cp017'||!['mecanet_control','mecanet_tenant_a','mecanet_tenant_b'].includes(database)
+  ||!qa?.fixture?.identities?.every(i=>i.email.endsWith('@qa.invalid'))||!/^[0-9]{10,24}$/.test(qa.systemIdentifier??''))throw new Error('OWN_QA_INSPECTION_REQUIRED');
+ const [ca,password]=await Promise.all([readFile('/run/qa-ca.crt','utf8'),readFile('/run/qa-secrets/bootstrap','utf8')]);
+ const pool=await createPgPool({host:'postgres',port:5432,database,user:'qa_bootstrap',password,
+  ssl:{ca,servername:'postgres',rejectUnauthorized:true},max:1,connectionTimeoutMillis:2000,statement_timeout:3000,application_name:'mecanet-private-readonly-writer-inspection'});
+ let client;
+ try{
+  client=await pool.connect();await client.query('BEGIN READ ONLY');
+  const observed=(await client.query('SELECT system_identifier::text FROM pg_control_system()')).rows[0].system_identifier;
+  if(observed!==qa.systemIdentifier)throw new Error('OWN_QA_CLUSTER_PROVENANCE_MISMATCH');
+  const result=await fn(client);await client.query('COMMIT');return result;
+ }catch(error){if(client)await client.query('ROLLBACK').catch(()=>{});throw error}
+ finally{client?.release();await pool.end()}
 }
 
 export async function collectWriterSqlFacts({qa,sourceSha}){
  sourceSha=code(sourceSha);
  if(!qa?.fixture?.identities?.every(i=>i.email.endsWith('@qa.invalid'))||!qa.connections?.saas_writer_maintenance)throw new Error('SYNTHETIC_WRITER_FIXTURE_REQUIRED');
- const central=await withConnection(qa.connections.saas_writer_maintenance,async pool=>{
+ const central=await withQaInspection(qa,'mecanet_control',async pool=>{
   const states=(await pool.query('SELECT * FROM saas.tenant_writer_state ORDER BY tenant_id')).rows;
   const aggregate=(await pool.query("SELECT q.used_bytes::text,q.reserved_bytes::text,q.max_bytes::text,q.barrier_max_bytes::text,saas.write_barrier_cost()::text AS barrier_bytes,(SELECT coalesce(sum(saas.write_operation_cost(r.tenant_id,r.operation_id)),0)::text FROM saas.write_growth_reservations r WHERE r.status='SETTLED') AS actual_used,(SELECT coalesce(sum(control_bytes_reserved),0)::text FROM saas.write_growth_reservations WHERE status<>'SETTLED') AS actual_reserved FROM saas.write_control_quota q WHERE id=1")).rows[0];
   assert.equal(aggregate.used_bytes,aggregate.actual_used);assert.equal(aggregate.reserved_bytes,aggregate.actual_reserved);
@@ -31,7 +41,7 @@ export async function collectWriterSqlFacts({qa,sourceSha}){
  const tenants=[];
  for(let index=0;index<TENANTS.length;index++){
   const suffix=index===0?'a':'b';
-  tenants.push(await withConnection(qa.connections[`saas_maintainer_${suffix}`],async pool=>{
+  tenants.push(await withQaInspection(qa,`mecanet_tenant_${suffix}`,async pool=>{
    const environment=(await pool.query("SELECT current_setting('server_version_num') AS version,current_setting('server_encoding') AS encoding,current_setting('client_encoding') AS client,current_setting('synchronous_commit') AS sync,(SELECT ssl FROM pg_stat_ssl WHERE pid=pg_backend_pid()) AS tls")).rows[0];
    assert.equal(environment.version,'180006');assert.equal(environment.encoding,'UTF8');assert.equal(environment.client,'UTF8');assert.equal(environment.sync,'on');assert.equal(environment.tls,true);
    const invariant=(await pool.query("SELECT q.active_products::text AS products,q.logical_bytes::text AS used,inventory.logical_usage()::text AS actual,(SELECT count(*) FROM catalog.products WHERE status='active')::text AS actual_products,(SELECT count(*) FROM inventory.operations)::text AS operations,(SELECT count(*) FROM inventory.audit)::text AS audits,(SELECT count(*) FROM inventory.movements)::text AS movements,(SELECT count(*) FROM inventory.balances b WHERE b.on_hand<>(SELECT coalesce(sum(m.quantity),0) FROM inventory.movements m WHERE m.product_id=b.product_id))::int AS balance_mismatch,(SELECT count(*) FROM inventory.operations o LEFT JOIN inventory.audit a ON a.operation_id=o.id WHERE a.operation_id IS NULL OR a.result_hash<>encode(sha256(convert_to(o.result::text,'UTF8')),'hex'))::int AS result_mismatch FROM inventory.quota_state q WHERE id=1")).rows[0];

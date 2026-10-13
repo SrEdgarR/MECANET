@@ -18,8 +18,8 @@ export function createFixtureIssuer({pool,generation,writerAuthority=null}) {
    const {rows}=await client.query('UPDATE saas.admission_fence SET admission_version=admission_version+1 WHERE id=1 RETURNING barrier,generation');
    if(rows[0]?.barrier!==false||rows[0]?.generation!==generation)throw failure('ADMISSION_CLOSED');
    live();
-   const current=(await client.query(`SELECT security_version FROM saas.identities WHERE id=$1 AND purpose=$2 AND status='active' AND verified FOR SHARE`,[identity.id,identity.purpose])).rows[0];
-   if(!current||String(current.security_version)!==String(identity.security_version))throw failure('AUTHORITY_CHANGED',409);
+   if(writerAuthority){const current=(await client.query('SELECT saas.lock_issuer_identity($1,$2,$3) AS allowed',[identity.id,identity.purpose,identity.security_version])).rows[0];if(current?.allowed!==true)throw failure('AUTHORITY_CHANGED',409)}
+   else{const current=(await client.query(`SELECT security_version FROM saas.identities WHERE id=$1 AND purpose=$2 AND status='active' AND verified`,[identity.id,identity.purpose])).rows[0];if(!current||String(current.security_version)!==String(identity.security_version))throw failure('AUTHORITY_CHANGED',409)}
    if(previous&&!writerAuthority)await client.query('SELECT saas.revoke_session($1,$2,$3)',[previous.sid,previous.identityId,previous.generation]);
    live();
    await client.query(writerAuthority?`INSERT INTO saas.session_registry(sid,identity_id,purpose,generation,status,security_version,absolute_expires_at,reauth_at,writer_session_ref) VALUES($1,$2,$3,$4,'active',$5,clock_timestamp()+CASE WHEN $3='demo' THEN interval '30 minutes' ELSE interval '8 hours' END,clock_timestamp(),$6)`: `INSERT INTO saas.session_registry(sid,identity_id,purpose,generation,status,security_version,absolute_expires_at,reauth_at) VALUES($1,$2,$3,$4,'active',$5,clock_timestamp()+CASE WHEN $3='demo' THEN interval '30 minutes' ELSE interval '8 hours' END,clock_timestamp())`,[sid,identity.id,identity.purpose,generation,identity.security_version,...(writerAuthority?[randomUUID()]:[])]);

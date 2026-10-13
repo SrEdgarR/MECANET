@@ -411,6 +411,17 @@ RETURNS SETOF saas.write_restrictions LANGUAGE sql STABLE SECURITY DEFINER SET s
 
 -- Preserve the L1 demo/operator behavior. The old company helper is no longer
 -- an escape hatch around the writer close protocol, even via its old grants.
+CREATE FUNCTION saas.lock_issuer_identity(p_identity uuid,p_purpose text,p_security_version bigint)
+RETURNS boolean LANGUAGE plpgsql SECURITY DEFINER SET search_path=pg_catalog,saas AS $$
+BEGIN
+ IF p_purpose NOT IN('company','demo','operator') OR p_security_version<=0 THEN RETURN false; END IF;
+ PERFORM 1 FROM saas.identities WHERE id=p_identity AND purpose=p_purpose AND status='active'
+   AND verified AND security_version=p_security_version AND (purpose<>'operator' OR mfa_verified) FOR SHARE;
+ RETURN FOUND;
+END $$;
+REVOKE ALL ON FUNCTION saas.lock_issuer_identity(uuid,text,bigint) FROM PUBLIC;
+GRANT EXECUTE ON FUNCTION saas.lock_issuer_identity(uuid,text,bigint) TO saas_issuer;
+
 CREATE OR REPLACE FUNCTION saas.revoke_session(p_sid text,p_identity uuid,p_generation uuid)
 RETURNS boolean LANGUAGE plpgsql SECURITY DEFINER SET search_path=pg_catalog,saas AS $$
 DECLARE r saas.session_registry%ROWTYPE;restriction uuid;

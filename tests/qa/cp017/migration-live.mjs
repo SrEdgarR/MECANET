@@ -70,6 +70,7 @@ try{
  // SQL parse position is safe and identifies the approved source; never print
  // PostgreSQL query/detail/context which can contain bound private credentials.
  if(/^\d{1,8}$/.test(error.position??''))report.sqlPosition=error.position;
+ if(error.migrationDiagnostics)report.migrationDiagnostics=error.migrationDiagnostics;
  if(/^(QA_|MIGRATION_|WRITER_)[A-Z0-9_]{1,80}$/.test(error.message??''))report.fixedFailure=error.message;
  await writeFile('/run/qa-results/migration.json',JSON.stringify(report),{mode:0o600});console.log(JSON.stringify(report));process.exitCode=1;
 }
