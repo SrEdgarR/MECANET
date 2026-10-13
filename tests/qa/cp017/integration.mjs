@@ -13,18 +13,22 @@ import {createQaClient,assertStatus} from '../cp014/http-client.mjs';
 import {arm,waitEvent,release} from './faults.mjs';
 import {runMetadataAssay} from './metadata-live.mjs';
 import {observeUncertainRetention} from './uncertain-retention.mjs';
+import {canonicalSkuForOracle} from './integration-sku-oracle.mjs';
 
 const PROJECT='mecanet-qa-p1l2-cp017';
 const TENANT_A='11111111-1111-4111-8111-111111111111',TENANT_B='22222222-2222-4222-8222-222222222222';
 const OWNER_A='aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaa1',MEMBER='aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaa5',TEAMMATE='aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaa6';
 if(process.env.QA_PROJECT!==PROJECT||!/^([a-f0-9]{40})$/.test(process.env.QA_CODE_SHA??''))throw Error('EXACT_OWN_QA_SOURCE_REQUIRED');
-const sourceSha=process.env.QA_CODE_SHA,reportFile='/run/qa-results/integration.json';
+const args=process.argv.slice(2);if(args.length>1||args.length===1&&args[0]!=='--sku-only')throw Error('FIXED_QA_INTEGRATION_MODE_REQUIRED');
+const skuOnly=args[0]==='--sku-only';
+const sourceSha=process.env.QA_CODE_SHA,reportFile=skuOnly?'/run/qa-results/integration-sku.json':'/run/qa-results/integration.json';
 const qa=JSON.parse(await readFile('/run/qa-secrets/connections.json','utf8'));
 if(qa.project!==PROJECT||!qa.fixture?.identities.every(i=>i.email.endsWith('@qa.invalid'))||!qa.generation)throw Error('SYNTHETIC_COHORT_REQUIRED');
 const login=JSON.parse(await readFile('/run/qa-secrets/fixture-login.json','utf8')),ca=await readFile('/run/qa-ca.crt');
 const bootstrap=(await readFile('/run/qa-secrets/bootstrap','utf8')).trim();
 const pools=new Map(),clients=[];
 const report={sourceSha,harnessSha256:createHash('sha256').update(await readFile(new URL(import.meta.url))).digest('hex'),project:PROJECT,generation:qa.generation,startedAt:new Date().toISOString(),architecture:arch(),environment:'own synthetic PostgreSQL18.6/ARM64/TLS/two API',cases:[],notVerified:['simultaneous SQL writers beyond enforced ordinary capacity','last product and last logical byte','control/barrier worst-case metadata boundary','process-dead resource reconciliation','restart and rotation','closed restore and rollback','browser reload/accessibility'],resourcesModified:'only own synthetic fixed restriction requests',secretsPrinted:false};
+report.mode=skuOnly?'sku-only':'full';if(skuOnly){report.resourcesModified='only two own synthetic original SKU-race attempts via API';report.notVerified=['other full-integration cases are not rerun or promoted by this focused assay','whole L2-A6/L2-A8 acceptance and all other complete criteria']}
 let nextHttp=0;const passedCases=new Set();
 async function persist(){await mkdir('/run/qa-results',{recursive:true});await writeFile(reportFile,JSON.stringify(report,null,2),{mode:0o600})}
 async function caseOf(id,criteria,fn,{dependsOn=[]}={}){
@@ -87,6 +91,7 @@ try{
  });
  if(report.cases[0].status!=='PASS')throw Error('OWN_ENVIRONMENT_NOT_PROVEN');
  a=await newClient('a@qa.invalid');a2=createQaClient({instance:'api2',purpose:'company',ca,budget:160});a2.setCookies(a.cookieHeader());a2.csrf=a.csrf;clients.push({label:'a-shared:api2',client:a2});
+ if(!skuOnly){
  b=await newClient('b@qa.invalid','api2');member=await newClient('member@qa.invalid');teammate=await newClient('teammate@qa.invalid','api2');
  demo=await newClient('demo@qa.invalid','api1','demo');operator=await newClient('operator@qa.invalid','api2','operator');
  await caseOf('purpose-exact-action-and-tenant-negative',['L2-A4'],async()=>{
@@ -146,6 +151,7 @@ try{
   assert.deepEqual(rows,{products:before+1,operations:1,audits:1});report.races.sameKey.stage='original-growth-settlement';report.races.sameKey.beforeSettlement=(await operationRows(id)).intent;const settled=await waitFor(()=>operationRows(id),value=>value.intent?.reservation_status==='SETTLED');assert.equal(settled.intent.status,'CONFIRMED');
   return {operationId:id,initialReplies,twoApiHttpConcurrency:true,singleProduct:true,singleAudit:true,knownIdQueryBeforeExplicitSameKeyReplay:true,originalGrowthSettled:true};
  },{dependsOn:['normalized-canonical-two-api-and-uc']});
+ }
  await caseOf('competing-sku-distinct-keys-two-api',['L2-A6','L2-A8'],async()=>{
   const ids=[randomUUID(),randomUUID()],sku=`RACE-${ids[0].slice(0,8)}`,inputs=[{sku,name:'SKU race A ficticio'},{sku,name:'SKU race B ficticio'}];
   report.races??={};report.races.sku={operationIds:ids,stage:'concurrent-post'};
@@ -158,11 +164,14 @@ try{
   report.races.sku.finalReplies=replies.map(r=>({status:r.status,publicCode:r.json?.error??null,resultState:r.json?.state??null,resultCode:r.json?.code??null}));report.races.sku.stage='verify-terminal-results';
   assert.deepEqual(replies.map(r=>r.status).sort(),[201,409]);
   const rejected=replies.find(r=>r.status===409);assert.equal(rejected.json.state,'REJECTED');assert.equal(rejected.json.code,'SKU_CONFLICT');
-  const rows=(await tenant('SELECT (SELECT count(*) FROM catalog.products WHERE sku=$1)::int AS products,(SELECT count(*) FROM inventory.operations WHERE id=ANY($2::uuid[]))::int AS operations,(SELECT count(*) FROM inventory.audit WHERE operation_id=ANY($2::uuid[]))::int AS audits',[sku,ids]))[0];
+  const canonicalSku=canonicalSkuForOracle(canonicalWrite({tenantId:TENANT_A,actorId:OWNER_A,action:'catalog.create',dataEpoch:'2',input:inputs[0]}));
+  const rows=(await tenant('SELECT (SELECT count(*) FROM catalog.products WHERE sku=$1)::int AS products,(SELECT count(*) FROM inventory.operations WHERE id=ANY($2::uuid[]))::int AS operations,(SELECT count(*) FROM inventory.audit WHERE operation_id=ANY($2::uuid[]))::int AS audits',[canonicalSku,ids]))[0];
+  report.races.sku.stage='verify-canonical-sku-and-two-audits';report.races.sku.dataCounts=rows;
   assert.deepEqual(rows,{products:1,operations:2,audits:2});
   for(const id of ids){const settled=await waitFor(()=>operationRows(id),v=>v.intent?.reservation_status==='SETTLED');assert(['CONFIRMED','REJECTED'].includes(settled.intent.status));}
   return {operationIds:ids,initialReplies,twoApiHttpConcurrency:true,oneSkuRow:true,twoTerminalAuditedResults:true,originalReservationsSettled:true};
  });
+ if(!skuOnly){
  await caseOf('two-receipts-sum-and-same-key-replay',['L2-A7'],async()=>{
   assert(product);const ids=[randomUUID(),randomUUID()],inputs=[{quantity:'7',reason:'Ficticio 1'},{quantity:'11',reason:'Ficticio 2'}];
   const replies=await Promise.all([write(a,ids[0],inputs[0],{productId:product}),write(a2,ids[1],inputs[1],{productId:product})]);
@@ -237,6 +246,7 @@ try{
    return {operationId:id,restrictionId,uuidKnownBeforeSend:true,tenantEffectDurable:true,centralUnknownObserved:true,projectedOnlyAfterProvenFence:true,noEffectRetry:true,uncertainTicketAndFullGrowthRetained:true,retention};
   }finally{await release(gate).catch(()=>{})}
  },{dependsOn:['delayed-original-writer-revocation-close-v-plus-two']});
+ }
 }catch(error){report.runnerFailure={code:typeof error.code==='string'&&/^[A-Z0-9_]{1,60}$/.test(error.code)?error.code:'RUNNER_BLOCKED',completedCases:report.cases.length}}
 finally{
  report.finishedAt=new Date().toISOString();report.requests=clients.map(({label,client})=>({label,count:client.requests,max:160}));report.status=report.runnerFailure||report.cases.some(c=>c.status==='FAIL')?'FAIL':'PASS FOR LISTED CASES ONLY';

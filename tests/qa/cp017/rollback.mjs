@@ -10,7 +10,7 @@ const digest=value=>createHash('sha256').update(JSON.stringify(value)).digest('h
 export function compatibleWriterRelease(current,target){
  for(const prefix of ['server/saas/db/migrations/']){
   const expected=current.entries.filter(e=>e.path.startsWith(prefix));
-  const names=['001-control.sql','002-tenant.sql','003-control-writers.sql','003-tenant-writers.sql','004-tenant-writers-fix.sql'];
+  const names=['001-control.sql','002-tenant.sql','003-control-writers.sql','003-tenant-writers.sql','004-tenant-writers-fix.sql','005-control-claim-ticket.sql'];
   if(expected.length!==names.length||names.some(name=>!expected.some(e=>e.path===prefix+name)))throw Error('ROLLBACK_CURRENT_SCHEMA_UNPROVEN');
   if(target.entries.filter(e=>e.path.startsWith(prefix)).length!==names.length)throw Error('ROLLBACK_SCHEMA_INCOMPATIBLE');
   for(const entry of expected)if(!target.entries.some(e=>e.path===entry.path&&e.sha256===entry.sha256))throw Error('ROLLBACK_SCHEMA_INCOMPATIBLE');

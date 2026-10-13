@@ -173,6 +173,10 @@ def own_tool():
  if action.startswith('resources-'):args+=['host-end-proof-'+action.split('-')[1]+'.json']
  if action=='revocation':
   assert len(sys.argv)==4 and sys.argv[3] in ['share-logout','membership','identity','capture-rotation','verify-rotation','capture-epoch','verify-epoch','block-tenant-b','drain'];args+=[sys.argv[3]]
+ if action=='integration':
+  assert len(sys.argv) in [3,4]
+  if len(sys.argv)==4:
+   assert sys.argv[3]=='--sku-only';args+=['--sku-only']
  if action=='quota-boundary':
   assert len(sys.argv)==4 and sys.argv[3] in ['tenant','global'];args+=[sys.argv[3]]
  try:print(compose(*args),end='')

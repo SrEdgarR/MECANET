@@ -27,7 +27,7 @@ const tests = [
   'tests/qa/write-validation.test.js', 'tests/qa/write-service.test.js', 'tests/qa/write-coordinator.test.js',
   'tests/qa/cp017/pools.test.mjs', 'tests/qa/cp017/routes.test.mjs', 'tests/qa/cp017/migrate.unit.test.mjs', 'tests/qa/write-app.test.js', 'tests/qa/cp017/logout.test.mjs', 'tests/qa/cp017/resource-closure.test.mjs', 'tests/qa/cp017/quota.unit.test.mjs', 'tests/qa/cp017/revocation-live.test.mjs', 'tests/qa/cp017/recovery.unit.test.mjs',
   'tests/qa/cp017/promotion.unit.test.mjs', 'tests/qa/cp017/sql-vectors.unit.test.mjs', 'tests/qa/cp017/rollback.unit.test.mjs',
-  'tests/qa/cp017/metadata.unit.test.mjs',
+  'tests/qa/cp017/metadata.unit.test.mjs', 'tests/qa/cp017/integration-sku.test.mjs', 'tests/qa/cp017/promote.unit.test.mjs',
   'tests/qa/cp017/quota-boundary.test.mjs',
   'tests/qa/cp017/quota-growth-boundary.test.mjs', 'tests/qa/cp017/claim-corrective.test.mjs', 'tests/qa/cp017/uncertain-retention.test.mjs', 'tests/qa/cp017/recovery-check.test.mjs',
   'tests/qa/read-abort-lifecycle.test.js', 'tests/qa/write-ticket-owner.test.js', 'tests/qa/post-response-diagnostic.test.js', 'tests/qa/read-rollback-lifecycle.test.js', 'tests/qa/cp017/read-closure.test.mjs',
