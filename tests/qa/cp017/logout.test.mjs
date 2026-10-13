@@ -46,7 +46,7 @@ test('pending company logout context resumes only the session-owned close and gr
  assert.deepEqual(ctx,{user:{id:actorId,email:'fixture@example.invalid'},purpose:'company',contextVersion:`7:${generation}`,generation,writerSessionRef,logoutPending:true});
  for(const forbidden of ['descriptor','writerDescriptor','permissions','tenantId','action'])assert.equal(Object.hasOwn(ctx,forbidden),false);
  assert.deepEqual(statement.values,['synthetic-signed-session',generation]);
- assert.match(statement.text,/x\.session_ref=r\.writer_session_ref/);assert.match(statement.text,/x\.identity_id=i\.id/);assert.match(statement.text,/x\.reason_code='LOGOUT'/);assert.match(statement.text,/x\.status<>'ACKNOWLEDGED'/);
+ assert.match(statement.text,/x\.session_ref=r\.writer_session_ref/);assert.match(statement.text,/\(x\.identity_id IS NULL OR x\.identity_id=i\.id\)/);assert.match(statement.text,/x\.reason_code='LOGOUT'/);assert.match(statement.text,/x\.status<>'ACKNOWLEDGED'/);
 });
 
 test('without a pending session-owned logout, ordinary expired authority remains 401',async()=>{

@@ -68,6 +68,40 @@ async function ownRow(tab,name){
   const next=tab.getByRole('button',{name:'Página siguiente',exact:true});if(!await next.isEnabled())break;await next.click();await tab.getByRole('heading',{level:1,name:'Inventario',exact:true}).waitFor();
  }throw Error('SYNTHETIC_PRODUCT_NOT_VISIBLE');
 }
+async function receiptMovements(tab,{name,productId,receipt}){
+ // An admitted transient read failure is not a failed receipt. Exercise the
+ // existing explicit UI recovery once, within one total eight-second window;
+ // never repeat the mutation or silently turn a persistent failure into PASS.
+ const started=performance.now(),deadline=started+8000,before=postCount();let recovery=0;
+ const remaining=()=>{const milliseconds=Math.ceil(deadline-performance.now());assert(milliseconds>0,'FINITE_MOVEMENT_RECOVERY_EXHAUSTED');return milliseconds};
+ const movementPath=productsPath+'/'+productId+'/stock-movements';
+ async function read(){
+  const pending=tab.waitForResponse(response=>response.request().method()==='GET'&&new URL(response.url()).pathname===movementPath,{timeout:remaining()});
+  await tab.getByRole('button',{name:`Movimientos de ${name}`,exact:true}).click({timeout:remaining()});return pending;
+ }
+ let reply=await read();
+ if([429,503].includes(reply.status())){
+  const firstStatus=reply.status(),after=reply.headers()['retry-after'];
+  assert.match(after??'',/^\d{1,6}$/);const retryAt=Date.now()+Number(after)*1000;
+  await tab.getByRole('heading',{level:1,name:firstStatus===429?'Límite temporal':'Servicio no disponible',exact:true}).waitFor({timeout:remaining()});
+  assert.equal(await tab.getByRole('table').count(),0);assert.equal(await tab.getByText(name,{exact:true}).count(),0);assert.equal(postCount(),before);
+  const retry=tab.getByRole('button',{name:'Reintentar acceso',exact:true});
+  if(retryAt-Date.now()>100)assert.equal(await retry.isEnabled(),false);
+  // Playwright waits for the existing disabled control to become actionable;
+  // the click itself is a single explicit user action, not an automatic GET.
+  await retry.click({timeout:remaining()});recovery++;
+  await tab.getByRole('heading',{level:1,name:'Tus empresas',exact:true}).waitFor({timeout:remaining()});
+  await tab.locator(`a[href="/app/${config.tenant.id}/catalogo"]`).click({timeout:remaining()});
+  await tab.getByRole('heading',{level:1,name:'Catálogo',exact:true}).waitFor({timeout:remaining()});
+  await tab.getByRole('link',{name:'Abrir inventario',exact:true}).click({timeout:remaining()});
+  await tab.getByRole('heading',{level:1,name:'Inventario',exact:true}).waitFor({timeout:remaining()});
+  reply=await read();assert.equal(reply.status(),200,'EXPLICIT_MOVEMENT_RECOVERY_FAILED');
+  evidence.readRecoveries??=[];evidence.readRecoveries.push({read:'stock-movements',firstStatus,recoveredStatus:reply.status(),explicitRecoveries:recovery,deadlineMs:8000,elapsedMs:Math.ceil(performance.now()-started),extraTenantPosts:postCount()-before});
+ }
+ assert.equal(reply.status(),200);const body=await reply.json();assert.equal(body.tenantId,config.tenant.id);assert.equal(body.dataEpoch,receipt.dataEpoch);assert.equal(body.items.length,1);
+ const movement=body.items[0];assert.equal(movement.id,receipt.movementId);assert.equal(movement.operationId,receipt.operationId);assert.equal(movement.productId,productId);assert.equal(movement.quantity,'7');assert.equal(movement.onHandAfter,'7');assert.equal(movement.balanceVersion,'2');
+ await tab.getByText('7 unidades recibidas',{exact:true}).waitFor({timeout:remaining()});assert.equal(await tab.locator('.movement-list li').count(),1);assert.equal(postCount(),before);remaining();
+}
 function postCount(){return tenantPosts}
 async function assertHintShape(tab){
  const hints=await tab.evaluate(key=>{const value=sessionStorage.getItem(key);return value?JSON.parse(value):[]},hintsKey);
@@ -99,7 +133,7 @@ try{
   const received=page.waitForResponse(response=>response.request().method()==='POST'&&new URL(response.url()).pathname===productsPath+'/'+created.productId+'/stock-receipts');
   await page.getByRole('button',{name:'Registrar recepción',exact:true}).click();const reply=await received;assert.equal(reply.status(),201);const result=await reply.json();assert.equal(result.onHand,'7');assert.equal(result.balanceVersion,'2');assert.notEqual(result.movementId,null);
   await page.getByRole('heading',{name:'Operación confirmada',exact:true}).waitFor();const row=await ownRow(page,name);assert.equal((await row.getByRole('cell').allTextContents())[2],'7');
-  await page.getByRole('button',{name:`Movimientos de ${name}`,exact:true}).click();await page.getByText('7 unidades recibidas',{exact:true}).waitFor();assert.equal(await page.locator('.movement-list li').count(),1);await screenshot(page,'inventory-received.png');
+  await receiptMovements(page,{name,productId:created.productId,receipt:result});await screenshot(page,'inventory-received.png');
  });
  let lostOperation;const lostSku='ACK-'+randomUUID().slice(0,8).toUpperCase(),lostName='ACK sintético '+lostSku;
  await check('A received server ACK lost only toward the browser keeps a query hint and never re-POSTs on reload',async()=>{

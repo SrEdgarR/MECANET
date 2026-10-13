@@ -6,6 +6,7 @@ import { randomUUID, createHash } from 'node:crypto';
 import { createPgPool } from '../../../server/saas/db/pools.js';
 import { createQaClient,assertStatus } from '../cp014/http-client.mjs';
 import { withQaInspection } from './sql-live.mjs';
+import {assertSqlDenied} from './quota-live.mjs';
 const file = process.env.MECANET_QA_CONNECTIONS ?? '/run/qa-secrets/connections.json';
 if (!file.startsWith('/run/qa-secrets/')) throw new Error('PRIVATE_QA_CONNECTIONS_REQUIRED');
 const qa = JSON.parse(await readFile(file, 'utf8'));
@@ -35,10 +36,10 @@ async function effect(pool, kind, operation, preimage, guards) {
   return (await pool.query(`SELECT * FROM inventory.${kind}($1,$2,$3,$4,$5,$6)`, [operation, preimage, hash(preimage), guards.generation, guards.data_epoch, guards.writer_version])).rows[0];
 }
 test('writer has no free DML, DDL, fence mutation, role elevation or foreign connection', async () => {
-  const denied = ['UPDATE inventory.balances SET on_hand=0', 'DELETE FROM inventory.movements', 'UPDATE inventory.writer_fence SET state=\'OPEN\'', 'CREATE TABLE catalog.forged(id int)', 'SET ROLE saas_owner_a', 'CREATE EXTENSION dblink'];
-  for (const sql of denied) await withRole(role, pool => assert.rejects(pool.query(sql), error => ['42501','25006'].includes(error.code)));
-  for (const database of ['mecanet_tenant_b','mecanet_control','postgres']) await assert.rejects(withRole(role, pool => pool.query('SELECT 1'), { database }), error => ['42501','28000'].includes(error.code));
-  await withRole('saas_tenant_a', pool => assert.rejects(pool.query('SELECT * FROM inventory.create_product($1,$2,$3,$4,2,1)', [randomUUID(), matrix('catalog.create',null,['FORGED','forged']), '0'.repeat(64), qa.generation]), error => error.code === '42501'));
+  const denied = [['DML_BALANCE','UPDATE inventory.balances SET on_hand=0'],['DELETE_MOVEMENT','DELETE FROM inventory.movements'],['FENCE_UPDATE','UPDATE inventory.writer_fence SET state=\'OPEN\''],['DDL','CREATE TABLE catalog.forged(id int)'],['ROLE_ELEVATION','SET ROLE saas_owner_a'],['EXTENSION','CREATE EXTENSION dblink']];
+  for (const [label,sql] of denied) await withRole(role,pool=>assertSqlDenied(()=>pool.query(sql),['42501','25006'],label));
+  for (const [label,database] of [['FOREIGN_B','mecanet_tenant_b'],['FOREIGN_CONTROL','mecanet_control'],['FOREIGN_ADMIN','postgres']]) await assertSqlDenied(()=>withRole(role,pool=>pool.query('SELECT 1'),{database}),['42501','28000'],label);
+  await withRole('saas_tenant_a',pool=>assertSqlDenied(()=>pool.query('SELECT * FROM inventory.create_product($1,$2,$3,$4,2,1)',[randomUUID(),matrix('catalog.create',null,['FORGED','forged']),'0'.repeat(64),qa.generation]),['42501'],'READER_WRITER_FUNCTION'));
 });
 test('SQL validates the same exact canonical UTF8 digest and derives the effect from it', async () => {
   await withQaInspection(qa,'mecanet_tenant_a', async maintenance => {

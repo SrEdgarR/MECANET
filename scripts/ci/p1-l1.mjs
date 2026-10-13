@@ -25,7 +25,7 @@ const tests = [
   'tests/qa/cp014/auth-login-failure.test.mjs',
   'tests/qa/cp014/deadlines.test.mjs',
   'tests/qa/write-validation.test.js', 'tests/qa/write-service.test.js', 'tests/qa/write-coordinator.test.js',
-  'tests/qa/cp017/pools.test.mjs', 'tests/qa/cp017/routes.test.mjs', 'tests/qa/cp017/migrate.unit.test.mjs', 'tests/qa/write-app.test.js', 'tests/qa/cp017/logout.test.mjs', 'tests/qa/cp017/resource-closure.test.mjs',
+  'tests/qa/cp017/pools.test.mjs', 'tests/qa/cp017/routes.test.mjs', 'tests/qa/cp017/migrate.unit.test.mjs', 'tests/qa/write-app.test.js', 'tests/qa/cp017/logout.test.mjs', 'tests/qa/cp017/resource-closure.test.mjs', 'tests/qa/cp017/quota.unit.test.mjs', 'tests/qa/cp017/revocation-live.test.mjs', 'tests/qa/cp017/recovery.unit.test.mjs',
 ];
 
 // Allow only process support variables. No inherited DB URLs, session secrets,

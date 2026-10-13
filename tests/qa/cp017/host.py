@@ -155,16 +155,22 @@ def accept_artifact():
  print(json.dumps({'artifactAccepted':True,'codeSha':manifest['codeSha'],'digest':manifest['digest'],'files':len(expected)}))
 
 def own_tool():
- own();assert len(sys.argv)==3 and sys.argv[2] in ['foundation','migration','sql','integration','recovery-check','corrective','resources-api1','resources-api2','promote']
+ own();assert len(sys.argv)>=3 and sys.argv[2] in ['foundation','migration','sql','integration','recovery-check','corrective','resources-api1','resources-api2','promote','quota','revocation']
  action=sys.argv[2];live=any(x['running'] for x in facts() if x['project']==PROJECT and x['name'].endswith(('-api1-1','-api2-1','-web-1')))
- service='probe' if action in ['sql','integration'] else 'harness';assert service=='probe' or not live,'HARNESS_RUNTIME_OVERLAP'
+ service='probe' if action in ['sql','integration','revocation'] or action=='quota' and (len(sys.argv)<5 or sys.argv[4]!='closed') else 'harness';assert service=='probe' or not live,'HARNESS_RUNTIME_OVERLAP'
  artifact=json.loads((ROOT/'evidence/artifact.json').read_text())
- files={'foundation':'prepare.mjs','migration':'migration-live.mjs','sql':'sql-live.mjs','integration':'integration.mjs','recovery-check':'recovery-check.mjs','corrective':'corrective.mjs','resources-api1':'resource-closure.mjs','resources-api2':'resource-closure.mjs','promote':'promote.mjs'}
+ files={'foundation':'prepare.mjs','migration':'migration-live.mjs','sql':'sql-live.mjs','integration':'integration.mjs','recovery-check':'recovery-check.mjs','corrective':'corrective.mjs','resources-api1':'resource-closure.mjs','resources-api2':'resource-closure.mjs','promote':'promote.mjs','quota':'quota-live.mjs','revocation':'revocation-live.mjs'}
  args=['run','--rm','--no-deps','-e','QA_CODE_SHA='+artifact['codeSha']]
  if action=='foundation':args+=['-e','QA_STAGE=foundation']
+ if action=='quota':
+  assert len(sys.argv)>=4 and sys.argv[3] in ['privileges','unicode','last-product','last-byte','debt'];args+=['-e','QA_QUOTA_PHASE='+sys.argv[3]]
+  if len(sys.argv)>=5:
+   assert sys.argv[4]=='closed' and len(sys.argv)==7 and re.fullmatch('[a-f0-9-]{36}',sys.argv[5]) and re.fullmatch('[a-f0-9-]{36}',sys.argv[6]);args+=['-e','QA_QUOTA_PREPARE=closed','-e','QA_QUOTA_TENANT='+sys.argv[5],'-e','QA_QUOTA_RESTRICTION='+sys.argv[6]]
  # Add only the exclusive synthetic result destination; no shared host mount.
  args+=['-v',str(ROOT/'evidence')+':/run/qa-results',service,'node','tests/qa/cp017/'+files[action]]
  if action.startswith('resources-'):args+=['host-end-proof-'+action.split('-')[1]+'.json']
+ if action=='revocation':
+  assert len(sys.argv)==4 and sys.argv[3] in ['share-logout','membership','identity','capture-rotation','verify-rotation','capture-epoch','verify-epoch','block-tenant-b','drain'];args+=[sys.argv[3]]
  try:print(compose(*args),end='')
  except subprocess.CalledProcessError as error:
   print(error.output,end='');raise SystemExit(error.returncode)
@@ -212,6 +218,19 @@ def prove_stop():
  p=ROOT/'evidence'/('host-end-proof-'+instance+'.json');p.write_text(json.dumps(proof));os.chmod(p,0o400);os.chown(p,999,999)
  print(json.dumps({'instance':instance,'owner':record['owner'],'processExitProven':True,'sqlOwnerAbsent':True,'operations':len(proof['operations'])}))
 
+def close_writers():
+ own();assert len(sys.argv)==3 and sys.argv[2] in ['POLICY','RESTORE'];reason=sys.argv[2]
+ pg=compose('ps','-q','postgres').strip();assert pg
+ command='export PGPASSWORD; PGPASSWORD=$(cat /run/secrets/bootstrap); exec psql -h /var/run/postgresql -U qa_bootstrap -d mecanet_control -qAt -v ON_ERROR_STOP=1'
+ generation=json.loads((ROOT/'secrets/connections.json').read_text())['generation'];assert re.fullmatch('[a-f0-9-]{36}',generation)
+ sql="SELECT saas.request_write_restriction(gen_random_uuid(),NULL,NULL,w.tenant_id,NULL,'"+generation+"'::uuid,'"+reason+"') IS NOT NULL FROM saas.tenant_writer_state w WHERE state='OPEN';"
+ run('docker','exec','-i',pg,'sh','-c',command,input=sql)
+ for _ in range(40):
+  closed=run('docker','exec','-i',pg,'sh','-c',command,input="BEGIN READ ONLY; SELECT count(*) FROM saas.tenant_writer_state w WHERE w.state='CLOSED' AND EXISTS(SELECT 1 FROM saas.write_restriction_tenants t JOIN saas.write_restrictions r ON r.id=t.restriction_id WHERE t.tenant_id=w.tenant_id AND t.closed_version=w.writer_version AND t.close_proven AND t.stage='ACKNOWLEDGED' AND r.status='ACKNOWLEDGED'); ROLLBACK;").strip()
+  if closed=='2':print('CP017_BOTH_WRITERS_EXCLUSIVE_CLOSE_ACKNOWLEDGED');return
+  time.sleep(.2)
+ raise AssertionError('WRITER_CLOSE_NOT_ACKNOWLEDGED')
+
 def corrective_proof():
  own();apis=[]
  for instance in ['api1','api2']:
@@ -245,11 +264,144 @@ def restart_proof():
  p.write_text(json.dumps(worker));os.chmod(p,0o400);os.chown(p,999,999)
  print('CP017_CLOCK_RESTART_PROCESS_AND_SQL_END_PROVEN')
 
+def recovery_proof():
+ own();apis=[]
+ assert all(not x['running'] for x in facts() if x['project']==PROJECT and not x['name'].endswith('-postgres-1')),'RESTORE_SOURCE_RUNTIME_ACTIVE'
+ for instance in ['api1','api2']:
+  p=json.loads((ROOT/'evidence'/('host-end-proof-'+instance+'.json')).read_text());s=json.loads(run('docker','inspect','--format','{{json .State}}',p['containerId']));assert not s['Running'] and s['Status']=='exited'
+  apis.append({'instance':instance,'containerId':p['containerId'],'state':'exited','stoppedSourceSha':p['sourceSha']})
+ pg=compose('ps','-q','postgres').strip();assert pg
+ command='export PGPASSWORD; PGPASSWORD=$(cat /run/secrets/bootstrap); exec psql -h /var/run/postgresql -U qa_bootstrap -d mecanet_control -qAt -v ON_ERROR_STOP=1'
+ n=run('docker','exec','-i',pg,'sh','-c',command,input="BEGIN READ ONLY; SELECT count(*) FROM pg_stat_activity WHERE usename LIKE 'saas_%'; ROLLBACK;").strip();assert n=='0','RESTORE_SQL_OWNER_ALIVE'
+ q=json.loads((ROOT/'secrets/connections.json').read_text());a=json.loads((ROOT/'evidence/artifact.json').read_text())
+ proof={'project':PROJECT,'sourceSha':a['codeSha'],'generation':q['generation'],'systemIdentifier':q['systemIdentifier'],'sourceRuntimeStopped':True,'sqlOwnersAbsent':True,'apis':apis,'observedAt':time.strftime('%Y-%m-%dT%H:%M:%SZ',time.gmtime())}
+ p=ROOT/'evidence/recovery-proof.json';p.write_text(json.dumps(proof));os.chmod(p,0o400);os.chown(p,999,999)
+ print('CP017_RECOVERY_SOURCE_END_PROVEN')
+
+def recovery_copy():
+ own();proof=json.loads((ROOT/'evidence/recovery-proof.json').read_text());assert proof['sourceRuntimeStopped'] and proof['sqlOwnersAbsent']
+ assert all(not x['running'] for x in facts() if x['project']==PROJECT and not x['name'].endswith('-postgres-1'))
+ source=ROOT/'data';destination=ROOT/'backup/writer-closed';assert source.resolve()==ROOT/'data' and destination.resolve()==ROOT/'backup/writer-closed' and not destination.exists()
+ assert sum(p.stat().st_size for p in source.rglob('*') if p.is_file())<2*1024**3,'RESTORE_COPY_SIZE_ABORT'
+ resources();compose('stop','postgres');assert not any(x['running'] for x in facts() if x['project']==PROJECT)
+ shutil.copytree(source,destination);pairs=[]
+ for p in sorted(destination.rglob('*')):
+  assert not p.is_symlink(),'RESTORE_SYMLINK_ABORT'
+  if p.is_file():pairs.append({'path':str(p.relative_to(destination)),'bytes':p.stat().st_size,'sha256':hashlib.sha256(p.read_bytes()).hexdigest()})
+ digest=hashlib.sha256(json.dumps(pairs,separators=(',',':')).encode()).hexdigest()
+ (ROOT/'backup/writer-manifest.json').write_text(json.dumps({'files':pairs,'digest':digest,'offlineWholeCluster':True,'sourceRuntimeStopped':True}));os.chmod(ROOT/'backup/writer-manifest.json',0o600)
+ proof.update({'backupVerified':True,'backupManifestHash':digest});p=ROOT/'evidence/recovery-proof.json';p.write_text(json.dumps(proof));os.chmod(p,0o400);os.chown(p,999,999)
+ compose('up','-d','--no-build','--pull','never','postgres');preserve();print(json.dumps({'ownClosedBackup':True,'files':len(pairs),'bytes':sum(p['bytes']for p in pairs),'manifestHash':digest,'wholeClusterOffline':True}))
+
+def recovery_target():
+ own();resources();compose('stop','postgres');assert not any(x['running'] for x in facts() if x['project']==PROJECT)
+ target=ROOT/'restore';assert target.resolve()==ROOT/'restore' and not (target/'data').exists()
+ subnet=ipaddress.ip_network('10.77.53.0/24')
+ ids=run('docker','network','ls','-q').split()
+ for n in json.loads(run('docker','network','inspect',*ids)):
+  for c in n['IPAM'].get('Config') or []:
+   if c.get('Subnet'):
+    other=ipaddress.ip_network(c['Subnet']);assert other.version!=subnet.version or not other.overlaps(subnet),'RESTORE_NETWORK_CONFLICT'
+ manifest=json.loads((ROOT/'backup/writer-manifest.json').read_text());backup=ROOT/'backup/writer-closed'
+ for e in manifest['files']:
+  p=backup/e['path'];assert p.resolve().is_relative_to(backup.resolve()) and not p.is_symlink() and p.is_file() and p.stat().st_size==e['bytes'] and hashlib.sha256(p.read_bytes()).hexdigest()==e['sha256'],'RESTORE_BACKUP_CHECKSUM_FAILED'
+ assert hashlib.sha256(json.dumps(manifest['files'],separators=(',',':')).encode()).hexdigest()==manifest['digest']
+ shutil.copytree(backup,target/'data');assert not (target/'data/postmaster.pid').exists()
+ for p in ['standby.signal','recovery.signal']:assert not (target/'data'/p).exists()
+ (target/'pg_hba.conf').write_text((ROOT/'config/pg_hba.conf').read_text().replace('10.77.51','10.77.53'));os.chmod(target/'pg_hba.conf',0o444)
+ artifact=json.loads((ROOT/'evidence/artifact.json').read_text());directory=str(ROOT/'artifacts'/artifact['digest'].split(':')[1]);name=PROJECT+'-restore'
+ text=f'''name: {name}
+services:
+  postgres:
+    image: postgres@sha256:67ba68a22dc7d5af3627b7e0f33d10bbefad07562ff9703b3a6c2de247649129
+    platform: linux/arm64
+    user: "999:999"
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    cpus: 0.35
+    mem_limit: 640m
+    pids_limit: 128
+    command: [postgres, -c, config_file=/run/qa-config/postgresql.conf]
+    environment: {{PGDATA: /var/lib/postgresql/data}}
+    volumes:
+      - {target}/data:/var/lib/postgresql/data
+      - {ROOT}/config/postgresql.conf:/run/qa-config/postgresql.conf:ro
+      - {target}/pg_hba.conf:/etc/postgresql/pg_hba.conf:ro
+      - {ROOT}/tls/postgres:/run/tls:ro
+    tmpfs: ["/var/run/postgresql:uid=999,gid=999,mode=0700", "/tmp:size=16m"]
+    networks: [isolated]
+  harness:
+    image: node@sha256:ba6b7d0ee561d9d49deb99e2b93c98632cc287b6cca1a6b18d66127054efa4dc
+    platform: linux/arm64
+    user: "999:999"
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    cpus: 0.25
+    mem_limit: 128m
+    pids_limit: 64
+    working_dir: /workspace
+    environment: {{QA_PROJECT: {PROJECT}, QA_CODE_SHA: {artifact['codeSha']}}}
+    volumes:
+      - {directory}:/workspace:ro
+      - {ROOT}/secrets:/run/qa-secrets:ro
+      - {ROOT}/config/ca.crt:/run/qa-ca.crt:ro
+      - {ROOT}/evidence:/run/qa-results
+      - {ROOT}/journal:/run/qa-journal
+    tmpfs: ["/tmp:size=16m"]
+    networks: [isolated]
+networks:
+  isolated:
+    internal: true
+    ipam:
+      config: [{{subnet: 10.77.53.0/24}}]
+'''
+ (target/'compose.yaml').write_text(text);run('docker','compose','-f',str(target/'compose.yaml'),'config','--quiet')
+ proof=json.loads((ROOT/'evidence/recovery-proof.json').read_text());proof.update({'targetPrivate':True,'targetEgressClosed':True,'targetHost':'postgres','backupVerified':True,'backupManifestHash':manifest['digest']});p=ROOT/'evidence/recovery-proof.json';p.write_text(json.dumps(proof));os.chmod(p,0o400);os.chown(p,999,999)
+ run('docker','compose','-f',str(target/'compose.yaml'),'up','-d','--no-build','--pull','never','postgres');preserve();print('CP017_SECOND_ISOLATED_RESTORE_TARGET_STARTED_NO_PUBLIC_ENTRY')
+
+def recovery_tool():
+ own();phase=sys.argv[2];assert phase in ['close','post-copy','verify-target']
+ if phase=='verify-target':print(run('docker','compose','-f',str(ROOT/'restore/compose.yaml'),'run','--rm','--no-deps','harness','node','tests/qa/cp017/recovery.mjs',phase),end='')
+ else:
+  assert all(not x['running'] for x in facts() if x['project']==PROJECT and not x['name'].endswith('-postgres-1'))
+  a=json.loads((ROOT/'evidence/artifact.json').read_text());print(compose('run','--rm','--no-deps','-e','QA_CODE_SHA='+a['codeSha'],'-v',str(ROOT/'evidence')+':/run/qa-results','-v',str(ROOT/'journal')+':/run/qa-journal','harness','node','tests/qa/cp017/recovery.mjs',phase),end='')
+
+def drain_control():
+ own();request=ROOT/'evidence/drain-request.json';deadline=time.monotonic()+45
+ while time.monotonic()<deadline:
+  if request.exists():
+   candidate=json.loads(request.read_text())
+   if time.time()-__import__('datetime').datetime.fromisoformat(candidate['requestedAt'].replace('Z','+00:00')).timestamp()<5:break
+  time.sleep(.05)
+ else:raise AssertionError('DRAIN_FRESH_REQUEST_MISSING')
+ a=json.loads((ROOT/'evidence/artifact.json').read_text());q=json.loads((ROOT/'secrets/connections.json').read_text())
+ assert candidate['project']==PROJECT and candidate['sourceSha']==a['codeSha'] and candidate['generation']==q['generation'] and candidate['instance']=='api1' and candidate['signal']=='SIGTERM'
+ assert all(re.fullmatch('[a-f0-9-]{36}',candidate[k]) for k in ['owner','operationId','ticketId'])
+ cid=compose('ps','-q','api1').strip();assert re.fullmatch('[a-f0-9]{64}',cid)
+ label=run('docker','inspect','--format','{{index .Config.Labels "com.docker.compose.project"}}',cid).strip();assert label==PROJECT
+ record=json.loads(run('docker','exec',cid,'cat','/tmp/qa-owner.json'));assert record['owner']==candidate['owner'] and record['generation']==candidate['generation']
+ t=time.monotonic();started=__import__('datetime').datetime.now(__import__('datetime').timezone.utc).isoformat();run('docker','kill','--signal','SIGTERM',cid)
+ proof={**{k:candidate[k]for k in ['project','sourceSha','generation','instance','owner','operationId','ticketId']},'containerId':cid,'artifactDigest':a['digest'],'signal':'SIGTERM','drainStartedAt':started}
+ p=ROOT/'evidence/drain-started-proof.json';p.write_text(json.dumps(proof));os.chmod(p,0o400);os.chown(p,999,999)
+ while time.monotonic()-t<35:
+  state=json.loads(run('docker','inspect','--format','{{json .State}}',cid))
+  if not state['Running']:break
+  time.sleep(.05)
+ assert not state['Running'] and state['Status']=='exited','OWN_DRAIN_PROCESS_NOT_ENDED'
+ pg=compose('ps','-q','postgres').strip();command='export PGPASSWORD; PGPASSWORD=$(cat /run/secrets/bootstrap); exec psql -h /var/run/postgresql -U qa_bootstrap -d mecanet_control -qAt -v ON_ERROR_STOP=1'
+ sql="BEGIN READ ONLY; SELECT json_build_object('absent',NOT EXISTS(SELECT 1 FROM pg_stat_activity WHERE application_name IN ('mecanet-writer:"+record['owner']+"','mecanet-qa-api:"+record['owner']+"')),'operations',(SELECT coalesce(json_agg(json_build_object('tenantId',i.tenant_id,'operationId',i.operation_id,'ticketId',i.ticket_id)),'[]') FROM saas.write_intents i JOIN saas.tickets t ON t.id=i.ticket_id WHERE t.owner='"+record['owner']+"'::uuid AND i.generation='"+record['generation']+"'::uuid)); ROLLBACK;"
+ observed=json.loads(run('docker','exec','-i',pg,'sh','-c',command,input=sql).strip());assert observed['absent']
+ end={'project':PROJECT,'sourceSha':a['codeSha'],'generation':record['generation'],'instance':'api1','owner':record['owner'],'containerId':cid,'running':False,'exitCode':state['ExitCode'],'containerStoppedAt':state['FinishedAt'],'httpClosed':True,'writerApplicationName':'mecanet-writer:'+record['owner'],'sqlOwnerAbsent':True,'operations':observed['operations']}
+ p=ROOT/'evidence/host-end-proof-api1.json';p.write_text(json.dumps(end));os.chmod(p,0o400);os.chown(p,999,999)
+ print(json.dumps({'ownApi1DrainEnded':True,'sqlOwnerAbsent':True,'elapsedSeconds':round(time.monotonic()-t,3),'containerId':cid}))
+
 def stop_own():
  own();compose('stop','api1','api2','web','worker','postgres');preserve();owner=own();owner['state']='STOPPED_PRIVATE_SYNTHETIC';(ROOT/'owner.json').write_text(json.dumps(owner))
  print('CP017_OWN_RUNTIME_STOPPED_NO_DATA_DELETION')
 if __name__=='__main__':
- action=sys.argv[1];assert action in ['preflight','bootstrap','preserve','configure','start-postgres','accept-artifact','tool','foundation-backup','finish-config','runtime','stop-own','prove-stop','corrective-proof','pause-own','restart-proof']
+ action=sys.argv[1];assert action in ['preflight','bootstrap','preserve','configure','start-postgres','accept-artifact','tool','foundation-backup','finish-config','runtime','stop-own','prove-stop','corrective-proof','pause-own','restart-proof','recovery-proof','recovery-copy','recovery-target','recovery-tool','close-writers','drain-control']
  if action=='preflight':print(json.dumps(preflight()))
  elif action=='bootstrap':bootstrap()
  elif action=='configure':configure()
@@ -260,8 +412,14 @@ if __name__=='__main__':
  elif action=='finish-config':finish_config()
  elif action=='runtime':runtime()
  elif action=='prove-stop':prove_stop()
+ elif action=='close-writers':close_writers()
  elif action=='corrective-proof':corrective_proof()
  elif action=='pause-own':pause_own()
  elif action=='restart-proof':restart_proof()
+ elif action=='recovery-proof':recovery_proof()
+ elif action=='recovery-copy':recovery_copy()
+ elif action=='recovery-target':recovery_target()
+ elif action=='recovery-tool':recovery_tool()
+ elif action=='drain-control':drain_control()
  elif action=='stop-own':stop_own()
  else:preserve()

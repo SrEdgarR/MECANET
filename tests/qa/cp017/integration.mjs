@@ -116,9 +116,31 @@ try{
  await caseOf('same-create-key-two-api-concurrent',['L2-A6'],async()=>{
   const id=randomUUID(),input={sku:`DUP-${id.slice(0,8)}`,name:'Concurrent synthetic'},before=(await tenant('SELECT count(*)::int AS n FROM catalog.products'))[0].n;
   const replies=await Promise.all([write(a,id,input),write(a2,id,{name:input.name,sku:input.sku})]);
-  replies.forEach(r=>assertStatus(r,201));assert.deepEqual(replies[0].json,replies[1].json);otherProduct=replies[0].json.productId;
+  const publicCode=reply=>typeof reply.json?.error==='string'&&/^[A-Z_]{1,60}$/.test(reply.json.error)?reply.json.error:null;
+  const initialReplies=replies.map(reply=>({status:reply.status,publicCode:publicCode(reply)}));
+  for(const reply of replies)assert(reply.status===201||reply.status===409&&publicCode(reply)==='OPERATION_PENDING'||reply.status===503,'CONCURRENT_RESPONSE_OUTSIDE_APPROVED_CONTRACT');
+  // A collision may return a bounded uncertain/dependency response before the
+  // other executor projects. The UUID/canonical input are never replaced. Query
+  // its known result first, then explicitly replay only that original intention.
+  let consulted=null;
+  for(let attempt=0;attempt<6&&!consulted;attempt++){
+   const reply=await send(a2,`/api/tenants/${TENANT_A}/operations/${id}`);
+   if(reply.status===200&&reply.json.state==='CONFIRMED'){assertStatus(reply,200);consulted=reply.json.result;break}
+   assert([200,404,409,429,503].includes(reply.status),'QUERY_RESPONSE_OUTSIDE_APPROVED_CONTRACT');await sleep(150);
+  }
+  assert(consulted,'CONCURRENT_RESULT_NOT_VERIFIED');
+  for(let index=0;index<replies.length;index++){
+   if(replies[index].status===201){assert.deepEqual(replies[index].json,consulted);continue}
+   for(let attempt=0;attempt<4;attempt++){
+    const replay=await write(index===0?a:a2,id,input);replies[index]=replay;
+    if(replay.status===201)break;
+    assert(replay.status===409&&publicCode(replay)==='OPERATION_PENDING'||[429,503].includes(replay.status),'REPLAY_RESPONSE_OUTSIDE_APPROVED_CONTRACT');await sleep(150);
+   }
+  }
+  replies.forEach(r=>assertStatus(r,201));assert.deepEqual(replies[0].json,replies[1].json);assert.deepEqual(replies[0].json,consulted);otherProduct=replies[0].json.productId;
   const rows=(await tenant('SELECT (SELECT count(*) FROM catalog.products)::int AS products,(SELECT count(*) FROM inventory.operations WHERE id=$1)::int AS operations,(SELECT count(*) FROM inventory.audit WHERE operation_id=$1)::int AS audits',[id]))[0];
-  assert.deepEqual(rows,{products:before+1,operations:1,audits:1});return {operationId:id,twoApiHttpConcurrency:true,singleProduct:true,singleAudit:true};
+  assert.deepEqual(rows,{products:before+1,operations:1,audits:1});const settled=await waitFor(()=>operationRows(id),value=>value.intent?.reservation_status==='SETTLED');assert.equal(settled.intent.status,'CONFIRMED');
+  return {operationId:id,initialReplies,twoApiHttpConcurrency:true,singleProduct:true,singleAudit:true,knownIdQueryBeforeExplicitSameKeyReplay:true,originalGrowthSettled:true};
  },{dependsOn:['normalized-canonical-two-api-and-uc']});
  await caseOf('two-receipts-sum-and-same-key-replay',['L2-A7'],async()=>{
   assert(product);const ids=[randomUUID(),randomUUID()],inputs=[{quantity:'7',reason:'Ficticio 1'},{quantity:'11',reason:'Ficticio 2'}];

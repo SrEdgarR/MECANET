@@ -63,7 +63,7 @@ export function createAuthority(pool,generation,{writersEnabled=false}={}) {
   const {rows}=await query({text:`SELECT i.id,i.email,i.security_version,r.generation,r.writer_session_ref,
    r.status,r.security_version AS session_security_version,
    EXISTS(SELECT 1 FROM saas.write_restrictions x WHERE x.active AND x.generation=r.generation
-    AND x.session_ref=r.writer_session_ref AND x.identity_id=i.id AND x.reason_code='LOGOUT'
+    AND x.session_ref=r.writer_session_ref AND (x.identity_id IS NULL OR x.identity_id=i.id) AND x.reason_code='LOGOUT'
     AND x.status<>'ACKNOWLEDGED') AS logout_pending
    FROM saas.session_registry r JOIN saas.identities i ON i.id=r.identity_id
    WHERE r.sid=$1 AND r.purpose='company' AND i.purpose='company' AND r.generation=$2`,values:[sid,generation],query_timeout:500});

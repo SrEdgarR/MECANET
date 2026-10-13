@@ -15,14 +15,19 @@ export async function withQaInspection(qa,database,fn){
  const [ca,password]=await Promise.all([readFile('/run/qa-ca.crt','utf8'),readFile('/run/qa-secrets/bootstrap','utf8')]);
  const pool=await createPgPool({host:'postgres',port:5432,database,user:'qa_bootstrap',password,
   ssl:{ca,servername:'postgres',rejectUnauthorized:true},max:1,connectionTimeoutMillis:2000,statement_timeout:3000,application_name:'mecanet-private-readonly-writer-inspection'});
- let client;
- try{
-  client=await pool.connect();await client.query('BEGIN READ ONLY');
-  const observed=(await client.query('SELECT system_identifier::text FROM pg_control_system()')).rows[0].system_identifier;
-  if(observed!==qa.systemIdentifier)throw new Error('OWN_QA_CLUSTER_PROVENANCE_MISMATCH');
-  const result=await fn(client);await client.query('COMMIT');return result;
- }catch(error){if(client)await client.query('ROLLBACK').catch(()=>{});throw error}
- finally{client?.release();await pool.end()}
+ const observer={async query(...args){
+  const client=await pool.connect();let discard;
+  try{
+   await client.query('BEGIN READ ONLY');
+   const observed=(await client.query('SELECT system_identifier::text FROM pg_control_system()')).rows[0].system_identifier;
+   if(observed!==qa.systemIdentifier)throw new Error('OWN_QA_CLUSTER_PROVENANCE_MISMATCH');
+   const result=await client.query(...args);await client.query('COMMIT');return result;
+  }catch(error){try{await client.query('ROLLBACK')}catch(rollback){discard=rollback}throw error}
+  finally{client.release(discard)}
+ }};
+ // Every SQL observation has its own short transaction. HTTP work inside the
+ // callback never leaves PostgreSQL idle in an open inspection transaction.
+ try{return await fn(observer)}finally{await pool.end()}
 }
 
 export async function collectWriterSqlFacts({qa,sourceSha}){
@@ -84,6 +89,8 @@ export function sanitizeTapDiagnostics(stdout){
   if(locations.length)diagnostics.locations=locations.slice(0,4);
   const fixed=[...section.matchAll(/\b[A-Z][A-Z_]{3,79}\b/g)].map(m=>m[0]).filter(value=>knownSqlMessages.has(value));
   if(fixed.length)diagnostics.fixedMessages=[...new Set(fixed)];
+  const denial=/SQL_DENIAL_(?:UNEXPECTED|MISSING)_(DML_BALANCE|DELETE_MOVEMENT|FENCE_UPDATE|DDL|ROLE_ELEVATION|EXTENSION|FOREIGN_B|FOREIGN_CONTROL|FOREIGN_ADMIN|READER_WRITER_FUNCTION|SQL_INPUT|FORGED_TENANT)\b/.exec(section);
+  if(denial)diagnostics.denialLabel=denial[1];
   const permissions=/permission denied for (table|schema|function|relation|database) ([a-z_][a-z0-9_.]*)/.exec(section);
   if(permissions&&/^(inventory|catalog|saas|mecanet_[a-z_]+|postgres)(?:\.[a-z_]+)?$/.test(permissions[2]))diagnostics.permission={kind:permissions[1],object:permissions[2]};
   return diagnostics;
