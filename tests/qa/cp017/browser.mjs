@@ -153,7 +153,7 @@ async function inventoryLegibility(tab){
  if(geometry.scrollable){await region.evaluate(node=>{node.scrollLeft=0});await tab.keyboard.press('ArrowRight');await region.evaluate(node=>new Promise((resolve,reject)=>{const started=performance.now();const inspect=()=>node.scrollLeft>0?resolve():performance.now()-started>1000?reject(Error('REGION_KEYBOARD_SCROLL_FAILED')):requestAnimationFrame(inspect);inspect()}))}
  const actions=region.locator('tbody tr').first().getByRole('button');
  for(let index=0;index<await actions.count();index++){
-  const button=actions.nth(index);await button.focus();
+  const button=actions.nth(index);await tab.keyboard.press('Tab');
   const box=await button.evaluate(node=>{const control=node.getBoundingClientRect(),region=node.closest('.table-region').getBoundingClientRect(),css=getComputedStyle(node),ring=parseFloat(css.outlineWidth)+parseFloat(css.outlineOffset);return {focused:document.activeElement===node,left:control.left,right:control.right,regionLeft:region.left,regionRight:region.right,ring,outline:css.outlineStyle}});
   assert.equal(box.focused,true);assert.notEqual(box.outline,'none');assert(box.left-box.ring>=box.regionLeft-1&&box.right+box.ring<=box.regionRight+1,'Focused inventory action/ring clipped by its scroll region');
  }

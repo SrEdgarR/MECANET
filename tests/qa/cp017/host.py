@@ -320,7 +320,7 @@ def rollback_target():
  names=['001-control.sql','002-tenant.sql','003-control-writers.sql','003-tenant-writers.sql','004-tenant-writers-fix.sql'];assert len(expected)==len(names) and {e['path'].split('/')[-1] for e in expected}==set(names)
  assert len([e for e in desired['entries'] if e['path'].startswith('server/saas/db/migrations/')])==len(names)
  for entry in expected:assert any(e['path']==entry['path'] and e['sha256']==entry['sha256'] for e in desired['entries']),'ROLLBACK_SCHEMA_INCOMPATIBLE'
- config=json.loads(compose('config','--format','json'))
+ config=json.loads(compose('--profile','*','config','--format','json'))
  for service in ['api1','api2','web']:
   for volume in config['services'][service]['volumes']:
    old=volume.get('source','')
@@ -349,6 +349,15 @@ def metadata_tool():
  service='probe' if live else 'harness'
  try:print(compose('run','--rm','--no-deps','-e','QA_CODE_SHA='+a['codeSha'],'-v',str(ROOT/'evidence')+':/run/qa-results',service,'node','tests/qa/cp017/metadata-live.mjs',sys.argv[2]),end='')
  except subprocess.CalledProcessError as e:print(e.output,end='');raise SystemExit(e.returncode)
+
+def repair_tool_profiles():
+ own();config=json.loads(compose('--profile','*','config','--format','json'));assert set(config['services'])=={'postgres','api1','api2','web','worker'},'REPAIR_ONLY_MISSING_OWN_PROFILES'
+ a=json.loads((ROOT/'evidence/artifact.json').read_text());source=str(ROOT/'artifacts'/a['digest'].split(':')[1])
+ for name in ['harness','probe']:
+  service={'profiles':['tools'],'image':'node@sha256:ba6b7d0ee561d9d49deb99e2b93c98632cc287b6cca1a6b18d66127054efa4dc','platform':'linux/arm64','user':'999:999','read_only':True,'cap_drop':['ALL'],'security_opt':['no-new-privileges:true'],'cpus':.25 if name=='harness' else .05,'mem_limit':'128m','pids_limit':64,'working_dir':'/workspace','environment':{'QA_PROJECT':PROJECT},'networks':['data'],'tmpfs':['/tmp:size=16m'],'volumes':[source+':/workspace:ro',str(ROOT/'secrets')+':/run/qa-secrets'+('' if name=='harness' else ':ro'),str(ROOT/'config/ca.crt')+':/run/qa-ca.crt:ro',str(ROOT/'evidence')+':/run/qa-results',str(ROOT/'journal')+':/run/qa-journal']}
+  if name=='probe':service['group_add']=['1001'];service['volumes']+=[str(ROOT/'ingress')+':/run/qa-ingress:ro',str(ROOT/'faults')+':/run/qa-faults']
+  config['services'][name]=service
+ (ROOT/'compose.yaml').write_text(json.dumps(config));compose('--profile','*','config','--quiet');preserve();print('CP017_ONLY_MISSING_OWN_TOOL_PROFILES_RESTORED')
 
 def recovery_proof():
  own();apis=[]
@@ -396,7 +405,8 @@ def recovery_target():
  for e in manifest['files']:
   p=backup/e['path'];assert p.resolve().is_relative_to(backup.resolve()) and not p.is_symlink() and p.is_file() and p.stat().st_size==e['bytes'] and hashlib.sha256(p.read_bytes()).hexdigest()==e['sha256'],'RESTORE_BACKUP_CHECKSUM_FAILED'
  assert hashlib.sha256(json.dumps(manifest['files'],separators=(',',':')).encode()).hexdigest()==manifest['digest']
- shutil.copytree(backup,target/'data');assert not (target/'data/postmaster.pid').exists()
+ shutil.copytree(backup,target/'data');assert not list((target/'data').rglob('postmaster.pid'))
+ assert (target/'data/18/docker/PG_VERSION').read_text().strip()=='18','RESTORE_PGDATA_LAYOUT_MISMATCH'
  # copytree preserves modes, not the postgres UID. Only the new, validated
  # own destination is changed; never the source, backup or shared volumes.
  data=target/'data';assert data.resolve()==ROOT/'restore/data'
@@ -404,7 +414,7 @@ def recovery_target():
   assert not p.is_symlink() and p.resolve().is_relative_to(data.resolve())
   os.chown(p,999,999)
  assert all(p.stat().st_uid==999 and p.stat().st_gid==999 for p in [data,*data.rglob('*')])
- for p in ['standby.signal','recovery.signal']:assert not (target/'data'/p).exists()
+ for p in ['standby.signal','recovery.signal']:assert not list((target/'data').rglob(p))
  (target/'pg_hba.conf').write_text((ROOT/'config/pg_hba.conf').read_text().replace('10.77.51','10.77.53'));os.chmod(target/'pg_hba.conf',0o444)
  artifact=json.loads((ROOT/'evidence/artifact.json').read_text());directory=str(ROOT/'artifacts'/artifact['digest'].split(':')[1]);name=PROJECT+'-restore'
  text=f'''name: {name}
@@ -420,9 +430,9 @@ services:
     mem_limit: 640m
     pids_limit: 128
     command: [postgres, -c, config_file=/run/qa-config/postgresql.conf]
-    environment: {{PGDATA: /var/lib/postgresql/data}}
+    environment: {{PGDATA: /var/lib/postgresql/18/docker}}
     volumes:
-      - {target}/data:/var/lib/postgresql/data
+      - {target}/data:/var/lib/postgresql
       - {ROOT}/config/postgresql.conf:/run/qa-config/postgresql.conf:ro
       - {target}/pg_hba.conf:/etc/postgresql/pg_hba.conf:ro
       - {ROOT}/tls/postgres:/run/tls:ro
@@ -505,7 +515,10 @@ def stop_own():
  preserve();owner=own();owner['state']='STOPPED_PRIVATE_SYNTHETIC';(ROOT/'owner.json').write_text(json.dumps(owner))
  print('CP017_OWN_RUNTIME_STOPPED_NO_DATA_DELETION')
 if __name__=='__main__':
- action=sys.argv[1];assert action in ['preflight','bootstrap','preserve','configure','start-postgres','accept-artifact','tool','foundation-backup','finish-config','runtime','stop-own','prove-stop','corrective-proof','pause-own','restart-proof','recovery-proof','recovery-copy','recovery-target','recovery-tool','close-writers','drain-control','promotion-proof','refresh-config','operational-promotion','rollback-target','rollback-tool','metadata-tool']
+ if len(sys.argv)>1 and sys.argv[1] not in ['preflight','bootstrap']:
+  own();artifactPath=ROOT/'evidence/artifact.json';record={'controllerSha256':hashlib.sha256(pathlib.Path(__file__).read_bytes()).hexdigest(),'artifactCodeSha':json.loads(artifactPath.read_text())['codeSha'] if artifactPath.exists() else None,'controllerSource':'private own-cohort controller bytes; separate from API artifact','observedAt':time.strftime('%Y-%m-%dT%H:%M:%SZ',time.gmtime())}
+  p=ROOT/'evidence/controller-provenance.json';p.write_text(json.dumps(record));os.chmod(p,0o400);os.chown(p,999,999)
+ action=sys.argv[1];assert action in ['preflight','bootstrap','preserve','configure','start-postgres','accept-artifact','tool','foundation-backup','finish-config','runtime','stop-own','prove-stop','corrective-proof','pause-own','restart-proof','recovery-proof','recovery-copy','recovery-target','recovery-tool','close-writers','drain-control','promotion-proof','refresh-config','operational-promotion','rollback-target','rollback-tool','metadata-tool','repair-tool-profiles']
  if action=='preflight':print(json.dumps(preflight()))
  elif action=='bootstrap':bootstrap()
  elif action=='configure':configure()
@@ -526,6 +539,7 @@ if __name__=='__main__':
  elif action=='rollback-target':rollback_target()
  elif action=='rollback-tool':rollback_tool()
  elif action=='metadata-tool':metadata_tool()
+ elif action=='repair-tool-profiles':repair_tool_profiles()
  elif action=='recovery-proof':recovery_proof()
  elif action=='recovery-copy':recovery_copy()
  elif action=='recovery-target':recovery_target()
