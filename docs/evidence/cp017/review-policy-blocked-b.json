@@ -1,0 +1,36 @@
+{
+  "reviewId":"CP017-REVIEW-POLICY-BLOCKED-B",
+  "recordedAt":"2026-10-13T22:19:14.1357350Z",
+  "implementer":"l2_ui",
+  "independentReviewer":"l2_sql",
+  "status":"PASS FOR STATIC PEER REVIEW AND LOCAL UNIT TESTS ONLY",
+  "inputs":[
+    {"path":"tests/qa/cp017/promote.mjs","sha256":"e8944fd15d25495d710b54ce88c69f1e01b82b0fd20f457ee4c27e1b3c45298f","bytes":13079},
+    {"path":"tests/qa/cp017/promote.unit.test.mjs","sha256":"340c033bda18096b7565cb614484571f308d7d757c00c1bc298530d9706b11cf","bytes":6601}
+  ],
+  "checks":[
+    {"status":"PASS","evidence":"Only exact CLI --blocked-b activates the new private mode, parsed before configuration/secret reads. Default still admits one or two exact own POLICY targets and requires global writer readiness true. Unknown or repeated flags fail closed."},
+    {"status":"PASS","evidence":"Blocked mode admits only one POLICY A, retains all prior ACK/close_proven/generation/epoch/v+1/v+2/debt checks and uses the unchanged A verifyPromotion/coordinator protocol. Targets B, multiple targets, duplicate restrictions or unknown modes are rejected."},
+    {"status":"PASS","evidence":"B snapshot uses SELECT in central maintenance and bootstrap tenant BEGIN READ ONLY with matching system identifier. It requires directory blocked/company/schema2, one active tenant-scoped TENANT restriction ACK, exact CLOSED central/local generation/epoch/version and zero pending intents, retained growth or reserved capacity."},
+    {"status":"PASS","evidence":"Server JSONB::text records of B central state, directory, restriction, guard and local fence produce a SHA-256 fingerprint before and after promoting A. Both snapshots must validate and hashes must match. No B mutation, credential rotation, quota/grant change or restriction removal is issued by the adapter."},
+    {"status":"PASS","evidence":"The explicit result requires readiness false and unchanged exact B fingerprints: PASS FOR OWN A POLICY ONLY / GLOBAL READY FALSE. It reports globalReady=false and never declares global health or readiness PASS."}
+  ],
+  "verification":{
+    "environment":"Local Windows Node24.21.0; pure unit fixtures and static inspection, no PostgreSQL or remote resource",
+    "tdd":{"red":{"pass":10,"fail":4},"green":{"pass":14,"fail":0,"skipped":0},"syntax":"PASS"},
+    "independentPeer":{"agent":"l2_sql","sourceHashesMatched":true,"localUnitsPass":14,"requiredFindings":0,"method":"Read-only SQL/ACL/control-flow inspection and independent local unit run"},
+    "negativeCoverage":["Unknown/repeated modes","B or multiple POLICY targets","Wrong B directory/reason/subject/guard/stage/generation/epoch/version","Pending intents/retained growth/reserved capacity","Missing or changed B fingerprint","Global true in blocked mode or global false in default mode"]
+  },
+  "findings":[],
+  "requiredFindingCount":0,
+  "limits":[
+    "The helper does not independently establish host process OFF or SQL-owner absence. It retains the controller's prior own-cohort stop/preflight proof and exact source/generation/system-identifier dependency; these must be accredited before actual QA.",
+    "The global false result is intentionally limited to own A POLICY promotion with B preserved blocked. It does not authorize reopening B or lowering quotas and does not prove application-wide readiness.",
+    "Root owns plan append, host CLI wiring, artifact capture and real QA execution. No remote promotion or actual fingerprint/readiness outcome was executed by implementer or peer in this review."
+  ],
+  "actualQAPromotion":"NOT VERIFIED BY THIS REVIEW",
+  "productFilesModified":false,
+  "infrastructureModified":false,
+  "SSHOrGitExecuted":false,
+  "secretsReadOrPrinted":false
+}

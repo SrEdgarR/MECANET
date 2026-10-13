@@ -172,11 +172,12 @@ def accept_artifact():
  print(json.dumps({'artifactAccepted':True,'codeSha':manifest['codeSha'],'digest':manifest['digest'],'files':len(expected)}))
 
 def own_tool():
- own();assert len(sys.argv)>=3 and sys.argv[2] in ['foundation','migration','sql','integration','recovery-check','corrective','resources-api1','resources-api2','promote','quota','revocation','quota-boundary','quota-growth','read-closure','claim-corrective','concurrency']
+ own();assert len(sys.argv)>=3 and sys.argv[2] in ['foundation','migration','sql','integration','recovery-check','corrective','resources-api1','resources-api2','promote','quota','revocation','quota-boundary','quota-growth','read-closure','claim-corrective','concurrency','canonical']
  action=sys.argv[2];live=any(x['running'] for x in facts() if x['project']==PROJECT and x['name'].endswith(('-api1-1','-api2-1','-web-1')))
- service='probe' if action in ['sql','integration','revocation','recovery-check'] or action=='quota' and (len(sys.argv)<5 or sys.argv[4]!='closed') else 'harness';assert service=='probe' or not live,'HARNESS_RUNTIME_OVERLAP'
+ if action=='canonical':assert len(sys.argv)==4 and sys.argv[3] in ['prepare','verify']
+ service='probe' if action in ['sql','integration','revocation','recovery-check'] or action=='quota' and (len(sys.argv)<5 or sys.argv[4]!='closed') or action=='canonical' and sys.argv[3]=='verify' else 'harness';assert service=='probe' or not live,'HARNESS_RUNTIME_OVERLAP'
  artifact=json.loads((ROOT/'evidence/artifact.json').read_text())
- files={'foundation':'prepare.mjs','migration':'migration-live.mjs','sql':'sql-live.mjs','integration':'integration.mjs','recovery-check':'recovery-check.mjs','corrective':'corrective.mjs','resources-api1':'resource-closure.mjs','resources-api2':'resource-closure.mjs','promote':'promote.mjs','quota':'quota-live.mjs','revocation':'revocation-live.mjs','quota-boundary':'quota-boundary.mjs','quota-growth':'quota-growth-boundary.mjs','read-closure':'read-closure.mjs','claim-corrective':'claim-corrective.mjs','concurrency':'concurrency-live.mjs'}
+ files={'foundation':'prepare.mjs','migration':'migration-live.mjs','sql':'sql-live.mjs','integration':'integration.mjs','recovery-check':'recovery-check.mjs','corrective':'corrective.mjs','resources-api1':'resource-closure.mjs','resources-api2':'resource-closure.mjs','promote':'promote.mjs','quota':'quota-live.mjs','revocation':'revocation-live.mjs','quota-boundary':'quota-boundary.mjs','quota-growth':'quota-growth-boundary.mjs','read-closure':'read-closure.mjs','claim-corrective':'claim-corrective.mjs','concurrency':'concurrency-live.mjs','canonical':'canonical-gap.mjs'}
  args=['run','--rm','--no-deps','-e','QA_CODE_SHA='+artifact['codeSha']]
  if action=='foundation':args+=['-e','QA_STAGE=foundation']
  if action=='quota':
@@ -197,6 +198,11 @@ def own_tool():
  if action=='quota-boundary':
   assert len(sys.argv)==4 and sys.argv[3] in ['tenant','global'];args+=[sys.argv[3]]
  if action=='concurrency':assert len(sys.argv)==3
+ if action=='canonical':args+=[sys.argv[3]]
+ if action=='promote':
+  assert len(sys.argv) in [3,4]
+  if len(sys.argv)==4:
+   assert sys.argv[3]=='--blocked-b';args+=['--blocked-b']
  try:print(compose(*args),end='')
  except subprocess.CalledProcessError as error:
   print(error.output,end='');raise SystemExit(error.returncode)

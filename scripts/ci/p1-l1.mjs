@@ -30,7 +30,7 @@ const tests = [
   'tests/qa/cp017/metadata.unit.test.mjs', 'tests/qa/cp017/integration-sku.test.mjs', 'tests/qa/cp017/promote.unit.test.mjs',
   'tests/qa/cp017/quota-boundary.test.mjs',
   'tests/qa/cp017/quota-growth-boundary.test.mjs', 'tests/qa/cp017/claim-corrective.test.mjs', 'tests/qa/cp017/uncertain-retention.test.mjs', 'tests/qa/cp017/recovery-check.test.mjs',
-  'tests/qa/read-abort-lifecycle.test.js', 'tests/qa/write-ticket-owner.test.js', 'tests/qa/post-response-diagnostic.test.js', 'tests/qa/read-rollback-lifecycle.test.js', 'tests/qa/cp017/read-closure.test.mjs', 'tests/qa/cp017/concurrency.unit.test.mjs',
+  'tests/qa/read-abort-lifecycle.test.js', 'tests/qa/write-ticket-owner.test.js', 'tests/qa/post-response-diagnostic.test.js', 'tests/qa/read-rollback-lifecycle.test.js', 'tests/qa/cp017/read-closure.test.mjs', 'tests/qa/cp017/concurrency.unit.test.mjs', 'tests/qa/cp017/canonical-gap.unit.test.mjs',
 ];
 
 // Allow only process support variables. No inherited DB URLs, session secrets,

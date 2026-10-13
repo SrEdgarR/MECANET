@@ -1,0 +1,47 @@
+{
+  "status": "PASS FOR LOCAL CONTRACTS AND SYNTAX ONLY",
+  "observedAt": "2026-10-13T22:29:45.157424Z",
+  "sourceHeadBeforeHarnessCommit": "b14b53bd792b30b68296005cc5ed379285f80dc6",
+  "functionalSource": "8199a414ff06220e147b062ce37fa55709311627",
+  "worktreeDirtyAtTest": true,
+  "environment": "Windows x64 / Node24.21.0",
+  "tests": 258,
+  "pass": 258,
+  "fail": 0,
+  "syntaxFiles": 134,
+  "pythonControllerAST": "PASS",
+  "baselineHash": "ca975dc822c0bd5e872d3debe824abc536f662007513170f327727878ff3ac71",
+  "promptHash": "d2dafd5f75df32aae33e421953fab6e99e723aa88744b918b555562c7b6a550d",
+  "localLogHashes": {
+    "contracts": "a4d33e4e13f4906f8b15d7f7d6c0d963aecadebb01603a6b9fa5eed1d99f0e7b",
+    "syntax": "286e3eed9b5f07b7d8fd04a4ef02973cfddf620c919d488afb1010e2f05019a1"
+  },
+  "testedFiles": [
+    {
+      "path": "tests/qa/cp017/host.py",
+      "sha256": "9f2328e00aca0b843c184b2a829a741a48cde54535731cccfa0ae7d359fd8941"
+    },
+    {
+      "path": "tests/qa/cp017/canonical-gap.mjs",
+      "sha256": "64bb01b07f78f5f70db22026ef50fe3073e154e11f1ab5a7bcfa732dace8a4b8"
+    },
+    {
+      "path": "tests/qa/cp017/canonical-gap.unit.test.mjs",
+      "sha256": "b41005f7c5ca365e9f73030203be153c1049c1302356cac55ec908379d296606"
+    },
+    {
+      "path": "tests/qa/cp017/promote.mjs",
+      "sha256": "e8944fd15d25495d710b54ce88c69f1e01b82b0fd20f457ee4c27e1b3c45298f"
+    },
+    {
+      "path": "tests/qa/cp017/promote.unit.test.mjs",
+      "sha256": "340c033bda18096b7565cb614484571f308d7d757c00c1bc298530d9706b11cf"
+    },
+    {
+      "path": "scripts/ci/p1-l1.mjs",
+      "sha256": "1a0be8febc9404ab41db849488328041078656d0b7f8618edf8c3b54f1eea987"
+    }
+  ],
+  "remoteQA": "NOT ATTRIBUTED TO THIS LOCAL RUN",
+  "wholeCriteria": "NOT VERIFIED BY TEST COUNT"
+}
