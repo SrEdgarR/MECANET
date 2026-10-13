@@ -1,0 +1,105 @@
+{
+  "checkpoint": "CP-017",
+  "classification": "DETECTED",
+  "provenance": "REMOTE GitHub hosted ubuntu-24.04; raw log retained privately",
+  "observedAt": "2026-10-13T23:09:00.106547+00:00",
+  "id": 38482079889,
+  "url": "https://github.com/SrEdgarR/MECANET/actions/runs/38482079889",
+  "event": "push",
+  "headSha": "7ff9a6c41060e186c8e8c6ce475957c53d40de38",
+  "headBranch": "develop",
+  "status": "completed",
+  "conclusion": "success",
+  "workflowPath": ".github/workflows/p1-l1-verify.yml",
+  "rawLogSha256": "62f8d6571ca5ae31fc482a2b35408af23ce33b1011b2b576b7e4c6aeca714cef",
+  "rawLogBytes": 136567,
+  "jobs": [
+    {
+      "name": "Local contracts, frontend and dependency audit",
+      "conclusion": "success",
+      "startedAt": "2026-10-13T23:05:41Z",
+      "completedAt": "2026-10-13T23:06:31Z",
+      "steps": [
+        {
+          "name": "Set up job",
+          "conclusion": "success"
+        },
+        {
+          "name": "Checkout without persisted credentials",
+          "conclusion": "success"
+        },
+        {
+          "name": "Use the approved Node runtime",
+          "conclusion": "success"
+        },
+        {
+          "name": "Check the exact toolchain",
+          "conclusion": "success"
+        },
+        {
+          "name": "Install locked backend dependencies without lifecycle scripts",
+          "conclusion": "success"
+        },
+        {
+          "name": "Check JavaScript syntax",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run the explicit local contract suite",
+          "conclusion": "success"
+        },
+        {
+          "name": "Check pure QA controller regressions",
+          "conclusion": "success"
+        },
+        {
+          "name": "Verify the SaaS lane boundaries and tooling isolation negatives",
+          "conclusion": "success"
+        },
+        {
+          "name": "Verify locked SaaS lane, guarded tests, build and complete dependency audit",
+          "conclusion": "success"
+        },
+        {
+          "name": "Compare the compiled SaaS assets with the accepted lot artifact",
+          "conclusion": "success"
+        },
+        {
+          "name": "Audit backend runtime dependencies",
+          "conclusion": "success"
+        },
+        {
+          "name": "Audit all backend dependencies as well",
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Use the approved Node runtime",
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Checkout without persisted credentials",
+          "conclusion": "success"
+        },
+        {
+          "name": "Complete job",
+          "conclusion": "success"
+        }
+      ]
+    }
+  ],
+  "scope": "CI local contracts/frontend/build/audits only; remote PostgreSQL QA and browser have separate historical sources",
+  "secretsPublished": false,
+  "actualCheckoutProvenance": {
+    "checkoutCommit": "7ff9a6c41060e186c8e8c6ce475957c53d40de38",
+    "worktreeClean": true,
+    "node": "v24.21.0",
+    "platform": "linux",
+    "architecture": "x64",
+    "scope": "local-contracts-and-frontend",
+    "postgresIntegration": "NOT RUN",
+    "remoteQA": "NOT USED"
+  },
+  "checkoutTreeSha": "4e55523b7541dcb6ddc02f7bd69fd4a93a22e817",
+  "apiHeadTreeSha": "4e55523b7541dcb6ddc02f7bd69fd4a93a22e817",
+  "checkoutTreeEqualsApiHead": true
+}

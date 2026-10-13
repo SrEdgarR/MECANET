@@ -1,0 +1,202 @@
+{
+  "reviewId": "REV-CP017-TERMINAL-DOCS-01",
+  "reviewer": "l2_sql",
+  "observedAt": "2026-10-13T23:15:06.850Z",
+  "classification": "DETECTED LOCAL DOCUMENTARY REVIEW; REMOTE FACTS REPORTED WITH ROOT-COLLECTED SOURCES",
+  "status": "PASS FOCAL TERMINAL DOCUMENTATION REVIEW ONLY",
+  "criticalFindingsOpen": 0,
+  "requiredFindingsOpen": 0,
+  "scope": "Cierre documental continuo del mismo CP-017 tras Integration Gate L2; seis documentos canónicos, AGENTS vigente, auditoría §27, bloque C249-C268, matriz, candidato L3 y mapa derivados. Sin nueva revisión de producto ni inventarios.",
+  "sources": [
+    {
+      "path": "AGENTS.md",
+      "sha256": "6f41e42489723843ebdc579b28bd41b6001a8fe738f0d97954188c6f626d3614",
+      "bytes": 13053
+    },
+    {
+      "path": "docs/README.md",
+      "sha256": "4a25a3e92e258eac968a66622e289340864d5eeba6fec77e059d6b6164663f15",
+      "bytes": 23407
+    },
+    {
+      "path": "docs/PROJECT_STATE.md",
+      "sha256": "ca0006862c914a165ee2df8af4035fd654d754377a117d82bc91071e2c5937db",
+      "bytes": 29593
+    },
+    {
+      "path": "docs/ROADMAP.md",
+      "sha256": "32f1ff768031221f0418c025f4d947d0691b526696b3914c4c52c720a4143749",
+      "bytes": 31200
+    },
+    {
+      "path": ".agentic/PLANNING_STATE.md",
+      "sha256": "e2cabfaed223b8c269cb94bef10997c4dc25b65f38a8f824b59e87114c9ab5a9",
+      "bytes": 33308
+    },
+    {
+      "path": "tasks/plan.md",
+      "sha256": "36e1bb8ca047e8cb0255f600ba189e7c88849ae337ec43dc0f305f827ca06c0a",
+      "bytes": 71921
+    },
+    {
+      "path": "tasks/todo.md",
+      "sha256": "dfc8e8c35ba4905667fa449149a71c0d219551c8dbb33517afe7eccb99e49b52",
+      "bytes": 29150
+    },
+    {
+      "path": "docs/audit/CP-017.md",
+      "sha256": "7e09801068a336a35b7ba03db2c3a4dd90f845a1d2724fd92fddbc8c8c35efab",
+      "bytes": 16989
+    },
+    {
+      "path": "docs/CHECKPOINTS.md",
+      "sha256": "a20224033516e6966e4649a5ca09afb7bf5244341fa9d7c5e2fadc660959daec",
+      "bytes": 106423
+    },
+    {
+      "path": "docs/evidence/cp017/matrix.md",
+      "sha256": "930d208a8f64f8a344251fb271bc2df89595204b8a29823d29184b000a423d0d",
+      "bytes": 14272
+    },
+    {
+      "path": ".agentic/P1-L3_CANDIDATE.md",
+      "sha256": "03627e96621ef3f3fbf41edcbabb73173142834e3a6dc293b1d4bd8c7226e328",
+      "bytes": 15952
+    },
+    {
+      "path": "docs/evidence/cp017/review-next-lot.md",
+      "sha256": "6da5894462561be12996f003f7f9ba891d6b91f1f9d9edd70cce4d87aa9c74e5",
+      "bytes": 6630
+    },
+    {
+      "path": "docs/evidence/cp017/integration.json",
+      "sha256": "0aec81346818d0e3cf06dd5a096ee987562c9bc3a24295c64cfec13f380aa261",
+      "bytes": 4657
+    },
+    {
+      "path": "docs/evidence/cp017/ci-correction.json",
+      "sha256": "e5e1ad91736f99e6bae23ef9225428787e495b7da1e67a10ef942043e8b32ef2",
+      "bytes": 2790
+    },
+    {
+      "path": "docs/evidence/cp017/review-ci-fixture.json",
+      "sha256": "9a6f7e9b37116bce576568aac00bf7ebeb19a954425ab248a110e5ed39542180",
+      "bytes": 4401
+    },
+    {
+      "path": "docs/evidence/cp017/documentation-quality.json",
+      "sha256": "ebb20dd682b8c7a83e3b06f1787d50bd398423b84ac40e25539d315a5767da03",
+      "bytes": 3048
+    },
+    {
+      "path": "docs/PROJECT_MAP_DATA.json",
+      "sha256": "1689e4789511f05953a1d2ed5314f43c7af84e59ecaa6a77642ecadb1e6f55f3",
+      "bytes": 263041
+    },
+    {
+      "path": "docs/project-map/index.html",
+      "sha256": "0f19c647b39a49adedcb1b74d2a759e98a61846581fd22bf761cbccd6ec999ca",
+      "bytes": 249539
+    },
+    {
+      "path": "docs/specs/p1-l2-approved/baseline.md",
+      "sha256": "ca975dc822c0bd5e872d3debe824abc536f662007513170f327727878ff3ac71",
+      "bytes": 56455
+    },
+    {
+      "path": "docs/methodology/Prompt_Maestro_v2.0.md",
+      "sha256": "d2dafd5f75df32aae33e421953fab6e99e723aa88744b918b555562c7b6a550d",
+      "bytes": 43535
+    }
+  ],
+  "method": {
+    "skill": "agent-skills:code-review-and-quality",
+    "sixAxes": {
+      "correctness": "L2 TERMINAL y doce PASS/Integration PASS limitados; P1 EN CURSO única fase/P0 PARCIAL/general NOT APPROVED.",
+      "security": "No autorización por extensión de producción, recursos compartidos, datos reales, secretos o reapertura del restore.",
+      "performance": "No se atribuye capacidad comercial al ensayo privado; L3 exige fuente nueva con margen antes del backup y preflight antes de recursos.",
+      "maintainability": "Baseline L1 selectiva y L2 completa separadas; IDs y fuentes independientes, cierre mismo CP017 sin autorreferencia.",
+      "testsAndEvidence": "CI push/PR/canónica y checkout sintético distinguidos; primera CI255PASS3FAIL y fixture12/15→15/15 conservados, sin reatribución de QA ARM64 a CI x64.",
+      "documentation": "Q35 FUTURE/14FUTURE/0BLOCKING; gate siguiente Design/baseline+A, B y Development/Environment antes del trabajo L3; seis salidas L3 NOT VERIFIED."
+    }
+  },
+  "localVerification": {
+    "criterionIds": [
+      "L2-A1",
+      "L2-A2",
+      "L2-A3",
+      "L2-A4",
+      "L2-A5",
+      "L2-A6",
+      "L2-A7",
+      "L2-A8",
+      "L2-A9",
+      "L2-A10",
+      "L2-A11",
+      "L2-A12"
+    ],
+    "checkpointRows": 20,
+    "checkpointPass": 19,
+    "checkpointNotVerified": 1,
+    "map": {
+      "activePhase": "P1",
+      "activePhases": 1,
+      "criteria": 268,
+      "decisions": 64,
+      "pending": 14,
+      "future": 14,
+      "blocking": 0,
+      "progressPercent": null
+    },
+    "referencesChecked": 126,
+    "brokenReferences": [],
+    "protectedBaselineAndMethodologyHashes": "MATCH EXACT APPROVED VALUES"
+  },
+  "rootEvidenceReviewed": {
+    "integrationFile": "docs/evidence/cp017/integration.json",
+    "pr": 3,
+    "prHeadSha": "df9219a202542fca173ffba25fe8d523b40e54cb",
+    "prActualCheckoutSha": "3bd4dcbe6b44fc78ede161c5b82fc9d640400198",
+    "canonicalSha": "7ff9a6c41060e186c8e8c6ce475957c53d40de38",
+    "ciRunIds": {
+      "push": 38481922405,
+      "pr": 38481927763,
+      "canonical": 38482079889
+    },
+    "sameTreeSha": "4e55523b7541dcb6ddc02f7bd69fd4a93a22e817",
+    "documentationQuality": {
+      "observedAt": "2026-10-13T23:12:54.015557+00:00",
+      "status": "PASS DOCUMENTATION QUALITY ONLY",
+      "checks": 10,
+      "referencesChecked": 239,
+      "brokenReferences": 0
+    }
+  },
+  "resolvedPriorFindings": [
+    {
+      "id": "DOC-L1-ONLY-BASELINE",
+      "state": "RESOLVED",
+      "evidence": "docs/README.md registro de baselines distingue L1/DEC058 y L2/DEC061-062 sin incorporación transitiva del SaaS general."
+    },
+    {
+      "id": "DOC-R04-FUNCTIONAL-CLOSURE",
+      "state": "RESOLVED",
+      "evidence": "docs/PROJECT_STATE.md R04 distingue aceptación limitada y cierre TERMINAL/Integration real; no contradice las doce salidas."
+    }
+  ],
+  "nonMandatoryFindings": [],
+  "limits": [
+    "El revisor leyó fuentes y ejecutó sólo comprobaciones documentales locales; no Git, SSH, GitHub API, SQL, navegador, builds, servicios ni acceso a secretos en esta tarea.",
+    "CI/merge/identidad de árboles y los checks de Quality documental son evidencia recogida por root; este informe no los presenta como consulta remota del revisor.",
+    "No se releyó ni reescribió la historia C001-C248; su conservación byte exacta procede del Quality documental de root.",
+    "No sustituye revisión funcional, gates ya acreditados o CI; no aprueba L3, SaaS general ni reapertura del destino recuperado.",
+    "El reporte fija hashes del corte leído y no un SHA autorreferencial de su propio futuro commit."
+  ],
+  "changes": {
+    "ownedReportOnly": "docs/evidence/cp017/review-terminal-docs.json",
+    "product": 0,
+    "infrastructure": 0,
+    "otherFiles": 0
+  },
+  "nextStep": "Integrar el cierre documental autorizado del mismo CP017 bajo políticas/checks vigentes. El siguiente lote sigue candidato y requiere Design/Specification/A exacta, B y Development/Environment antes de código o recursos."
+}
