@@ -17,7 +17,13 @@ export function createApp({origin,sessionPool,sessionSecret,authority,admission,
   ingress++;let settled=false,released=false;req.pendingWork=0;req.deadline=performance.now()+8000;req.responseTimedOut=false;
   req.releaseIngress=()=>{if(settled&&!req.pendingWork&&!released){released=true;ingress--;clearTimeout(timer)}};
   const timer=setTimeout(()=>{req.responseTimedOut=true;req.cancelSessionIssuance?.();if(!res.headersSent)res.status(503).json({error:'SERVICE_UNAVAILABLE'});else res.destroy()},8000);timer.unref();
-  const settle=()=>{settled=true;req.releaseIngress()};res.once('finish',settle);res.once('close',settle);next();
+  const settle=()=>{settled=true;req.releaseIngress()};res.once('finish',settle);
+  res.once('close',()=>{
+   // A peer-aborted response is positive socket evidence, not an elapsed
+   // deadline or missing heartbeat. A timeout-generated response is separate.
+   if(!req.responseTimedOut&&performance.now()<req.deadline&&!res.writableFinished&&res.destroyed&&req.socket.destroyed)req.peerResponseClosed=true;
+   settle();
+  });next();
  });
  const wrap=fn=>(req,res,next)=>{req.pendingWork++;Promise.resolve().then(()=>fn(req,res)).catch(next).finally(()=>{req.pendingWork--;req.releaseIngress()})};
  app.disable('x-powered-by');app.set('query parser','simple');
@@ -46,11 +52,11 @@ export function createApp({origin,sessionPool,sessionSecret,authority,admission,
  const context=a=>({identityId:a.user.id,purpose:a.purpose,contextVersion:a.contextVersion});
  const csrf=csrfMiddleware(origin);
 
- async function respond(req,res,{tenantId=null,lane='auth',revalidate=async()=>{},reserveBytes=65536,workUnits=1,onSettled=async()=>{}},operation){
+ async function respond(req,res,{tenantId=null,lane='auth',revalidate=async()=>{},reserveBytes=65536,workUnits=1,readOnly=false,onSettled=async()=>{}},operation){
   const deadline=req.deadline;
   await admission.observeClock();
   let ticket=await admission.admit({tenantId,lane,kind:'HTTP',reserveBytes,workUnits});
-  active.add(ticket.id);let sqlSettled=false,workAttempted=false,payloadAccounted=false,responseOwned=false,heartbeat;
+  active.add(ticket.id);let sqlSettled=false,workAttempted=false,bytesAttempted=false,payloadAccounted=false,responseOwned=false,heartbeat;
   try{
    while(ticket.state==='WAITING'&&performance.now()<deadline){await sleep(40);await admission.observeClock();ticket=await admission.claim(ticket.id,{revalidate});}
    if(ticket.state!=='ACTIVE')throw failure('QUEUE_EXPIRED',503);
@@ -60,9 +66,10 @@ export function createApp({origin,sessionPool,sessionSecret,authority,admission,
    let body;
    try{body=await operation(ticket)}catch(error){if(error.status>=400&&error.status<500){res.status(error.status);body={error:error.code}}else throw error}
    sqlSettled=true;
+   if(readOnly&&req.peerResponseClosed)throw failure('RESPONSE_ABORTED');
    const payload=JSON.stringify(body);const bytes=Buffer.byteLength(payload);
    if(bytes>reserveBytes||performance.now()>deadline)throw failure('RESPONSE_LIMIT');
-   await admission.consumeBytes(ticket.id,bytes);
+   bytesAttempted=true;await admission.consumeBytes(ticket.id,bytes);
    await checkpoint('admission.bytes',{ticketId:ticket.id,tenantId});
    payloadAccounted=true;
    if(req.responseTimedOut||res.destroyed||res.writableEnded||res.writableFinished||performance.now()>deadline)throw failure('RESPONSE_ABORTED');
@@ -71,7 +78,11 @@ export function createApp({origin,sessionPool,sessionSecret,authority,admission,
    else await admission.markUncertain(ticket.id);
   }catch(error){
    try{
-    if(!workAttempted||ticket.state==='WAITING'||(sqlSettled&&responseOwned&&!req.responseTimedOut&&res.writableFinished&&payloadAccounted))await admission.finish(ticket.id,{sqlSettled:true,responseSettled:true});
+    if(!workAttempted||ticket.state==='WAITING'||(sqlSettled&&responseOwned&&!req.responseTimedOut&&res.writableFinished&&payloadAccounted)||
+       // Only explicitly read-only work may use this path. The completed
+       // operation has awaited its SQL/pool lease; ambiguous SQL or byte
+       // accounting retains the original ticket, as do all write handlers.
+       (readOnly&&sqlSettled&&req.peerResponseClosed&&(!bytesAttempted||payloadAccounted)))await admission.finish(ticket.id,{sqlSettled:true,responseSettled:true});
     else await admission.markUncertain(ticket.id);
    }catch{}
    throw error;
@@ -130,7 +141,7 @@ export function createApp({origin,sessionPool,sessionSecret,authority,admission,
   const query=parseCatalogQuery(req.query);
   const authorize=()=>authority.authorize({sid:req.sessionID,purpose:req.purpose,tenantId:req.params.tenantId,action:'catalog.read'});
   let a=await authorize();
-  await respond(req,res,{tenantId:a.descriptor.tenantId,lane:'ordinary',reserveBytes:1048576,revalidate:async()=>{a=await authorize()}},async()=>{
+  await respond(req,res,{tenantId:a.descriptor.tenantId,lane:'ordinary',readOnly:true,reserveBytes:1048576,revalidate:async()=>{a=await authorize()}},async()=>{
    const items=await tenantPools.withTenant(a.descriptor,client=>readCatalog(client,query,{deadline:req.deadline}),{deadline:req.deadline});
    return {tenantId:a.descriptor.tenantId,dataEpoch:a.descriptor.dataEpoch,context:context(a),items,nextCursor:items.length===query.limit?items.at(-1).id:null};
   });
@@ -156,20 +167,20 @@ export function createApp({origin,sessionPool,sessionSecret,authority,admission,
   app.post('/api/tenants/:tenantId/products/:productId/stock-receipts',csrf,writeRoute('inventory.receive'));
   app.get('/api/tenants/:tenantId/inventory',wrap(async(req,res)=>{
    const query=parseInventoryQuery(req.query);let a=await tenantAuthority(req,'inventory.read');
-   await respond(req,res,{tenantId:a.descriptor.tenantId,lane:'ordinary',revalidate:async()=>{a=await tenantAuthority(req,'inventory.read')}},()=>writes.readInventory({authorityContext:a,query,deadline:req.deadline}));
+   await respond(req,res,{tenantId:a.descriptor.tenantId,lane:'ordinary',readOnly:true,revalidate:async()=>{a=await tenantAuthority(req,'inventory.read')}},()=>writes.readInventory({authorityContext:a,query,deadline:req.deadline}));
   }));
   app.get('/api/tenants/:tenantId/products/:productId/stock-movements',wrap(async(req,res)=>{
    const query=parseInventoryQuery(req.query),productId=canonicalUuid(req.params.productId);let a=await tenantAuthority(req,'inventory.read');
-   await respond(req,res,{tenantId:a.descriptor.tenantId,lane:'ordinary',revalidate:async()=>{a=await tenantAuthority(req,'inventory.read')}},()=>writes.readMovements({authorityContext:a,query,productId,deadline:req.deadline}));
+   await respond(req,res,{tenantId:a.descriptor.tenantId,lane:'ordinary',readOnly:true,revalidate:async()=>{a=await tenantAuthority(req,'inventory.read')}},()=>writes.readMovements({authorityContext:a,query,productId,deadline:req.deadline}));
   }));
   app.get('/api/tenants/:tenantId/operations',wrap(async(req,res)=>{
    const query=parseInventoryQuery(req.query,{pending:true}),tenantId=canonicalUuid(req.params.tenantId);let a=await company(req);
-   await respond(req,res,{tenantId,lane:'ordinary',revalidate:async()=>{a=await company(req)}},()=>writes.listOperations({authorityContext:a,sid:req.sessionID,tenantId,query,deadline:req.deadline}));
+   await respond(req,res,{tenantId,lane:'ordinary',readOnly:true,revalidate:async()=>{a=await company(req)}},()=>writes.listOperations({authorityContext:a,sid:req.sessionID,tenantId,query,deadline:req.deadline}));
   }));
   app.get('/api/tenants/:tenantId/operations/:operationId',wrap(async(req,res)=>{
    if(Object.keys(req.query).length)throw failure('INVALID_QUERY',400);
    const tenantId=canonicalUuid(req.params.tenantId),operationId=canonicalUuid(req.params.operationId);let a=await company(req);
-   await respond(req,res,{tenantId,lane:'ordinary',revalidate:async()=>{a=await company(req)}},()=>writes.status({authorityContext:a,sid:req.sessionID,tenantId,operationId,deadline:req.deadline}));
+   await respond(req,res,{tenantId,lane:'ordinary',readOnly:true,revalidate:async()=>{a=await company(req)}},()=>writes.status({authorityContext:a,sid:req.sessionID,tenantId,operationId,deadline:req.deadline}));
   }));
  }
  app.use('/api',(_req,res)=>res.status(404).json({error:'NOT_FOUND'}));
@@ -179,7 +190,7 @@ export function createApp({origin,sessionPool,sessionSecret,authority,admission,
   const allowed=new Set(['INVALID_LOGIN','INVALID_CREDENTIALS','PURPOSE_MISMATCH','INVALID_TENANT','INVALID_QUERY','INVALID_ORIGIN','CSRF_REJECTED','SESSION_EXPIRED','ACCESS_DENIED','TENANT_UNAVAILABLE','TENANT_QUOTA','GLOBAL_QUOTA','CLOCK_UNAVAILABLE','QUEUE_EXPIRED','ADMISSION_CLOSED','DRAINING','AUTHORITY_UNAVAILABLE','AUTHORITY_CHANGED','INVALID_WRITE','EPOCH_CONFLICT','KEY_CONFLICT','SKU_CONFLICT','OPERATION_PENDING','PRODUCT_LIMIT','LOGICAL_QUOTA','WRITE_CLOSED','WRITE_UNCERTAIN','NOT_FOUND']);
   const code=allowed.has(error.code)?error.code:'SERVICE_UNAVAILABLE';
   const status=Number.isInteger(error.status)&&error.status>=400&&error.status<=599?error.status:503;
-  const diagnostic=new Set([...allowed,'ADMISSION_BUSY','COMMIT_UNCERTAIN','CLOCK_INCONSISTENT','POLICY_UNAVAILABLE','RESPONSE_LIMIT','RESPONSE_ABORTED','END_NOT_PROVEN','WORK_ALREADY_STARTED','PAYLOAD_EXCEEDS_RESERVATION','RECONCILIATION_REQUIRED','DB_DEADLINE','40001','40P01','42501','53300','57014','57P01']);
+  const diagnostic=new Set([...allowed,'ADMISSION_BUSY','COMMIT_UNCERTAIN','ROLLBACK_UNCERTAIN','CLOCK_INCONSISTENT','POLICY_UNAVAILABLE','RESPONSE_LIMIT','RESPONSE_ABORTED','END_NOT_PROVEN','WORK_ALREADY_STARTED','PAYLOAD_EXCEEDS_RESERVATION','RECONCILIATION_REQUIRED','DB_DEADLINE','40001','40P01','42501','53300','57014','57P01']);
   const errorType=error instanceof TypeError?'TypeError':error instanceof RangeError?'RangeError':'Error';
   // Only these built-in source locations can enter a diagnostic, never a raw
   // stack/message, SQL or request/session data.

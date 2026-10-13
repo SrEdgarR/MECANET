@@ -12,6 +12,7 @@ import {canonicalWrite} from '../../../server/saas/writes/validation.js';
 import {createQaClient,assertStatus} from '../cp014/http-client.mjs';
 import {arm,waitEvent,release} from './faults.mjs';
 import {runMetadataAssay} from './metadata-live.mjs';
+import {observeUncertainRetention} from './uncertain-retention.mjs';
 
 const PROJECT='mecanet-qa-p1l2-cp017';
 const TENANT_A='11111111-1111-4111-8111-111111111111',TENANT_B='22222222-2222-4222-8222-222222222222';
@@ -221,14 +222,15 @@ try{
  await caseOf('lost-after-tenant-commit-retains-unknown-and-durable-effect',['L2-A5','L2-A7','L2-A8'],async()=>{
   assert(product);const id=randomUUID(),gate=await arm({instance:'api1',stage:'write.afterTenantCommit',tenantId:TENANT_A,action:'reject'}),input={quantity:'2',reason:'ACK perdido ficticio'};
   try{
-   const reply=await write(a,id,input,{productId:product});assertStatus(reply,503);assert.deepEqual(reply.json,{error:'WRITE_UNCERTAIN'});await waitEvent(gate);
+   const reply=await write(a,id,input,{productId:product});assertStatus(reply,503);assert.deepEqual(reply.json,{error:'WRITE_UNCERTAIN'});const event=await waitEvent(gate);
    const rows=await operationRows(id);assert.equal(rows.local.status,'CONFIRMED');assert.equal(rows.local.result.operationId,id);assert.equal(rows.intent.status,'UNKNOWN');assert.equal(rows.intent.tenant_bytes_reserved,'32768');assert.equal(rows.intent.reservation_status,'RESERVED');assert.equal(rows.intent.ticket_state,'UNCERTAIN');
    assert.equal((await tenant('SELECT count(*)::int AS n FROM inventory.movements WHERE operation_id=$1',[id]))[0].n,1);
    const restrictionId=await requestRestriction({identityId:TEAMMATE,action:'catalog.create'});await restrictionAck(restrictionId);
    const projected=await operationRows(id);assert.equal(projected.intent.status,'CONFIRMED');assert.equal(projected.intent.reservation_status,'PROJECTED');assert.equal(projected.intent.tenant_bytes_reserved,'32768');assert.equal(projected.intent.ticket_state,'UNCERTAIN');
+   const retention=await observeUncertainRetention({qa,sourceSha,operationId:id,event,readCentral:central,apiClients:{api1:a,api2:a2}});
    lost={operationId:id,tenantId:TENANT_A,productId:product,input,ticketId:rows.intent.ticket_id,restrictionId};
    report.recovery={operationId:id,tenantId:TENANT_A,productId:product,ticketId:rows.intent.ticket_id,restrictionId,ownerInstance:'api1',httpFinished:true,requiresPositiveProcessAndSqlEnd:true,httpQueryAndReplay:'NOT VERIFIED until own ticket and resource reconciliation',inputHash:rows.local.request_hash};
-   return {operationId:id,restrictionId,uuidKnownBeforeSend:true,tenantEffectDurable:true,centralUnknownObserved:true,projectedOnlyAfterProvenFence:true,noEffectRetry:true,uncertainTicketAndFullGrowthRetained:true};
+   return {operationId:id,restrictionId,uuidKnownBeforeSend:true,tenantEffectDurable:true,centralUnknownObserved:true,projectedOnlyAfterProvenFence:true,noEffectRetry:true,uncertainTicketAndFullGrowthRetained:true,retention};
   }finally{await release(gate).catch(()=>{})}
  },{dependsOn:['delayed-original-writer-revocation-close-v-plus-two']});
 }catch(error){report.runnerFailure={code:typeof error.code==='string'&&/^[A-Z0-9_]{1,60}$/.test(error.code)?error.code:'RUNNER_BLOCKED',completedCases:report.cases.length}}

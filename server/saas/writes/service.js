@@ -22,6 +22,9 @@ function privateDiagnostic(result,error){
  return result;
 }
 const safeError=error=>{
+ // Missing transaction-end acknowledgement always wins over an original
+ // domain/status alias. Diagnostics are fixed allowlisted fields only.
+ if(['COMMIT_UNCERTAIN','ROLLBACK_UNCERTAIN'].includes(error.code))return privateDiagnostic(failure('WRITE_UNCERTAIN',503),error.operationCause??error.cause??error);
  const codes={INVALID_WRITE:400,INVALID_QUERY:400,EPOCH_CONFLICT:409,KEY_CONFLICT:409,SKU_CONFLICT:409,OPERATION_PENDING:409,AUTHORITY_CHANGED:409,ACCESS_DENIED:403,SESSION_EXPIRED:401,PRODUCT_LIMIT:429,LOGICAL_QUOTA:429,GLOBAL_QUOTA:429,WRITE_CLOSED:503,TENANT_UNAVAILABLE:503};
  if(Object.hasOwn(codes,error.code))return privateDiagnostic(failure(error.code,codes[error.code]),error);
  // SECURITY DEFINER exceptions use fixed messages only; no raw SQL is returned.

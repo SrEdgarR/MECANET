@@ -7,6 +7,9 @@ export class AdmissionError extends Error {
 export class CommitUncertainError extends AdmissionError {
   constructor(cause) { super('COMMIT_UNCERTAIN'); this.cause = cause; }
 }
+export class RollbackUncertainError extends AdmissionError {
+  constructor(cause, operationCause) { super('ROLLBACK_UNCERTAIN'); this.cause = cause; this.operationCause = operationCause; }
+}
 const pendingAcquisitions = new WeakMap();
 async function acquireBefore(pool, deadline) {
   const queued = pendingAcquisitions.get(pool) ?? 0;
@@ -50,8 +53,15 @@ export async function serializable(pool, callback, { deadline = performance.now(
       const conflict = error.code === '40001' || error.code === '40P01';
       if (committing && !conflict) { discard = error; throw new CommitUncertainError(error); }
       if (discard) throw error; // Destroy connection; do not wait beyond deadline for a blocked rollback.
-      try { await boundedClient.query('ROLLBACK'); } catch (rollbackError) { discard = rollbackError; }
-      if (!conflict || discard) throw error;
+      try { await boundedClient.query('ROLLBACK'); }
+      catch (rollbackError) {
+        discard = rollbackError;
+        // The original business rejection is not evidence that SQL ended.
+        // Neither a 4xx alias nor a retryable conflict may escape this unknown
+        // boundary or cause another attempt after a missing ROLLBACK ACK.
+        throw new RollbackUncertainError(rollbackError, error);
+      }
+      if (!conflict) throw error;
       if (attempt === 2 || performance.now() + 5 >= deadline) throw new AdmissionError('ADMISSION_BUSY');
     } finally { client.release(discard); }
     await delay(Math.min(4, Math.max(0, deadline - performance.now())));

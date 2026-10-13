@@ -1,0 +1,10 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {validateReadHostEndProof,validateHostEndProof} from './resource-closure.mjs';
+import {READ_TICKET,READ_OWNER,validateReadTicket} from './read-closure.mjs';
+const generation='aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa',sourceSha='a'.repeat(40);
+const context={generation,closureSourceSha:sourceSha,acceptedArtifacts:[{codeSha:sourceSha,digest:'a'.repeat(64)}]};
+const proof={project:'mecanet-qa-p1l2-cp017',sourceSha,generation,instance:'api1',owner:READ_OWNER,containerId:'b'.repeat(64),running:false,exitCode:0,httpClosed:true,sqlOwnerAbsent:true,writerApplicationName:`mecanet-writer:${READ_OWNER}`,containerStoppedAt:new Date().toISOString(),operations:[]};
+const row={id:READ_TICKET,owner:READ_OWNER,generation,state:'UNCERTAIN',tenant_id:'11111111-1111-4111-8111-111111111111',operation_kind:'HTTP',lane:'ordinary',work_started:true,has_intent:false,reserved_qc:'0',reserved_qt:'65000'};
+test('read-only host end accepts no write intents without relaxing writer proof',()=>{assert.equal(validateReadHostEndProof(proof,context),proof);assert.throws(()=>validateHostEndProof(proof,context));for(const patch of[{running:true},{sqlOwnerAbsent:false},{httpClosed:false},{owner:'wrong'}])assert.throws(()=>validateReadHostEndProof({...proof,...patch},context))});
+test('only exact historical uncertain read without an intent can be reconciled',()=>{assert.equal(validateReadTicket(row,{generation}),row);for(const patch of[{id:generation},{owner:generation},{generation:READ_OWNER},{state:'ACTIVE'},{has_intent:true},{reserved_qc:'1'},{reserved_qt:'0'},{operation_kind:'OTHER'},{work_started:false}])assert.throws(()=>validateReadTicket({...row,...patch},{generation}))});
