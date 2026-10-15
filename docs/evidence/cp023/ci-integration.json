@@ -1,0 +1,136 @@
+{
+  "schema": "cp023-ci-integration-evidence-v1",
+  "collectedAt": "2026-10-15T16:52:37.687011+00:00",
+  "repository": "SrEdgarR/MECANET",
+  "authenticatedLogin": "SrEdgarR",
+  "scope": "GitHub development CI only; not L3 acceptance, VPS or physical recovery",
+  "pullRequest": {
+    "number": 5,
+    "url": "https://github.com/SrEdgarR/MECANET/pull/5",
+    "draft": true,
+    "mergePerformed": false
+  },
+  "attempts": [
+    {
+      "runId": 38771927346,
+      "url": "https://github.com/SrEdgarR/MECANET/actions/runs/38771927346",
+      "jobId": 116549680957,
+      "headSha": "5c6b19a529e66b0ab44b09d24c46fd643a7d7c48",
+      "event": "push",
+      "conclusion": "FAIL",
+      "completedAt": "2026-10-15T16:48:45Z",
+      "log": {
+        "bytes": 50113,
+        "sha256": "813f83db0e6e62f522ec2ecc6e8cd02ebcef7c8fdf9d5dd428f0c3c645ca1c9f",
+        "rawPublic": false,
+        "retainedInPrivateWorkspace": true
+      },
+      "sanitizedReport": {
+        "schema": "cp023-ci-development-v1",
+        "status": "FAIL",
+        "environment": "GitHub-hosted ubuntu24.04 Linux x64; not ARM64/VPS acceptance",
+        "physicalRecovery": "NOT VERIFIED",
+        "sql": {
+          "status": "NOT VERIFIED",
+          "scope": "controller only; API/PG internal SQL not globally counted"
+        },
+        "http": {
+          "status": "NOT VERIFIED"
+        },
+        "cleanup": {
+          "status": "UNKNOWN"
+        },
+        "limits": {
+          "seconds": 600,
+          "parentSqlCommands": 8192,
+          "httpCalls": 80,
+          "postgresConnections": 60,
+          "nanoCpus": 1000000000,
+          "memoryBytes": 1073741824,
+          "pids": 128
+        },
+        "sourceSha": "5c6b19a529e66b0ab44b09d24c46fd643a7d7c48",
+        "failure": "CI_POSTGRES_READY_NOT_VERIFIED",
+        "postgresFailureDiagnostic": {
+          "status": "exited",
+          "exitCode": 2,
+          "oom": false,
+          "pid": 0,
+          "startedAt": "2026-10-15T16:47:57.344180196Z",
+          "finishedAt": "2026-10-15T16:47:58.356089585Z",
+          "classification": "POSTGRES_LOG_UNCLASSIFIED",
+          "logBytes": 1568,
+          "boundedLogSha256": "4a9b440e9e0bfacec6121f9972e8839961c7c8679f2a3fdbe3124325a8abfe67",
+          "rawLogPublished": false,
+          "configuredNanoCpus": 1000000000,
+          "configuredMemory": 1073741824
+        },
+        "parentSqlCommands": 224,
+        "elapsedSeconds": 58.194851678
+      },
+      "rootCause": {
+        "status": "NOT VERIFIED EXACT ERROR",
+        "observed": "container started then exited2 with PID0/no OOM before SQL readiness; SQL and HTTP NOT VERIFIED; cleanup UNKNOWN preserved",
+        "sourceInference": "explicit unix_socket_directories=/tmp conflicts with the Debian image initialization psql path under /var/run/postgresql; entrypoint clears PGHOST/PGHOSTADDR. Source-level defect identified; exact lost PostgreSQL log text not claimed."
+      },
+      "correction": {
+        "state": "LOCAL PURE GREEN; REMOTE GREEN NOT VERIFIED",
+        "helperBeforeSha256": "08a09915078f6f56859d111d6b00b765294194e636852ce2ba1bbcaa4ab69dc0",
+        "helperAfterSha256": "84777913b946b0c7d4ed74b1daccfae6f0ad910c9f5fc0455a7e5d5254619820",
+        "scope": "Set own PostgreSQL Unix socket to /var/run/postgresql to match official initialization client, add mandatory pure guard and bounded psql socket classification; retain exit0 FIN and UNKNOWN",
+        "redPureGuard": "CI_INIT_SOCKET_PATH_REQUIRED with old /tmp argument",
+        "greenPure": {
+          "syntax": "PASS",
+          "negativeModels": 12,
+          "classifierCases": 2,
+          "dockerUsed": false,
+          "sqlCommands": 0,
+          "networkUsed": false
+        }
+      }
+    }
+  ],
+  "contractsRun": {
+    "runId": 38772042299,
+    "url": "https://github.com/SrEdgarR/MECANET/actions/runs/38772042299",
+    "jobId": 116550073895,
+    "headSha": "5c6b19a529e66b0ab44b09d24c46fd643a7d7c48",
+    "checkoutSha": "9f3047ad5d64a93648a2aa23584f47042e909ae8",
+    "checkoutKind": "pull request synthetic merge; head is not claimed to be the direct checkout",
+    "event": "pull_request",
+    "status": "completed",
+    "conclusion": "FAIL",
+    "completedAt": "2026-10-15T16:49:29Z",
+    "tests": 673,
+    "pass": 667,
+    "fail": 6,
+    "backendAuditFindings": 0,
+    "log": {
+      "bytes": 209792,
+      "sha256": "52e2591632f164a120ff2ed83a4e290c42a8ee10e99fcd96a6dd88b8deac1036",
+      "rawPublic": false,
+      "retainedInPrivateWorkspace": true
+    },
+    "failures": [
+      {
+        "file": "tests/qa/cp019/copy-offline.test.mjs",
+        "count": 3,
+        "observedError": "RECOVERY_DIRECTORY_ACCESS"
+      },
+      {
+        "file": "tests/qa/cp019/stage-journal.test.mjs",
+        "count": 2,
+        "observedError": "RECOVERY_DIRECTORY_ACCESS"
+      },
+      {
+        "file": "tests/qa/cp019/target-prepare.test.mjs",
+        "count": 1,
+        "observedError": "TARGET_PREPARE_COPY_ROOTS"
+      }
+    ],
+    "correctionOwner": "Root/assigned QA agent; no files changed by CI observer"
+  },
+  "vpsModified": false,
+  "r03Restarted": false,
+  "secretsIncluded": false
+}

@@ -77,6 +77,7 @@ docs/specs/p1-l3-approved/*.md -text
 # New recovery sources keep their frozen byte identity on all checkouts.
 tests/qa/cp019/*.mjs text eol=lf
 tests/qa/cp019/*.py text eol=lf
+tests/integration/*.mjs text eol=lf
 server/saas/db/migrations/006-*.sql text eol=lf
 
 # Reproduce CI module text and preserve raw CP-016 evidence file hashes.
