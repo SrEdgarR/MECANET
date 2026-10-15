@@ -1,0 +1,107 @@
+{
+  "schema": "cp023-network-witness-red-v1",
+  "at": "2026-10-15T16:16:30.273635+00:00",
+  "environment": "Windows x64 PostgreSQL18.6 loopback synthetic development",
+  "diagnosticQueries": 1,
+  "observed": {
+    "legacy": "127.0.0.1/32",
+    "canonical": "127.0.0.1",
+    "version": "180006"
+  },
+  "failureReproduced": "raw ::text contains mask and fails exact plain networkIP equality",
+  "fix": "SQL host(inet_server_addr()) returns address without mask; closed networkIP equality remains unchanged",
+  "files": [
+    {
+      "file": "tests/qa/cp019/a5-negatives.mjs",
+      "occurrences": 2,
+      "beforeSha256": "7ca3309a75c971357f96c8d18eb533198ea34353096b2bcad9d537e7440e2209",
+      "afterSha256": "c644498800e94f2258dbbeca99cf565d0387cc20a4455b3e02f0ace40ffaa70b"
+    },
+    {
+      "file": "tests/qa/cp019/acceptance.mjs",
+      "occurrences": 2,
+      "beforeSha256": "0c200e6e32d787f1e820eb1312e3979648ecb5250ce58fb87460863f7979aa38",
+      "afterSha256": "1d9963e4c1483adfe73f993083f322fe19a0045ee473000385c66cc483fc3fd4"
+    },
+    {
+      "file": "tests/qa/cp019/commit-fault-probe.mjs",
+      "occurrences": 1,
+      "beforeSha256": "bc7d5be62ff04012a3d90375b93a6be1ea6c0ea392697260b7cf59621ae53320",
+      "afterSha256": "428e965115ece390b0593e0c253b0971ca4aecfaaa4f43e79a93dbb1d75e45f3"
+    },
+    {
+      "file": "tests/qa/cp019/credential-probe.mjs",
+      "occurrences": 2,
+      "beforeSha256": "60507f1fc99b57ea88716241aa1aa20478b39ec10efe13948c283148acde0441",
+      "afterSha256": "7db408e0186732d3f8269f8c2b96dd73a5257af9298f13f750bf20128a762c78"
+    },
+    {
+      "file": "tests/qa/cp019/promotion-barrier.mjs",
+      "occurrences": 2,
+      "beforeSha256": "9e10f42715bc0409c30670048ba5af168d377b04d7a9fd7b94f1b12f61b01a12",
+      "afterSha256": "d0d030235d5e7c23479383a2124d07e91fb2258f39f31cdf625c997b79d5deb4"
+    },
+    {
+      "file": "tests/qa/cp019/runtime-driver.mjs",
+      "occurrences": 2,
+      "beforeSha256": "aaae7709c37e14ae2114a401d231dbfb5fb841b72afb831f6d6f737aa4b71977",
+      "afterSha256": "98f6c645bb3c15dc1cd47d8682c80c436540ec8f1d5a3ee86235134c51e35990"
+    },
+    {
+      "file": "tests/qa/cp019/schema-check.mjs",
+      "occurrences": 1,
+      "beforeSha256": "f82d58a7aa3b2a2410d4b026e4f5d58a4e014349f2352a7b8bcf8b4a0808f71a",
+      "afterSha256": "5cd388ecb6bc4f96551bacff0c296c1d19f8b0545619aaae6f1cdc6a43c9f9a9"
+    },
+    {
+      "file": "tests/qa/cp019/schema-fault-probe.mjs",
+      "occurrences": 1,
+      "beforeSha256": "f50bce4b59bceb4bef76a8a5c9d77bb3f3b6dc1097575b18df9bb162b458ed03",
+      "afterSha256": "8e10a71e3092d61038109a609f07a377184af2a0dcaad6ec838aa7dedbcb5efb"
+    },
+    {
+      "file": "tests/qa/cp019/source-driver.mjs",
+      "occurrences": 1,
+      "beforeSha256": "c9a06f7da9b3999d3c4d7ef23f870e83fd034991568eece2186be897ba3efebd",
+      "afterSha256": "e6853ba040547b55bf66a5e77b9d3cbff0af2dfcaebad5a77dd5c6294fca90ca"
+    },
+    {
+      "file": "tests/qa/cp019/source-final.mjs",
+      "occurrences": 1,
+      "beforeSha256": "451a1c5fdbac904d7f267d4197c0405a3fe43eec83f3c9a526fbec5533e30e08",
+      "afterSha256": "b7f6a5b9775943995ba489c4c2edb7b3b5a50e5def240869a594bc2eab783c5a"
+    },
+    {
+      "file": "tests/qa/cp019/sql-probe.mjs",
+      "occurrences": 1,
+      "beforeSha256": "c862acb42ee81a98cc4c57b5758cc8d689b39a5f53f852588bd3d2f50be07c62",
+      "afterSha256": "00ecb83d8a4064265f15cb7dc9e980b2beb068dc13a50676615d2ecd1d2981ef"
+    },
+    {
+      "file": "tests/qa/cp019/target-end.mjs",
+      "occurrences": 1,
+      "beforeSha256": "52eed2a4793aa94a50093aaa14a1970385995c5f8586bc37cdc81220ab0504de",
+      "afterSha256": "7a69f8d09ea912067f6b5ed67907378b95b1a1cce539a029b2ec0239cf6f5440"
+    },
+    {
+      "file": "tests/qa/cp019/target-restart.mjs",
+      "occurrences": 1,
+      "beforeSha256": "4d8d24f6f54b8251a63005b4a46bf085ba2d7f05d1dc6714237f006f3a8ac776",
+      "afterSha256": "ffe083ed681102ed0034c76d93a310a115a19382ae929b3d9ae30278abe71f17"
+    },
+    {
+      "file": "tests/qa/cp019/target-runtime.mjs",
+      "occurrences": 1,
+      "beforeSha256": "215b30a1a665301aa9c1ebf57865d61a30bf80a002160a9d45d832263f9afcdb",
+      "afterSha256": "4140470653e1ff717dde0fcd679b8358779a5f8676fa4fe675a5be84e85052a0"
+    },
+    {
+      "file": "tests/qa/cp019/target-witness.mjs",
+      "occurrences": 2,
+      "beforeSha256": "819cf69a05fb1b865f761ab3b873055602d8d4d4adbdbebe5b97d473497a8629",
+      "afterSha256": "50e3dbb5d3a83fcc96f19d7f1fea599ddf7e2831fd2628373a8aa5b20c79b2a0"
+    }
+  ],
+  "physicalArm64Qa": "NOT VERIFIED",
+  "secretsPrinted": false
+}

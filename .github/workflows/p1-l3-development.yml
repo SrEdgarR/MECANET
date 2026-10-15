@@ -1,0 +1,73 @@
+name: P1-L3 development PostgreSQL and HTTP
+
+on:
+  push:
+    branches: [codex/verify-p1-l3-development]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: p1-l3-development-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  development:
+    name: Linux x64 SQL and two API development (not L3 acceptance)
+    if: github.repository == 'SrEdgarR/MECANET' && github.ref == 'refs/heads/codex/verify-p1-l3-development'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    env:
+      CI: 'true'
+      REAL_API: 'false'
+      VITEST_REAL_API: 'false'
+    steps:
+      - name: Checkout exact source without persisted credentials
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
+        with:
+          persist-credentials: false
+
+      - name: Use approved Node without package cache
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: '24.21.0'
+          package-manager-cache: false
+
+      - name: Check exact runtime and install locked backend without lifecycle scripts
+        run: |
+          npm install --global npm@11.9.0 --ignore-scripts --no-audit --no-fund
+          test "$(node --version)" = "v24.21.0"
+          test "$(npm --version)" = "11.9.0"
+          npm ci --prefix server/saas --ignore-scripts --no-audit --no-fund
+
+      - name: Pure CI boundary guards
+        run: |
+          node --check tests/integration/ci-postgres.mjs
+          node --check tests/integration/development-api.mjs
+          node --check tests/integration/development-http.mjs
+          node --check tests/integration/development-recovery.mjs
+          node tests/integration/ci-postgres.mjs --self-test
+          node tests/integration/p1-l3-postgres.mjs --self-test
+          node tests/integration/development-recovery.mjs --self-test
+
+      - name: Run exclusive PostgreSQL and two API development checks
+        id: integration
+        continue-on-error: true
+        run: node tests/integration/ci-postgres.mjs run
+
+      - name: SQL development result
+        if: always()
+        run: node tests/integration/ci-postgres.mjs assert-sql
+
+      - name: HTTP development result
+        if: always()
+        run: node tests/integration/ci-postgres.mjs assert-http
+
+      - name: Confirm cleanup of positively identified own PostgreSQL only
+        if: always()
+        run: node tests/integration/ci-postgres.mjs cleanup
+
+      - name: Require complete development run and original cleanup PASS
+        if: always()
+        run: node tests/integration/ci-postgres.mjs assert-pass

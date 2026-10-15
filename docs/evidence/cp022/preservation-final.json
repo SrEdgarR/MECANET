@@ -1,0 +1,112 @@
+{
+  "at": "2026-10-15T15:28:46.605934+00:00",
+  "availableMiB": 8404,
+  "diskFreeBytes": 140630437888,
+  "globalElapsedSeconds": 662.04,
+  "globalOriginalDeadline": 1472188.38,
+  "hostPgStartElapsedSeconds": 653.15,
+  "hostPgStartOriginalDeadline": 1470442.27,
+  "hostSha256": "bcecffab7d9bfade1c4af46c32bf895dc87fba4ca923240450e6340489fcd725",
+  "ledgerCanonicalSha256": "c91f1ffab82e29fe1e871175a23a1e5d20bf89dbe09fe602fb25ebf32c9b3750",
+  "ledgerSequence": 44,
+  "ledgerTotal": {
+    "artifactFiles": 639,
+    "http": 0,
+    "journal": 0,
+    "sql": 0
+  },
+  "ledgerUnchangedSinceAbort": true,
+  "mutations": 0,
+  "noReadinessOrRecoveryAcceptance": true,
+  "ownContainers": [
+    {
+      "exitCode": 0,
+      "finishedAt": "2026-10-15T15:18:02.598236798Z",
+      "id": "aa35afe3ea406009410be0e1a7eef759c619c8386a290ce9cbf620fe890cc500",
+      "image": "sha256:67ba68a22dc7d5af3627b7e0f33d10bbefad07562ff9703b3a6c2de247649129",
+      "imageRef": "postgres@sha256:67ba68a22dc7d5af3627b7e0f33d10bbefad07562ff9703b3a6c2de247649129",
+      "jobId": null,
+      "memory": 671088640,
+      "name": "/mecanet-qa-p1l3-r03-postgres-1",
+      "nanoCpus": 350000000,
+      "ownerId": "76066956-b4ae-422f-ae8d-69a0795a88dd",
+      "pid": 0,
+      "project": "mecanet-qa-p1l3-r03",
+      "running": false,
+      "service": "postgres",
+      "startedAt": "2026-10-15T15:17:56.083807678Z",
+      "status": "exited"
+    }
+  ],
+  "ownNetworks": [
+    {
+      "endpoints": 0,
+      "internal": true,
+      "name": "mecanet-qa-p1l3-r03-data",
+      "subnets": [
+        {
+          "Subnet": "10.77.64.0/24"
+        }
+      ]
+    }
+  ],
+  "ownTrees": {
+    "mecanet-qa-p1l3-r03": {
+      "data": {
+        "allocatedFileBytes": 40611840,
+        "contentsRead": false,
+        "logicalBytes": 40560908,
+        "mode": "0o700",
+        "regularFiles": 971,
+        "symlinks": 0,
+        "uid": 999
+      },
+      "root": {
+        "allocatedFileBytes": 46354432,
+        "contentsRead": false,
+        "logicalBytes": 44646345,
+        "mode": "0o711",
+        "regularFiles": 1593,
+        "symlinks": 0,
+        "uid": 0
+      }
+    },
+    "mecanet-qa-p1l3-r03-target": {
+      "data": {
+        "allocatedFileBytes": 0,
+        "contentsRead": false,
+        "logicalBytes": 0,
+        "mode": "0o700",
+        "regularFiles": 0,
+        "symlinks": 0,
+        "uid": 999
+      },
+      "root": {
+        "allocatedFileBytes": 73728,
+        "contentsRead": false,
+        "logicalBytes": 30330,
+        "mode": "0o711",
+        "regularFiles": 16,
+        "symlinks": 0,
+        "uid": 0
+      }
+    }
+  },
+  "prepareFoundationInChargedLedger": false,
+  "prepareFoundationInRegistry": true,
+  "preservation": {
+    "preservedOtherConsumers": 28,
+    "result": "PASS"
+  },
+  "priorInspectorCorrection": "post-abort foundationCaseExists checked host-prepare-foundation; correct prepare-foundation is also absent from charged ledger",
+  "provenance": "REMOTE / non destructive metadata inspection",
+  "publicPortsCreated": false,
+  "r02HistoricalCleanup": "FAIL / UNKNOWN1 retained; no adoption or mutation",
+  "r02PreservedCreatedInactive": true,
+  "result": "PASS",
+  "runtimeSha": "7f5986f01c1cce8c35ba3e9635d9001523da0bc8",
+  "schema": "cp022-preservation-final-v1",
+  "sourceReferenceValidated": true,
+  "sqlQueriesIssued": 0,
+  "totalContainers": 29
+}

@@ -1,0 +1,16 @@
+{
+  "schema": "cp022-root-orchestrator-preflight-v1",
+  "at": "2026-10-15T15:16:01.242200+00:00",
+  "result": "PASS",
+  "sourceSha": "7f5986f01c1cce8c35ba3e9635d9001523da0bc8",
+  "uploaderSha256": "4da4e3309d2afc96c9e658297605a9baab5d917dc33961c4ee22c327d3ac9e6c",
+  "runnerSha256": "405b571e068bf18553592250f7a849078d0d0dd35794ef90c96ea926b3ad1cd3",
+  "chosenPlanHash": "ca1f70ddcade223660a215e9b0b3db40e157ec9b752767b95ec141ae8db9e0c8",
+  "actualChosenBrowserOptions": 7,
+  "realChosenOptionsValidated": true,
+  "pureUploaderTests": 31,
+  "pureRunnerTests": 7,
+  "requiredOpen": 0,
+  "localCliPathsAbsent": true,
+  "remoteQaEffects": 0
+}

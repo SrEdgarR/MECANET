@@ -1,0 +1,28 @@
+{
+  "checkpoint": "CP-018",
+  "status": "PASS LOCAL ABSTRACT SENSITIVITY ONLY",
+  "provenance": "LOCAL root execution; PowerShell asserted expected exit1 before GREEN run",
+  "observedAt": "2026-10-14T00:11:06.119289+00:00",
+  "modelSha256": "f211a552ee872f4bc49ae2d75ec215fa7b3748301c28460625c15aaa3188b414",
+  "commands": [
+    {
+      "flag": "--unsafe-closure",
+      "expectedExit": 1,
+      "observedExit": 1,
+      "logSha256": "b80821323d0be51f5a11b96e78464ca9424c76cd7f167022133a9c528ca7df78",
+      "logBytes": 915,
+      "assertionObserved": true
+    },
+    {
+      "flag": "--unsafe-roster",
+      "expectedExit": 1,
+      "observedExit": 1,
+      "logSha256": "58c8086fc091ed6b4084da43801229d288ccacbd8c0646b10d07950384c7bd80",
+      "logBytes": 914,
+      "assertionObserved": true
+    }
+  ],
+  "scope": "Deliberately unsafe abstract variants; no product/PG/HTTP/filesystem Linux tests",
+  "rawLogs": "KEEP PRIVATE",
+  "normalResultsSha256": "7473aada512364f46b060c1277c5552da2d9cf9a84c47bb4f87c9a05827fc578"
+}

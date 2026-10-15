@@ -1,0 +1,37 @@
+{
+  "schema": "cp021-review-progress-v1",
+  "at": "2026-10-15T13:37:21.617299+00:00",
+  "reviews": [
+    {
+      "reviewer": "cp021_budget",
+      "scope": "budget consistency, COMMIT lost ACK, cold PostgreSQL/empty cohort, Root runner",
+      "findings": [
+        "monitor.stop exception could bypass cleanup",
+        "stdin EOF not observed before further effects"
+      ],
+      "disposition": "correction/tests in progress"
+    },
+    {
+      "reviewer": "cp021_provider",
+      "scope": "variant provider, Source final journal, copy ordering and resource projection",
+      "findings": [
+        "Source canary advances journal; seal variant lineage afterwards",
+        "copy-case static sleeps32s; performance remains unmeasured"
+      ],
+      "disposition": "controller ordering corrected; no cap increased"
+    },
+    {
+      "reviewer": "cp021_variants",
+      "scope": "Root guards, exact ownership, start deadlines and emergency cleanup",
+      "findings": [
+        "expired ledger prevented variant emergency references",
+        "START could occur after case45s elapsed"
+      ],
+      "disposition": "Root emergency reader fixed/modelled; start deadline checks being finalized"
+    }
+  ],
+  "openRequired": "Final joint review pending",
+  "physicalAcceptance": "NOT VERIFIED",
+  "resourceMutations": 0,
+  "productionChanges": 0
+}

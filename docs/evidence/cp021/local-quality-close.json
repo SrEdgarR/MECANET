@@ -1,0 +1,258 @@
+{
+  "schema": "cp021-local-quality-close-v2",
+  "at": "2026-10-15T14:29:12.762171+00:00",
+  "sourceSha": "ec1c5c9cfd3a39ab3702d52fbd014183ddc52429",
+  "result": "PASS",
+  "scope": "LOCAL QA only, not physical PostgreSQL/HTTP/restore acceptance",
+  "python": {
+    "testsByUnion": 387,
+    "files": 18,
+    "freshExactGitDeltaTests": 104,
+    "sourceDelta": "tests/qa/cp019/host.test.py",
+    "previous": "local-quality-interim.json",
+    "previousSourceSha": "4472cdbe0916da81827de60383b4d27518a8cdaa",
+    "allInputsTraced": [
+      {
+        "path": "tests/qa/cp019/artifact-smoke.py",
+        "sha256": "f410639756f32b9ee30ea30bee62a5813611d5625bd4f59e616a6860d326ffb2",
+        "priorSha256": "f410639756f32b9ee30ea30bee62a5813611d5625bd4f59e616a6860d326ffb2",
+        "trace": "IDENTICAL"
+      },
+      {
+        "path": "tests/qa/cp019/artifact.py",
+        "sha256": "443a2994db43393d1eeb8bde797df05184d1c33451d6a4dceeb33dd8fc2e4ade",
+        "priorSha256": "443a2994db43393d1eeb8bde797df05184d1c33451d6a4dceeb33dd8fc2e4ade",
+        "trace": "IDENTICAL"
+      },
+      {
+        "path": "tests/qa/cp019/artifact.test.py",
+        "sha256": "183eaca25423751606c77b230469569a38390b9d93ba2e5aba26f1d54bd18a24",
+        "priorSha256": "183eaca25423751606c77b230469569a38390b9d93ba2e5aba26f1d54bd18a24",
+        "trace": "IDENTICAL"
+      },
+      {
+        "path": "tests/qa/cp019/browser-config.py",
+        "sha256": "a98a806a7e850360517767ec1857b578ec8e11afea00e8303551afb89822b3a1",
+        "priorSha256": "a98a806a7e850360517767ec1857b578ec8e11afea00e8303551afb89822b3a1",
+        "trace": "IDENTICAL"
+      },
+      {
+        "path": "tests/qa/cp019/browser-config.test.py",
+        "sha256": "90ec38a9def3020c71e9ea569f9d55fa2961db9c33080f8974d7c5766fd1e723",
+        "priorSha256": "90ec38a9def3020c71e9ea569f9d55fa2961db9c33080f8974d7c5766fd1e723",
+        "trace": "IDENTICAL"
+      },
+      {
+        "path": "tests/qa/cp019/compose-compat.py",
+        "sha256": "bddb0fe71dbc5da8d05eb096a575a41218a3759de62e1627829db9f862d3e05b",
+        "priorSha256": "bddb0fe71dbc5da8d05eb096a575a41218a3759de62e1627829db9f862d3e05b",
+        "trace": "IDENTICAL"
+      },
+      {
+        "path": "tests/qa/cp019/compose-compat.test.py",
+        "sha256": "6647d4ad6228f1188442f123acaedf9719565e27689817b29bdc45bd4d0d11a6",
+        "priorSha256": "6647d4ad6228f1188442f123acaedf9719565e27689817b29bdc45bd4d0d11a6",
+        "trace": "IDENTICAL"
+      },
+      {
+        "path": "tests/qa/cp019/controller.py",
+        "sha256": "521d32181a703fdafafc41e9b60202d2e05d0ca6c496541cca5c0ba5e1353566",
+        "priorSha256": "521d32181a703fdafafc41e9b60202d2e05d0ca6c496541cca5c0ba5e1353566",
+        "trace": "IDENTICAL"
+      },
+      {
+        "path": "tests/qa/cp019/controller.test.py",
+        "sha256": "c26af3129a7c636a338ddb3ccf8b191d73fd3064fec49f273bc526e8ccf3f9bb",
+        "priorSha256": "c26af3129a7c636a338ddb3ccf8b191d73fd3064fec49f273bc526e8ccf3f9bb",
+        "trace": "IDENTICAL"
+      },
+      {
+        "path": "tests/qa/cp019/host.py",
+        "sha256": "33b9d0377dcb7bd81d974d5da764fff55e21fed1e088403e8fded7cfbe74e69a",
+        "priorSha256": "d53e95c186d86843de814f81fcb844f8049f438b7f2734d415390202889fc401",
+        "trace": "FRESH_EXACT_GIT_SOURCE_DELTA"
+      },
+      {
+        "path": "tests/qa/cp019/host.test.py",
+        "sha256": "835bdb0ff9cd6184fa699b34f4e4426a9c762ad6c2ecc630b7b4effa771468c9",
+        "priorSha256": "1d24662d10ac3a89ef0459568ab5e3ee7224c2e39cd7f7b4caaef5fb1bf9a204",
+        "trace": "FRESH_EXACT_GIT_SOURCE_DELTA"
+      },
+      {
+        "path": "tests/qa/cp019/resource-monitor.py",
+        "sha256": "50c771921df3e9496728b6f17f246555b424539236806fc8ae6e70652d731830",
+        "priorSha256": "50c771921df3e9496728b6f17f246555b424539236806fc8ae6e70652d731830",
+        "trace": "IDENTICAL"
+      },
+      {
+        "path": "tests/qa/cp019/resource-monitor.test.py",
+        "sha256": "5f2d8ae7515a2068946e36a56253dc0fa869662e7d037640fe07976d17135e55",
+        "priorSha256": "5f2d8ae7515a2068946e36a56253dc0fa869662e7d037640fe07976d17135e55",
+        "trace": "IDENTICAL"
+      },
+      {
+        "path": "tests/qa/cp019/resume-state.py",
+        "sha256": "ee8510cf3e616a29218d06aaad49c017647806a30faeb9ffb790db296bde1763",
+        "priorSha256": "ee8510cf3e616a29218d06aaad49c017647806a30faeb9ffb790db296bde1763",
+        "trace": "IDENTICAL"
+      },
+      {
+        "path": "tests/qa/cp019/resume-state.test.py",
+        "sha256": "3fc8e32ae843fcbad1c865dc78b6fc36e11d2cf70ded297c54ae7ee0962ea761",
+        "priorSha256": "3fc8e32ae843fcbad1c865dc78b6fc36e11d2cf70ded297c54ae7ee0962ea761",
+        "trace": "IDENTICAL"
+      },
+      {
+        "path": "tests/qa/cp019/resume.py",
+        "sha256": "a2582eb90a72c1cac0ff7a0c6eed9d3f826b1f17668bb4cb05e357559a6b87c2",
+        "priorSha256": "a2582eb90a72c1cac0ff7a0c6eed9d3f826b1f17668bb4cb05e357559a6b87c2",
+        "trace": "IDENTICAL"
+      },
+      {
+        "path": "tests/qa/cp019/resume.test.py",
+        "sha256": "332c6e7699009cf924c1df13b3c1a169caf8e9fafae58da6a6ac19d75ba837f6",
+        "priorSha256": "332c6e7699009cf924c1df13b3c1a169caf8e9fafae58da6a6ac19d75ba837f6",
+        "trace": "IDENTICAL"
+      },
+      {
+        "path": "tests/qa/cp019/runner.py",
+        "sha256": "9af303e7e836fc126e5bfcea8aacc47aa9a785b1f618cbbf01bd89ed36fd2bd6",
+        "priorSha256": "9af303e7e836fc126e5bfcea8aacc47aa9a785b1f618cbbf01bd89ed36fd2bd6",
+        "trace": "IDENTICAL"
+      },
+      {
+        "path": "tests/qa/cp019/runner.test.py",
+        "sha256": "5ef4b68a0c114ad2ef65450b296cb05b46a4ee644fa32d1e6a6625933e8c1fb1",
+        "priorSha256": "5ef4b68a0c114ad2ef65450b296cb05b46a4ee644fa32d1e6a6625933e8c1fb1",
+        "trace": "IDENTICAL"
+      },
+      {
+        "path": "tests/qa/cp019/target-cold-host.py",
+        "sha256": "b87d2f4453ff63a63d973eced96537d4336bb7c4a65842ae393055a3c217fe18",
+        "priorSha256": "b87d2f4453ff63a63d973eced96537d4336bb7c4a65842ae393055a3c217fe18",
+        "trace": "IDENTICAL"
+      },
+      {
+        "path": "tests/qa/cp019/target-cold-host.test.py",
+        "sha256": "e6256d495ad9f0ba393301f037e397ef2f3fec0d19747089fba8c719862e37b7",
+        "priorSha256": "e6256d495ad9f0ba393301f037e397ef2f3fec0d19747089fba8c719862e37b7",
+        "trace": "IDENTICAL"
+      },
+      {
+        "path": "tests/qa/cp019/target-commit-host.py",
+        "sha256": "6db01f5f915a1a253c755ba568f40388d7254453a1a0c82faf517f00110faadb",
+        "priorSha256": "6db01f5f915a1a253c755ba568f40388d7254453a1a0c82faf517f00110faadb",
+        "trace": "IDENTICAL"
+      },
+      {
+        "path": "tests/qa/cp019/target-commit-host.test.py",
+        "sha256": "7f5f9885f3e342e5459f3690f8bcf34ff3c5547ab1c713467df33371fd523ebe",
+        "priorSha256": "7f5f9885f3e342e5459f3690f8bcf34ff3c5547ab1c713467df33371fd523ebe",
+        "trace": "IDENTICAL"
+      },
+      {
+        "path": "tests/qa/cp019/target-host.py",
+        "sha256": "66df806ce5c9c401609436c9ef139edce4abe4061ad241cb647b60e3b0d27747",
+        "priorSha256": "66df806ce5c9c401609436c9ef139edce4abe4061ad241cb647b60e3b0d27747",
+        "trace": "IDENTICAL"
+      },
+      {
+        "path": "tests/qa/cp019/target-host.test.py",
+        "sha256": "d470fef90d2cf38cf14d43c69d1b7697d105828eeab2c51068cf866d46e2ecfa",
+        "priorSha256": "d470fef90d2cf38cf14d43c69d1b7697d105828eeab2c51068cf866d46e2ecfa",
+        "trace": "IDENTICAL"
+      },
+      {
+        "path": "tests/qa/cp019/target-http-host.py",
+        "sha256": "39e673577a6e7f377749bc85d26cb2321c3a572918eb3af555d450e72b921022",
+        "priorSha256": "39e673577a6e7f377749bc85d26cb2321c3a572918eb3af555d450e72b921022",
+        "trace": "IDENTICAL"
+      },
+      {
+        "path": "tests/qa/cp019/target-http-host.test.py",
+        "sha256": "53c63ef1acb961762fa3f1561c070bb8e2dbbdd08dd40d00900b1f5003ec2c8a",
+        "priorSha256": "53c63ef1acb961762fa3f1561c070bb8e2dbbdd08dd40d00900b1f5003ec2c8a",
+        "trace": "IDENTICAL"
+      },
+      {
+        "path": "tests/qa/cp019/target-lifecycle.py",
+        "sha256": "f5eb34145f27c3b357348fa46b29255ce08794eefeadf438965467483f024a99",
+        "priorSha256": "f5eb34145f27c3b357348fa46b29255ce08794eefeadf438965467483f024a99",
+        "trace": "IDENTICAL"
+      },
+      {
+        "path": "tests/qa/cp019/target-lifecycle.test.py",
+        "sha256": "78073b933171f2daff153b4aab35fa468768b245153bb2813e7e108a6b013b50",
+        "priorSha256": "78073b933171f2daff153b4aab35fa468768b245153bb2813e7e108a6b013b50",
+        "trace": "IDENTICAL"
+      },
+      {
+        "path": "tests/qa/cp019/target-probes-host.py",
+        "sha256": "78793e81ca4b1d3338c44fb4864059c583c8381b10d673d776a31e0039eab749",
+        "priorSha256": "78793e81ca4b1d3338c44fb4864059c583c8381b10d673d776a31e0039eab749",
+        "trace": "IDENTICAL"
+      },
+      {
+        "path": "tests/qa/cp019/target-probes-host.test.py",
+        "sha256": "72681c0ce059a9c2942b277cfe848d2ccd75d791a374999d47ae16cbec5c0a09",
+        "priorSha256": "72681c0ce059a9c2942b277cfe848d2ccd75d791a374999d47ae16cbec5c0a09",
+        "trace": "IDENTICAL"
+      },
+      {
+        "path": "tests/qa/cp019/target-readiness-host.py",
+        "sha256": "bc459b6952c6575e8290eb6bcd24eb72ba0596430307d066db2bca785c737d9f",
+        "priorSha256": "bc459b6952c6575e8290eb6bcd24eb72ba0596430307d066db2bca785c737d9f",
+        "trace": "IDENTICAL"
+      },
+      {
+        "path": "tests/qa/cp019/target-readiness-host.test.py",
+        "sha256": "54946aa3023942b94b350de3160b8afee53798c5affb87c075a9b3b59b0168b5",
+        "priorSha256": "54946aa3023942b94b350de3160b8afee53798c5affb87c075a9b3b59b0168b5",
+        "trace": "IDENTICAL"
+      },
+      {
+        "path": "tests/qa/cp019/target-variant-host.py",
+        "sha256": "0b2deb724cfc0ef3388929d27208e2ad8c3d0fc3a5f2bb3af5130b61301c4763",
+        "priorSha256": "0b2deb724cfc0ef3388929d27208e2ad8c3d0fc3a5f2bb3af5130b61301c4763",
+        "trace": "IDENTICAL"
+      },
+      {
+        "path": "tests/qa/cp019/target-variant-host.test.py",
+        "sha256": "4727bb6cca13875671ec627c2e30caec205981237563e7fb3e5eda7b9a6f0d89",
+        "priorSha256": "4727bb6cca13875671ec627c2e30caec205981237563e7fb3e5eda7b9a6f0d89",
+        "trace": "IDENTICAL"
+      },
+      {
+        "path": "tests/qa/cp019/tls_bundle.py",
+        "sha256": "f31a71be42759130e5182678ea1d968cc98c8d87d8a3f2fd8e1de31440f52894",
+        "priorSha256": "f31a71be42759130e5182678ea1d968cc98c8d87d8a3f2fd8e1de31440f52894",
+        "trace": "IDENTICAL"
+      },
+      {
+        "path": "tests/qa/cp019/tls_bundle.test.py",
+        "sha256": "9f6ebb35c82cafa5eca474b5f7c2069fed20e69b0bc93880fd9b620d624b70c0",
+        "priorSha256": "9f6ebb35c82cafa5eca474b5f7c2069fed20e69b0bc93880fd9b620d624b70c0",
+        "trace": "IDENTICAL"
+      }
+    ],
+    "pythonSyntax": "PASS"
+  },
+  "node": {
+    "tests": 411,
+    "inputs": 78,
+    "allInputsIdentical": true,
+    "source": "local-node.json",
+    "freshRun": false
+  },
+  "extension": {
+    "tests": 32,
+    "includedInPythonUnion": true,
+    "source": "extension-quality.json"
+  },
+  "uiAndDependencies": "3assets/28inputs and manifests/locks unchanged; prior own audits0 reused per quality-gate.json; legacyTD21 FAIL retained",
+  "review": "review-close.json",
+  "physicalAcceptance": "A2..A6 NOT VERIFIED",
+  "remoteRuntimeSha": "ca15ed980de8167cc6144285a43b85cfbf71a7d3",
+  "remoteControllerRevision": "79fab18359e49703b9fb823f8fc099fa6c1a7f7f",
+  "correctedCodeNotPublishedRemotely": true
+}

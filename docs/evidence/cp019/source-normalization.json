@@ -1,0 +1,70 @@
+{
+  "schema": "cp019-source-normalization-v1",
+  "scope": "Own CP019 sources + modified runner/client; excludes SQL001-005, protected snapshots, history and primary",
+  "changes": [
+    {
+      "path": "tests/qa/cp019/runtime-driver.test.mjs",
+      "before": "a4448e9b6dafa111158425ee14b6d8605fd0a4b295a7c0e3fced7c45124ee32a",
+      "after": "0055ba8cb12abfa3bea2e6f0f25a3a11486acf60ad462c40d6d22a720aaba314",
+      "change": "CRLF to LF only, no functional text change"
+    },
+    {
+      "path": "tests/qa/cp019/target-witness.mjs",
+      "before": "ce0428f67af2ffde2fa8ab09ac8ed40cdc8b4ceaafd790ec94e2034519182b10",
+      "after": "24c6aa58adfa6ec0b951eef7d5bbfe95ab882a5bdc848f40b941bf9003071fbe",
+      "change": "CRLF to LF only, no functional text change"
+    },
+    {
+      "path": "tests/qa/cp019/target-witness.test.mjs",
+      "before": "47270ed2de88a3d2567a06dd0368037ea7702bb10cabf59c0c8dcf0bb8b56bdc",
+      "after": "1da8d9b13d9b48abb83d492f9583fc44b186665c52dd8bffa5603ca1abbc05ad",
+      "change": "CRLF to LF only, no functional text change"
+    },
+    {
+      "path": "scripts/ci/p1-l1.mjs",
+      "before": "93e92d776f392deb633425785f752f028a60452863ad6775302ff68a24031121",
+      "after": "5fc2615fcdd7115d34012484e9dad9bddd0897cf5d0ad5a0fa33e26fafa0342e",
+      "change": "CRLF to LF only, no functional text change"
+    }
+  ],
+  "physical": "NOT RUN",
+  "historicalReviewHashes": "preserved; final code hashes recorded separately",
+  "documentChanges": [
+    {
+      "path": "docs/ROADMAP.md",
+      "before": "39d52b6013722fb798f020d46ebb774b258f2f8a87e48ce7b0a9fee4b94d5678",
+      "after": "bcf1c6750a437311439599d258fe1251036701403bc2bff6fbbe65cf82074fe3",
+      "change": "CRLF to LF / browser-plan final blank line only"
+    },
+    {
+      "path": ".agentic/PLANNING_STATE.md",
+      "before": "98fad1eeae2a2f71433b3e2d897da06d9ef5fa96ad745305ebc36c85ea53f764",
+      "after": "ca3b8cb4698769149a732bf3421f7ad926dd364369c8563508e1c862771ae8c6",
+      "change": "CRLF to LF / browser-plan final blank line only"
+    },
+    {
+      "path": "docs/evidence/cp019/browser-plan.md",
+      "before": "1785fb9e936330f5394c361c838d6e4eb95741bf433ef5c7ad2027d307d8d4b7",
+      "after": "dd85f4d96a81a45bdb3ed7da0e965833a9ebcf3bd6551328ce63ed4c3e268153",
+      "change": "CRLF to LF / browser-plan final blank line only"
+    },
+    {
+      "path": "docs/evidence/cp019/sql-implementation.md",
+      "before": "bfd3c47ce0b33e1d4c91b6a846021970143e8b2b033fedecedde984cba4961ca",
+      "after": "091a01e08cd113b40a28e0dde5d9bb1fc7d8b379da00882892617eef20d498d7",
+      "change": "CRLF to LF / browser-plan final blank line only"
+    },
+    {
+      "path": "docs/evidence/cp019/approval.json",
+      "before": "59b642488ce166ce5ea1d2726be273c84a1c4e1a30d3ebe132796a7a7950a10a",
+      "after": "21b60a97dbcb7cb29b90aa86a43217bfb74c3520070e6f6c58a1e5fa26f735c7",
+      "change": "CRLF to LF / browser-plan final blank line only"
+    },
+    {
+      "path": "docs/evidence/cp019/preflight-readonly.json",
+      "before": "115886b057e10f83bfd5e194a7df1f04452eb54457610eaa0e364a24cf99e50e",
+      "after": "bc7bbce508299db099cb33a2ea858cec69206d123a2e61f8c5649637c3f69154",
+      "change": "CRLF to LF / browser-plan final blank line only"
+    }
+  ]
+}

@@ -1,0 +1,31 @@
+{
+  "schema": "cp021-human-approval-v1",
+  "recordedAt": "2026-10-15T13:02:19.410853+00:00",
+  "source": "Direct human answer: Aprobar SC-013 / DEC-071 exclusivamente",
+  "status": "CONFIRMED / APPROVED",
+  "decision": "DEC-071",
+  "change": "SC-013",
+  "objectCommit": "8a109d37158cd048f6742a6bf21b56626fae54ad",
+  "objectPath": ".agentic/P1-L3_ARTIFACT_BUDGET_CHANGE.md",
+  "objectSha256": "acd92b9ddb980a6bd0731610eb60b340601873ba39c981a21015c61d2514acf0",
+  "approved": {
+    "globalArtifacts": 8192
+  },
+  "unchanged": {
+    "caseArtifacts": 2000,
+    "caseSql": 8192,
+    "globalSql": 200000,
+    "scenarios": 135,
+    "caseSeconds": 45,
+    "activeSeconds": 1800,
+    "caseHttp": 80,
+    "globalHttp": 300,
+    "journal": 1000,
+    "cpuMilli": 1000,
+    "memoryMiB": 2048,
+    "connections": 60
+  },
+  "noNewABRequired": true,
+  "qaStartConditional": true,
+  "sharedChangesAuthorized": false
+}

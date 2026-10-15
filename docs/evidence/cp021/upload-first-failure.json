@@ -1,0 +1,41 @@
+{
+  "failure": "TRANSFER_UID_ASSUMPTION",
+  "physicalReadback": {
+    "ubuntuUid": 1001,
+    "r02RootsExist": false,
+    "controllerPublished": false,
+    "transfer": [
+      {
+        "name": "mecanet-cp021-transfer",
+        "uid": 1001,
+        "mode": "0o700",
+        "bytes": 4096,
+        "symlink": false
+      },
+      {
+        "name": "artifact.tar",
+        "uid": 1001,
+        "mode": "0o600",
+        "bytes": 4474880,
+        "symlink": false
+      },
+      {
+        "name": "budget.json",
+        "uid": 1001,
+        "mode": "0o600",
+        "bytes": 16243,
+        "symlink": false
+      },
+      {
+        "name": "controllers.tar",
+        "uid": 1001,
+        "mode": "0o600",
+        "bytes": 368640,
+        "symlink": false
+      }
+    ]
+  },
+  "sql": 0,
+  "http": 0,
+  "containersCreated": 0
+}

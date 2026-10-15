@@ -1,0 +1,14 @@
+{
+  "schema": "cp023-development-recovery-sql-v1",
+  "status": "FAIL",
+  "stage": "begin-enroll",
+  "sqlCommands": 83,
+  "sqlState": "42702",
+  "position": null,
+  "internalPosition": "86",
+  "message": "column reference \"r.id\" is ambiguous",
+  "where": "PL/pgSQL function begin_recovery(uuid,uuid,uuid,uuid,text,text,text,text,text,text,uuid[],uuid[],uuid,uuid) line 26 at IF",
+  "sourceKeep": true,
+  "materialKeep": true,
+  "outerProtocol": "NOT VERIFIED"
+}

@@ -1,0 +1,24 @@
+{
+  "schema": "cp022-tls-local-v1",
+  "at": "2026-10-15T14:55:13.943436+00:00",
+  "producerFileSha256": "897ef66d6e4b93873566156dcdc973cab3aedcf74438a77ac3390d1c690a9875",
+  "result": "PASS",
+  "elapsedSeconds": 5.231,
+  "proof": {
+    "schema": "cp019-tls-verification-v1",
+    "result": "PASS",
+    "manifestHash": "8e23b48c574af86fb4fad966eda2a7cb779e93cb5c975a4c22e696520e21b98c",
+    "projects": [
+      "mecanet-qa-p1l3-r03",
+      "mecanet-qa-p1l3-r03-target"
+    ],
+    "verifiedKeyPairs": 4,
+    "independentCAs": 2,
+    "networkUsed": false,
+    "secretOutput": false
+  },
+  "network": false,
+  "newQaRootsOnVps": 0,
+  "generatedOnce": true,
+  "privateMaterialOutput": false
+}

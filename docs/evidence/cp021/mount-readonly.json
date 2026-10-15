@@ -1,0 +1,108 @@
+{
+  "at": "2026-10-15T14:15:14.418709+00:00",
+  "actual": {
+    "id": "ddcbb1b7902718fd2aa78f1a1e36a195d52085b7239e0c4005dfafa009f5bdb0",
+    "status": "created",
+    "pid": 0,
+    "running": false,
+    "mounts": [
+      {
+        "Destination": "/run/tls",
+        "Mode": "ro",
+        "Propagation": "rprivate",
+        "RW": false,
+        "Source": "/opt/mecanet-qa-p1l3-r02/tls/postgres",
+        "Type": "bind"
+      },
+      {
+        "Destination": "/etc/postgresql/pg_hba.conf",
+        "Mode": "ro",
+        "Propagation": "rprivate",
+        "RW": false,
+        "Source": "/opt/mecanet-qa-p1l3-r02/config/pg_hba.conf",
+        "Type": "bind"
+      },
+      {
+        "Destination": "/etc/postgresql/postgresql.conf",
+        "Mode": "ro",
+        "Propagation": "rprivate",
+        "RW": false,
+        "Source": "/opt/mecanet-qa-p1l3-r02/config/postgresql.conf",
+        "Type": "bind"
+      },
+      {
+        "Destination": "/run/secrets/bootstrap",
+        "Mode": "ro",
+        "Propagation": "rprivate",
+        "RW": false,
+        "Source": "/opt/mecanet-qa-p1l3-r02/secrets/bootstrap",
+        "Type": "bind"
+      },
+      {
+        "Destination": "/var/lib/postgresql",
+        "Mode": "rw",
+        "Propagation": "rprivate",
+        "RW": true,
+        "Source": "/opt/mecanet-qa-p1l3-r02/data",
+        "Type": "bind"
+      }
+    ],
+    "tmpfs": {
+      "/tmp": "size=16m",
+      "/var/run/postgresql": "size=8m,mode=0770,uid=999,gid=999"
+    },
+    "ports": {},
+    "networks": {
+      "mecanet-qa-p1l3-r02-data": {
+        "Aliases": [
+          "mecanet-qa-p1l3-r02-postgres-1",
+          "postgres"
+        ],
+        "DNSNames": null,
+        "DriverOpts": null,
+        "EndpointID": "",
+        "Gateway": "",
+        "GlobalIPv6Address": "",
+        "GlobalIPv6PrefixLen": 0,
+        "GwPriority": 0,
+        "IPAMConfig": {
+          "IPv4Address": "10.77.61.2"
+        },
+        "IPAddress": "10.77.61.2",
+        "IPPrefixLen": 0,
+        "IPv6Gateway": "",
+        "Links": null,
+        "MacAddress": "",
+        "NetworkID": ""
+      }
+    },
+    "ownerId": "38efdab0-b297-4896-8d71-cd3270e79673",
+    "service": "postgres"
+  },
+  "expected": {
+    "volumes": [
+      "/opt/mecanet-qa-p1l3-r02/data:/var/lib/postgresql:rw",
+      "/opt/mecanet-qa-p1l3-r02/config/postgresql.conf:/etc/postgresql/postgresql.conf:ro",
+      "/opt/mecanet-qa-p1l3-r02/config/pg_hba.conf:/etc/postgresql/pg_hba.conf:ro",
+      "/opt/mecanet-qa-p1l3-r02/tls/postgres:/run/tls:ro",
+      "/opt/mecanet-qa-p1l3-r02/secrets/bootstrap:/run/secrets/bootstrap:ro"
+    ],
+    "tmpfs": [
+      "/tmp:size=16m",
+      "/var/run/postgresql:size=8m,mode=0770,uid=999,gid=999"
+    ],
+    "networks": {
+      "data": {
+        "ipv4_address": "10.77.61.2"
+      }
+    }
+  },
+  "hostPgCaseAge": 137.5100000000093,
+  "globalElapsed": 1305.1399999998976,
+  "ledgerTotal": {
+    "artifactFiles": 642,
+    "http": 0,
+    "journal": 0,
+    "sql": 0
+  }
+}

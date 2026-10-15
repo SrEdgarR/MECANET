@@ -1,0 +1,829 @@
+{
+  "schema": "cp021-vps-readonly-v1",
+  "observedAt": "2026-10-15T11:59:32.971976+00:00",
+  "readOnly": true,
+  "architecture": "aarch64",
+  "cpuCount": 2,
+  "cpuBusyPercent": 2.757,
+  "sampleSeconds": 2,
+  "availableBytes": 8819236864,
+  "diskFreeBytes": 140711092224,
+  "diskTotalBytes": 154894188544,
+  "pressure": {
+    "cpu": "some avg10=1.88 avg60=1.90 avg300=1.84 total=33245552050\nfull avg10=0.00 avg60=0.00 avg300=0.00 total=0",
+    "memory": "some avg10=0.00 avg60=0.00 avg300=0.00 total=2836494\nfull avg10=0.00 avg60=0.00 avg300=0.00 total=1921010",
+    "io": "some avg10=0.00 avg60=0.00 avg300=0.00 total=2066439365\nfull avg10=0.00 avg60=0.00 avg300=0.00 total=1794739398"
+  },
+  "consumers": [
+    {
+      "id": "73fe55c217c84fb473bfa4162a45c59935aedc589fe6e7efb9b6b1fde151410e",
+      "name": "/mecanet-qa-p1l3-r01-job-9325e94f-8a4f-4821-936b-ff66d9745f80",
+      "running": false,
+      "status": "exited",
+      "pid": 0,
+      "startedAt": "2026-10-14T06:16:57.877591608Z",
+      "finishedAt": "2026-10-14T06:16:57.95665245Z",
+      "exitCode": 127,
+      "imageRef": "node@sha256:ba6b7d0ee561d9d49deb99e2b93c98632cc287b6cca1a6b18d66127054efa4dc",
+      "image": "sha256:ba6b7d0ee561d9d49deb99e2b93c98632cc287b6cca1a6b18d66127054efa4dc",
+      "nanoCpus": 250000000,
+      "memory": 134217728,
+      "project": "mecanet-qa-p1l3-r01",
+      "service": "controller-tool",
+      "ownerId": "2a180111-2692-4475-ae84-c3cfd181e359"
+    },
+    {
+      "id": "94c987849009ddba3215a25cc17c52f94f3895b2567dae7edbe7794976df9bd0",
+      "name": "/mecanet-qa-p1l2-cp017-restore-postgres-1",
+      "running": false,
+      "status": "exited",
+      "pid": 0,
+      "startedAt": "2026-10-13T22:33:15.675301624Z",
+      "finishedAt": "2026-10-13T22:34:29.919138559Z",
+      "exitCode": 0,
+      "imageRef": "postgres@sha256:67ba68a22dc7d5af3627b7e0f33d10bbefad07562ff9703b3a6c2de247649129",
+      "image": "sha256:67ba68a22dc7d5af3627b7e0f33d10bbefad07562ff9703b3a6c2de247649129",
+      "nanoCpus": 350000000,
+      "memory": 671088640,
+      "project": "mecanet-qa-p1l2-cp017-restore",
+      "service": null,
+      "ownerId": null
+    },
+    {
+      "id": "2cada80febee9324cc29fb1693e3097b0eb56bac963c72ee715643e191816778",
+      "name": "/mecanet-qa-p1l2-cp017-web-1",
+      "running": false,
+      "status": "exited",
+      "pid": 0,
+      "startedAt": "2026-10-13T22:31:46.191850399Z",
+      "finishedAt": "2026-10-13T22:32:31.314655068Z",
+      "exitCode": 0,
+      "imageRef": "nginx@sha256:3abad30db61dfb2a339ea21acc9f3e6bbe78e291fcff2f835f4510c8fdfcbd83",
+      "image": "sha256:3abad30db61dfb2a339ea21acc9f3e6bbe78e291fcff2f835f4510c8fdfcbd83",
+      "nanoCpus": 100000000,
+      "memory": 100663296,
+      "project": "mecanet-qa-p1l2-cp017",
+      "service": null,
+      "ownerId": null
+    },
+    {
+      "id": "e00f29e40b6337acbd2c0b857b3e994c561f1d2f9b281e33f033100140da4f77",
+      "name": "/mecanet-qa-p1l2-cp017-api1-1",
+      "running": false,
+      "status": "exited",
+      "pid": 0,
+      "startedAt": "2026-10-13T22:31:46.415556243Z",
+      "finishedAt": "2026-10-13T22:32:27.385660182Z",
+      "exitCode": 0,
+      "imageRef": "node@sha256:ba6b7d0ee561d9d49deb99e2b93c98632cc287b6cca1a6b18d66127054efa4dc",
+      "image": "sha256:ba6b7d0ee561d9d49deb99e2b93c98632cc287b6cca1a6b18d66127054efa4dc",
+      "nanoCpus": 200000000,
+      "memory": 335544320,
+      "project": "mecanet-qa-p1l2-cp017",
+      "service": null,
+      "ownerId": null
+    },
+    {
+      "id": "ee3b131eea75b316bc6a16cd8156007e85ca26cc0c4647a1053e02c587760cb4",
+      "name": "/mecanet-qa-p1l2-cp017-worker-1",
+      "running": false,
+      "status": "exited",
+      "pid": 0,
+      "startedAt": "2026-10-13T22:31:46.626450617Z",
+      "finishedAt": "2026-10-13T22:32:31.35945479Z",
+      "exitCode": 0,
+      "imageRef": "node@sha256:ba6b7d0ee561d9d49deb99e2b93c98632cc287b6cca1a6b18d66127054efa4dc",
+      "image": "sha256:ba6b7d0ee561d9d49deb99e2b93c98632cc287b6cca1a6b18d66127054efa4dc",
+      "nanoCpus": 100000000,
+      "memory": 201326592,
+      "project": "mecanet-qa-p1l2-cp017",
+      "service": null,
+      "ownerId": null
+    },
+    {
+      "id": "8eadb8f6fe790ea6077948cdcf8cb1f7dd93bb4a0ba3c47755ecbbbc3c1678e9",
+      "name": "/mecanet-qa-p1l2-cp017-api2-1",
+      "running": false,
+      "status": "exited",
+      "pid": 0,
+      "startedAt": "2026-10-13T22:31:46.772682999Z",
+      "finishedAt": "2026-10-13T22:32:29.405218606Z",
+      "exitCode": 0,
+      "imageRef": "node@sha256:ba6b7d0ee561d9d49deb99e2b93c98632cc287b6cca1a6b18d66127054efa4dc",
+      "image": "sha256:ba6b7d0ee561d9d49deb99e2b93c98632cc287b6cca1a6b18d66127054efa4dc",
+      "nanoCpus": 200000000,
+      "memory": 335544320,
+      "project": "mecanet-qa-p1l2-cp017",
+      "service": null,
+      "ownerId": null
+    },
+    {
+      "id": "fe6b1fd1fa43de172ef81504cb62efba246ff6d2e798fa3d8fc341c8f7da6ec7",
+      "name": "/mecanet-qa-p1l2-cp017-postgres-1",
+      "running": false,
+      "status": "exited",
+      "pid": 0,
+      "startedAt": "2026-10-13T22:33:03.394097054Z",
+      "finishedAt": "2026-10-13T22:33:13.540522179Z",
+      "exitCode": 0,
+      "imageRef": "postgres@sha256:67ba68a22dc7d5af3627b7e0f33d10bbefad07562ff9703b3a6c2de247649129",
+      "image": "sha256:67ba68a22dc7d5af3627b7e0f33d10bbefad07562ff9703b3a6c2de247649129",
+      "nanoCpus": 350000000,
+      "memory": 671088640,
+      "project": "mecanet-qa-p1l2-cp017",
+      "service": null,
+      "ownerId": null
+    },
+    {
+      "id": "86eada6d1335e5ca9e9621eb7a6c7c0774e7ea106d28e49ca15ad43b4d129773",
+      "name": "/mecanet-qa-p1l1-cp014-worker-1",
+      "running": false,
+      "status": "exited",
+      "pid": 0,
+      "startedAt": "2026-10-13T14:06:08.505335464Z",
+      "finishedAt": "2026-10-13T14:06:57.899226987Z",
+      "exitCode": 0,
+      "imageRef": "node@sha256:ba6b7d0ee561d9d49deb99e2b93c98632cc287b6cca1a6b18d66127054efa4dc",
+      "image": "sha256:ba6b7d0ee561d9d49deb99e2b93c98632cc287b6cca1a6b18d66127054efa4dc",
+      "nanoCpus": 100000000,
+      "memory": 201326592,
+      "project": "mecanet-qa-p1l1-cp014",
+      "service": null,
+      "ownerId": null
+    },
+    {
+      "id": "7e48b7d22ea65d3330f7c2859fe09f616639c25ade458eda6f1aa8cd858c8fb3",
+      "name": "/mecanet-qa-p1l1-cp014-web-1",
+      "running": false,
+      "status": "exited",
+      "pid": 0,
+      "startedAt": "2026-10-13T14:06:05.245850611Z",
+      "finishedAt": "2026-10-13T14:07:53.184361123Z",
+      "exitCode": 0,
+      "imageRef": "nginx@sha256:3abad30db61dfb2a339ea21acc9f3e6bbe78e291fcff2f835f4510c8fdfcbd83",
+      "image": "sha256:3abad30db61dfb2a339ea21acc9f3e6bbe78e291fcff2f835f4510c8fdfcbd83",
+      "nanoCpus": 100000000,
+      "memory": 100663296,
+      "project": "mecanet-qa-p1l1-cp014",
+      "service": null,
+      "ownerId": null
+    },
+    {
+      "id": "70c35ca781bcf8fd2459c1f274580a23de04b1ae84602b613ad1efb9271045c4",
+      "name": "/mecanet-qa-p1l1-cp014-api2-1",
+      "running": false,
+      "status": "exited",
+      "pid": 0,
+      "startedAt": "2026-10-13T14:06:04.434299176Z",
+      "finishedAt": "2026-10-13T14:06:48.912421271Z",
+      "exitCode": 0,
+      "imageRef": "node@sha256:ba6b7d0ee561d9d49deb99e2b93c98632cc287b6cca1a6b18d66127054efa4dc",
+      "image": "sha256:ba6b7d0ee561d9d49deb99e2b93c98632cc287b6cca1a6b18d66127054efa4dc",
+      "nanoCpus": 200000000,
+      "memory": 335544320,
+      "project": "mecanet-qa-p1l1-cp014",
+      "service": null,
+      "ownerId": null
+    },
+    {
+      "id": "24d264997aa104209517658536636bf45826baae092ada1f1d87984770b95cb0",
+      "name": "/mecanet-qa-p1l1-cp014-api1-1",
+      "running": false,
+      "status": "exited",
+      "pid": 0,
+      "startedAt": "2026-10-13T14:06:04.283709513Z",
+      "finishedAt": "2026-10-13T14:06:48.923410758Z",
+      "exitCode": 0,
+      "imageRef": "node@sha256:ba6b7d0ee561d9d49deb99e2b93c98632cc287b6cca1a6b18d66127054efa4dc",
+      "image": "sha256:ba6b7d0ee561d9d49deb99e2b93c98632cc287b6cca1a6b18d66127054efa4dc",
+      "nanoCpus": 200000000,
+      "memory": 335544320,
+      "project": "mecanet-qa-p1l1-cp014",
+      "service": null,
+      "ownerId": null
+    },
+    {
+      "id": "d29bed5099d5c39b8f8c04b2641bf009b0c8ca2a7114f3506b61b8dc8bc98303",
+      "name": "/mecanet-qa-p1l1-cp014-postgres-1",
+      "running": false,
+      "status": "exited",
+      "pid": 0,
+      "startedAt": "2026-10-13T13:43:27.085637019Z",
+      "finishedAt": "2026-10-13T14:07:53.224304665Z",
+      "exitCode": 0,
+      "imageRef": "postgres@sha256:67ba68a22dc7d5af3627b7e0f33d10bbefad07562ff9703b3a6c2de247649129",
+      "image": "sha256:67ba68a22dc7d5af3627b7e0f33d10bbefad07562ff9703b3a6c2de247649129",
+      "nanoCpus": 350000000,
+      "memory": 671088640,
+      "project": "mecanet-qa-p1l1-cp014",
+      "service": null,
+      "ownerId": null
+    },
+    {
+      "id": "4801d05d65b0cbab2574d723724080bbb8cdc10085970aa28ae9781a2329e74f",
+      "name": "/mecanet-qa-p1l1-worker-1",
+      "running": false,
+      "status": "exited",
+      "pid": 0,
+      "startedAt": "2026-10-13T12:26:27.947391052Z",
+      "finishedAt": "2026-10-13T12:28:22.649834947Z",
+      "exitCode": 0,
+      "imageRef": "node@sha256:ba6b7d0ee561d9d49deb99e2b93c98632cc287b6cca1a6b18d66127054efa4dc",
+      "image": "sha256:ba6b7d0ee561d9d49deb99e2b93c98632cc287b6cca1a6b18d66127054efa4dc",
+      "nanoCpus": 100000000,
+      "memory": 201326592,
+      "project": "mecanet-qa-p1l1",
+      "service": null,
+      "ownerId": null
+    },
+    {
+      "id": "850bdbb6019d6d7c1135c9d2bab57223341d39e693ff5e920fe6e144f3ec9127",
+      "name": "/mecanet-qa-p1l1-web-1",
+      "running": false,
+      "status": "exited",
+      "pid": 0,
+      "startedAt": "2026-10-13T04:29:41.603470061Z",
+      "finishedAt": "2026-10-13T12:28:27.147048757Z",
+      "exitCode": 0,
+      "imageRef": "nginx@sha256:3abad30db61dfb2a339ea21acc9f3e6bbe78e291fcff2f835f4510c8fdfcbd83",
+      "image": "sha256:3abad30db61dfb2a339ea21acc9f3e6bbe78e291fcff2f835f4510c8fdfcbd83",
+      "nanoCpus": 100000000,
+      "memory": 100663296,
+      "project": "mecanet-qa-p1l1",
+      "service": null,
+      "ownerId": null
+    },
+    {
+      "id": "306b73b3c4e70ba8f2cb88cc923bea7ded39cb82c18dc7d75c056ecb36a0f551",
+      "name": "/mecanet-qa-p1l1-api1-1",
+      "running": false,
+      "status": "exited",
+      "pid": 0,
+      "startedAt": "2026-10-13T04:29:41.778838534Z",
+      "finishedAt": "2026-10-13T12:28:27.138787623Z",
+      "exitCode": 0,
+      "imageRef": "node@sha256:ba6b7d0ee561d9d49deb99e2b93c98632cc287b6cca1a6b18d66127054efa4dc",
+      "image": "sha256:ba6b7d0ee561d9d49deb99e2b93c98632cc287b6cca1a6b18d66127054efa4dc",
+      "nanoCpus": 200000000,
+      "memory": 335544320,
+      "project": "mecanet-qa-p1l1",
+      "service": null,
+      "ownerId": null
+    },
+    {
+      "id": "27113cd83ef060c06b81a822c6b48efcfd307d880e16966cece1dc1a6401c617",
+      "name": "/mecanet-qa-p1l1-api2-1",
+      "running": false,
+      "status": "exited",
+      "pid": 0,
+      "startedAt": "2026-10-13T04:29:41.977355876Z",
+      "finishedAt": "2026-10-13T12:28:27.15441Z",
+      "exitCode": 0,
+      "imageRef": "node@sha256:ba6b7d0ee561d9d49deb99e2b93c98632cc287b6cca1a6b18d66127054efa4dc",
+      "image": "sha256:ba6b7d0ee561d9d49deb99e2b93c98632cc287b6cca1a6b18d66127054efa4dc",
+      "nanoCpus": 200000000,
+      "memory": 335544320,
+      "project": "mecanet-qa-p1l1",
+      "service": null,
+      "ownerId": null
+    },
+    {
+      "id": "51dcf248acd5eae94a1dc7b011cb00c67984d08a4f937dd343e6fca64bae7a69",
+      "name": "/mecanet-qa-p1l1-postgres-1",
+      "running": false,
+      "status": "exited",
+      "pid": 0,
+      "startedAt": "2026-10-13T03:23:36.066315495Z",
+      "finishedAt": "2026-10-13T12:29:43.546667063Z",
+      "exitCode": 0,
+      "imageRef": "postgres@sha256:67ba68a22dc7d5af3627b7e0f33d10bbefad07562ff9703b3a6c2de247649129",
+      "image": "sha256:67ba68a22dc7d5af3627b7e0f33d10bbefad07562ff9703b3a6c2de247649129",
+      "nanoCpus": 350000000,
+      "memory": 671088640,
+      "project": "mecanet-qa-p1l1",
+      "service": null,
+      "ownerId": null
+    },
+    {
+      "id": "0743f780302012524f8e63432b4d35ccb46284602852df1bbecbccf9d7b6bebd",
+      "name": "/coolify",
+      "running": true,
+      "status": "running",
+      "pid": 2170021,
+      "startedAt": "2026-10-10T04:00:47.674384439Z",
+      "finishedAt": "0001-01-01T00:00:00Z",
+      "exitCode": 0,
+      "imageRef": "docker.io/coollabsio/coolify:4.4.6",
+      "image": "sha256:7c54f42d64c0d20fed4a8f4561df9018a561fecba9931ed3f64a4f3e0d34a3be",
+      "nanoCpus": 0,
+      "memory": 0,
+      "project": "source",
+      "service": null,
+      "ownerId": null
+    },
+    {
+      "id": "2df4bfb80746e8d7fa32b19f662a8a942241ced5aad259d06ce20650eeac965e",
+      "name": "/coolify-db",
+      "running": true,
+      "status": "running",
+      "pid": 2169777,
+      "startedAt": "2026-10-10T04:00:41.98563556Z",
+      "finishedAt": "0001-01-01T00:00:00Z",
+      "exitCode": 0,
+      "imageRef": "postgres:15-alpine",
+      "image": "sha256:f7d23353e1b15400d22ebe31189f4d314b87a4c129cc400c8c2d8d4ca127bf81",
+      "nanoCpus": 0,
+      "memory": 0,
+      "project": "source",
+      "service": null,
+      "ownerId": null
+    },
+    {
+      "id": "a14d7f4484efc5af8d0aa4b24aecb8976abc334842bc5d74c21b3f3426f5b8b4",
+      "name": "/coolify-redis",
+      "running": true,
+      "status": "running",
+      "pid": 2169775,
+      "startedAt": "2026-10-10T04:00:41.984224504Z",
+      "finishedAt": "0001-01-01T00:00:00Z",
+      "exitCode": 0,
+      "imageRef": "redis:7-alpine",
+      "image": "sha256:858f009f9709ce576febc734aa78b8f6d624b82571f9ddb6bda4377c833b3499",
+      "nanoCpus": 0,
+      "memory": 0,
+      "project": "source",
+      "service": null,
+      "ownerId": null
+    },
+    {
+      "id": "bf610dbf592d58b314b195c39b1bfd8addb8aade2ccdf58070d179a26ae5ea85",
+      "name": "/anxlw7yetk0ocvbyzwbpjint-163548116612",
+      "running": true,
+      "status": "running",
+      "pid": 282978,
+      "startedAt": "2026-10-07T16:36:14.285635032Z",
+      "finishedAt": "0001-01-01T00:00:00Z",
+      "exitCode": 0,
+      "imageRef": "anxlw7yetk0ocvbyzwbpjint:f5afaa23c54c968be249231f18e212b2b43a0c82",
+      "image": "sha256:af97d16a68b0f569fe137d3b70acf387983be15bf34e75dae16e09a9e64a4fbe",
+      "nanoCpus": 0,
+      "memory": 0,
+      "project": "anxlw7yetk0ocvbyzwbpjint",
+      "service": null,
+      "ownerId": null
+    },
+    {
+      "id": "4de25bf15c14e6407df3854456cebbdb839aadcd13efe83ba23552e1c2e50862",
+      "name": "/7lr48ioylpn4uwuwmzdr84xv",
+      "running": true,
+      "status": "running",
+      "pid": 271195,
+      "startedAt": "2026-10-07T16:32:17.85456039Z",
+      "finishedAt": "0001-01-01T00:00:00Z",
+      "exitCode": 0,
+      "imageRef": "mongo:7",
+      "image": "sha256:1f995ad6fdb93244a1addab1b58f934a0bc2f5643c38e02f5e9d7f0c7d227a7b",
+      "nanoCpus": 0,
+      "memory": 1073741824,
+      "project": "7lr48ioylpn4uwuwmzdr84xv",
+      "service": null,
+      "ownerId": null
+    },
+    {
+      "id": "c0d29e4a0d0310fda23ac63bdd851a0f097bdeab82aad739413fc4e7cc0eeec4",
+      "name": "/tofxqwcillfystizcppgwefs-152517892574",
+      "running": true,
+      "status": "running",
+      "pid": 150677,
+      "startedAt": "2026-10-07T15:25:28.448872744Z",
+      "finishedAt": "0001-01-01T00:00:00Z",
+      "exitCode": 0,
+      "imageRef": "tofxqwcillfystizcppgwefs:bbb54177c8397b3ccccd7cbf1c287d9c57801e7b",
+      "image": "sha256:b4415438e0b32f56caea7bc03b1990fb3070d6647df8e3988ee28197ec37421f",
+      "nanoCpus": 0,
+      "memory": 0,
+      "project": "tofxqwcillfystizcppgwefs",
+      "service": null,
+      "ownerId": null
+    },
+    {
+      "id": "b1cd805a5a3cd0ee537f67e2430b76d68e8c6f63820d6417fe3cc42048573e20",
+      "name": "/coolify-sentinel",
+      "running": true,
+      "status": "running",
+      "pid": 3718318,
+      "startedAt": "2026-10-07T09:00:08.052055911Z",
+      "finishedAt": "0001-01-01T00:00:00Z",
+      "exitCode": 0,
+      "imageRef": "docker.io/coollabsio/sentinel:1.0.2",
+      "image": "sha256:9355fc746d5ca550b8c16577c514337a12dda54f88bb1876333e4ff2128e6371",
+      "nanoCpus": 0,
+      "memory": 0,
+      "project": null,
+      "service": null,
+      "ownerId": null
+    },
+    {
+      "id": "bfdb0b54cf15dbcecabfc284fa0c435f2cf11911fb11c6afed75ff54256e327c",
+      "name": "/kwbztz6s0wntvtw7wc3n6sv4",
+      "running": true,
+      "status": "running",
+      "pid": 2073575,
+      "startedAt": "2026-09-29T14:12:09.149335444Z",
+      "finishedAt": "0001-01-01T00:00:00Z",
+      "exitCode": 0,
+      "imageRef": "mongo:7",
+      "image": "sha256:9854f7139445d766a9523571d6f047530c45547460ffcf8259eb2bf4264632ca",
+      "nanoCpus": 0,
+      "memory": 0,
+      "project": "kwbztz6s0wntvtw7wc3n6sv4",
+      "service": null,
+      "ownerId": null
+    },
+    {
+      "id": "c34ed1b7659f73d2a6f5d60a73dd5e5db2699424eff1937ecce50b4c888e59e1",
+      "name": "/l5xb1i1sv6xmndnradzxzlhz",
+      "running": true,
+      "status": "running",
+      "pid": 170497,
+      "startedAt": "2026-09-28T17:09:33.575947598Z",
+      "finishedAt": "0001-01-01T00:00:00Z",
+      "exitCode": 0,
+      "imageRef": "mongo:7",
+      "image": "sha256:9854f7139445d766a9523571d6f047530c45547460ffcf8259eb2bf4264632ca",
+      "nanoCpus": 0,
+      "memory": 0,
+      "project": "l5xb1i1sv6xmndnradzxzlhz",
+      "service": null,
+      "ownerId": null
+    },
+    {
+      "id": "094b5a9325391e128333d49f25fbe5d4f4f7ea5dd5d385c115a4cee2f856534a",
+      "name": "/coolify-proxy",
+      "running": true,
+      "status": "running",
+      "pid": 29613,
+      "startedAt": "2026-09-28T15:32:48.170930691Z",
+      "finishedAt": "0001-01-01T00:00:00Z",
+      "exitCode": 0,
+      "imageRef": "traefik:v3.6",
+      "image": "sha256:31267173a15b4944e797a76ffd9c419707c8d8b32fe5b610f80cd0cfa05f372d",
+      "nanoCpus": 0,
+      "memory": 0,
+      "project": "coolify-proxy",
+      "service": null,
+      "ownerId": null
+    }
+  ],
+  "containerStats": [
+    {
+      "BlockIO": "893kB / 196MB",
+      "CPUPerc": "0.24%",
+      "Container": "0743f780302012524f8e63432b4d35ccb46284602852df1bbecbccf9d7b6bebd",
+      "ID": "0743f7803020",
+      "MemPerc": "3.24%",
+      "MemUsage": "386.1MiB / 11.65GiB",
+      "Name": "coolify",
+      "NetIO": "1.92GB / 3.64GB",
+      "PIDs": "31"
+    },
+    {
+      "BlockIO": "975kB / 104MB",
+      "CPUPerc": "2.61%",
+      "Container": "2df4bfb80746e8d7fa32b19f662a8a942241ced5aad259d06ce20650eeac965e",
+      "ID": "2df4bfb80746",
+      "MemPerc": "0.28%",
+      "MemUsage": "33.69MiB / 11.65GiB",
+      "Name": "coolify-db",
+      "NetIO": "227MB / 662MB",
+      "PIDs": "7"
+    },
+    {
+      "BlockIO": "8.19kB / 14.1GB",
+      "CPUPerc": "0.58%",
+      "Container": "a14d7f4484efc5af8d0aa4b24aecb8976abc334842bc5d74c21b3f3426f5b8b4",
+      "ID": "a14d7f4484ef",
+      "MemPerc": "0.06%",
+      "MemUsage": "7.406MiB / 11.65GiB",
+      "Name": "coolify-redis",
+      "NetIO": "3.4GB / 902MB",
+      "PIDs": "7"
+    },
+    {
+      "BlockIO": "0B / 0B",
+      "CPUPerc": "0.09%",
+      "Container": "bf610dbf592d58b314b195c39b1bfd8addb8aade2ccdf58070d179a26ae5ea85",
+      "ID": "bf610dbf592d",
+      "MemPerc": "0.72%",
+      "MemUsage": "86.36MiB / 11.65GiB",
+      "Name": "anxlw7yetk0ocvbyzwbpjint-163548116612",
+      "NetIO": "180MB / 91.8MB",
+      "PIDs": "11"
+    },
+    {
+      "BlockIO": "893kB / 7.72GB",
+      "CPUPerc": "0.56%",
+      "Container": "4de25bf15c14e6407df3854456cebbdb839aadcd13efe83ba23552e1c2e50862",
+      "ID": "4de25bf15c14",
+      "MemPerc": "10.11%",
+      "MemUsage": "103.5MiB / 1GiB",
+      "Name": "7lr48ioylpn4uwuwmzdr84xv",
+      "NetIO": "104MB / 152MB",
+      "PIDs": "78"
+    },
+    {
+      "BlockIO": "4.47MB / 12.3kB",
+      "CPUPerc": "0.08%",
+      "Container": "c0d29e4a0d0310fda23ac63bdd851a0f097bdeab82aad739413fc4e7cc0eeec4",
+      "ID": "c0d29e4a0d03",
+      "MemPerc": "0.67%",
+      "MemUsage": "80.24MiB / 11.65GiB",
+      "Name": "tofxqwcillfystizcppgwefs-152517892574",
+      "NetIO": "604MB / 565MB",
+      "PIDs": "11"
+    },
+    {
+      "BlockIO": "1.79MB / 76.8MB",
+      "CPUPerc": "0.03%",
+      "Container": "b1cd805a5a3cd0ee537f67e2430b76d68e8c6f63820d6417fe3cc42048573e20",
+      "ID": "b1cd805a5a3c",
+      "MemPerc": "0.06%",
+      "MemUsage": "7.426MiB / 11.65GiB",
+      "Name": "coolify-sentinel",
+      "NetIO": "46.8MB / 249MB",
+      "PIDs": "3"
+    },
+    {
+      "BlockIO": "1.22MB / 16.2GB",
+      "CPUPerc": "0.67%",
+      "Container": "bfdb0b54cf15dbcecabfc284fa0c435f2cf11911fb11c6afed75ff54256e327c",
+      "ID": "bfdb0b54cf15",
+      "MemPerc": "10.64%",
+      "MemUsage": "1.239GiB / 11.65GiB",
+      "Name": "kwbztz6s0wntvtw7wc3n6sv4",
+      "NetIO": "1.54GB / 1.39GB",
+      "PIDs": "149"
+    },
+    {
+      "BlockIO": "9.03MB / 12GB",
+      "CPUPerc": "0.50%",
+      "Container": "c34ed1b7659f73d2a6f5d60a73dd5e5db2699424eff1937ecce50b4c888e59e1",
+      "ID": "c34ed1b7659f",
+      "MemPerc": "5.70%",
+      "MemUsage": "679.8MiB / 11.65GiB",
+      "Name": "l5xb1i1sv6xmndnradzxzlhz",
+      "NetIO": "817MB / 707MB",
+      "PIDs": "88"
+    },
+    {
+      "BlockIO": "44.1MB / 0B",
+      "CPUPerc": "0.09%",
+      "Container": "094b5a9325391e128333d49f25fbe5d4f4f7ea5dd5d385c115a4cee2f856534a",
+      "ID": "094b5a932539",
+      "MemPerc": "0.55%",
+      "MemUsage": "65.16MiB / 11.65GiB",
+      "Name": "coolify-proxy",
+      "NetIO": "2.36GB / 756MB",
+      "PIDs": "11"
+    }
+  ],
+  "networks": [
+    {
+      "id": "28223a62204d9053b165fb8cc7746e911d4232a012afd13d77e1673ebe6527a1",
+      "name": "bridge",
+      "internal": false,
+      "ipam": [
+        {
+          "Gateway": "10.0.1.1",
+          "Subnet": "10.0.1.0/24"
+        }
+      ],
+      "endpoints": {}
+    },
+    {
+      "id": "dd1bd9cd3e250c6a328a9dac09100f05e8716284e78f62aae3fc5f6db27ef347",
+      "name": "coolify",
+      "internal": false,
+      "ipam": [
+        {
+          "Gateway": "10.0.2.1",
+          "Subnet": "10.0.2.0/24"
+        },
+        {
+          "Gateway": "fdfa:9c72:863e::1",
+          "Subnet": "fdfa:9c72:863e::/64"
+        }
+      ],
+      "endpoints": {
+        "0743f780302012524f8e63432b4d35ccb46284602852df1bbecbccf9d7b6bebd": {
+          "EndpointID": "ff75908b3a106467ad01b8505bcba907990f01bdef495d65c7d7cda3dee16842",
+          "IPv4Address": "10.0.2.4/24",
+          "IPv6Address": "fdfa:9c72:863e::4/64",
+          "MacAddress": "ae:ff:f0:95:da:3f",
+          "Name": "coolify"
+        },
+        "094b5a9325391e128333d49f25fbe5d4f4f7ea5dd5d385c115a4cee2f856534a": {
+          "EndpointID": "a957a2d29e9762e6b1c3a81cd86772285e2bf93e00dd5f598feb2cc765564e8e",
+          "IPv4Address": "10.0.2.7/24",
+          "IPv6Address": "fdfa:9c72:863e::7/64",
+          "MacAddress": "b2:2e:02:c2:69:bd",
+          "Name": "coolify-proxy"
+        },
+        "2df4bfb80746e8d7fa32b19f662a8a942241ced5aad259d06ce20650eeac965e": {
+          "EndpointID": "11cf2ae13176a1916497a9546b6095346ef0b1eee59fdabd9fa44cfecf94c627",
+          "IPv4Address": "10.0.2.2/24",
+          "IPv6Address": "fdfa:9c72:863e::2/64",
+          "MacAddress": "26:f5:11:a1:ff:f0",
+          "Name": "coolify-db"
+        },
+        "4de25bf15c14e6407df3854456cebbdb839aadcd13efe83ba23552e1c2e50862": {
+          "EndpointID": "a0ad7a1c44eaa61470b41aeb8777191d59d3677f42023b49d5470a00ee59c1a9",
+          "IPv4Address": "10.0.2.10/24",
+          "IPv6Address": "fdfa:9c72:863e::a/64",
+          "MacAddress": "a6:99:61:e8:7d:93",
+          "Name": "7lr48ioylpn4uwuwmzdr84xv"
+        },
+        "a14d7f4484efc5af8d0aa4b24aecb8976abc334842bc5d74c21b3f3426f5b8b4": {
+          "EndpointID": "323dbc905c2b4b272bc916760add003d74e3f2be44fd14fc8bd778cf2c7a9a3e",
+          "IPv4Address": "10.0.2.3/24",
+          "IPv6Address": "fdfa:9c72:863e::3/64",
+          "MacAddress": "06:f7:4d:5a:b0:66",
+          "Name": "coolify-redis"
+        },
+        "b1cd805a5a3cd0ee537f67e2430b76d68e8c6f63820d6417fe3cc42048573e20": {
+          "EndpointID": "7f62af785779e8ec132663f001a957d4fb0b29f14bef546c668c5ff6aebef4f8",
+          "IPv4Address": "10.0.2.6/24",
+          "IPv6Address": "fdfa:9c72:863e::6/64",
+          "MacAddress": "7a:77:aa:1e:cf:de",
+          "Name": "coolify-sentinel"
+        },
+        "bf610dbf592d58b314b195c39b1bfd8addb8aade2ccdf58070d179a26ae5ea85": {
+          "EndpointID": "8193a72cb3ed5af03d2cd431d3a071411132bfe534848f691cef7d1ee441cf87",
+          "IPv4Address": "10.0.2.13/24",
+          "IPv6Address": "fdfa:9c72:863e::d/64",
+          "MacAddress": "a6:3b:a2:37:fa:f0",
+          "Name": "anxlw7yetk0ocvbyzwbpjint-163548116612"
+        },
+        "bfdb0b54cf15dbcecabfc284fa0c435f2cf11911fb11c6afed75ff54256e327c": {
+          "EndpointID": "852473bf0be385dd799262f3fa78d8a95c3ab1fcb0179c330f8a450d9aec5c0f",
+          "IPv4Address": "10.0.2.9/24",
+          "IPv6Address": "fdfa:9c72:863e::9/64",
+          "MacAddress": "3e:26:32:ec:ad:37",
+          "Name": "kwbztz6s0wntvtw7wc3n6sv4"
+        },
+        "c0d29e4a0d0310fda23ac63bdd851a0f097bdeab82aad739413fc4e7cc0eeec4": {
+          "EndpointID": "777277fe4d3b7c459bbef93b599be511c760f83efd50d18c0e0edcc30c720a31",
+          "IPv4Address": "10.0.2.11/24",
+          "IPv6Address": "fdfa:9c72:863e::b/64",
+          "MacAddress": "be:ea:58:c5:14:f6",
+          "Name": "tofxqwcillfystizcppgwefs-152517892574"
+        },
+        "c34ed1b7659f73d2a6f5d60a73dd5e5db2699424eff1937ecce50b4c888e59e1": {
+          "EndpointID": "faf3bf2acf18b990b5f11a7880ceb7107c05fcc98713d6bab6a3bcb0acf5da9b",
+          "IPv4Address": "10.0.2.8/24",
+          "IPv6Address": "fdfa:9c72:863e::8/64",
+          "MacAddress": "a6:57:63:29:ba:ff",
+          "Name": "l5xb1i1sv6xmndnradzxzlhz"
+        }
+      }
+    },
+    {
+      "id": "5b2861f3549b91c30188c84f532e6d89de2e46ba9524ebdc6feac0cd16e8e1ca",
+      "name": "host",
+      "internal": false,
+      "ipam": null,
+      "endpoints": {}
+    },
+    {
+      "id": "25736b52f4099ceed04d5244400ea0ebe862889283ee48ad0797e4c11f2af2fb",
+      "name": "mecanet-qa-p1l1-cp014-data",
+      "internal": true,
+      "ipam": [
+        {
+          "Subnet": "10.77.41.0/24"
+        }
+      ],
+      "endpoints": {}
+    },
+    {
+      "id": "85a3210726115e415d857783416f420f0c00f23747e7254dfb86aa686e82755e",
+      "name": "mecanet-qa-p1l1-cp014-front",
+      "internal": true,
+      "ipam": [
+        {
+          "Subnet": "10.77.42.0/24"
+        }
+      ],
+      "endpoints": {}
+    },
+    {
+      "id": "5da2cc7171e8fefaaac774ad8cb13a05e18847ee56719003e3cc35d72f70d43d",
+      "name": "mecanet-qa-p1l1-data",
+      "internal": true,
+      "ipam": [
+        {
+          "Subnet": "10.77.31.0/24"
+        }
+      ],
+      "endpoints": {}
+    },
+    {
+      "id": "f9608ac79d9ecce8c5f860c52f61ce5fffb219b289739a2a27efa780ce099c5f",
+      "name": "mecanet-qa-p1l1-front",
+      "internal": true,
+      "ipam": [
+        {
+          "Subnet": "10.77.32.0/24"
+        }
+      ],
+      "endpoints": {}
+    },
+    {
+      "id": "b68fa688727c8a4b33264d089aadc912fffb2369b97ceed33455442f817b2844",
+      "name": "mecanet-qa-p1l2-cp017-data",
+      "internal": true,
+      "ipam": [
+        {
+          "Subnet": "10.77.51.0/24"
+        }
+      ],
+      "endpoints": {}
+    },
+    {
+      "id": "f770e81b62c45077f3f38e0a2876b63d85ff752423fa12ef542ec657bc6cadac",
+      "name": "mecanet-qa-p1l2-cp017-front",
+      "internal": true,
+      "ipam": [
+        {
+          "Subnet": "10.77.52.0/24"
+        }
+      ],
+      "endpoints": {}
+    },
+    {
+      "id": "7a78ef6981fdb34285fb79fff3aebe85e6f26d40252199779b1060275f3f94d9",
+      "name": "mecanet-qa-p1l2-cp017-restore_isolated",
+      "internal": true,
+      "ipam": [
+        {
+          "Gateway": "10.77.53.1",
+          "Subnet": "10.77.53.0/24"
+        }
+      ],
+      "endpoints": {}
+    },
+    {
+      "id": "b9ce69a73d7dcbbeff0b844e6ed46859234fbcc63b7147500cab562b1da01af1",
+      "name": "none",
+      "internal": false,
+      "ipam": null,
+      "endpoints": {}
+    }
+  ],
+  "images": {
+    "node": {
+      "id": "sha256:ba6b7d0ee561d9d49deb99e2b93c98632cc287b6cca1a6b18d66127054efa4dc",
+      "architecture": "arm64",
+      "os": "linux"
+    },
+    "postgres": {
+      "id": "sha256:67ba68a22dc7d5af3627b7e0f33d10bbefad07562ff9703b3a6c2de247649129",
+      "architecture": "arm64",
+      "os": "linux"
+    },
+    "nginx": {
+      "id": "sha256:3abad30db61dfb2a339ea21acc9f3e6bbe78e291fcff2f835f4510c8fdfcbd83",
+      "architecture": "arm64",
+      "os": "linux"
+    }
+  },
+  "rootsPresent": {
+    "/opt/mecanet-qa-p1l3-r02": false,
+    "/opt/mecanet-qa-p1l3-r02-target": false
+  },
+  "composeVersion": "5.5.1",
+  "tcpListenerLines": [
+    "State  Recv-Q Send-Q Local Address:Port Peer Address:PortProcess",
+    "LISTEN 0      4096   127.0.0.53%lo:53        0.0.0.0:*          ",
+    "LISTEN 0      4096         0.0.0.0:443       0.0.0.0:*          ",
+    "LISTEN 0      4096         0.0.0.0:111       0.0.0.0:*          ",
+    "LISTEN 0      4096         0.0.0.0:80        0.0.0.0:*          ",
+    "LISTEN 0      4096         0.0.0.0:22        0.0.0.0:*          ",
+    "LISTEN 0      4096      127.0.0.54:53        0.0.0.0:*          ",
+    "LISTEN 0      4096         0.0.0.0:8000      0.0.0.0:*          ",
+    "LISTEN 0      4096         0.0.0.0:8080      0.0.0.0:*          ",
+    "LISTEN 0      4096         0.0.0.0:6002      0.0.0.0:*          ",
+    "LISTEN 0      4096         0.0.0.0:6001      0.0.0.0:*          ",
+    "LISTEN 0      4096            [::]:443          [::]:*          ",
+    "LISTEN 0      4096            [::]:111          [::]:*          ",
+    "LISTEN 0      4096            [::]:80           [::]:*          ",
+    "LISTEN 0      4096            [::]:22           [::]:*          ",
+    "LISTEN 0      4096            [::]:8000         [::]:*          ",
+    "LISTEN 0      4096            [::]:8080         [::]:*          ",
+    "LISTEN 0      4096            [::]:6002         [::]:*          ",
+    "LISTEN 0      4096            [::]:6001         [::]:*"
+  ],
+  "secretsRead": false,
+  "capacityProven": false,
+  "qaCreated": 0
+}

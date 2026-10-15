@@ -1,0 +1,14 @@
+{
+  "schema": "cp021-resume-state-v1",
+  "status": "PASS",
+  "readOnly": true,
+  "extensionHash": "571c19d48609a1fd3e9b5a8b2deceed9a14511514bfcf5a3c55076d9ee73bda7",
+  "parentPlanHash": "ca6b57c002446a8cd1549680a2fb187f1d524b1ff1d064e69aa4ad7307c71263",
+  "ledgerHash": "4bbcef2a85b9d777c2062dad07b0ca1d2603609a8f699fe301110f766b159ac1",
+  "materialHash": "98a76f16014ff2160b4b74e4309ca1b2b4750d581d8371ddb555fc5e4cf234b9",
+  "artifactDigest": "sha256:490abc1bac7b50b51e03e15cd6aa0e6a0de90910635f0994b8257e62a0347863",
+  "preservedFiles": 36,
+  "preservedConsumers": 27,
+  "remainingGlobalSeconds": 665.08,
+  "controllerRevision": "79fab18359e49703b9fb823f8fc099fa6c1a7f7f"
+}

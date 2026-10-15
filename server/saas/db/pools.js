@@ -18,6 +18,7 @@ export function createSecretResolver({ entries,access='read' }) {
     for (const key of ['tenantId', 'dbName', 'credentialVersion', 'dataEpoch']) {
       if (entry[key] !== descriptor[key]) throw fail('SECRET_MISMATCH');
     }
+    if(descriptor.schemaVersion===3)for(const key of ['recoveryRunId','recoveryManifestHash'])if(!entry[key]||entry[key]!==descriptor[key])throw fail('SECRET_MISMATCH');
     return { ...entry.connection, ssl: { ...entry.connection.ssl } };
   };
 }
@@ -55,9 +56,9 @@ export async function createPgPool(config) {
 }
 
 /** At most four tenant pools per API; rotation never doubles a tenant's quota. */
-export function createTenantPoolManager({ resolveSecret, createPool = createPgPool, maxPools = 4, maxPerPool = 2, idleMs = 60_000, now = Date.now, monotonicNow = () => performance.now(),access='read',allowedSchemaVersions=access==='write'?[2]:[1],budget=createPoolBudget({maxPools,maxLeases:maxPools*maxPerPool}) } = {}) {
+export function createTenantPoolManager({ resolveSecret, createPool = createPgPool, maxPools = 4, maxPerPool = 2, idleMs = 60_000, now = Date.now, monotonicNow = () => performance.now(),access='read',allowedSchemaVersions=access==='write'?[2]:[1],recovery=null,recoveryAccess='business',budget=createPoolBudget({maxPools,maxLeases:maxPools*maxPerPool}) } = {}) {
   if (typeof resolveSecret !== 'function' || typeof monotonicNow !== 'function' || !Number.isInteger(maxPools) || maxPools < 1 || maxPools > 4 || !Number.isInteger(maxPerPool) || maxPerPool < 1 || maxPerPool > 2 || !Number.isSafeInteger(idleMs) || idleMs < 1) throw fail('INVALID_POOL_LIMIT');
-  if(!['read','write'].includes(access)||!Array.isArray(allowedSchemaVersions)||!allowedSchemaVersions.length||allowedSchemaVersions.some(v=>![1,2].includes(v))||(access==='write'&&allowedSchemaVersions.some(v=>v!==2)))throw fail('INVALID_POOL_PURPOSE');
+  if(!['read','write'].includes(access)||!Array.isArray(allowedSchemaVersions)||!allowedSchemaVersions.length||allowedSchemaVersions.some(v=>![1,2,3].includes(v))||(access==='write'&&allowedSchemaVersions.some(v=>![2,3].includes(v)))||!['business','maintenance'].includes(recoveryAccess)||(allowedSchemaVersions.includes(3)&&(!recovery?.binding||typeof recovery.guard!=='function'||typeof recovery.maintenanceGuard!=='function')))throw fail('INVALID_POOL_PURPOSE');
   if(['withPoolLock','reservePool','registerPool','releasePool','reserveLease','releaseLease'].some(key=>typeof budget?.[key]!=='function'))throw fail('INVALID_POOL_BUDGET');
   const positive=v=>Number.isSafeInteger(v)&&v>0||typeof v==='string'&&/^[1-9][0-9]{0,18}$/.test(v)&&BigInt(v)<=9223372036854775807n;
   const pools = new Map(); let closed = false; let serial = Promise.resolve();
@@ -70,6 +71,9 @@ export function createTenantPoolManager({ resolveSecret, createPool = createPgPo
     return entry.retiring;
   }
   async function acquire(d) {
+    if(d?.schemaVersion===3){
+      if(!recovery||d.recoveryRunId!==recovery.binding.runId||d.recoveryManifestHash!==recovery.binding.manifestHash||typeof d.credentialVersion!=='string'||typeof d.dataEpoch!=='string'||!await recovery[recoveryAccess==='maintenance'?'maintenanceGuard':'guard']())throw fail('TENANT_UNAVAILABLE');
+    }
     // Global acquisition precedes the manager lock; idle eviction never waits
     // on an acquisition holding a different manager lock in the opposite order.
     return budget.withPoolLock(()=>lock(async () => {

@@ -1,0 +1,15 @@
+{
+  "schema": "cp022-approval-verification-v1",
+  "at": "2026-10-15T14:49:42.921717+00:00",
+  "source": "direct human message current execution",
+  "proposalPath": ".agentic/P1-L3_QA_RETRY_R03.md",
+  "proposalSourceCommit": "2a3ca97a5353b078bfd6494c00479ea3e02d8d9c",
+  "sha256": "b58ad6a856fd987bd6a23358b2f129e0a44a3a75c4206cf57b6d49a9e2d1df05",
+  "exactHashMatch": true,
+  "contentReviewed": true,
+  "scope": "single r03/r03-target QA pair and own64/65/66 subnets; preserve r01/r02/material/evidence; all caps and135semanticcases unchanged",
+  "status": "CONFIRMED / APPROVED SC014 DEC072",
+  "implementationAuthorizedAfterRegistration": true,
+  "productionSharedInfrastructureAuthorized": false,
+  "newResourcesCreated": 0
+}

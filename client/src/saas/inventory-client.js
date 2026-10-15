@@ -44,14 +44,20 @@ export function createInventoryActions(bridge, { storage, operationUuid = () => 
     if (!UUID.test(item?.id) || !validInventoryText(item.sku, 64) || !validInventoryText(item.name, 200) || !decimal(item.onHand) || !positive(item.version)) throw unavailable();
     return { id: item.id.toLowerCase(), sku: item.sku, name: item.name, onHand: item.onHand, version: item.version };
   }
-  function result(value, tenant, operationId) {
+  function result(value, tenant, operationId, { ownLookup = false } = {}) {
     if (!value || value.operationId !== operationId || !publicStates.has(value.state)) throw unavailable();
-    if (String(value.dataEpoch) !== tenant.dataEpoch) throw Object.assign(unavailable(), { contextLost: true });
+    // Only a GET whose outer envelope has passed the current context check may
+    // carry a terminal result from an earlier epoch. Its original epoch is
+    // history, never a writer guard or permission to replay after restoration.
+    const historical = ownLookup && terminal(value.state) && positive(value.dataEpoch) && positive(tenant.dataEpoch)
+      && BigInt(value.dataEpoch) < BigInt(tenant.dataEpoch);
+    if (String(value.dataEpoch) !== tenant.dataEpoch && !historical) throw Object.assign(unavailable(), { contextLost: true });
+    const dataEpoch = historical ? value.dataEpoch : tenant.dataEpoch;
     if (value.state === 'CONFIRMED') {
       if (!UUID.test(value.productId) || (value.movementId !== null && !UUID.test(value.movementId)) || !decimal(value.onHand) || !positive(value.balanceVersion)) throw unavailable();
-      return { operationId, state: value.state, productId: value.productId, movementId: value.movementId, onHand: value.onHand, balanceVersion: value.balanceVersion, dataEpoch: tenant.dataEpoch };
+      return { operationId, state: value.state, productId: value.productId, movementId: value.movementId, onHand: value.onHand, balanceVersion: value.balanceVersion, dataEpoch };
     }
-    if (value.state === 'REJECTED') return { operationId, state: value.state, dataEpoch: tenant.dataEpoch };
+    if (value.state === 'REJECTED') return { operationId, state: value.state, dataEpoch };
     return { operationId, state: value.state, dataEpoch: tenant.dataEpoch };
   }
   function saveOperation(operation, tenant, { selected = true, message = '' } = {}) {
@@ -70,7 +76,7 @@ export function createInventoryActions(bridge, { storage, operationUuid = () => 
       const value = await bridge.getOnce(`/api/tenants/${tenant.id}/operations/${operationId}`, request);
       if (!latest() || bridge.state().tenant?.id !== tenant.id) return;
       envelope(value, tenant);
-      const operation = result(value.result ?? value, tenant, operationId);
+      const operation = result(value.result ?? value, tenant, operationId, { ownLookup: true });
       if (value.state !== operation.state) throw unavailable();
       saveOperation(operation, tenant, { selected, message: terminal(operation.state) ? '' : 'El resultado sigue pendiente de comprobar.' });
     } catch (error) {

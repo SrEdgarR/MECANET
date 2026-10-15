@@ -805,3 +805,86 @@ Fuente humana directa actual: adjunto CP-0151c09dd03-5335-4dee-abad-844c36aebdcc
 - Fecha/estado/tipo: 2026-10-13, CP-017 / PROPOSED / evaluación externa futura.
 - Fuente humana: adjunto actual solicita considerar PayPal además de CardNET/AZUL; CONFIRMED únicamente su incorporación a la evaluación. No proveedor aprobado ni sustitución de DEC-008/alternativas actuales.
 - Pendiente técnico/contractual/comercial Q-03/38 antes de primer código de pagos/P3: disponibilidad para el comerciante concreto RD, recurrencia/monedas/fees/cancelación/webhooks y condiciones verificables. No conexión/cobro/contratación ni afirmación de disponibilidad en esta ejecución; no bloquea QA sintética L2.
+
+## DEC-065 — Recuperación y reapertura reanudables de P1-L3
+
+**Vigencia CP-019: CONFIRMED / APPROVED / en el objeto exacto DEC-067; B separada DEC-068.** El estado PROPOSED siguiente describe exclusivamente CP-018 y se conserva como historia.
+
+- Fecha/estado/tipo: 2026-10-13, CP-018 / PROPOSED / SUGGESTED arquitectura/seguridad/operación; parte propuesta SC-010, sin A/B.
+- Fuente: instrucción humana CP-018 pide completar diseño; no aprueba mecanismo. [Candidato único](../.agentic/P1-L3_CANDIDATE.md) v0.2-CP018 contiene el objeto exacto para A futura. No duplicar baseline ni extender DEC-061/062.
+- Problema: restore CLOSED L2 no acredita procedimiento de apertura/continuación, material una-vez, cierre original, bindings de recursos o barreras entre generaciones.
+- Propuesta exacta:006/registros por run/tenant/guard, custodia write-ahead privada antes de SQL, expected before/after/CAS y compensación monotónica, reloj con transferencia registrada, promoción individual y activación final central atómica. Conservar namespace/resultados históricos/tombstones/SID antiguos revocados y recursos inciertos hasta fin positivo. Sólo RESTORE identificado consumible; TENANT/subject nunca retirados por recovery.
+- Alternativas descartadas: simple up/copiarcluster, regenerar claves por retry, adoptar versión actual, TTL/takeover, eliminar restricciones globalmente, 2PC/vault externo/microservicios sin necesidad.
+- Impacto/reverse-impact: schema3/006, authority/readerpools/descriptores, coordinator/SQLbarreras/results, entry/worker/clock, custodia/harness/regresiones y estado/mapa; snapshots y003–005 intactos. P2/P3/P4 mantienen gates de dominio, no implementación por extensión.
+- Validación/límites: revisión y modelo LOCAL sólo; SQL/HTTP/fsync/clock/restore/apertura reales NOT VERIFIED. CP017STOPPEDKEEP, nueva cohorte/margen/cotas/preflight sólo después de A/B/Development/Environment. Rollback cerrado/KEEP, sin datos reales ni origen abierto; resolve-before primer código L3/recurso/reapertura respectivamente.
+
+## DEC-066 — Readiness técnico independiente del número de empresas OPEN
+
+**Vigencia CP-019: CONFIRMED / APPROVED / en el objeto exacto DEC-067; B separada DEC-068.** El estado PROPOSED siguiente describe exclusivamente CP-018 y se conserva como historia.
+
+- Fecha/estado/tipo: 2026-10-13, CP-018 / PROPOSED / SUGGESTED contrato observable; parte propuesta SC-010, sin A/B.
+- Fuente: instrucción humana CP-018 pide evaluar cero empresas y contrato único; no cambio del handler actual. [Candidato L3§5](../.agentic/P1-L3_CANDIDATE.md#5-contrato-único-de-salud-y-autorización).
+- Propuesta exacta: live prueba proceso; ready200 sólo conformidad técnica/config/schema/clock/barrera/inventario completo y NORMAL válido o recovery COMPLETE. Cero empresas custodiado vacío o todas legítimamente CLOSED pueden200; elegible pendiente, UNKNOWN de recovery/cierre, error/conjunto incompleto dan503. Cuerpos mínimos/no-store; permiso/tenant/acción/cupo se comprueban por request y SQL, nunca concedidos por health.
+- Alternativas: exigir≥1OPEN o que todos OPEN produce503 engañoso con cero clientes/Bbloqueada; omitir DB/scopes o ignorar incertidumbre para conseguir200 descarta garantías.
+- Impacto/reverse-impact: app/ready/writes/observador SQL y consumidores QA/Compose propios; Nginx estático no ofrece healthcheck ni autoactivación actual. Misma barrera durable impide negocio aun si un proxy reenvía. Regresión diferencia ordinaryUNKNOWN con guardas íntegras del recoveryUNKNOWN; no falsear readinessCP017 histórica.
+- Gate/límites: DG-ready/F14/review documental antes A; handler/006/consumidores sólo después A/B y pruebas HTTP/SQL de salida L3. Sin proxy/DNS/production/cambios compartidos. A exacta debe incluir explícitamente SC-010 y ambas DEC propuestas; B separada.
+
+### SC-010 — APPROVED CP-019 / propuesta histórica CP-018
+
+Cambio real de mecanismo y readiness respecto de los fragmentos aprobados L1/L2, no SPEC ERRATA. Análisis de impacto en DEC-065/066 y candidato§9; cada garantía previa preservada o cambio exacto propuesto. Ninguna aprobación implícita, ninguna migración/handler modificado en CP-018. Resolver A del hash completo y B diferenciada antes del primer cambio funcional; verificar delta real en el lote autorizado, sin trasladar pruebas L3 a P6.
+
+## DEC-067 — A exacta de P1-L3 v0.2-CP018
+
+- Fecha/estado/tipo: 2026-10-13, CP-019 / CONFIRMED / APPROVED / A de baseline limitada.
+- Fuente humana directa: adjunto `2e724c7c-a1e8-4812-a713-c181042c0aba` §1, «APRUEBO A y AUTORIZO B»; verificación byte exacta del candidato en checkpoint `cace66cd34dbad31d480bef8f902bd71effbc0b1`, hash `4d1cf193000106dd20555f6c70acab3cb264fd3a7bfe0a9cf8be662eddb2b3ec`, antes de registrar.
+- Objeto: archivo completo, SC-010 y DEC-065/066, seis criterios, recuperación, custodia, promoción/readiness. DEC-065/066 y SC-010 pasan a APPROVED en este alcance; sus textos CP018 PROPOSED se conservan como historia. Es SPEC CHANGE real de mecanismo, no errata ni permiso de alterar snapshots L1/L2.
+- Impacto inverso aprobado: SQL006/schema3/guards, runtime/authority/pools/coordinator, reloj/entry propios, health/consumidores, protocolo privado y pruebas. Ningún cambio fiscal/comercial/operador/pagos/P2 por extensión. [Baseline protegida](specs/P1-L3.md).
+
+## DEC-068 — B integral e integración condicionada de P1-L3
+
+- Fecha/estado/tipo: 2026-10-13, CP-019 / CONFIRMED / APPROVED / ejecución diferenciada de A.
+- Fuente: mismo adjunto §1B/§§2…8; implementación integral L3 y QA nueva autorizadas tras Development/Environment/preflight, sin B por archivo/prueba/corrección/corte. PR/CI/review/merge exclusivamente con seis salidas y gates PASS y sin despliegue no autorizado.
+- Límites: PostgreSQL18.6 ARM64/dosAPI/privado/Compose propios, presupuesto exacto aprobado antes de recursos; preservar CP017/29de29, Coolify/Traefik/Nexora/EAK/DNS/puertos/producción/secretos ajenos y PR1. No P2 funcional, gastos, datos reales ni RPO/RTO comercial.
+- Q44/Q45 resueltas por fuente humana exacta; Environment y salida Q35 siguen pruebas independientes antes del recurso/TERMINAL. [Plan previo](../.agentic/P1-L3_PLAN.md).
+
+## DEC-069 — Cohorte sucesora tras el aborto inicial de Environment L3
+
+- Fecha/estado/tipo:2026-10-14, continuación posterior a CP-019 / CONFIRMED / APPROVED / infraestructura de ensayo y seguridad; **SC-011 APPROVED**.
+- Fuente humana directa actual: «Apruebo SC-011». Aprueba exactamente el objeto registrado en82569344118307d0165912f11ddc94bd93d9ee2d/P1-L3_ENV_RETRY, con r01KEEP/r02cerrado y todas sus cotas. Estado PROPOSED de CP-019 conservado en su checkpoint; no otra A/B L3 ni tercera cohorte por extensión.
+- Problema DETECTED: r01 publicó material definitivo y abortó TLS127 antes de PostgreSQL; caso45s vencido durante diagnóstico, ledger y recurso STOPPED/KEEP. No autoriza reset/regeneración ni declarar capacidad insuficiente. [Evidencia real](evidence/cp019/remote-run.json).
+- Decisión aprobada exacta (propuesta originalmente en CP-019): una pareja nueva r02/r02-target en sus raíces propias, con preflight/TLS corregido y mismos límites por cohorte, conservando r01/material/1061 cargos/evidencia y26 consumidores previos. Sin namespace libre, reutilización de secretos o tercera cohorte por extensión.
+- Motivo/alternativas: no se puede sustituir silenciosamente la whitelist de identidad del objeto aprobado ni reiniciar el caso para obtener PASS; mantener abortado y resolver el cambio acotado es la alternativa segura. [Objeto/impacto/reversión](../.agentic/P1-L3_ENV_RETRY.md).
+- Documentos/código afectados: enmienda del wrapper de baseline sin alterar snapshot; protocol/custody y adaptadores QA/ledger/config/fixture/copy/entry/tests con identidad cerrada nueva. L1/L2/P2…P6 conservan alcance y evidencia; P2 no autorizada. No imágenes/puertos compartidos/DNS/gasto.
+- Validación/resolve-before: revisión independiente de autoridad§6/8 y Prompt§5.1; aprobación SC-011 recibida antes de implementar r02. Quality/Environment/preflight y salida L3 se acreditan por separado. **No otra A/B integral L3**; el Prompt y el snapshot original siguen intactos.
+
+### SC-011 — APPROVED / propuesta CP-019 conservada históricamente
+
+Cambia exclusivamente los destinos y la identidad cerrada del siguiente intento QA; no es SPEC ERRATA ni cambio de contrato de producto. Los IDs r01 de la baseline corresponden al entorno realmente creado y al material final confirmado. Análisis/reverse-impact/rollback en P1-L3_ENV_RETRY; preservación y límites expresos. La implementación r02 queda autorizada por la aprobación actual, condicionada a Quality/Environment/preflight frescos, no a otra decisión humana.
+
+## DEC-070 — Ajuste SQL del ensayo r02 aprobado
+
+- Fecha/estado/tipo: 2026-10-15, CP-021 / CONFIRMED / APPROVED / condición cuantitativa de QA; **SC-012 APPROVED**. Fuente humana directa actual: «APRUEBO SC-012 / DEC-070», exclusivamente8192SQL/caso y200000global, sin ampliar los demás límites ni el número de escenarios. Objeto CP020 SHA-256 `7a3c8e4d1701e35b9474911b0da5ae61bd4336b8ee513510a6db54e7a1d602ab` en bcc268814b3e59e375960f87f6b5d8e0d8aff253.
+- Antecedente CP020: conteo local reproducible de módulos reales con dobles, [viabilidad](evidence/cp020/sql-budget-feasibility.md); propuesta aún no aprobada entonces. El mensaje humano CP021 sustituye únicamente ese estado y aprueba las dos cifras; no otras cotas o permisos.
+- Decisión aprobada exacta: **8192 SQL por caso y 200000 SQL global**, en vez de 140/3000. Cada query/transacción/observer/retry/reloj sigue contado; fuente/destino/variantes comparten el total. Ningún cambio de tiempo, HTTP, archivos, journal, CPU/RAM/conexiones, cuotas o identidad SC-011.
+- Motivo: 97 SQL de admisión por petición; subconjunto principal3298>3000 y caso de siete GET679>140 antes de otros costes. Fondo nominal88,333SQL/s da3975 por45s/159000 por30min exclusivos. Márgenes propuestos, no capacidad real ni garantía ante contención/fallos.
+- Impacto/alternativas/reverse-impact/rollback y condiciones: [objeto completo SC-012](../.agentic/P1-L3_SQL_BUDGET_CHANGE.md). SPEC CHANGE real, no errata; snapshot original y propuesta CP020 intactos. Aplicar8192/200000 a consumidores antes de recursos, conservando135escenarios del registro vigente y las otras cotas. Detener/conservar al agotar cualquier cota, sin ocultar consultas ni resetear casos.
+- Resolve-before: aprobación exacta recibida antes de modificar cotas; ahora coherencia de consumidores/registro, provider/publishers, review/Quality, proyección de carga y Environment/preflight físico actual antes de recursos. No nueva A/B funcional o SC011; no tercera cohorte, despliegue público o permiso compartido. Q-32 conserva evidencia de entrada; Q-35 salidas físicas e Integration. No aumentar número de escenarios ni otro presupuesto sin autorización específica.
+
+
+## DEC-071 — Límite acumulado de artefactos del ensayo r02
+
+2026-10-15 / APPROVED / CONFIRMED. Fuente humana directa: respuesta actual «Aprobar SC-013 / DEC-071 exclusivamente». Objeto técnico SC-013 v0.1-CP021 aprobado: [objeto revisable](../.agentic/P1-L3_ARTIFACT_BUDGET_CHANGE.md), SHA-256 `acd92b9ddb980a6bd0731610eb60b340601873ba39c981a21015c61d2514acf0`. Autoriza cambiar únicamente2000→8192 artefactos acumulados; mantener2000por caso y todos los demás límites, incluidas las135identidades de escenarios y las cotas SQL aprobadas DEC070.
+
+Fuente DETECTED/local: [conteo del programa real](evidence/cp021/artifact-budget-review.md), mínimo cerrado2020 y ampliado incompleto2414. Las dos optimizaciones puntuales evaluadas no aplicadas dejan2322antes de otras creaciones; no habilitan r02. La cota8192 quedó APPROVED por esta respuesta; su suficiencia y la capacidad siguen NOT VERIFIED. La propuesta original permanece histórica. Impacto/reverse-impact/alternativas/rollback y condiciones en el objeto. No autoriza recursos ni cambios compartidos; A/B DEC067/068 y SC011/SC012 conservadas, no se vuelven a solicitar. La aprobación resuelve sólo la decisión del contador. Resolve-before: aplicar/revisar todos los consumidores antes del primer ledger/material/recurso r02; Quality/controlador integral/preflight siguen separados.
+
+## DEC-072 — Cohorte sucesora r03 aprobada tras abortar r02
+
+2026-10-15 / APPROVED / CONFIRMED. **SC-014 APPROVED**, por fuente humana directa actual, tras verificar hash exacto y alcance. Autoriza aplicar coherentemente consumidores y crear únicamente QA r03/r03-target después de sus gates/preflight. No altera A/B DEC067/068 o SC011/012/013 ya aprobadas. Objeto exacto: [P1-L3_QA_RETRY_R03](../.agentic/P1-L3_QA_RETRY_R03.md), SHA-256 `b58ad6a856fd987bd6a23358b2f129e0a44a3a75c4206cf57b6d49a9e2d1df05`.
+
+Motivo DETECTED/REMOTE: r02 falló antes PG START por dos errores del arnés; el caso host-pg-start y el reloj global originales no habilitan continuar. Un contenedor CREATED inactivo se conserva con cleanup FAIL UNKNOWN1; no se adopta ni detiene por etiquetas. No es fallo SQL del producto. Propuesta: únicamente IDs/rutas r03/r03-target y redes privadas64/65/66, material/TLS/ledger nuevos propios elegidos una vez tras aprobación, conservando r01/r02/CP017. Mismos135 escenarios semánticos y todas las cotas; no r04, reset o gasto.
+
+SPEC CHANGE de identidad protegida, no errata. Impacto y reverse-impact/alternativas/riesgos/reversión y consumidores afectados en objeto. §5.1 exige aprobación explícita antes del cambio, seguida de coherencia/Quality/review/preflight físico fresco y Environment. La foto14:22 sin solapamientos no prueba disponibilidad futura. Fuente humana CP022: «APRUEBO SC-014 / DEC-072» exclusivamente para el objeto b58ad6a8…e2d1df05; [verificación previa](evidence/cp022/approval.json). Propuesta histórica y snapshot intactos. No r04 automático si aborta antes PG: análisis de causa raíz del procedimiento primero. Q32 localizado; Q35 y seis salidas/Integration permanecen NOT VERIFIED. No código funcional, P2, compartidos o producción autorizados por esta propuesta.
+
+### SE-003 — orden de integración y representación documental
+
+CP021 / SPEC ERRATA: precisión del wrapper SC012 y de la propuesta SC014 antes de aprobarla. Integration Gate requiere PR/CI/review/merge/canónica y no puede preceder al PR; seis salidas/Quality/review local sí lo preceden. Fuente: Prompt§8.5 y autorización condicional DEC068. No nueva garantía, excepción o permiso; snapshot protegido intacto y ninguna nueva aprobación inferida. DEC071 también aclara que8192 es una cota aprobada y su suficiencia sigue NOT VERIFIED. Evidencia: auditoría CP021 y review-close.

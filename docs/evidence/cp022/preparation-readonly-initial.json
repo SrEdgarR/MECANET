@@ -1,0 +1,9 @@
+{
+  "at": "2026-10-15T14:54:04.160395+00:00",
+  "result": "FAIL",
+  "scope": "read-only inspector path assumption",
+  "error": "SOURCE_COMPOSE_LOCATION",
+  "reason": "inspector looked for compose under master; actual own config is root/compose.json",
+  "remoteMutations": 0,
+  "r03Resources": 0
+}

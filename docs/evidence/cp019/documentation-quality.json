@@ -1,0 +1,103 @@
+{
+  "schema": "cp019-documentation-quality-v1",
+  "at": "2026-10-14T08:04:30.041580+00:00",
+  "result": "PASS DOCUMENTARY ONLY",
+  "codeSha": "64e647e3b3e95f5559d32ed9bb84bfe962e08496",
+  "checkpointSha": "identified externally after commit; no self reference",
+  "provenance": "LOCAL Git/hash/reference/map checks; no browser/DB/SSH/resource",
+  "checks": {
+    "protectedSnapshotsAndPrompt": "PASS",
+    "legacySQL001to005GitByteExact": "PASS",
+    "CP017AndCP018EvidencePreserved": "PASS",
+    "historicalCheckpointText": "PASS",
+    "newCodeUnchangedAfterQuality": "PASS",
+    "oneActivePhaseAndLimitedGates": "PASS",
+    "fourteenPending69Decisions306Criteria": "PASS",
+    "localReferences": "PASS",
+    "auditSection27": "PASS",
+    "derivedMapCheck": "PASS",
+    "noGlobalPercentage": "PASS"
+  },
+  "map": {
+    "phases": 8,
+    "active": "P1",
+    "decisions": 69,
+    "criteria": 306,
+    "pending": 14,
+    "blocking": 2,
+    "future": 12,
+    "feedback": 3
+  },
+  "references": {
+    "documents": 19,
+    "links": 324,
+    "missing": []
+  },
+  "legacyMigrationFiles": [
+    "server/saas/db/migrations/001-control.sql",
+    "server/saas/db/migrations/002-tenant.sql",
+    "server/saas/db/migrations/003-control-writers.sql",
+    "server/saas/db/migrations/003-tenant-writers.sql",
+    "server/saas/db/migrations/004-tenant-writers-fix.sql",
+    "server/saas/db/migrations/005-control-claim-ticket.sql"
+  ],
+  "canonicalInputs": [
+    {
+      "path": "docs/README.md",
+      "sha256": "58c984fa389d3557fd10f8dcba580238947d51696ad1882ee47d0d0c7a4ef1cd"
+    },
+    {
+      "path": "docs/PROJECT_STATE.md",
+      "sha256": "ecffb7bb039356c1b9a4cf29c9373996b34490c5e6e0266c9f021e8520c6f5f5"
+    },
+    {
+      "path": "docs/ROADMAP.md",
+      "sha256": "bcf1c6750a437311439599d258fe1251036701403bc2bff6fbbe65cf82074fe3"
+    },
+    {
+      "path": "docs/CHECKPOINTS.md",
+      "sha256": "6574b4383975b879407599df85a4ed8a2326d26510bb32d12b41cb4e1fd9e585"
+    },
+    {
+      "path": "docs/DECISIONS.md",
+      "sha256": "c623fe72f9a841713d54982f7713496d0c15d4c9ed8b416d6b8e7633fde45c13"
+    },
+    {
+      "path": ".agentic/PLANNING_STATE.md",
+      "sha256": "ca3b8cb4698769149a732bf3421f7ad926dd364369c8563508e1c862771ae8c6"
+    },
+    {
+      "path": "AGENTS.md",
+      "sha256": "c1723bf4a5977483a65686ea294ee07d15404d17382f01ab604f2f70aeb3f51a"
+    },
+    {
+      "path": "tasks/plan.md",
+      "sha256": "51516ade32dbdc7d7da4011fff53c254109d4187075110fe9aa99fdf76fe0440"
+    },
+    {
+      "path": "tasks/todo.md",
+      "sha256": "21ae622de44c4277ad575928fd0253ebc08a4cdf32e90e59db71253dce5c614f"
+    },
+    {
+      "path": ".agentic/P1-L3_ENV_RETRY.md",
+      "sha256": "78b0f7f149ab0f5028adeccd349b61482f0278001d46831ed756c858c1590381"
+    },
+    {
+      "path": "docs/audit/CP-019.md",
+      "sha256": "ca7fc9cac55aa55750debf11b39f077b903c9bd37b859917eb246f4c182ddddc"
+    }
+  ],
+  "maps": [
+    {
+      "path": "docs/PROJECT_MAP_DATA.json",
+      "sha256": "1d169c80b0d1e9c06ec054565160d53fb51184b467aee698396c4ce877150be5"
+    },
+    {
+      "path": "docs/project-map/index.html",
+      "sha256": "71f6d0a55eb965bc1aaf25cc4204007b3e075d80efd8cdeba3709a62ce2e43a1"
+    }
+  ],
+  "physicalAcceptance": "NOT VERIFIED",
+  "environmentGate": "FAIL r01",
+  "integrationGate": "NOT VERIFIED"
+}

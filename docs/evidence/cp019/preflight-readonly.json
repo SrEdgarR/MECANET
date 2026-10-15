@@ -1,0 +1,34 @@
+{
+  "checks": {
+    "arm64": true,
+    "sourceAbsent": true,
+    "targetAbsent": true,
+    "netAvailable": true,
+    "previousStopped": true,
+    "imagesArm64": true,
+    "ramMargin": true,
+    "diskMargin": true,
+    "cpuBelow80": true
+  },
+  "result": "PASS",
+  "time": "2026-10-14T02:42:28Z",
+  "kernel": "7.0.0-1011-oracle",
+  "architecture": "aarch64",
+  "docker": "Docker version 29.8.1, build 4a63305",
+  "compose": "5.5.1",
+  "resources": {
+    "availableMiB": 8414,
+    "diskFreeBytes": 140796121088,
+    "cpuBusyPercent": 5.78
+  },
+  "networkConflicts": [],
+  "images": {
+    "node": "arm64",
+    "postgres": "arm64",
+    "nginx": "arm64"
+  },
+  "resourceMutation": false,
+  "consumerCount": 26,
+  "scope": "preliminary READ ONLY; full resource preflight required immediately before own creation",
+  "canonicalBase": "86985fe7589032f202ebf0cb057a9b1384217151"
+}

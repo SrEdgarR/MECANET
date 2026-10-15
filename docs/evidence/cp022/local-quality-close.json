@@ -1,0 +1,68 @@
+{
+  "schema": "cp022-local-quality-close-v1",
+  "at": "2026-10-15T15:31:30.642765+00:00",
+  "result": "PASS",
+  "localOnly": true,
+  "runtimeSha": "7f5986f01c1cce8c35ba3e9635d9001523da0bc8",
+  "diagnosticFixSha": "67f9c448a3e56b7040e3f937a4e1b17588373d97",
+  "runtimeReplacedRemotely": false,
+  "red": {
+    "exitCode": 1,
+    "tests": 31,
+    "outputSha256": "66fc0568d27f10bf720f288b6ea4de7fe9bf66c541b8d6852e4bda0dc4937320",
+    "tail": "...........................FFF...\n======================================================================\nFAIL: test_summary_preserves_numeric_observation_that_trips_resource_limit (__main__.PassiveModels.test_summary_preserves_numeric_observation_that_trips_resource_limit) (code='RESOURCE_CPU_LIMIT')\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"C:\\Users\\thede\\AppData\\Local\\Temp\\mecanet-cp022-monitor-red-rcyad7e3\\resource-monitor.test.py\", line 34, in test_summary_preserves_numeric_observation_that_trips_resource_limit\n    self.assertEqual(out['error'],code);self.assertTrue(out['failed']);self.assertEqual(out['maxHostCpuBusyPercent'],round(max(62.626,busy),3));self.assertEqual(out['minimumAvailableMiB'],min(5000,available));self.assertEqual(out['minimumDiskFreeBytes'],min(20*1024**3,free));self.assertEqual(out['cpuSamples'],2)\n                                                                       ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: 62.626 != 94.5\n\n======================================================================\nFAIL: test_summary_preserves_numeric_observation_that_trips_resource_limit (__main__.PassiveModels.test_summary_preserves_numeric_observation_that_trips_resource_limit) (code='RESOURCE_MEMORY_LIMIT')\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"C:\\Users\\thede\\AppData\\Local\\Temp\\mecanet-cp022-monitor-red-rcyad7e3\\resource-monitor.test.py\", line 34, in test_summary_preserves_numeric_observation_that_trips_resource_limit\n    self.assertEqual(out['error'],code);self.assertTrue(out['failed']);self.assertEqual(out['maxHostCpuBusyPercent'],round(max(62.626,busy),3));self.assertEqual(out['minimumAvailableMiB'],min(5000,available));self.assertEqual(out['minimumDiskFreeBytes'],min(20*1024**3,free));self.assertEqual(out['cpuSamples'],2)\n                                                                                                                                                ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: 5000 != 3071\n\n======================================================================\nFAIL: test_summary_preserves_numeric_observation_that_trips_resource_limit (__main__.PassiveModels.test_summary_preserves_numeric_observation_that_trips_resource_limit) (code='RESOURCE_DISK_LIMIT')\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"C:\\Users\\thede\\AppData\\Local\\Temp\\mecanet-cp022-monitor-red-rcyad7e3\\resource-monitor.test.py\", line 34, in test_summary_preserves_numeric_observation_that_trips_resource_limit\n    self.assertEqual(out['error'],code);self.assertTrue(out['failed']);self.assertEqual(out['maxHostCpuBusyPercent'],round(max(62.626,busy),3));self.assertEqual(out['minimumAvailableMiB'],min(5000,available));self.assertEqual(out['minimumDiskFreeBytes'],min(20*1024**3,free));self.assertEqual(out['cpuSamples'],2)\n                                                                                                                                                ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: 5000 != 4096\n\n----------------------------------------------------------------------\nRan 31 tests in 0.034s\n\nFAILED (failures=3)\n"
+  },
+  "green": {
+    "exitCode": 0,
+    "tests": 31,
+    "outputSha256": "aa6fbe01eba46c1f708852d7b362b534bd6b821a640828b92ba57e2e63e25b33",
+    "tail": "...............................\n----------------------------------------------------------------------\nRan 31 tests in 0.032s\n\nOK\n"
+  },
+  "deltaFiles": {
+    "tests/qa/cp019/resource-monitor.py": "eb14f355ff7d925094f0e038d8c60901c39c93451aa882d76658020dd2a66a74",
+    "tests/qa/cp019/resource-monitor.test.py": "857b6f9ee05458fb9ca6d17ac6b31d19221a8bd0bc2194110a1f1d75be19ec9e"
+  },
+  "independentReview": {
+    "at": "2026-10-15T15:24:41.812905+00:00",
+    "checks": [
+      "valid CPU/RAM/disk extrema recorded before resource assertions",
+      "CPU guard busy<90 remains unchanged",
+      "RAM>=3072MiB and free>max15GiB/10percent remain unchanged",
+      "old abort latch retains first failure after a later valid observation",
+      "NaN/Infinity/string/bool not accumulated as valid CPU measurements",
+      "non-resource failures still abort independently",
+      "no remote helper or runtime artifact mutation"
+    ],
+    "fail": 0,
+    "pass": 31,
+    "remoteEffects": 0,
+    "requiredOpen": 0,
+    "result": "PASS",
+    "schema": "cp022-monitor-independent-review-v1",
+    "scope": "Local Python models and source review only; not physical resource or recovery verification",
+    "sourceSha256": "eb14f355ff7d925094f0e038d8c60901c39c93451aa882d76658020dd2a66a74",
+    "testSha256": "857b6f9ee05458fb9ca6d17ac6b31d19221a8bd0bc2194110a1f1d75be19ec9e"
+  },
+  "node": {
+    "tests": 415,
+    "files": 39,
+    "source": "local-node-after-monitor.json",
+    "freshCompleteRun": true,
+    "reason": "the earlier broad recorded input set includes the two changed monitor files"
+  },
+  "python": {
+    "tests": 395,
+    "files": 18,
+    "union": "393 tests on runtime7f minus original29monitor plus fresh31 on67f; all other recorded input bytes identical",
+    "source": "local-python.json",
+    "freshCompleteRun": false
+  },
+  "unchangedLimits": {
+    "cpuAbortPercent": 90,
+    "minAvailableMiB": 3072,
+    "diskFree": "greater than max(15GiB,10%)",
+    "otherBudgets": "unchanged"
+  },
+  "physicalAcceptance": "A2..A6 NOT VERIFIED",
+  "remoteRunPreserved": "9bd6b77c0f3de7de60c9e9790146989672067478126102fc18bc976819754453"
+}

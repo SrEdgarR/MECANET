@@ -1,0 +1,45 @@
+{
+  "schema": "cp022-arm64-tls-preflight-v1",
+  "at": "2026-10-15T15:09:30.667861+00:00",
+  "result": "PASS",
+  "architecture": "aarch64",
+  "pairs": [
+    {
+      "project": "mecanet-qa-p1l3-r03",
+      "service": "postgres",
+      "tls": "TLSv1.3",
+      "hostnameVerified": true,
+      "chainVerified": true,
+      "keyPairVerified": true
+    },
+    {
+      "project": "mecanet-qa-p1l3-r03",
+      "service": "web",
+      "tls": "TLSv1.3",
+      "hostnameVerified": true,
+      "chainVerified": true,
+      "keyPairVerified": true
+    },
+    {
+      "project": "mecanet-qa-p1l3-r03-target",
+      "service": "postgres",
+      "tls": "TLSv1.3",
+      "hostnameVerified": true,
+      "chainVerified": true,
+      "keyPairVerified": true
+    },
+    {
+      "project": "mecanet-qa-p1l3-r03-target",
+      "service": "web",
+      "tls": "TLSv1.3",
+      "hostnameVerified": true,
+      "chainVerified": true,
+      "keyPairVerified": true
+    }
+  ],
+  "memoryFdsClosed": 12,
+  "persistentFilesCreated": 0,
+  "socketsUsed": 0,
+  "qaRootsCreated": 0,
+  "materialPrinted": false
+}

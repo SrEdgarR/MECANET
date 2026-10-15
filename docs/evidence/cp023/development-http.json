@@ -1,0 +1,82 @@
+{
+  "schema": "cp023-development-http-v1",
+  "status": "PASS",
+  "environment": "Windows x64 PostgreSQL18.6 TLS loopback; not ARM64/VPS QA",
+  "checks": [
+    {
+      "name": "readiness-two-independent-api",
+      "status": "PASS",
+      "api": 1,
+      "httpStatus": 200
+    },
+    {
+      "name": "readiness-two-independent-api",
+      "status": "PASS",
+      "api": 2,
+      "httpStatus": 200
+    },
+    {
+      "name": "real-login-with-temporary-fixture-credentials",
+      "status": "PASS"
+    },
+    {
+      "name": "same-session-on-second-api",
+      "status": "PASS"
+    },
+    {
+      "name": "product-idempotency-across-two-processes",
+      "status": "PASS"
+    },
+    {
+      "name": "positive-receipt-and-no-duplicate-on-uuid-replay",
+      "status": "PASS"
+    },
+    {
+      "name": "same-actor-historical-operation-on-other-api",
+      "status": "PASS"
+    },
+    {
+      "name": "inventory-and-movements-through-real-http",
+      "status": "PASS"
+    },
+    {
+      "name": "company-a-session-cannot-read-company-b",
+      "status": "PASS"
+    },
+    {
+      "name": "sql-observation-confirms-two-operations-one-movement",
+      "status": "PASS"
+    }
+  ],
+  "httpCalls": 13,
+  "apiProcesses": [
+    {
+      "instance": "api1",
+      "pid": 760,
+      "port": 18441
+    },
+    {
+      "instance": "api2",
+      "pid": 21456,
+      "port": 18442
+    }
+  ],
+  "sqlEffectObservation": {
+    "operations": 2,
+    "movements": 1
+  },
+  "physicalRecovery": "NOT VERIFIED",
+  "provenance": {
+    "sourceSha": "a3b5752c178afa20d3835aebc8e3c88d04fbc02a",
+    "nodeProcess": 26076,
+    "httpFunctionSha256": "28623e4d7aa7086017f9ae7ddb92879cd46d99dc6b059654f78c4b752093f14b",
+    "platform": "win32",
+    "architecture": "x64",
+    "representationErrata": {
+      "classification": "SPEC ERRATA / evidence representation only",
+      "rawReport": "development-http-raw.json",
+      "rawSha256": "47f6b8970e9e7508e769dd643fb19b5e5a1dc5ed9238fcfc862d9dbc75bedfe7",
+      "change": "two successful readiness check status=200 represented as status=PASS/httpStatus=200; no new test claimed"
+    }
+  }
+}

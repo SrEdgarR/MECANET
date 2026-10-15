@@ -1,0 +1,70 @@
+{
+  "schema": "cp020-verification-index-v1",
+  "at": "2026-10-15T11:38:40.332765+00:00",
+  "status": "PASS LOCAL UNION",
+  "baseSha": "86985fe7589032f202ebf0cb057a9b1384217151",
+  "fullRunSha": "e6ac8026e59322b992fff3584377cf97a75291ec",
+  "testedCodeSha": "dd7dc0d303e0bacff354c8e6b70a8df1c2b191c2",
+  "fullRun": {
+    "path": "docs/evidence/cp020/local-quality.json",
+    "sha256": "e50600a7fafc730210551397cd27d5c78a5a54acad9f3bf55e643a4d3349621e",
+    "status": "FAIL preserved:1 Python fixture failure;600/600 Node PASS"
+  },
+  "finalUnion": {
+    "path": "docs/evidence/cp020/local-quality-final.json",
+    "sha256": "bce49956cd2824eac24f9b25c99ae51dfc08d4a03128c4b46ca3da5fc142026c",
+    "status": "PASS",
+    "changedPriorInputs": 3,
+    "unchangedPriorInputs": 280,
+    "addedInputs": 1
+  },
+  "rootDelta": {
+    "nodeTests": 21,
+    "pythonTargetHost": 25,
+    "syntaxJS": 2,
+    "syntaxPython": 2,
+    "passiveGitImports": 9,
+    "runtimeFiles": 580,
+    "archiveWritten": false,
+    "tempRemoved": true
+  },
+  "audits": {
+    "backendFullAndRuntime": 0,
+    "frontendLaneFullAndRuntime": 0,
+    "legacy": "Historical FAIL/TD-21 conserved; not audited or included by extension"
+  },
+  "scope": "No physical PostgreSQL/HTTP/GUI/restore r02; no remote actions during the15Oct resume",
+  "reviews": [
+    {
+      "path": "docs/evidence/cp020/review-copy-journal.json",
+      "sha256": "4daa7b3b842cead29ccc80c0c88205e831af8a3a7fba8e7079a611ef6a56e187"
+    },
+    {
+      "path": "docs/evidence/cp020/review-a5-schema.md",
+      "sha256": "fb439edbfb82dc7d5549d5ad13577dda1621efd4f18b05169630186e66a7fe96"
+    }
+  ],
+  "sqlBudget": {
+    "effectiveCase": 140,
+    "effectiveGlobal": 3000,
+    "proposedCase": 8192,
+    "proposedGlobal": 200000,
+    "proposalStatus": "SUGGESTED / NOT APPROVED",
+    "caseRegistryCount": 135,
+    "caseRegistrySha256": "ba43bef8cdd8351c58c9cc3a6ccc4b109f0aaf0e59d1856fe6c67903912e182f"
+  },
+  "proposal": {
+    "path": ".agentic/P1-L3_SQL_BUDGET_CHANGE.md",
+    "sha256": "7a3c8e4d1701e35b9474911b0da5ae61bd4336b8ee513510a6db54e7a1d602ab"
+  },
+  "methodologyFinding": "Budget infeasibility and QA bugs are project findings, not a new defect of Prompt Maestro; AUD001-003 conserved",
+  "infrastructure": {
+    "qaR02ResourcesCreated": 0,
+    "r02Started": false,
+    "r02LedgerCreated": false,
+    "productionModified": false,
+    "sharedServicesModified": false,
+    "tlsInputFilesPreparedEarlier": 19,
+    "lastRemotePreservation": "2026-10-14T15:14:58.274656+00:00;26 prior consumers unchanged/1 failed r01tool stopped KEEP, not a current preflight"
+  }
+}

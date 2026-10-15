@@ -1,0 +1,17 @@
+{
+  "at": "2026-10-15T13:57:57.650407+00:00",
+  "startedUptime": 1465333.09,
+  "nowUptime": 1465601.46,
+  "total": {
+    "artifactFiles": 636,
+    "http": 0,
+    "journal": 0,
+    "sql": 0
+  },
+  "hostPgCase": null,
+  "supportsNoDeps": false,
+  "supportsNoRecreate": true,
+  "rootsPresent": true,
+  "evidencePreserved": true,
+  "elapsedSeconds": 268.37
+}

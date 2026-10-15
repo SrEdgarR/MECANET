@@ -1,0 +1,36 @@
+{
+  "schema": "cp021-extension-upload-v1",
+  "at": "2026-10-15T14:11:42.653531+00:00",
+  "controllerRevision": "79fab18359e49703b9fb823f8fc099fa6c1a7f7f",
+  "runtimeSourceSha": "ca15ed980de8167cc6144285a43b85cfbf71a7d3",
+  "parentPlanHash": "ca6b57c002446a8cd1549680a2fb187f1d524b1ff1d064e69aa4ad7307c71263",
+  "extensionHash": "571c19d48609a1fd3e9b5a8b2deceed9a14511514bfcf5a3c55076d9ee73bda7",
+  "helpers": {
+    "resume.py": "a2582eb90a72c1cac0ff7a0c6eed9d3f826b1f17668bb4cb05e357559a6b87c2",
+    "resume-state.py": "ee8510cf3e616a29218d06aaad49c017647806a30faeb9ffb790db296bde1763",
+    "compose-compat.py": "bddb0fe71dbc5da8d05eb096a575a41218a3759de62e1627829db9f862d3e05b"
+  },
+  "preservedFileCount": 36,
+  "originalLedgerAnchor": {
+    "registryHash": "193c5b53f0df3243fa9c3c30b6bafdfd4a4cfdc7299db46db0016b182fa75b84",
+    "sequence": 41,
+    "startedUptime": 1465333.09,
+    "total": {
+      "artifactFiles": 636,
+      "http": 0,
+      "journal": 0,
+      "sql": 0
+    }
+  },
+  "publication": {
+    "result": "PASS",
+    "files": 4,
+    "mode": "Root0700/0400",
+    "ledgerReset": false,
+    "materialRegenerated": false,
+    "runtimeSourceSha": "ca15ed980de8167cc6144285a43b85cfbf71a7d3"
+  },
+  "newContainers": 0,
+  "newNetworks": 0,
+  "originalHelpersModified": false
+}

@@ -1,0 +1,35 @@
+{
+  "schema": "cp020-artifact-smoke-v1",
+  "status": "PASS",
+  "sourceSha": "ca15ed980de8167cc6144285a43b85cfbf71a7d3",
+  "selectorSha256": "443a2994db43393d1eeb8bde797df05184d1c33451d6a4dceeb33dd8fc2e4ade",
+  "smokeSha256": "f410639756f32b9ee30ea30bee62a5813611d5625bd4f59e616a6860d326ffb2",
+  "runtimeIndexSha256": "490abc1bac7b50b51e03e15cd6aa0e6a0de90910635f0994b8257e62a0347863",
+  "files": 595,
+  "bytes": 3902579,
+  "publicBundleFiles": 3,
+  "passiveImports": [
+    "tests/qa/cp019/entry.mjs",
+    "tests/qa/cp019/worker.mjs",
+    "tests/qa/cp019/runtime-driver.mjs",
+    "tests/qa/cp019/target-runtime.mjs",
+    "tests/qa/cp019/browser.mjs",
+    "server/saas/node_modules/pg/esm/index.mjs",
+    "tests/qa/cp019/a5-negatives.mjs",
+    "tests/qa/cp019/schema-fault-probe.mjs",
+    "tests/qa/cp019/archived-l2-pools.mjs",
+    "tests/qa/cp019/commit-fault-hook.mjs",
+    "tests/qa/cp019/commit-fault-probe.mjs",
+    "tests/qa/cp019/readiness-variant.mjs",
+    "tests/qa/cp019/promotion-barrier.mjs"
+  ],
+  "nodeVersion": "v24.21.0",
+  "archivedComponent": {
+    "baseSha": "86985fe7589032f202ebf0cb057a9b1384217151",
+    "sha256": "b8eebead8655a0b6eae42df6d923d119ca2648457175e43d80e6e28ef4fb76f3"
+  },
+  "temporaryStageRemoved": true,
+  "archiveWritten": false,
+  "secretOutput": false,
+  "elapsedSeconds": 8.863
+}

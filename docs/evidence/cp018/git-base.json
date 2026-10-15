@@ -1,0 +1,29 @@
+{
+  "checkpoint": "CP-018",
+  "classification": "DETECTED",
+  "provenance": "LOCAL git + REMOTE authenticated GitHub read-only",
+  "observedAt": "2026-10-13T23:56:57.876916+00:00",
+  "account": "SrEdgarR",
+  "baseSha": "86985fe7589032f202ebf0cb057a9b1384217151",
+  "localHeadBeforeEdits": "86985fe7589032f202ebf0cb057a9b1384217151",
+  "remoteCanonicalSha": "86985fe7589032f202ebf0cb057a9b1384217151",
+  "branch": "codex/p1-l3-design",
+  "worktree": "C:\\Users\\thede\\.codex\\worktrees\\p1l1-integration\\MECANET-develop",
+  "primaryPreservedHead": "704b4ae22f1af7fe868d3faf6bdf17a227fb0f50",
+  "primaryPreservedChanges": [
+    "untracked original methodology document"
+  ],
+  "remoteFinalCI": {
+    "id": 38483733526,
+    "headSha": "86985fe7589032f202ebf0cb057a9b1384217151",
+    "conclusion": "success"
+  },
+  "remoteMutations": [],
+  "resourcesCreated": 0,
+  "sshCalls": 0,
+  "scope": "Documentation/pure model only; no A/B L3",
+  "protectedHashes": {
+    "docs/methodology/Prompt_Maestro_v2.0.md": "d2dafd5f75df32aae33e421953fab6e99e723aa88744b918b555562c7b6a550d",
+    "docs/specs/p1-l2-approved/baseline.md": "ca975dc822c0bd5e872d3debe824abc536f662007513170f327727878ff3ac71"
+  }
+}

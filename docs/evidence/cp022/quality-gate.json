@@ -1,0 +1,40 @@
+{
+  "schema": "cp022-local-quality-gate-v1",
+  "at": "2026-10-15T15:04:23.526314+00:00",
+  "sourceSha": "7f5986f01c1cce8c35ba3e9635d9001523da0bc8",
+  "result": "PASS",
+  "scope": "LOCAL QA contracts/models and frozen frontend inputs, not physical acceptance",
+  "node": {
+    "tests": 415,
+    "files": 39,
+    "source": "local-node.json",
+    "exactGit": true
+  },
+  "python": {
+    "tests": 393,
+    "files": 18,
+    "source": "local-python.json",
+    "exactGit": true
+  },
+  "syntaxChangedJavaScript": 63,
+  "pythonCompile": 37,
+  "artifactSmoke": "git-artifact-smoke.json",
+  "assets": {
+    "files": 3,
+    "inputs": 28,
+    "frozenOracleVerified": true,
+    "rebuild": false
+  },
+  "dependencies": {
+    "lockHashes": {
+      "server/saas/package.json": "81bae24ed651002ebeabb2c8d234583fc051c413d0eb54d793b289affce1b65e",
+      "server/saas/package-lock.json": "ee71de65fed14da54be916f00d239388d32cca896d6577870db619ad17bb80e0",
+      "scripts/ci/saas-toolchain/package.json": "85643425a0ffdabfda1d4331ce01ac94ac2704626b07ac27e0c437347812edd4",
+      "scripts/ci/saas-toolchain/package-lock.json": "d793a6a5ef5a7a9e9d07a9c586a903a96672be9d08d21537a55a511098468470"
+    },
+    "previousOwnAuditsZeroReused": "cp021/quality-gate.json by unchanged locks; legacyTD21 FAIL retained",
+    "newDependencies": false
+  },
+  "independentReview": "protocol/MJS/Python targeted, required defects fixed; private upload/run review pending separately",
+  "physicalCriteria": "A2..A6 NOT VERIFIED"
+}

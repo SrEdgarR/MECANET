@@ -1,0 +1,29 @@
+{
+  "schema": "cp022-compose-config-preflight-v1",
+  "at": "2026-10-15T15:01:44.292080+00:00",
+  "result": "PASS",
+  "scope": "read-only model of real saved r02 config translated to exact r03 namespaces/subnets; not r03 material or runtime",
+  "rows": [
+    {
+      "project": "mecanet-qa-p1l3-r03",
+      "services": 7,
+      "networks": 2,
+      "stdinHash": "a4a6a56766ec28aaf47f646e7c353e1130c357e249832e0f818cdeac2d36fcfa",
+      "normalizedHash": "411ecd969d43b35d15f0072801a1404bf3b144ea46725c2370c9f44dc3aaf8f0",
+      "ports": 0,
+      "createStartRunIssued": false
+    },
+    {
+      "project": "mecanet-qa-p1l3-r03-target",
+      "services": 7,
+      "networks": 2,
+      "stdinHash": "6f6b5ba3d6c6f220a0f7d3cf34747aeff91e06335531ec23746b73658ba599fd",
+      "normalizedHash": "81eef82e172eb90de269d9fa9cdb3abcd13d854e2fa14dea93a95557e9d15696",
+      "ports": 0,
+      "createStartRunIssued": false
+    }
+  ],
+  "mutations": 0,
+  "environmentFile": "/dev/null",
+  "resourcesCreated": 0
+}

@@ -1,0 +1,10 @@
+{
+  "schema": "cp023-006-reproduction-v1",
+  "status": "FAIL",
+  "sqlState": "42601",
+  "position": "8693",
+  "internalPosition": null,
+  "routine": "scanner_yyerror",
+  "message": "error de sintaxis al final de la entrada",
+  "secretOutput": false
+}

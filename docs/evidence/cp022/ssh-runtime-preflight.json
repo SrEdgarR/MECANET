@@ -1,0 +1,9 @@
+{
+  "at": "2026-10-15T15:10:06.433507+00:00",
+  "result": "PASS",
+  "sshFilteredSupportEnvironment": true,
+  "exitCode": 0,
+  "stdoutBytes": 0,
+  "stderrBytes": 0,
+  "remoteMutations": 0
+}

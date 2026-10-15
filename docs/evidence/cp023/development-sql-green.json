@@ -1,0 +1,124 @@
+{
+  "schema": "cp023-development-integration-v1",
+  "status": "PASS",
+  "sourceSha": "a3b5752c178afa20d3835aebc8e3c88d04fbc02a",
+  "environment": "fresh loopback PostgreSQL18.6 development; not ARM64/VPS QA",
+  "systemIdentifier": "7696930096056248912",
+  "checks": [
+    {
+      "name": "exclusive-loopback-cluster",
+      "status": "PASS",
+      "version": "180006",
+      "osArchitecture": "development host only; not ARM64 QA"
+    },
+    {
+      "name": "private-material-published-before-ddl",
+      "status": "PASS",
+      "materialHash": "a7a56f302c88dd614f3e9715704b1ffc1bff3b282f555f57831632fd34ffdba6",
+      "directoryDurability": "NOT VERIFIED ON WINDOWS"
+    },
+    {
+      "name": "sql001-through005-and-synthetic-fixture",
+      "status": "PASS"
+    },
+    {
+      "name": "sql006-real-ddl",
+      "status": "PASS"
+    },
+    {
+      "name": "normal-cas-idempotent-bootstrap-clock-and-runtime-guard",
+      "status": "PASS",
+      "proofScope": "synthetic local SQL bootstrap, not physical SourceFIN or restore"
+    },
+    {
+      "name": "real-product-receipt-concurrent-idempotent-replay",
+      "status": "PASS",
+      "products": 1,
+      "movements": 1,
+      "stock": "7",
+      "directTenantSql": true
+    },
+    {
+      "name": "stale-epoch-denied-and-original-history",
+      "status": "PASS"
+    }
+  ],
+  "migrations": [
+    {
+      "database": "mecanet_tenant_a",
+      "file": "002-tenant.sql",
+      "version": 2,
+      "sha256": "76965dee4d8f4bbe2462272012db76b9466439128d8b974cb8abeeecd53011a0"
+    },
+    {
+      "database": "mecanet_tenant_b",
+      "file": "002-tenant.sql",
+      "version": 2,
+      "sha256": "76965dee4d8f4bbe2462272012db76b9466439128d8b974cb8abeeecd53011a0"
+    },
+    {
+      "database": "mecanet_demo",
+      "file": "002-tenant.sql",
+      "version": 2,
+      "sha256": "76965dee4d8f4bbe2462272012db76b9466439128d8b974cb8abeeecd53011a0"
+    },
+    {
+      "database": "mecanet_control",
+      "file": "003-control-writers.sql",
+      "version": 3,
+      "sha256": "c5036db5fd1a71ea94e7d7feee25e299dcb074e25108465304ac6dff92955d07"
+    },
+    {
+      "database": "mecanet_tenant_a",
+      "file": "003-tenant-writers.sql",
+      "version": 3,
+      "sha256": "5fe454b89dbc5f821f742456deb2ebde08b9142048b2eac33ef9352eb87bce06"
+    },
+    {
+      "database": "mecanet_tenant_a",
+      "file": "004-tenant-writers-fix.sql",
+      "version": 4,
+      "sha256": "df6f2229217479c45ec21ef31165ed8e16d939300c76f313e3f2d2b79555d854"
+    },
+    {
+      "database": "mecanet_tenant_b",
+      "file": "003-tenant-writers.sql",
+      "version": 3,
+      "sha256": "5fe454b89dbc5f821f742456deb2ebde08b9142048b2eac33ef9352eb87bce06"
+    },
+    {
+      "database": "mecanet_tenant_b",
+      "file": "004-tenant-writers-fix.sql",
+      "version": 4,
+      "sha256": "df6f2229217479c45ec21ef31165ed8e16d939300c76f313e3f2d2b79555d854"
+    },
+    {
+      "database": "mecanet_control",
+      "file": "005-control-claim-ticket.sql",
+      "version": 5,
+      "sha256": "6f50da1b59b6f2c73733aa6c2c5f1698bdb3b8afab679e854f0705f030438e1e"
+    },
+    {
+      "database": "mecanet_tenant_a",
+      "file": "006-tenant-recovery.sql",
+      "version": 6,
+      "sha256": "cefc4d33b05ab44e82c05627f919f4df8a4bbfdf7fa352f344abbe8eca1115fa"
+    },
+    {
+      "database": "mecanet_tenant_b",
+      "file": "006-tenant-recovery.sql",
+      "version": 6,
+      "sha256": "cefc4d33b05ab44e82c05627f919f4df8a4bbfdf7fa352f344abbe8eca1115fa"
+    },
+    {
+      "database": "mecanet_control",
+      "file": "006-control-recovery.sql",
+      "version": 6,
+      "sha256": "012c440c59c8acbb012ef6a019822643660b008f014cf505719ccec900ca44e9"
+    }
+  ],
+  "sqlCommands": 275,
+  "physicalRecovery": "NOT VERIFIED",
+  "twoApi": "NOT VERIFIED by this runner",
+  "cleanup": "Root must call returned close() then own native PG cleanup"
+}

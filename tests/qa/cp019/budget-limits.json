@@ -1,0 +1,1 @@
+{"case":{"artifactFiles":2000,"http":80,"journal":1000,"sql":8192},"caseSeconds":45,"cohortSeconds":1800,"global":{"artifactFiles":8192,"http":300,"journal":1000,"sql":200000},"scenarioCount":135,"schema":"cp021-budget-limits-v1"}

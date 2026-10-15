@@ -1,0 +1,140 @@
+{
+  "schema": "cp022-python-exact-v1",
+  "at": "2026-10-15T14:59:53.839658+00:00",
+  "sourceSha": "7f5986f01c1cce8c35ba3e9635d9001523da0bc8",
+  "inputs": {
+    "tests/qa/cp019/artifact-smoke.py": "4b8d56f5ccc0eb5a2825147bff3aef95bc32edc25d36f84c1051ff7806dd5a17",
+    "tests/qa/cp019/artifact.py": "0555ffb90aad1e2128e22327fea83d569f1057d4837e3d85268295013e2da794",
+    "tests/qa/cp019/artifact.test.py": "b85aead2e83eb7e4275f972cf545445f27f694fbb2723225e1de945553430e7e",
+    "tests/qa/cp019/browser-config.py": "fbaa269b87ed41f05b9642c042eeaa2c1a111ee020cadd6c2ec814270fff124a",
+    "tests/qa/cp019/browser-config.test.py": "ae626999d47ee10ccaf9f4afddbc287955aebecd031cc423eb729e27a6c57cfe",
+    "tests/qa/cp019/compose-compat.py": "bddb0fe71dbc5da8d05eb096a575a41218a3759de62e1627829db9f862d3e05b",
+    "tests/qa/cp019/compose-compat.test.py": "6647d4ad6228f1188442f123acaedf9719565e27689817b29bdc45bd4d0d11a6",
+    "tests/qa/cp019/controller.py": "347734f44f889a754b547a7f161dc46011685f898882509d5c80f698feb3774c",
+    "tests/qa/cp019/controller.test.py": "c26af3129a7c636a338ddb3ccf8b191d73fd3064fec49f273bc526e8ccf3f9bb",
+    "tests/qa/cp019/host.py": "bcecffab7d9bfade1c4af46c32bf895dc87fba4ca923240450e6340489fcd725",
+    "tests/qa/cp019/host.test.py": "2f4c82714e6ce4941e055107d413ea2decd640d39f184423e737bf789d06b26b",
+    "tests/qa/cp019/resource-monitor.py": "e307c2d42269bc08c3c5ea793a1243c002e54db862c562dce38a37f8cb539680",
+    "tests/qa/cp019/resource-monitor.test.py": "5f2d8ae7515a2068946e36a56253dc0fa869662e7d037640fe07976d17135e55",
+    "tests/qa/cp019/resume-state.py": "ee8510cf3e616a29218d06aaad49c017647806a30faeb9ffb790db296bde1763",
+    "tests/qa/cp019/resume-state.test.py": "3fc8e32ae843fcbad1c865dc78b6fc36e11d2cf70ded297c54ae7ee0962ea761",
+    "tests/qa/cp019/resume.py": "a2582eb90a72c1cac0ff7a0c6eed9d3f826b1f17668bb4cb05e357559a6b87c2",
+    "tests/qa/cp019/resume.test.py": "332c6e7699009cf924c1df13b3c1a169caf8e9fafae58da6a6ac19d75ba837f6",
+    "tests/qa/cp019/runner.py": "9af303e7e836fc126e5bfcea8aacc47aa9a785b1f618cbbf01bd89ed36fd2bd6",
+    "tests/qa/cp019/runner.test.py": "5ef4b68a0c114ad2ef65450b296cb05b46a4ee644fa32d1e6a6625933e8c1fb1",
+    "tests/qa/cp019/target-cold-host.py": "03e764e6d7dd36cd26ec436e17b849418a5a884a4a84170e5fbd746810f78028",
+    "tests/qa/cp019/target-cold-host.test.py": "338604cda2e815a2fdbdcf07ed95e5261cf2380cdcab68b685a1e6f85a6887a6",
+    "tests/qa/cp019/target-commit-host.py": "6db01f5f915a1a253c755ba568f40388d7254453a1a0c82faf517f00110faadb",
+    "tests/qa/cp019/target-commit-host.test.py": "70018d1207b47c345b2abcddba4d2436d75ceca5620a5a3acda9887c6d434ddb",
+    "tests/qa/cp019/target-host.py": "1f064d8ee86e151004b48cea12266bbcbe8aaf61ca77a6d9ba44eaa52957f73b",
+    "tests/qa/cp019/target-host.test.py": "8b7bf2e0cc994b1d44f97e23effeadf96255c7f428618a9b081af38ea06ee29d",
+    "tests/qa/cp019/target-http-host.py": "b0af753088407e5f267353035a543db47c3e91b367af0ef79578b90c6a9fa844",
+    "tests/qa/cp019/target-http-host.test.py": "485b2d41e874647c99458610594072b7ba9b487a2d85f1fa6f4049d5470bfd60",
+    "tests/qa/cp019/target-lifecycle.py": "7063005f867c3fd23982751d361276c0535e137bf1d4ffb8270df8418e52efa4",
+    "tests/qa/cp019/target-lifecycle.test.py": "8362075ee74d18bcc041494a0b61f2f0124387ee73969934f33f5f8cc0ebd066",
+    "tests/qa/cp019/target-probes-host.py": "4ca9699320eb0a6ec3eb312cce920d6a86ae079acada0f58b2f3ff2ce8d0da47",
+    "tests/qa/cp019/target-probes-host.test.py": "f5ece6a7395d48bc680cc147b842e35bb58382f6ac0d7135eaf8e0edc670b8bb",
+    "tests/qa/cp019/target-readiness-host.py": "13b38fa0175a658a7e34021e27b6caab9f659a6bc5b216f54bd9f74140a059fc",
+    "tests/qa/cp019/target-readiness-host.test.py": "27269f54ba07a93f7595765f8a297bfe5520d6a52ae6dc18022ceea3b2e4c631",
+    "tests/qa/cp019/target-variant-host.py": "0a8eba08123014432dd568579bc567fc0523f316e061d985e87a1e8e0461df09",
+    "tests/qa/cp019/target-variant-host.test.py": "3168ef572042cec9d587d123f27fbb6cdb3848318fbcd87c7e0f5bc478a81efe",
+    "tests/qa/cp019/tls_bundle.py": "897ef66d6e4b93873566156dcdc973cab3aedcf74438a77ac3390d1c690a9875",
+    "tests/qa/cp019/tls_bundle.test.py": "9f6ebb35c82cafa5eca474b5f7c2069fed20e69b0bc93880fd9b620d624b70c0"
+  },
+  "rows": [
+    {
+      "path": "tests/qa/cp019/artifact.test.py",
+      "tests": 18,
+      "exit": 0
+    },
+    {
+      "path": "tests/qa/cp019/browser-config.test.py",
+      "tests": 10,
+      "exit": 0
+    },
+    {
+      "path": "tests/qa/cp019/compose-compat.test.py",
+      "tests": 9,
+      "exit": 0
+    },
+    {
+      "path": "tests/qa/cp019/controller.test.py",
+      "tests": 10,
+      "exit": 0
+    },
+    {
+      "path": "tests/qa/cp019/host.test.py",
+      "tests": 107,
+      "exit": 0
+    },
+    {
+      "path": "tests/qa/cp019/resource-monitor.test.py",
+      "tests": 29,
+      "exit": 0
+    },
+    {
+      "path": "tests/qa/cp019/resume-state.test.py",
+      "tests": 18,
+      "exit": 0
+    },
+    {
+      "path": "tests/qa/cp019/resume.test.py",
+      "tests": 5,
+      "exit": 0
+    },
+    {
+      "path": "tests/qa/cp019/runner.test.py",
+      "tests": 17,
+      "exit": 0
+    },
+    {
+      "path": "tests/qa/cp019/target-cold-host.test.py",
+      "tests": 13,
+      "exit": 0
+    },
+    {
+      "path": "tests/qa/cp019/target-commit-host.test.py",
+      "tests": 13,
+      "exit": 0
+    },
+    {
+      "path": "tests/qa/cp019/target-host.test.py",
+      "tests": 42,
+      "exit": 0
+    },
+    {
+      "path": "tests/qa/cp019/target-http-host.test.py",
+      "tests": 12,
+      "exit": 0
+    },
+    {
+      "path": "tests/qa/cp019/target-lifecycle.test.py",
+      "tests": 18,
+      "exit": 0
+    },
+    {
+      "path": "tests/qa/cp019/target-probes-host.test.py",
+      "tests": 13,
+      "exit": 0
+    },
+    {
+      "path": "tests/qa/cp019/target-readiness-host.test.py",
+      "tests": 11,
+      "exit": 0
+    },
+    {
+      "path": "tests/qa/cp019/target-variant-host.test.py",
+      "tests": 37,
+      "exit": 0
+    },
+    {
+      "path": "tests/qa/cp019/tls_bundle.test.py",
+      "tests": 11,
+      "exit": 0
+    }
+  ],
+  "tests": 393,
+  "inputStability": true,
+  "physical": false,
+  "result": "PASS"
+}

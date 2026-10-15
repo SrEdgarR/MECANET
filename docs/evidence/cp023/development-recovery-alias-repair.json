@@ -1,0 +1,15 @@
+{
+  "schema": "cp023-development-function-repair-v1",
+  "status": "PASS",
+  "function": "saas.begin_recovery(uuid,uuid,uuid,uuid,text,text,text,text,text,text,uuid[],uuid[],uuid,uuid)",
+  "sqlCommands": 10,
+  "priorSqlState": "42702",
+  "change": "SQL alias r renamed restore_row only inside RESTORE scope EXISTS; no guard or CAS change",
+  "previousFunctionBodySha256": "0e6a74a848614c180d3e425fe43a691fc002ae04d2072755baa7fe0c186a3099",
+  "repairedFunctionBodySha256": "2f24206b139a64345355eb25c85c9d9c2d844cf09690a57cc3b5c2e2af1f99cf",
+  "currentMigrationFileSha256": "d39d9883a700677518b02561ca348cd7883c1e3fd4cc9c2fcb56dd23d6431d64",
+  "copiedMigrationRegistryPreserved": "012c440c59c8acbb012ef6a019822643660b008f014cf505719ccec900ca44e9",
+  "transactionCommitAcknowledged": true,
+  "postCommitCatalogReadback": true,
+  "scope": "own restored development target only; source and physical copy evidence unchanged"
+}

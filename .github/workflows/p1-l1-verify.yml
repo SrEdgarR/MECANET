@@ -4,7 +4,7 @@ on:
   pull_request:
     branches: [develop]
   push:
-    branches: [develop, codex/integrate-p1-l1, codex/p1-l2]
+    branches: [develop, codex/integrate-p1-l1, codex/p1-l2, codex/p1-l3]
 
 permissions:
   contents: read
@@ -57,13 +57,35 @@ jobs:
       - name: Check pure QA controller regressions
         run: python3 -X utf8 tests/qa/cp014/host-regression.py
 
+      - name: Check the independent L3 controller without SSH or Docker
+        run: |
+          python3 -X utf8 tests/qa/cp019/host.test.py
+          python3 -X utf8 tests/qa/cp019/target-host.test.py
+          python3 -X utf8 tests/qa/cp019/target-lifecycle.test.py
+          python3 -X utf8 tests/qa/cp019/target-variant-host.test.py
+          python3 -X utf8 tests/qa/cp019/target-readiness-host.test.py
+          python3 -X utf8 tests/qa/cp019/target-commit-host.test.py
+          python3 -X utf8 tests/qa/cp019/target-http-host.test.py
+          python3 -X utf8 tests/qa/cp019/target-probes-host.test.py
+          python3 -X utf8 tests/qa/cp019/target-cold-host.test.py
+          python3 -X utf8 tests/qa/cp019/controller.test.py
+          python3 -X utf8 tests/qa/cp019/runner.test.py
+          python3 -X utf8 tests/qa/cp019/resource-monitor.test.py
+          python3 -X utf8 tests/qa/cp019/resource-sample.test.py
+          python3 -X utf8 tests/qa/cp019/compose-compat.test.py
+          python3 -X utf8 tests/qa/cp019/resume-state.test.py
+          python3 -X utf8 tests/qa/cp019/resume.test.py
+          python3 -X utf8 tests/qa/cp019/browser-config.test.py
+          python3 -X utf8 tests/qa/cp019/tls_bundle.test.py
+          python3 -X utf8 tests/qa/cp019/artifact.test.py
+
       - name: Verify the SaaS lane boundaries and tooling isolation negatives
         run: node --test scripts/ci/saas-toolchain.test.mjs scripts/ci/tooling-isolation.test.mjs
 
       - name: Verify locked SaaS lane, guarded tests, build and complete dependency audit
         run: node scripts/ci/saas-toolchain.mjs verify
 
-      - name: Compare the compiled SaaS assets with the accepted lot artifact
+      - name: Compare compiled SaaS assets with the frozen lot build provenance
         run: node scripts/ci/p1-l1.mjs assets
 
       - name: Audit backend runtime dependencies

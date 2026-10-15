@@ -8,7 +8,7 @@ import {readCatalog} from './repositories/catalog.js';
 import {canonicalWrite,canonicalUuid,parseInventoryQuery,decimal} from './writes/validation.js';
 
 /** No .env, legacy routes, fixture import, or commercial authority in this factory. */
-export function createApp({origin,sessionPool,sessionSecret,authority,admission,tenantPools,writes=null,issuer=null,trustedProxy='10.77.32.2',reportError=()=>{},checkpoint=async()=>{}}) {
+export function createApp({origin,sessionPool,sessionSecret,authority,admission,tenantPools,writes=null,issuer=null,recovery=null,trustedProxy='10.77.32.2',reportError=()=>{},checkpoint=async()=>{}}) {
  if(new URL(origin).protocol!=='https:')throw new Error('HTTPS_REQUIRED');
  const app=express();let draining=false;const active=new Set();let ingress=0;
  // Finite process envelope precedes JSON parsing, session-store access and pool queues.
@@ -35,7 +35,20 @@ export function createApp({origin,sessionPool,sessionSecret,authority,admission,
   next();
  });
  app.get('/api/health/live',(_req,res)=>res.json({status:'live'}));
- app.get('/api/health/ready',wrap(async(_req,res)=>{await admission.observeClock();const ready=!draining&&admission.ready()&&(!writes?.ready||await writes.ready());res.status(ready?200:503).json({status:ready?'ready':'unavailable'})}));
+ app.get('/api/health/ready',wrap(async(_req,res)=>{
+  let ready=false;
+  try{
+   const clockReady=async()=>{await admission.observeClock();return admission.ready()};
+   ready=recovery?await recovery.ready({clockReady,draining,deadline:performance.now()+1000}):!draining&&await clockReady()&&(!writes?.ready||await writes.ready());
+  }catch{}
+  res.status(ready?200:503).json({status:ready?'ready':'unavailable'});
+ }));
+ if(recovery)app.use('/api',(req,res,next)=>{
+  req.pendingWork++;
+  Promise.resolve().then(()=>recovery.guard({deadline:Math.min(req.deadline,performance.now()+500)})).then(allowed=>{
+   if(allowed)next();else if(!res.destroyed&&!res.writableEnded)res.status(503).json({error:'SERVICE_UNAVAILABLE'});
+  }).catch(()=>{if(!res.destroyed&&!res.writableEnded)res.status(503).json({error:'SERVICE_UNAVAILABLE'})}).finally(()=>{req.pendingWork--;req.releaseIngress()});
+ });
  app.use(express.json({limit:'16kb',strict:true,verify:(req,_res,bytes)=>{req.jsonBytes=bytes.length}}));
  const sessions=sessionMiddlewares({pool:sessionPool,secret:sessionSecret});
  app.use('/api',(req,res,next)=>{

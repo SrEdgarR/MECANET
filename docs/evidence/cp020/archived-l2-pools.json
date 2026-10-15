@@ -1,0 +1,10 @@
+{
+  "schema": "cp020-archived-component-v1",
+  "repository": "SrEdgarR/MECANET",
+  "baseSha": "86985fe7589032f202ebf0cb057a9b1384217151",
+  "sourcePath": "server/saas/db/pools.js",
+  "archivedPath": "tests/qa/cp019/archived-l2-pools.mjs",
+  "bytes": 10221,
+  "sha256": "b8eebead8655a0b6eae42df6d923d119ca2648457175e43d80e6e28ef4fb76f3",
+  "scope": "Exact L2 pool component only; not an old complete HTTP binary or PostgreSQL execution"
+}

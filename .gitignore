@@ -63,3 +63,6 @@ coverage/
 .qa-private/
 client/dist-saas/
 .vercel/
+
+# CP-019 local Python bytecode is not QA evidence or release source.
+tests/qa/cp019/__pycache__/

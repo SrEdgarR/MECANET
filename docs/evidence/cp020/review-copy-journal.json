@@ -1,0 +1,115 @@
+{
+  "schema": "cp020-focused-copy-journal-review-v1",
+  "date": "2026-10-15",
+  "reviewer": "cp020_review",
+  "scope": "Local focused review of copy/journal negatives, host boundary and fixed budget/CLI wiring; no remote execution",
+  "status": "PASS LOCAL FOCAL; PHYSICAL EXECUTION NOT VERIFIED",
+  "git": {
+    "branch": "codex/p1-l3",
+    "head": "0bb9cb26e37dced8d73e52085d29121f430672d3",
+    "tested_code_sha": null,
+    "provenance": "Uncommitted shared worktree; executed bytes identified by SHA-256 below. No commit, push, PR or CI performed by this reviewer."
+  },
+  "findings": {
+    "required_initial": 2,
+    "required_open_focal": 0,
+    "resolved": [
+      "New copy/journal cases were missing from the fixed registry: both host enter_runtime_case calls rejected BUDGET_RUNTIME_SCOPE and real Node ledger.enter could not proceed.",
+      "The two host functions were absent from the closed CLI dispatch."
+    ],
+    "root_authorized_correction": "Only budget-plan.mjs/.test.mjs and host.py/.test.py: register 19 exact helper cases, maintain 140 SQL per case and 3000 SQL globally, update canonical plan hash/count, and expose exact copy-negatives/journal-negatives CLI actions.",
+    "author_delta_review": "Corrected by this reviewer under Root authorization; focal self-review and local tests complete. Independent Root Quality Gate remains the next verification of this authored delta."
+  },
+  "registry": {
+    "cases": 135,
+    "added": 19,
+    "canonical_plan_sha256": "ba43bef8cdd8351c58c9cc3a6ccc4b109f0aaf0e59d1856fe6c67903912e182f",
+    "source_cases": ["source-schema-probe-pre", "source-schema-probe-post"],
+    "target_cases": ["copy-negatives-env", "copy-negative-missing", "copy-negative-extra", "copy-negative-hash", "copy-negative-symlink", "copy-negative-hardlink", "journal-negatives-env", "journal-negatives", "target-a5-login", "target-a5-body", "target-a5-action", "target-a5-product", "target-a5-epoch", "target-a5-actor", "variant-a5-grant", "variant-a5-membership", "variant-a5-identity"],
+    "caps_changed": false,
+    "clocks_changed_or_reset": false,
+    "private_plan_or_qa_ledger_modified": false,
+    "other_variant_lifecycle_cases": "NOT READY: VARIANT_CASES declares 61 unique names; only ready-empty, ready-allclosed and the three A5 restriction cases are registered. The other 56 lack their host variant provider and remain unregistered; this local correction does not enable those flows."
+  },
+  "verification": {
+    "environment": "Windows, Node v24.21.0, Python 3.14.3",
+    "red": [
+      "budget-plan.test.mjs: 2 PASS / 1 FAIL because source-schema-probe-pre had no registered source-window scope.",
+      "Focused Python dispatcher test failed because host_dispatch did not exist."
+    ],
+    "green_node": {
+      "tests": 24,
+      "passed": 24,
+      "failed": 0,
+      "duration_ms": 1716.1923,
+      "files": ["budget-plan.test.mjs", "ledger.test.mjs", "copy-negatives.test.mjs", "journal-negatives.test.mjs", "target-prepare.test.mjs"]
+    },
+    "green_python": {"host_tests": 72, "target_host_tests": 24, "failed": 0, "ast_files": 2},
+    "git_diff_check": "PASS for the four authorized source/test files",
+    "integrated_contract": "All 19 new names enter the actual local Node ledger and charge SQL once; over-cap charges reject; accumulated SQL remains 19; Python plan SHA/count match the canonical Node registry. Python mock dispatch rejects extra/unknown arguments before invoking either helper.",
+    "windows_directory_sync": "The first integrated local attempt hit EPERM on directory fsync. The test explicitly supplies a no-op only for Windows directory sync; actual file reads, exclusive locks, file fsync, renames and charges remain real. Linux directory durability is NOT VERIFIED by this test."
+  },
+  "matrix": {
+    "uid999_network_none_no_master": "PASS STATIC/local host guard tests",
+    "readonly_canonical_backup_and_journal": "PASS STATIC/local filesystem contracts; real Linux mount enforcement NOT VERIFIED",
+    "aggregate_target_data_plus_five_copies_at_most_2GiB_and_disk_before_effects": "PASS STATIC/local capacity rejection tests",
+    "ledger_deadlines_and_immutable_metadata": "PASS STATIC/local contracts; Linux ownership/directory durability NOT VERIFIED",
+    "positive_job_fin": "PASS STATIC through watch_job/finish_job exact identity and END receipt; physical Docker FIN NOT VERIFIED",
+    "postgresql_recovery_or_sql_effects": "NOT VERIFIED; helpers explicitly report no PostgreSQL execution"
+  },
+  "sha256": {
+    "tests/qa/cp019/copy-negatives.mjs": "1fe0352ad0ca7a3c2833993e8b9028047dfe7bb27721600331a37b76316328c3",
+    "tests/qa/cp019/copy-negatives.test.mjs": "9f1df2ee772aa0c8ac8b75fea922db565453fdf1910c715ed5363ae6a0b2d900",
+    "tests/qa/cp019/journal-negatives.mjs": "c4a5e45ba5558329d578aa7b960632aa702cf41fd97c918bef1baed79829912a",
+    "tests/qa/cp019/journal-negatives.test.mjs": "a4759bdb71238d2ef833b9052a5fecc79a75d89317e23bcc4442e6d6a47ba611",
+    "tests/qa/cp019/budget-plan.mjs": "e4ae4bde31525b0f55185eab30d3f9c4e001a6b0b2b22408a17d52bb6859bdda",
+    "tests/qa/cp019/budget-plan.test.mjs": "313d7689209dd3e08ac78bff4370f6ba70926c39181cc2da1f7891b555342734",
+    "tests/qa/cp019/host.py": "63884fc177feaf57c69476075575d4650a4152cb2ac85b3672b432026e838e66",
+    "tests/qa/cp019/host.test.py": "a973c8722b6bf5ba9a4e22f1dc0d7b25f4e3ab33dc3dd20600dfacfa04323e76"
+  },
+  "audit_summary": {
+    "phase": "P1-L3 EN CURSO; this subtask closes only local focal review/wiring",
+    "security": "No secrets, .env, private credentials, SSH or production data read or printed. Runtime binary invoked only at the explicitly authorized path.",
+    "infrastructure": "No QA roots, ledgers, containers, networks or remote resources created or changed. Own OS temporary test directories removed.",
+    "ui": "NOT APPLICABLE to this focal task",
+    "progress_map": "Not updated by this reviewer; Root consolidates the current milestone.",
+    "methodology": "No new methodology defect detected. Protected methodology/specifications unchanged.",
+    "next_gate": "Root independent Quality Gate of the authored delta, then unresolved variant host provider and separately authorized physical environment/execution. No r02 bootstrap or remote action performed."
+  },
+  "followups": [
+    {
+      "date": "2026-10-15",
+      "scope": "Root-authorized fixture-only correction in target-host.test.py after local Quality Gate FAIL",
+      "base_code_sha": "e6ac8026e59322b992fff3584377cf97a75291ec",
+      "tested_code_sha": null,
+      "provenance": "Uncommitted test-only delta, identified by hashes below; no production source, private plan, resources or QA ledger modified",
+      "basis": {
+        "reported_by_root": "Root reproduced intermittent positive report sealing failure twice in eight Windows runs. Path.lstat and os.fstat exposed different st_ctime_ns for the same file, e.g. 1792063902467321600 and 1792063902467823300.",
+        "observed_by_this_reviewer": "The existing positive fixture already models Linux UID/mode but forwarded raw Windows ctime from two APIs into the Linux sealing comparison.",
+        "classification": "Local test model/environment mismatch; no basis to remove or weaken the Linux production ctime guard"
+      },
+      "change": "Share the report fixture and give its modeled Linux ctime a controlled stamp, incremented on modeled chmod. Actual device/inode/link count/size/mtime observations remain intact. Add a distinct FD ctime drift before sealing; expect TARGET_ACCEPTANCE_REPORT_CHANGED, zero chmod calls, mode600 and unchanged bytes.",
+      "checks": {
+        "focused_positive_and_ctime_negative": "2/2 PASS",
+        "target_host_suite": "25/25 PASS, 38ms",
+        "affected_host_suite": "72/72 PASS, 23ms",
+        "single_justified_repeat": "25/25 target-host PASS, 36ms; repeat authorized by the intermittent reproduction, no further repeats",
+        "mutation": "Removing st_ctime_ns only from an in-memory copy of seal_acceptance_report causes the new negative to FAIL because the expected rejection is absent. Original production source bytes untouched.",
+        "ast_and_diff_check": "PASS",
+        "environment": "Windows / Python 3.14.3"
+      },
+      "sha256": {
+        "tests/qa/cp019/target-host.py": "fff61296510fb5bb0d479c7ff4b4afad2924afca2f34cf8ac29a222da8053fa3",
+        "tests/qa/cp019/target-host.test.py": "d3e71c21d3cb6f8d073427af6fb9553065828fb3cb6c8672d3a9ee3a050cc440"
+      },
+      "retained_fail": {
+        "path": "docs/evidence/cp020/local-quality.json",
+        "result": "FAIL",
+        "code_sha": "e6ac8026e59322b992fff3584377cf97a75291ec",
+        "sha256_unchanged": "e50600a7fafc730210551397cd27d5c78a5a54acad9f3bf55e643a4d3349621e",
+        "overwritten": false
+      },
+      "audit_summary": "Fixture delta frozen for independent Root review. Physical Linux custody and full Quality Gate of the next exact commit remain separate. No SSH, production, .env, credentials or remote resources accessed."
+    }
+  ]
+}

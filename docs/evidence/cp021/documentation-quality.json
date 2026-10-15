@@ -1,0 +1,55 @@
+{
+  "schema": "cp021-documentation-quality-v1",
+  "at": "2026-10-15T14:35:54.130749+00:00",
+  "result": "PASS",
+  "scope": "documentary diff only, no physical tests",
+  "localCodeSha": "ec1c5c9cfd3a39ab3702d52fbd014183ddc52429",
+  "indexedFilesHashVerified": 34,
+  "jsonParsed": 32,
+  "markdownFiles": 12,
+  "localLinksChecked": 328,
+  "newBrokenLinks": [],
+  "inheritedBrokenLinksNotIntroduced": [],
+  "protectedAndProposalHashes": {
+    "docs/methodology/Prompt_Maestro_v2.0.md": "d2dafd5f75df32aae33e421953fab6e99e723aa88744b918b555562c7b6a550d",
+    ".agentic/P1-L3_CANDIDATE.md": "4d1cf193000106dd20555f6c70acab3cb264fd3a7bfe0a9cf8be662eddb2b3ec",
+    "docs/specs/p1-l3-approved/baseline.md": "4d1cf193000106dd20555f6c70acab3cb264fd3a7bfe0a9cf8be662eddb2b3ec",
+    "docs/specs/p1-l2-approved/baseline.md": "ca975dc822c0bd5e872d3debe824abc536f662007513170f327727878ff3ac71",
+    "tests/qa/cp019/budget-limits.json": "65cb46844d2b8a78250839ed14b25fca91561cfcdd7d46557ff5b98829f334c2",
+    ".agentic/P1-L3_QA_RETRY_R03.md": "b58ad6a856fd987bd6a23358b2f129e0a44a3a75c4206cf57b6d49a9e2d1df05"
+  },
+  "map": {
+    "phases": 8,
+    "active": "P1",
+    "decisions": 72,
+    "criteria": 344,
+    "pending": 14,
+    "blocking": 2,
+    "future": 12,
+    "progressPercent": null
+  },
+  "dec070071": "APPROVED",
+  "dec072": "PROPOSED",
+  "seIDs": [
+    "SE-001",
+    "SE-002",
+    "SE-003"
+  ],
+  "productDiff": false,
+  "secretPatternScan": "no private key/GitHub token patterns detected in own documentary diff; not a universal secret audit",
+  "sourceHashes": {
+    "docs/PROJECT_STATE.md": "486c48b0a6a4b9734bd23c1643cd4320e841936151420d71fc5aae0e1b7a18c6",
+    "docs/ROADMAP.md": "a2a21965a10393ee34f20de426522e2647a02c47db96b8cb32087246f94ab105",
+    "docs/DECISIONS.md": "ddebf473088c7a49b549a8d72f4e2e8a0217ca7460022a576d7a8be3c7816690",
+    "docs/CHECKPOINTS.md": "9826eb055e8e5e05a6add7869522016f4c00999efedb88de26da7450ba53d605",
+    ".agentic/PLANNING_STATE.md": "795e8904785feebb199e4a140cfc0e17da2388a5b89a69cd9d37ac24e110bff8",
+    "docs/PROJECT_MAP_DATA.json": "e73ce77a4bf153c10ecb3dee7cf76ae61af7f5d09eba71329fc96f929135c42d",
+    "docs/audit/CP-021.md": "9061fdff13ab17dafcfffd8021e21532ce1476986d5789ad08eea74e3e924855"
+  },
+  "selfHashExcluded": true,
+  "canonicalGitBlobHashesVerified": 34,
+  "existingEvidenceEolNormalizationOnly": [
+    "docs/evidence/cp021/artifact-budget-review.json",
+    "docs/evidence/cp021/artifact-budget-review.md"
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "schema": "cp019-tls-verification-v1",
+  "result": "PASS",
+  "manifestHash": "c8209a068a92a4d81bf05e82f1cb28764b0f81cd38d2568194a6e4c950707e39",
+  "projects": [
+    "mecanet-qa-p1l3-r02",
+    "mecanet-qa-p1l3-r02-target"
+  ],
+  "verifiedKeyPairs": 4,
+  "independentCAs": 2,
+  "networkUsed": false,
+  "secretOutput": false,
+  "localPlatform": "Windows x64",
+  "vpsVerification": "NOT VERIFIED",
+  "qaResourcesCreated": 0
+}

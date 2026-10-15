@@ -1,0 +1,1 @@
+{"schema": "cp019-final-preservation-v1", "at": "2026-10-14T06:53:50.900102+00:00", "result": "PASS", "previousConsumers": 26, "ownStopped": 1, "ownRunning": 0, "newPostgres": 0, "resourceRetry": false, "secretsRead": false, "python": "3.12.3"}

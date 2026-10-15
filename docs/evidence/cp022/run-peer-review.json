@@ -1,0 +1,22 @@
+{
+  "at": "2026-10-15T15:15:39.647763+00:00",
+  "checks": [
+    "exact seven prepared options plus fixed origin",
+    "private frames never echoed",
+    "outer final report schema/source binding",
+    "fallback FAIL records SQL/HTTP/cleanup unknown",
+    "Popen startup failure publishes safe FAIL",
+    "drain retains180 seconds then45-second Root cleanup wait",
+    "local SSH exit never asserts remote FIN"
+  ],
+  "chosenPlanPin": "ca1f70ddcade223660a215e9b0b3db40e157ec9b752767b95ec141ae8db9e0c8",
+  "fail": 0,
+  "pass": 7,
+  "remoteEffects": 0,
+  "requiredOpen": 0,
+  "schema": "cp022-run-independent-review-v1",
+  "scope": "Read-only code review and seven AST-extracted local doubles; no SSH/wrapper execution/TLS or controller-plan reads",
+  "testSha256": "fcdfaa8d4b3474a2206d76f9db6615d948aae314624cf2aae83b431d4c83ff7a",
+  "uploaderSha256": "4da4e3309d2afc96c9e658297605a9baab5d917dc33961c4ee22c327d3ac9e6c",
+  "wrapperSha256": "405b571e068bf18553592250f7a849078d0d0dd35794ef90c96ea926b3ad1cd3"
+}

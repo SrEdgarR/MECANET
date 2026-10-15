@@ -1,0 +1,8 @@
+{
+  "result": "PASS",
+  "inputArchiveBeforeMode": "0o664",
+  "afterMode": "0400",
+  "afterUid": 0,
+  "scope": "exact own cp020 TLS archive",
+  "secretsPrinted": false
+}

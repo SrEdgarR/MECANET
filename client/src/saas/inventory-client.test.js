@@ -15,12 +15,14 @@ const page = tenant => ({ context, tenantId: tenant.id, dataEpoch: tenant.dataEp
 const storage = () => { const values = new Map(); return { getItem: key => values.get(key) ?? null, setItem: (key, value) => values.set(key, String(value)), removeItem: key => values.delete(key) }; };
 function harness(handler = () => response(result()), options = {}) {
   const memory = options.storage ?? storage();
+  const tenants = options.tenants ?? [A, B];
   const fetch = vi.fn(async (url, request) => {
     if (url === '/api/auth/session') return response(session);
-    if (url === '/api/tenants') return response({ context, tenants: options.tenants ?? [A, B] });
+    if (url === '/api/tenants') return response({ context, tenants });
     if (url === '/api/auth/activity') return response({ ok: true });
-    if (url.endsWith('/inventory?limit=20')) return response(page(url.includes(B.id) ? B : A));
-    if (url.includes('/operations?')) return options.pending ? options.pending(url) : response({ context, tenantId: url.includes(B.id) ? B.id : A.id, dataEpoch: url.includes(B.id) ? '2' : '1', items: [], nextCursor: null });
+    const tenant = tenants.find(item => url.includes(item.id)) ?? A;
+    if (url.endsWith('/inventory?limit=20')) return response(page(tenant));
+    if (url.includes('/operations?')) return options.pending ? options.pending(url) : response({ context, tenantId: tenant.id, dataEpoch: tenant.dataEpoch, items: [], nextCursor: null });
     return handler(url, request);
   });
   return { client: createSaasClient(fetch, { storage: memory, operationUuid: () => operationId }), fetch, memory };
@@ -28,6 +30,42 @@ function harness(handler = () => response(result()), options = {}) {
 const open = async client => { await client.start(); await client.selectInventory(A.id, false); };
 
 describe('private inventory intent recovery', () => {
+  it('a recovered own terminal result retains its original epoch under the validated current envelope without a POST', async () => {
+    const current = { ...A, dataEpoch: '3' }; const original = result(A, { dataEpoch: '2' });
+    const { client, memory, fetch } = harness(() => response({ context, tenantId: A.id, dataEpoch: '3', operationId, state: 'CONFIRMED', result: original }), { tenants: [current] });
+    await open(client); memory.setItem(HINTS_KEY, JSON.stringify([{ tenantId: A.id, operationId }])); await client.lookupOperation(operationId);
+    expect(client.getSnapshot()).toMatchObject({ phase: 'inventory', tenant: { dataEpoch: '3' }, operation: { ...original, canReplay: false } });
+    expect(client.getSnapshot().items[0].onHand).toBe('0'); expect(memory.getItem(HINTS_KEY)).toBeNull();
+    expect(fetch.mock.calls.filter(([, request]) => request.headers['Idempotency-Key'])).toHaveLength(0);
+    client.dispose();
+  });
+
+  it('a historical payload never bypasses a foreign identity, context, company or stale outer envelope', async () => {
+    const current = { ...A, dataEpoch: '3' };
+    for (const change of [{ context: { ...context, identityId: B.id } }, { context: { ...context, contextVersion: 'foreign' } }, { tenantId: B.id }, { dataEpoch: '2' }]) {
+      const { client, fetch } = harness(() => response({ context, tenantId: A.id, dataEpoch: '3', operationId, state: 'CONFIRMED', result: result(A, { dataEpoch: '2' }), ...change }), { tenants: [current] });
+      await open(client); await client.lookupOperation(operationId);
+      expect(client.getSnapshot()).toMatchObject({ phase: 'unavailable', items: [], operations: [], operation: null });
+      expect(fetch.mock.calls.filter(([, request]) => request.headers['Idempotency-Key'])).toHaveLength(0); client.dispose();
+    }
+  });
+
+  it('future or nonterminal historical epochs are not adopted from a valid current envelope', async () => {
+    const current = { ...A, dataEpoch: '3' };
+    for (const [state, dataEpoch] of [['CONFIRMED', '4'], ['UNKNOWN', '2'], ['PENDING', '2']]) {
+      const { client } = harness(() => response({ context, tenantId: A.id, dataEpoch: '3', operationId, state, result: result(A, { state, dataEpoch }) }), { tenants: [current] });
+      await open(client); await client.lookupOperation(operationId);
+      expect(client.getSnapshot()).toMatchObject({ phase: 'unavailable', items: [], operations: [], operation: null }); client.dispose();
+    }
+  });
+
+  it('POST remains bound to the current epoch and does not accept a confirmed old-epoch ACK', async () => {
+    const current = { ...A, dataEpoch: '3' }; const { client, fetch, memory } = harness(() => response(result(A, { dataEpoch: '2' }), 201), { tenants: [current] });
+    await open(client); await client.createProduct({ sku: 'ABC', name: 'Nombre' });
+    const writes = fetch.mock.calls.filter(([, request]) => request.headers['Idempotency-Key']);
+    expect(writes).toHaveLength(1); expect(writes[0][1].headers['X-Data-Epoch']).toBe('3');
+    expect(client.getSnapshot()).toMatchObject({ phase: 'unavailable', items: [], operation: null }); expect(memory.getItem(HINTS_KEY)).toContain(operationId); client.dispose();
+  });
   it('persists only the known IDs before one POST and submits exact headers/DTO', async () => {
     let persisted;
     const { client, fetch, memory } = harness((_url, request) => { persisted = JSON.parse(memory.getItem(HINTS_KEY)); return response(result(), 201); });

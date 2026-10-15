@@ -1,0 +1,180 @@
+{
+  "schema": "cp023-contract-fixture-correction-v1",
+  "collectedAt": "2026-10-15T17:00:23.222451+00:00",
+  "scope": "Local filesystem fixtures and disposable GitHub-hosted CI runner only; no product or VPS change",
+  "repository": "SrEdgarR/MECANET",
+  "sourceHeadAtCollection": "f4e77776c875ce39644a70e897f1f5b71f256e06",
+  "files": [
+    {
+      "path": "scripts/ci/p1-l1.mjs",
+      "beforeSha256": "b015cd0047c1e288681b770749d38022490564ba9ab8eb6a3e3475ecfa9a8a80",
+      "afterSha256": "e7b4e03785f04733dde2e165e08c87ac5f02f763438deabc1aa641f1876fe7e1"
+    },
+    {
+      "path": "tests/qa/cp019/copy-offline.test.mjs",
+      "beforeSha256": "0573d7548e78a58d99edaa337120d4682bdd84484446c12d6f99ede8390703a3",
+      "afterSha256": "d9bbbb948afc1eb78f966b12a498932b6e690e4ae8cad1167ea85e3fe56562cf"
+    },
+    {
+      "path": "tests/qa/cp019/stage-journal.test.mjs",
+      "beforeSha256": "6daeb7f706c1727cc85276680f115b350e350e733ce438807214599377e222d7",
+      "afterSha256": "d737d340aab446cbbdf0fc1ee40277e49be3c7568fd89acdaad73252b0dea882"
+    },
+    {
+      "path": "tests/qa/cp019/target-prepare.test.mjs",
+      "beforeSha256": "bf3d01e0ca15df9ba0da29ca8c4e0980bb7d98784458b2de4963b81aa3140692",
+      "afterSha256": "6728efa5a93ff7c8f65b5e2069b340fe1d4e1f359a325837b83d49f8fed8b76d"
+    }
+  ],
+  "red": {
+    "environment": "GitHub-hosted ubuntu24.04 Linux x64",
+    "runId": 38772042299,
+    "url": "https://github.com/SrEdgarR/MECANET/actions/runs/38772042299",
+    "headSha": "5c6b19a529e66b0ab44b09d24c46fd643a7d7c48",
+    "syntheticCheckout": "9f3047ad5d64a93648a2aa23584f47042e909ae8",
+    "counts": {
+      "tests": 673,
+      "pass": 667,
+      "fail": 6,
+      "skipped": 0
+    },
+    "log": {
+      "bytes": 209792,
+      "sha256": "52e2591632f164a120ff2ed83a4e290c42a8ee10e99fcd96a6dd88b8deac1036",
+      "retainedPrivately": true,
+      "rawPublished": false
+    },
+    "failures": [
+      {
+        "path": "tests/qa/cp019/copy-offline.test.mjs",
+        "count": 3,
+        "cause": "EPERM chown to UID/GID999 from unprivileged runner; masks intended COPY_HASH and COPY_BUDGET_ABORT negatives"
+      },
+      {
+        "path": "tests/qa/cp019/stage-journal.test.mjs",
+        "count": 2,
+        "cause": "heads/plans created with default0755; production directory guard requires current owner and no group/other access"
+      },
+      {
+        "path": "tests/qa/cp019/target-prepare.test.mjs",
+        "count": 1,
+        "cause": "backup/target fixture directories require exact0700 and ownerUID999"
+      }
+    ]
+  },
+  "correction": {
+    "fixtures": "Only explicit mkdir mode0700 added; assertions, expected errors, product guards and platform behavior unchanged",
+    "runner": "Exactly3 filesystem files run as UID/GID999 only on GitHub-hosted Linux exactSrEdgarR/MECANET and github.com. /usr/bin/sudo -n /usr/bin/setpriv clears groups; /usr/bin/env -i provides fixed lean environment and TMPDIR=/tmp; absolute Node24.21.0; positive child identity preflight before tests. Other81 files keep normalUID1001. Local/Windows or other environments keep original84-file suite. Failure never falls back to ordinary UID.",
+    "partition": {
+      "allFiles": 84,
+      "isolatedFiles": 3,
+      "ordinaryFiles": 81,
+      "duplicates": 0,
+      "removedFiles": 0
+    },
+    "humanAuthority": "Parent-authorized bounded disposable CI correction; no product SPEC CHANGE or new system user",
+    "guardRelaxations": false,
+    "platformMocks": false,
+    "newSystemUsers": false,
+    "dockerUsed": false,
+    "infrastructureModified": false
+  },
+  "verification": {
+    "redPure": {
+      "command": "node scripts/ci/p1-l1.mjs self-test",
+      "exitCode": 1,
+      "failure": "ReferenceError: contractTestPlan is not defined",
+      "observedInToolOutput": "c1cb81",
+      "scope": "Pure partition test written before implementation; not Linux filesystem reproduction"
+    },
+    "greenPure": {
+      "status": "PASS",
+      "partitionCases": 8,
+      "commandCases": 2,
+      "identityCases": 6,
+      "sudoExecuted": false,
+      "filesystemEffects": false,
+      "sqlCommands": 0
+    },
+    "syntax": "PASS",
+    "windowsFocused": {
+      "status": "PASS",
+      "tests": 16,
+      "pass": 16,
+      "fail": 0,
+      "skipped": 0,
+      "scope": "Windows filesystem behavior only, not Linux ownership"
+    },
+    "windowsFull": {
+      "status": "PASS",
+      "node": "v24.21.0",
+      "files": 84,
+      "tests": 673,
+      "pass": 673,
+      "fail": 0,
+      "skipped": 0,
+      "durationMs": 24337.0229,
+      "logSha256": "dc25d9eba49e11c370a1a5bb4d4174c2b5c7d3fff4a01ba50640c3fe0d163706",
+      "logBytes": 70189,
+      "retainedPrivately": true
+    },
+    "linuxAfterCorrection": "Initial corrected runner failed env prototype preflight in run38773816221 before FS tests; latest a6afb427 candidate Linux verification NOT VERIFIED pending next CI.",
+    "physicalL3": "NOT VERIFIED — no ARM64/VPS/SQL/HTTP/browser or restoration acceptance by this correction"
+  },
+  "peerReview": {
+    "reviewer": "cp022_python",
+    "status": "PASS",
+    "requiredFindings": 0,
+    "scope": "4 source objects at recorded after hashes; independent syntax/self-test8partitions2commands6identities; fixture mkdir-only delta; no Linux real execution",
+    "collectedAt": "2026-10-15T17:00:36.605058+00:00"
+  },
+  "followUp": {
+    "collectedAt": "2026-10-15T17:04:25.544706+00:00",
+    "remoteRed": {
+      "runId": 38773816221,
+      "url": "https://github.com/SrEdgarR/MECANET/actions/runs/38773816221",
+      "stage": "positive UID999 filesystem environment preflight; before FS tests",
+      "failure": "CI_FILESYSTEM_ENVIRONMENT_REQUIRED",
+      "cause": "assert.deepStrictEqual compared exotic process.env prototype with a plain object despite identical own six env pairs",
+      "log": {
+        "bytes": 46807,
+        "sha256": "fbd87b2127f0db94271c5ff0acc6d610bafbb5c2d739d5666f299a7dba2642bd",
+        "retainedPrivately": true,
+        "rawPublished": false
+      }
+    },
+    "pureRed": {
+      "failure": "CI_FILESYSTEM_ENVIRONMENT_REQUIRED",
+      "exitCode": 1,
+      "toolOutput": "cb0bda",
+      "fixture": "Object.assign(Object.create(Object.getPrototypeOf(process.env)), fixedSyntheticSixVariables); no values copied from actual environment",
+      "note": "Earlier plain Object.create({}) did not reproduce; not counted as RED"
+    },
+    "correction": {
+      "path": "scripts/ci/p1-l1.mjs",
+      "beforeSha256": "e7b4e03785f04733dde2e165e08c87ac5f02f763438deabc1aa641f1876fe7e1",
+      "afterSha256": "a6afb42722a4e4d8a09f64046517b92442d92facad2769e41b881afc3a7332c7",
+      "delta": "Normalize own enumerable env pairs via Object.fromEntries(Object.entries(variables)) before the same closed key/value equality. Add positive exotic-env prototype pure test and report7 identity cases. No identity, environment value, allowlist, runner partition, assertion or product change."
+    },
+    "greenPure": {
+      "status": "PASS",
+      "syntax": "PASS",
+      "partitionCases": 8,
+      "commandCases": 2,
+      "identityCases": 7,
+      "extraNodeOptionsStillRejected": true,
+      "sudoExecuted": false,
+      "sqlCommands": 0,
+      "linuxFilesystemExecuted": false
+    },
+    "peerReview": {
+      "reviewer": "cp022_python",
+      "status": "PASS",
+      "requiredFindings": 0,
+      "sourceSha256": "a6afb42722a4e4d8a09f64046517b92442d92facad2769e41b881afc3a7332c7",
+      "independentChecks": "syntax and8partitions2commands7identities PASS; no SQL/sudo/Linux filesystem execution",
+      "collectedAt": "2026-10-15T17:04:44.683563+00:00"
+    },
+    "newLinuxCI": "NOT VERIFIED pending next push; earlier RED preserved"
+  }
+}
