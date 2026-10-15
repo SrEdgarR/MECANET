@@ -56,7 +56,7 @@ def validate_prepared(prepared):
   while path.parent!=BASE:directories.add(path.parent);path=path.parent
  check(p['runtimeDirectories']==sorted(d.relative_to(ROOT).as_posix() for d in directories) and p['costs']=={'host-bootstrap':14,'host-stage':len(files)+len(directories),'host-config-source':1,'host-config-target':1},'PUBLICATION_COST_CHANGED');return True
 
-def publish(prepared,claim,host_factory,broker_module,start_transport=False):
+def publish(prepared,claim,host_factory,broker_module,start_transport=False,before_effect=None):
  """No retry/cleanup/adoption after uncertainty. Caller must finish safely.
 
  host_factory imports the effective host only after its files exist, avoiding
@@ -69,7 +69,9 @@ def publish(prepared,claim,host_factory,broker_module,start_transport=False):
   # stale compose is adopted as the original. Output contains hashes only.
   check(sha(private_raw(ROOT/'master/material.json'))==MATERIAL and private_raw(ROOT/'staging/artifact.json',0o444)==prepared['originalRaw'] and private_raw(ROOT/'compose.json')==prepared['sourceRaw'] and private_raw(TARGET/'compose.json')==prepared['targetRaw'],'PUBLICATION_SEALED_INPUT_CHANGED');check(private_raw(ROOT/'budget/ledger.json',0o600,999)==claim.context['baseLedger'],'PUBLICATION_V1_CHANGED')
   check(BASE.resolve()==BASE and BASE.is_dir() and BASE.stat().st_uid==0 and stat.S_IMODE(BASE.stat().st_mode)==0o700,'PUBLICATION_CLAIM_DIRECTORY')
-  def before(scenario):claim.check_live();claim.model.remaining(claim.body['initialState'],*[claim.context[k] for k in ['baseLedger','baseLedgerHash','admission']],scenario,float(pathlib.Path('/proc/uptime').read_text().split()[0]))
+  def before(scenario):
+   if before_effect is not None:before_effect()
+   claim.check_live();claim.model.remaining(claim.body['initialState'],*[claim.context[k] for k in ['baseLedger','baseLedgerHash','admission']],scenario,float(pathlib.Path('/proc/uptime').read_text().split()[0]))
   def mkdir(path,uid=0,scenario='host-bootstrap'):
    before(scenario);check(path.is_relative_to(ROOT) and path.parent.resolve()==path.parent,'PUBLICATION_DIRECTORY_SCOPE');path.mkdir(mode=0o700);os.chown(path,uid,uid);syncdir(path.parent)
   def write(path,raw,mode,uid=0,scenario='host-bootstrap'):before(scenario);return exclusive_file(path,raw,mode,uid)

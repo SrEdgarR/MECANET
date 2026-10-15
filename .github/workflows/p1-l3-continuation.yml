@@ -46,6 +46,9 @@ jobs:
           python3 -B -X utf8 tests/qa/cp019/continuation-admission.test.py
           python3 -B -X utf8 tests/qa/cp019/continuation-publication.test.py
           python3 -B -X utf8 tests/qa/cp019/continuation-port.test.py
+          python3 -B -X utf8 tests/qa/cp019/runner.test.py
+          python3 -B -X utf8 tests/qa/cp019/continuation-runner.test.py
+          python3 -B -X utf8 tests/qa/cp019/resource-monitor.test.py
       - name: Prove fixed Root fsync store in this exclusive ephemeral runner
         run: sudo -n python3 -B -X utf8 tests/qa/cp019/continuation-store-linux.test.py
       - name: Prove one immutable Root claim and reject a second OS process

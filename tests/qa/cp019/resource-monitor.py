@@ -8,9 +8,11 @@ import datetime, hashlib, importlib.util, json, math, os, pathlib, re, stat, sub
 try:import resource
 except ImportError:resource=None  # Windows runs pure models; physical Linux needs rusage.
 
-_sample_source=pathlib.Path(__file__).with_name('resource-sample.py')
-assert _sample_source.is_file() and _sample_source.resolve()==_sample_source and not _sample_source.is_symlink(),'RESOURCE_DIAGNOSTIC_HELPER_REQUIRED'
-_sample_spec=importlib.util.spec_from_file_location('cp023_resource_sample',_sample_source);diagnostics=importlib.util.module_from_spec(_sample_spec);_sample_spec.loader.exec_module(diagnostics)
+if '_CP024_MEMORY_DIAGNOSTICS' in globals():diagnostics=_CP024_MEMORY_DIAGNOSTICS
+else:
+ _sample_source=pathlib.Path(__file__).with_name('resource-sample.py')
+ assert _sample_source.is_file() and _sample_source.resolve()==_sample_source and not _sample_source.is_symlink(),'RESOURCE_DIAGNOSTIC_HELPER_REQUIRED'
+ _sample_spec=importlib.util.spec_from_file_location('cp023_resource_sample',_sample_source);diagnostics=importlib.util.module_from_spec(_sample_spec);_sample_spec.loader.exec_module(diagnostics)
 
 KINDS=('roster-empty','allclosed','commit-interrupted','promote-prefix','a5-restrictions')
 HASH=re.compile(r'^[0-9a-f]{64}$');UUID=re.compile(r'^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$')
@@ -56,7 +58,7 @@ def usage_seconds():
 
 class ResourceMonitor:
  def __init__(self,h,raw_run=None):
-  self.h=h;self.raw_run=raw_run or h.run;self.abortFlag=threading.Event();self._stop=threading.Event();self._lock=threading.RLock();self._thread=None;self._started=False;self._error=None;self._samples=0;self._cpu_samples=0;self._last_sample=None;self._sampling_at=None;self._cpu=None;self._cpu_at=None;self._cpu_max=0;self._mem_min=None;self._disk_min=None;self._tcp_max=0;self._pg_stop_transitions=0;self._own=set();self._elapsed=0.;self._usage=0.;self._last_complete=None;self._process_cpu_start=None;self._process_cpu_delta=None;self._first_failure_sample=None;self._pending_sample=None
+  self.h=h;self.raw_run=raw_run or h.run;self.abortFlag=threading.Event();self._stop=threading.Event();self._first_complete=threading.Event();self._lock=threading.RLock();self._thread=None;self._started=False;self._error=None;self._samples=0;self._cpu_samples=0;self._last_sample=None;self._sampling_at=None;self._cpu=None;self._cpu_at=None;self._cpu_max=0;self._mem_min=None;self._disk_min=None;self._tcp_max=0;self._pg_stop_transitions=0;self._own=set();self._elapsed=0.;self._usage=0.;self._last_complete=None;self._process_cpu_start=None;self._process_cpu_delta=None;self._first_failure_sample=None;self._pending_sample=None
   baseline=read_root_json(h.ROOT/'evidence/preflight.json',allow600=True);self.foreign=baseline['consumers'];require(isinstance(self.foreign,list) and all(isinstance(c,dict) and HASH.fullmatch(c.get('id','')) for c in self.foreign) and len({c['id'] for c in self.foreign})==len(self.foreign),'RESOURCE_FOREIGN_BASELINE')
  def roots(self):return [self.h.ROOT,self.h.TARGET,*[self.h.TARGET/'variants'/k for k in KINDS]]
  def fail(self,code,sample=None):
@@ -80,6 +82,10 @@ class ResourceMonitor:
   if resource is not None:
    u=resource.getrusage(resource.RUSAGE_SELF);self._process_cpu_start=u.ru_utime+u.ru_stime
   self._thread=threading.Thread(target=self._loop,name='cp021-resource-monitor',daemon=True);self._thread.start();return self.summary()
+ def first_sample(self):
+  # Positive completion event only. Timeout/failure denies the first mutation;
+  # this is neither FIN/readiness nor a new CPU tolerance or retry policy.
+  require(self._started and self._first_complete.wait(2),'RESOURCE_MONITOR_FIRST_SAMPLE_UNKNOWN');self.check();require(self._samples>=1,'RESOURCE_MONITOR_FIRST_SAMPLE_UNKNOWN');return self.summary()
  def stop(self):
   try:
    self._stop.set()
@@ -97,7 +103,7 @@ class ResourceMonitor:
    began=time.monotonic();self._sample_once()
    if self._stop.wait(max(0,2-(time.monotonic()-began))):break
  def _record_sample(self,elapsed,usage):
-  with self._lock:self._samples+=1;self._elapsed=max(self._elapsed,elapsed);self._usage+=max(0,usage);self._last_complete=time.monotonic()
+  with self._lock:self._samples+=1;self._elapsed=max(self._elapsed,elapsed);self._usage+=max(0,usage);self._last_complete=time.monotonic();self._first_complete.set()
  def _sample_once(self):
   began=time.monotonic();used=None
   with self._lock:self._sampling_at=began;self._pending_sample=None

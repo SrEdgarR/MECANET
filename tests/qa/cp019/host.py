@@ -4,9 +4,14 @@ Fresh preflight, immutable staged bytes and own resources only; no build/pull.
 import hashlib, ipaddress, json, os, pathlib, subprocess, sys, tarfile, time, secrets, re, uuid, datetime, importlib.util, types, base64, stat, math
 try:import resource as _resource_api
 except ImportError:_resource_api=None
-_resource_source=pathlib.Path(__file__).with_name('resource-sample.py')
-assert _resource_source.is_file() and _resource_source.resolve()==_resource_source and not _resource_source.is_symlink(),'RESOURCE_DIAGNOSTIC_HELPER_REQUIRED'
-_resource_spec=importlib.util.spec_from_file_location('cp023_host_resource_sample',_resource_source);resource_diagnostics=importlib.util.module_from_spec(_resource_spec);_resource_spec.loader.exec_module(resource_diagnostics)
+_memory_inputs=globals().get('_CP024_MEMORY_INPUTS')
+if _memory_inputs is None:
+ _resource_source=pathlib.Path(__file__).with_name('resource-sample.py')
+ assert _resource_source.is_file() and _resource_source.resolve()==_resource_source and not _resource_source.is_symlink(),'RESOURCE_DIAGNOSTIC_HELPER_REQUIRED'
+ _resource_spec=importlib.util.spec_from_file_location('cp023_host_resource_sample',_resource_source);resource_diagnostics=importlib.util.module_from_spec(_resource_spec);_resource_spec.loader.exec_module(resource_diagnostics)
+else:
+ assert set(_memory_inputs)=={'diagnostics','limitsRaw'},'CONTINUATION_MEMORY_INPUTS'
+ resource_diagnostics=_memory_inputs['diagnostics']
 RESOURCE_LAST_SAMPLE=None
 RESOURCE_FIRST_REJECTED_SAMPLE=None
 ROOT=pathlib.Path('/opt/mecanet-qa-p1l3-r03')
@@ -99,9 +104,12 @@ def track_continuation_progress(state):
  import copy
  CONTINUATION_HIGH_WATER=copy.deepcopy(state);return state
 LIMITS_SHA='65cb46844d2b8a78250839ed14b25fca91561cfcdd7d46557ff5b98829f334c2'
-_limits_path=pathlib.Path(__file__).with_name('budget-limits.json')
-assert _limits_path.is_file() and not _limits_path.is_symlink() and _limits_path.stat().st_size<=1024,'BUDGET_LIMITS_FILE'
-_limits_raw=_limits_path.read_bytes();assert hashlib.sha256(_limits_raw).hexdigest()==LIMITS_SHA,'BUDGET_LIMITS_HASH'
+if _memory_inputs is None:
+ _limits_path=pathlib.Path(__file__).with_name('budget-limits.json')
+ assert _limits_path.is_file() and not _limits_path.is_symlink() and _limits_path.stat().st_size<=1024,'BUDGET_LIMITS_FILE'
+ _limits_raw=_limits_path.read_bytes()
+else:_limits_raw=_memory_inputs['limitsRaw']
+assert isinstance(_limits_raw,bytes) and len(_limits_raw)<=1024 and hashlib.sha256(_limits_raw).hexdigest()==LIMITS_SHA,'BUDGET_LIMITS_HASH'
 _limits=json.loads(_limits_raw)
 CEILINGS=_limits['global']
 CASE_LIMITS=_limits['case']
