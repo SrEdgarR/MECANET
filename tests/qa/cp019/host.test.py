@@ -1,6 +1,7 @@
 """Pure CP019 host guards: no Docker, SSH, credentials or resources are accessed."""
-import importlib.util, pathlib, subprocess, unittest, copy, json, tempfile, types, io
+import importlib.util, pathlib, subprocess, unittest, copy, json, tempfile, types, io, shutil, sys
 from unittest.mock import patch, Mock
+from contextlib import ExitStack
 
 spec=importlib.util.spec_from_file_location('cp019_host',pathlib.Path(__file__).with_name('host.py'))
 h=importlib.util.module_from_spec(spec);spec.loader.exec_module(h)
@@ -402,7 +403,29 @@ class HostGuards(unittest.TestCase):
   def job(root,profile,command,env,after_start):
    self.assertEqual(profile,'probe');self.assertEqual(command[-1],'source-live');self.assertIn('QA_BUSINESS_GATE',env);self.assertIn('QA_FIXTURE_DONE',env);self.assertIn('QA_SOURCE_STOP_GATE',env);events.append('ONE_JOB');after_start({'cid':'5'*64,'jobId':uid});events.append('JOB_END');return json.dumps({'type':'cp019-source-live','phase':'source-fixture','status':'PASS','ackReceiptHash':ack_hash,'resultHash':h.canonical_hash(report),'secretOutput':False,'sourceEndProofHash':end_hash}),{}
   def start(side,mode,sample):self.assertFalse(sample);events.append('START_'+mode);return {'runtimeConsumers':[r for r in rows[2:] if mode=='business' or r['service']=='worker']}
-  with patch.object(h,'own'),patch.object(h,'set_host_case'),patch.object(h,'enter_runtime_case',side_effect=lambda scope,name:events.append('CASE_'+name)),patch.object(h,'read_host_private',side_effect=private),patch.object(h,'material_owned',return_value=m),patch.object(pathlib.Path,'read_text',return_value=json.dumps({'sourceSha':'a'*40})),patch.object(pathlib.Path,'is_file',return_value=True),patch.object(pathlib.Path,'exists',return_value=False),patch.object(h,'facts',side_effect=[rows[:2],rows]),patch.object(h.uuid,'uuid4',return_value=uid),patch.object(h,'controller_job',side_effect=job),patch.object(h,'wait_source_ready',side_effect=lambda *a:events.append('READY')),patch.object(h,'guard_effect',side_effect=lambda *a:events.append('COLD_SAMPLE')),patch.object(h,'runtime_start',side_effect=start),patch.object(h,'fresh_source_observation',return_value={'resource':body['resource'],'runtimeConsumers':[]}),patch.object(h,'source_resource',return_value={'resource':body['resource']}),patch.object(h,'wait_source_signal',side_effect=signal),patch.object(h,'write_plain',side_effect=lambda p,*a:events.append('PUBLISH_'+('ACK' if 'clock-ack-run' in p.name else 'BUSINESS' if 'business' in p.name else 'STOP'))),patch.object(h,'stop_source_business',side_effect=lambda *a:events.append('STOP_EXACT4') or ended),patch.object(h,'expected_owners',return_value=OWNERS),patch.object(h,'preserve',return_value={}):result=h.source_live()
+  with ExitStack() as patches:
+   patches.enter_context(patch.object(h,'own'))
+   patches.enter_context(patch.object(h,'set_host_case'))
+   patches.enter_context(patch.object(h,'enter_runtime_case',side_effect=lambda scope,name:events.append('CASE_'+name)))
+   patches.enter_context(patch.object(h,'read_host_private',side_effect=private))
+   patches.enter_context(patch.object(h,'material_owned',return_value=m))
+   patches.enter_context(patch.object(pathlib.Path,'read_text',return_value=json.dumps({'sourceSha':'a'*40})))
+   patches.enter_context(patch.object(pathlib.Path,'is_file',return_value=True))
+   patches.enter_context(patch.object(pathlib.Path,'exists',return_value=False))
+   patches.enter_context(patch.object(h,'facts',side_effect=[rows[:2],rows]))
+   patches.enter_context(patch.object(h.uuid,'uuid4',return_value=uid))
+   patches.enter_context(patch.object(h,'controller_job',side_effect=job))
+   patches.enter_context(patch.object(h,'wait_source_ready',side_effect=lambda *a:events.append('READY')))
+   patches.enter_context(patch.object(h,'guard_effect',side_effect=lambda *a:events.append('COLD_SAMPLE')))
+   patches.enter_context(patch.object(h,'runtime_start',side_effect=start))
+   patches.enter_context(patch.object(h,'fresh_source_observation',return_value={'resource':body['resource'],'runtimeConsumers':[]}))
+   patches.enter_context(patch.object(h,'source_resource',return_value={'resource':body['resource']}))
+   patches.enter_context(patch.object(h,'wait_source_signal',side_effect=signal))
+   patches.enter_context(patch.object(h,'write_plain',side_effect=lambda p,*a:events.append('PUBLISH_'+('ACK' if 'clock-ack-run' in p.name else 'BUSINESS' if 'business' in p.name else 'STOP'))))
+   patches.enter_context(patch.object(h,'stop_source_business',side_effect=lambda *a:events.append('STOP_EXACT4') or ended))
+   patches.enter_context(patch.object(h,'expected_owners',return_value=OWNERS))
+   patches.enter_context(patch.object(h,'preserve',return_value={}))
+   result=h.source_live()
   self.assertEqual(events,['ONE_JOB','READY','COLD_SAMPLE','START_worker','PUBLISH_ACK','ACK_READY','CASE_source-runtime-start','START_business','PUBLISH_BUSINESS','FIXTURE_DONE','CASE_source-close-admission','STOP_EXACT4','PUBLISH_STOP','JOB_END']);self.assertEqual(result['allL3Acceptance'],'NOT VERIFIED')
  def test_source_stop_missing_positive_exit_is_not_fin(self):
   _,_,rows=self.live_fixture();business=rows[2:];after=[{**r,'running':False,'status':'exited','pid':0,'exitCode':0,'finishedAt':'0001-01-01T00:00:00Z'} for r in business]
@@ -437,7 +460,9 @@ class HostGuards(unittest.TestCase):
 
 class RemainingBudget(unittest.TestCase):
  def test_real_node_registry_hash_and_remaining_agree_without_tmp_plan(self):
-  node='C:/Users/thede/Desktop/Proyectos de programacion/MECANET-develop/.qa-private/runtime/node.exe'
+  node='C:/Users/thede/Desktop/Proyectos de programacion/MECANET-develop/.qa-private/runtime/node.exe' if sys.platform=='win32' else shutil.which('node')
+  self.assertTrue(node and pathlib.Path(node).is_file(),'APPROVED_NODE_RUNTIME_REQUIRED')
+  self.assertEqual(subprocess.check_output([node,'--version'],text=True,timeout=10).strip(),'v24.21.0')
   script="import {budgetRegistry,initialBudget} from './tests/qa/cp019/budget-plan.mjs'; console.log(JSON.stringify(initialBudget(budgetRegistry(),100)));"
   state=json.loads(subprocess.check_output([node,'--input-type=module','-e',script],cwd=pathlib.Path(__file__).parents[3],text=True,timeout=10))
   self.assertEqual(h.validate_budget_remaining(state,'ready-empty',144),45)

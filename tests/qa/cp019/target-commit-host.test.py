@@ -1,10 +1,12 @@
 """Local boundary models only: no Docker, PostgreSQL, SSH or Linux custody claim."""
-import importlib.util,json,pathlib,subprocess,tempfile,types,unittest,uuid
+import importlib.util,json,pathlib,subprocess,tempfile,types,unittest,uuid,shutil,sys
 from unittest.mock import patch
 
 HERE=pathlib.Path(__file__).parent
 spec=importlib.util.spec_from_file_location('commit_host',HERE/'target-commit-host.py');c=importlib.util.module_from_spec(spec);spec.loader.exec_module(c)
-NODE=pathlib.Path('C:/Users/thede/Desktop/Proyectos de programacion/MECANET-develop/.qa-private/runtime/node.exe')
+_node='C:/Users/thede/Desktop/Proyectos de programacion/MECANET-develop/.qa-private/runtime/node.exe' if sys.platform=='win32' else shutil.which('node')
+if _node is None:raise RuntimeError('APPROVED_NODE_RUNTIME_REQUIRED')
+NODE=pathlib.Path(_node)
 ident=lambda n:'00000000-0000-4000-8000-'+str(n).zfill(12)
 H='a'*64
 
@@ -140,6 +142,8 @@ class RunModel:
 
 class Boundaries(unittest.TestCase):
  def test_python_and_node_make_identical_prospective_plan_and_hash(self):
+  self.assertTrue(NODE.is_file(),'APPROVED_NODE_RUNTIME_REQUIRED')
+  self.assertEqual(subprocess.check_output([str(NODE),'--version'],text=True,timeout=10).strip(),'v24.21.0')
   m,base=fixture();expected=c.make_plan(m,base,ident(5),'c'*64)
   script="import{makeCommitFaultPlan}from'./tests/qa/cp019/commit-fault-hook.mjs';import{sha256}from'./server/saas/recovery/protocol.js';let s='';for await(const x of process.stdin)s+=x;const a=JSON.parse(s),plan=makeCommitFaultPlan(a);console.log(JSON.stringify({plan,hash:sha256(plan)}));"
   args={'material':m,'parentPlan':base['plan'],'parentPlanHash':base['planHash'],'variantLineageHash':H,'invocationId':ident(5),'controllerContainerId':'c'*64}

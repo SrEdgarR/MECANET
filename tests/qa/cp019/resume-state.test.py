@@ -1,5 +1,5 @@
 """Read-only continuation models; no Docker, SSH, secrets or live QA state."""
-import copy, hashlib, importlib.util, json, pathlib, stat, subprocess, types, unittest
+import copy, hashlib, importlib.util, json, pathlib, stat, subprocess, types, unittest, shutil, sys
 from unittest.mock import patch
 
 spec=importlib.util.spec_from_file_location('resume_state',pathlib.Path(__file__).with_name('resume-state.py'))
@@ -98,7 +98,9 @@ class Continuation(unittest.TestCase):
    self.assertNotIn('private-model-sentinel',str(err.exception))
  def test_original_node_registry_and_host_validator_are_used_without_reset(self):
   original_spec=importlib.util.spec_from_file_location('resume_original_host',pathlib.Path(__file__).with_name('host.py'));original=importlib.util.module_from_spec(original_spec);original_spec.loader.exec_module(original)
-  node='C:/Users/thede/Desktop/Proyectos de programacion/MECANET-develop/.qa-private/runtime/node.exe'
+  node='C:/Users/thede/Desktop/Proyectos de programacion/MECANET-develop/.qa-private/runtime/node.exe' if sys.platform=='win32' else shutil.which('node')
+  self.assertTrue(node and pathlib.Path(node).is_file(),'APPROVED_NODE_RUNTIME_REQUIRED')
+  self.assertEqual(subprocess.check_output([node,'--version'],text=True,timeout=10).strip(),'v24.21.0')
   code="import {budgetRegistry,initialBudget} from './tests/qa/cp019/budget-plan.mjs';console.log(JSON.stringify(initialBudget(budgetRegistry(),1000)));"
   state=json.loads(subprocess.check_output([node,'--input-type=module','-e',code],cwd=pathlib.Path(__file__).parents[3],text=True,timeout=10))
   h=Model();h.BUDGET_PLAN_SHA=original.BUDGET_PLAN_SHA;state['sequence']=636;state['total']['artifactFiles']=636;state['scenarios']['host-stage']={'startedUptime':1001,'limits':CASE.copy(),'total':{'artifactFiles':636,'sql':0,'http':0,'journal':0}};h.ledger=state;h.extension['originalLedgerAnchor']['registryHash']=h.BUDGET_PLAN_SHA;h.validate_budget_remaining=original.validate_budget_remaining
