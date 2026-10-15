@@ -1,0 +1,86 @@
+{
+  "schema": "cp023-development-rollback-probes-v1",
+  "status": "PASS",
+  "checks": [
+    {
+      "name": "product-and-receipt-failure-before-COMMIT",
+      "status": "PASS",
+      "productConfirmedInsideTransaction": true,
+      "receiptConfirmedInsideTransaction": true,
+      "commitSent": false,
+      "rollbackAcknowledged": true,
+      "persistedOperations": 0,
+      "persistedMovements": 0
+    },
+    {
+      "name": "stale-admission-close-CAS",
+      "status": "PASS",
+      "sqlState": "P0001",
+      "rollbackAcknowledged": true
+    },
+    {
+      "name": "abort-without-positive-global-closure",
+      "status": "PASS",
+      "sqlState": "P0001",
+      "rollbackAcknowledged": true
+    },
+    {
+      "name": "activation-without-proof",
+      "status": "PASS",
+      "sqlState": "P0001",
+      "rollbackAcknowledged": true
+    },
+    {
+      "name": "API-role-cannot-promote-recovery",
+      "status": "PASS",
+      "sqlState": "42501",
+      "rollbackAcknowledged": true
+    }
+  ],
+  "fingerprints": [
+    {
+      "name": "product-and-receipt-before-COMMIT",
+      "database": "mecanet_tenant_a",
+      "before": "f9f4c0085153cc882a52bec1942f1abfa79f4b4a3e726c90cce8f21005abb83f",
+      "after": "f9f4c0085153cc882a52bec1942f1abfa79f4b4a3e726c90cce8f21005abb83f",
+      "rollbackAcknowledged": true
+    },
+    {
+      "name": "stale-admission-close-CAS",
+      "database": "mecanet_control",
+      "before": "07100ff0e4117509032c2152a9636b765f35797564c23614097dbdf867da08ef",
+      "after": "07100ff0e4117509032c2152a9636b765f35797564c23614097dbdf867da08ef",
+      "rollbackAcknowledged": true
+    },
+    {
+      "name": "abort-without-positive-global-closure",
+      "database": "mecanet_control",
+      "before": "07100ff0e4117509032c2152a9636b765f35797564c23614097dbdf867da08ef",
+      "after": "07100ff0e4117509032c2152a9636b765f35797564c23614097dbdf867da08ef",
+      "rollbackAcknowledged": true
+    },
+    {
+      "name": "activation-without-proof",
+      "database": "mecanet_control",
+      "before": "07100ff0e4117509032c2152a9636b765f35797564c23614097dbdf867da08ef",
+      "after": "07100ff0e4117509032c2152a9636b765f35797564c23614097dbdf867da08ef",
+      "rollbackAcknowledged": true
+    },
+    {
+      "name": "API-role-cannot-promote-recovery",
+      "database": "mecanet_control",
+      "before": "07100ff0e4117509032c2152a9636b765f35797564c23614097dbdf867da08ef",
+      "after": "07100ff0e4117509032c2152a9636b765f35797564c23614097dbdf867da08ef",
+      "rollbackAcknowledged": true
+    }
+  ],
+  "sqlCommands": 34,
+  "elapsedMs": 308,
+  "scope": "real PostgreSQL development rollback only; not transport-loss proof, POS or outer L3 QA",
+  "stateKept": true,
+  "provenance": {
+    "helperSha256": "41cbf170a31821481ed81496520e9bec00780dea2551e93c1f6f978e7fd11b11",
+    "previousFailedHelperSha256": "1b43576f30382a98af82854ba57b32507ee9948e57f302f3c0c698c4f128a902",
+    "correction": "post-ROLLBACK fingerprint on same released-from-transaction client; no max-pool increase; same custodied operation IDs"
+  }
+}

@@ -1,0 +1,89 @@
+{
+  "schema": "cp023-development-http-v1",
+  "status": "PASS",
+  "environment": "win32 x64 PostgreSQL18.6 TLS loopback; not ARM64/VPS QA",
+  "checks": [
+    {
+      "name": "readiness-two-independent-api",
+      "status": "PASS",
+      "api": 1,
+      "httpStatus": 200
+    },
+    {
+      "name": "readiness-two-independent-api",
+      "status": "PASS",
+      "api": 2,
+      "httpStatus": 200
+    },
+    {
+      "name": "real-login-with-temporary-fixture-credentials",
+      "status": "PASS"
+    },
+    {
+      "name": "same-session-on-second-api",
+      "status": "PASS"
+    },
+    {
+      "name": "product-idempotency-across-two-processes",
+      "status": "PASS"
+    },
+    {
+      "name": "positive-receipt-and-no-duplicate-on-uuid-replay",
+      "status": "PASS"
+    },
+    {
+      "name": "same-actor-historical-operation-on-other-api",
+      "status": "PASS"
+    },
+    {
+      "name": "inventory-and-movements-through-real-http",
+      "status": "PASS"
+    },
+    {
+      "name": "company-a-session-cannot-read-company-b",
+      "status": "PASS"
+    },
+    {
+      "name": "sql-observation-confirms-two-operations-one-movement",
+      "status": "PASS"
+    },
+    {
+      "name": "old-source-cookie-invalid-before-and-after-new-login",
+      "status": "PASS",
+      "httpCalls": 2,
+      "httpStatus": 200,
+      "authenticated": false
+    },
+    {
+      "name": "source-original-receipt-history-identical-after-physical-copy",
+      "status": "PASS",
+      "httpStatus": 200,
+      "sourceResultSha256": "3814975d60fed264ec8319e7c39143be00b48eb169fa9b50002128816e4e73c2",
+      "targetResultSha256": "3814975d60fed264ec8319e7c39143be00b48eb169fa9b50002128816e4e73c2"
+    }
+  ],
+  "httpCalls": 16,
+  "apiProcesses": [
+    {
+      "instance": "api1",
+      "pid": 25332,
+      "port": 18441
+    },
+    {
+      "instance": "api2",
+      "pid": 7836,
+      "port": 18442
+    }
+  ],
+  "sqlEffectObservation": {
+    "operations": 2,
+    "movements": 1
+  },
+  "physicalRecovery": "NOT VERIFIED",
+  "provenance": {
+    "httpHelperSha256": "e2af43f7e871fc556e838647f0b9ad263695f158755ea26de5c858dcc5198261",
+    "apiHelperSha256": "76223eb32d8f7091cc77ac4d6eb9b54afda6fe8978fc3bf4c7ca4c5b244f99c9",
+    "physicalCopyIndex": "ec584f377985c66e73bcdf90c3d9002999682a8a8b066d0ffb7c4da36a6c08c7",
+    "outerL3A2": "NOT VERIFIED"
+  }
+}

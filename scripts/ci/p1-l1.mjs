@@ -88,6 +88,44 @@ function run(args, extraEnvironment = {}) {
   if (result.signal || result.status !== 0) process.exit(result.status || 1);
 }
 
+// These physical filesystem adapters intentionally require PostgreSQL UID999.
+// Only the disposable GitHub-hosted job uses that identity; no product guard,
+// test assertion or local execution is changed to simulate Unix ownership.
+const filesystemTests = Object.freeze([
+  'tests/qa/cp019/copy-offline.test.mjs',
+  'tests/qa/cp019/stage-journal.test.mjs',
+  'tests/qa/cp019/target-prepare.test.mjs',
+]);
+function contractTestPlan(platform, variables) {
+  const isolated = platform === 'linux' && variables.GITHUB_ACTIONS === 'true'
+    && variables.GITHUB_REPOSITORY === 'SrEdgarR/MECANET'
+    && variables.GITHUB_SERVER_URL === 'https://github.com'
+    && variables.RUNNER_ENVIRONMENT === 'github-hosted' && variables.RUNNER_OS === 'Linux';
+  const filesystem = isolated ? [...filesystemTests] : [];
+  const ordinary = tests.filter(file => !filesystem.includes(file));
+  assert.equal(new Set([...ordinary, ...filesystem]).size, tests.length);
+  assert.equal(ordinary.length + filesystem.length, tests.length);
+  return { ordinary, filesystem };
+}
+function filesystemCommand(nodePath, args) {
+  assert.match(nodePath, /^\/[^\r\n\0]+$/, 'CI_FILESYSTEM_ABSOLUTE_NODE_REQUIRED');
+  return { executable: '/usr/bin/sudo', args: ['-n', '/usr/bin/setpriv', '--reuid=999', '--regid=999', '--clear-groups', '/usr/bin/env', '-i', 'PATH=/usr/bin:/bin', 'TMPDIR=/tmp', 'NODE_ENV=test', 'CI=true', 'REAL_API=false', 'VITEST_REAL_API=false', nodePath, ...args] };
+}
+function filesystemIdentity({ uid, gid, groups, version, environment: variables }) {
+  assert.equal(uid, 999, 'CI_FILESYSTEM_UID_REQUIRED');
+  assert.equal(gid, 999, 'CI_FILESYSTEM_GID_REQUIRED');
+  assert.ok(Array.isArray(groups) && groups.includes(999) && groups.every(group => group === 999), 'CI_FILESYSTEM_GROUPS_REQUIRED');
+  assert.equal(version, 'v24.21.0', 'CI_FILESYSTEM_NODE_REQUIRED');
+  assert.deepEqual(variables, { PATH: '/usr/bin:/bin', TMPDIR: '/tmp', NODE_ENV: 'test', CI: 'true', REAL_API: 'false', VITEST_REAL_API: 'false' }, 'CI_FILESYSTEM_ENVIRONMENT_REQUIRED');
+  return { schema: 'cp023-filesystem-identity-v1', status: 'PASS', uid, gid, groups, node: version };
+}
+function runFilesystem(args) {
+  const command = filesystemCommand(process.execPath, args);
+  const result = spawnSync(command.executable, command.args, { cwd: root, env: { PATH: '/usr/bin:/bin' }, stdio: 'inherit' });
+  if (result.error) throw result.error;
+  if (result.signal || result.status !== 0) process.exit(result.status || 1);
+}
+
 function javascriptFiles(directory) {
   return readdirSync(resolve(root, directory), { withFileTypes: true })
     .filter(entry => entry.name !== 'node_modules')
@@ -101,6 +139,38 @@ function javascriptFiles(directory) {
 
 if (process.version !== 'v24.21.0') throw new Error('P1_L1_EXACT_NODE_RUNTIME_REQUIRED');
 switch (mode) {
+  case 'self-test': {
+    const github = { GITHUB_ACTIONS: 'true', GITHUB_REPOSITORY: 'SrEdgarR/MECANET', GITHUB_SERVER_URL: 'https://github.com', RUNNER_ENVIRONMENT: 'github-hosted', RUNNER_OS: 'Linux' };
+    const filesystem = ['tests/qa/cp019/copy-offline.test.mjs', 'tests/qa/cp019/stage-journal.test.mjs', 'tests/qa/cp019/target-prepare.test.mjs'];
+    const cases = [
+      ['linux', github, true],
+      ['win32', github, false],
+      ['linux', {}, false],
+      ['linux', { ...github, GITHUB_REPOSITORY: 'foreign/MECANET' }, false],
+      ['linux', { ...github, GITHUB_SERVER_URL: 'https://foreign.example' }, false],
+      ['linux', { ...github, RUNNER_ENVIRONMENT: 'self-hosted' }, false],
+      ['linux', { ...github, GITHUB_ACTIONS: 'false' }, false],
+      ['linux', { ...github, RUNNER_OS: 'Windows' }, false],
+    ];
+    for (const [platform, variables, isolated] of cases) {
+      const plan = contractTestPlan(platform, variables);
+      assert.deepEqual(plan.filesystem, isolated ? filesystem : []);
+      assert.deepEqual(plan.ordinary, tests.filter(file => !isolated || !filesystem.includes(file)));
+      const union = [...plan.ordinary, ...plan.filesystem];
+      assert.equal(union.length, tests.length);
+      assert.equal(new Set(union).size, tests.length);
+      assert.deepEqual([...union].sort(), [...tests].sort());
+    }
+    const command = filesystemCommand('/opt/node/bin/node', ['--test', '--test-reporter=spec', ...filesystem]);
+    assert.equal(command.executable, '/usr/bin/sudo');
+    assert.deepEqual(command.args, ['-n', '/usr/bin/setpriv', '--reuid=999', '--regid=999', '--clear-groups', '/usr/bin/env', '-i', 'PATH=/usr/bin:/bin', 'TMPDIR=/tmp', 'NODE_ENV=test', 'CI=true', 'REAL_API=false', 'VITEST_REAL_API=false', '/opt/node/bin/node', '--test', '--test-reporter=spec', ...filesystem]);
+    assert.throws(() => filesystemCommand('node', []), /CI_FILESYSTEM_ABSOLUTE_NODE_REQUIRED/);
+    const identity = { uid: 999, gid: 999, groups: [999], version: 'v24.21.0', environment: { PATH: '/usr/bin:/bin', TMPDIR: '/tmp', NODE_ENV: 'test', CI: 'true', REAL_API: 'false', VITEST_REAL_API: 'false' } };
+    assert.equal(filesystemIdentity(identity).status, 'PASS');
+    for (const change of [{ uid: 0 }, { gid: 0 }, { groups: [999, 127] }, { version: 'v22.0.0' }, { environment: { ...identity.environment, NODE_OPTIONS: '--inspect' } }]) assert.throws(() => filesystemIdentity({ ...identity, ...change }));
+    console.log(JSON.stringify({ schema: 'cp023-contract-partition-self-test-v1', status: 'PASS', partitionCases: cases.length, files: tests.length, isolatedFiles: filesystem.length, commandCases: 2, identityCases: 6, filesystemEffects: false, sudoExecuted: false, sqlCommands: 0 }));
+    break;
+  }
   case 'provenance': {
     const result = spawnSync('git', ['rev-parse', 'HEAD'], { cwd: root, encoding: 'utf8', stdio: ['ignore', 'pipe', 'inherit'] });
     if (result.status !== 0 || !/^[a-f0-9]{40}\s*$/.test(result.stdout)) throw new Error('CI_GIT_IDENTITY_REQUIRED');
@@ -115,10 +185,19 @@ switch (mode) {
     console.log(`PASS: JavaScript syntax (${files.length} files; JSX parsed by the frontend build)`);
     break;
   }
-  case 'test':
+  case 'test': {
     console.log(`Explicit local suite: ${tests.length} files; no PostgreSQL or private QA integration`);
-    run(['--test', '--test-reporter=spec', ...tests]);
+    const plan = contractTestPlan(process.platform, process.env);
+    if (plan.filesystem.length) {
+      assert.equal(process.getuid(), 1001, 'CI_FILESYSTEM_PARENT_UID_REQUIRED');
+      const preflight = `import assert from 'node:assert/strict';console.log(JSON.stringify((${filesystemIdentity.toString()})({uid:process.getuid(),gid:process.getgid(),groups:process.getgroups(),version:process.version,environment:process.env})));`;
+      runFilesystem(['--input-type=module', '-e', preflight]);
+      console.log(`Filesystem suite: ${plan.filesystem.length} exact files as UID/GID999; remaining ${plan.ordinary.length} as UID1001`);
+      runFilesystem(['--test', '--test-reporter=spec', ...plan.filesystem]);
+    }
+    run(['--test', '--test-reporter=spec', ...plan.ordinary]);
     break;
+  }
   case 'frontend':
   case 'sanitizer':
     // DEC-060 / SC-008: both entry points use the locked SaaS lane, never the
@@ -169,5 +248,5 @@ switch (mode) {
     break;
   }
   default:
-    throw new Error('USE_PROVENANCE_SYNTAX_TEST_FRONTEND_SANITIZER_OR_ASSETS');
+    throw new Error('USE_SELF_TEST_PROVENANCE_SYNTAX_TEST_FRONTEND_SANITIZER_OR_ASSETS');
 }

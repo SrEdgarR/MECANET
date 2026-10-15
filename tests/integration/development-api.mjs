@@ -31,6 +31,11 @@ async function main(){
  let stopping=false,checking=false;const timer=setInterval(async()=>{if(checking)return;checking=true;try{await admission.observeClock()}catch{}finally{checking=false}},150);timer.unref();
  async function stop(){if(stopping)return;stopping=true;const drained=await service.drain();clearInterval(timer);await new Promise(resolve=>{server.close(resolve);server.closeIdleConnections()});await Promise.all([readers.close(),writers.close()]);await Promise.all(ownPools.map(p=>p.end()));console.log(JSON.stringify({type:'development-api-stopped',instance:c.instance,pid:process.pid,drained,budget:budget.snapshot()}));process.exitCode=drained?0:1;process.stdin.destroy()}
  process.on('SIGTERM',()=>void stop());process.on('SIGINT',()=>void stop());const input=createInterface({input:process.stdin});input.on('line',line=>{if(line==='STOP')void stop()});input.on('close',()=>void stop());
- await admission.observeClock();await new Promise((yes,no)=>{server.once('error',no);server.listen(c.port,'127.0.0.1',yes)});console.log(JSON.stringify({type:'development-api-ready',instance:c.instance,pid:process.pid,port:c.port}));
+ const clockDeadline=performance.now()+10000;let clockObservedReady=false,clockObservationAttempts=0;
+ while(performance.now()<clockDeadline&&!stopping){clockObservationAttempts++;if(await admission.observeClock()===true){clockObservedReady=true;break}await new Promise(resolve=>setTimeout(resolve,20))}
+ // The spacing schedules bounded observations; only positive SQL clock progress
+ // permits startup. Elapsed time or a sleep never establishes readiness.
+ assert.ok(clockObservedReady&&!stopping,'DEVELOPMENT_CLOCK_NOT_READY');
+ await new Promise((yes,no)=>{server.once('error',no);server.listen(c.port,'127.0.0.1',yes)});console.log(JSON.stringify({type:'development-api-ready',instance:c.instance,pid:process.pid,port:c.port,clockObservedReady,clockObservationAttempts}));
 }
 main().catch(e=>{console.error(JSON.stringify({type:'development-api-failed',guard:/^[A-Z][A-Z0-9_]{2,80}$/.test(e.message??'')?e.message:'DEVELOPMENT_API_FAILED'}));process.exitCode=1});

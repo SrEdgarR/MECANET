@@ -1,0 +1,29 @@
+{
+  "schema": "cp023-development-runtime-end-v1",
+  "status": "PASS",
+  "clock": {
+    "tick": "7462",
+    "version": "7465",
+    "uncertain": false,
+    "stopped": true
+  },
+  "clockFailure": null,
+  "runtimeSql": {
+    "sqlCommandsAfterHandoff": 7119
+  },
+  "runtimeSqlScope": "parent measured pools only; API process SQL not included",
+  "apiProcesses": [
+    {
+      "instance": "api1",
+      "exitCode": 0,
+      "drained": true
+    },
+    {
+      "instance": "api2",
+      "exitCode": 0,
+      "drained": true
+    }
+  ],
+  "poolsEnded": true,
+  "nativePostgres": "still running for bounded rollback probes"
+}

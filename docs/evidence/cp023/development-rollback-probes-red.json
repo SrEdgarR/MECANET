@@ -1,0 +1,8 @@
+{
+  "schema": "cp023-development-rollback-probes-v1",
+  "status": "FAIL",
+  "stage": "negative-CAS-proof-ACL",
+  "sqlCommands": 16,
+  "errorType": "Error",
+  "message": "timeout exceeded when trying to connect"
+}

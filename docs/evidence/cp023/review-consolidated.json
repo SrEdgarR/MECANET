@@ -1,0 +1,211 @@
+{
+  "schema": "cp023-independent-consolidated-review-v1",
+  "reviewer": "cp022_protocol; distinto de autores SQL, witnesses, helpers y CI",
+  "at": "2026-10-15T16:47:56Z",
+  "result": "PASS LOCAL FOCUSED CODE REVIEW; NOT L3 ACCEPTANCE",
+  "requiredOpen": [],
+  "codeHashes": {
+    "tests/integration/development-recovery.mjs": "dfcdc3fc62a3a43795e5ab0822c62f936ccff52f327ae0985248d8470041a4dd",
+    "tests/integration/development-http.mjs": "e2af43f7e871fc556e838647f0b9ad263695f158755ea26de5c858dcc5198261",
+    "tests/integration/development-api.mjs": "76223eb32d8f7091cc77ac4d6eb9b54afda6fe8978fc3bf4c7ca4c5b244f99c9",
+    "tests/integration/ci-postgres.mjs": "08a09915078f6f56859d111d6b00b765294194e636852ce2ba1bbcaa4ab69dc0",
+    ".github/workflows/p1-l3-development.yml": "c07ab715a090844666bdd68c47fafa6429380092f10cd88d537d4d982bf842a5",
+    "docs/evidence/cp023/ci-design.md": "936524ac81b0c8e3bd827110a5c72dd90dce0fc077c25be3e4fd332f1593c0ef"
+  },
+  "caseSyntax": {
+    "commit": "a3b5752c178afa20d3835aebc8e3c88d04fbc02a",
+    "result": "PASS",
+    "files": [
+      {
+        "path": "server/saas/db/migrations/006-control-recovery.sql",
+        "expressions": 3,
+        "sha256AtCommit": "012c440c59c8acbb012ef6a019822643660b008f014cf505719ccec900ca44e9"
+      },
+      {
+        "path": "server/saas/db/migrations/006-tenant-recovery.sql",
+        "expressions": 3,
+        "sha256AtCommit": "cefc4d33b05ab44e82c05627f919f4df8a4bbfdf7fa352f344abbe8eca1115fa"
+      }
+    ],
+    "proof": "Igualdad byte exacta con parent salvo seis pares de parentesis alrededor de CASE de comparacion. Sin cambios de firmas, ramas, CAS, predicados, ACL o cotas.",
+    "realEvidenceReadOnly": [
+      "development-006-red.json",
+      "development-006-green-rollback.json"
+    ],
+    "realSqlRerunByReviewer": false
+  },
+  "networkWitness": {
+    "commit": "3c183976598ff19f2018be63629949784ebcb95e",
+    "result": "PASS",
+    "files": [
+      {
+        "path": "tests/qa/cp019/a5-negatives.mjs",
+        "replacements": 2,
+        "sha256": "c644498800e94f2258dbbeca99cf565d0387cc20a4455b3e02f0ace40ffaa70b"
+      },
+      {
+        "path": "tests/qa/cp019/acceptance.mjs",
+        "replacements": 2,
+        "sha256": "1d9963e4c1483adfe73f993083f322fe19a0045ee473000385c66cc483fc3fd4"
+      },
+      {
+        "path": "tests/qa/cp019/commit-fault-probe.mjs",
+        "replacements": 1,
+        "sha256": "428e965115ece390b0593e0c253b0971ca4aecfaaa4f43e79a93dbb1d75e45f3"
+      },
+      {
+        "path": "tests/qa/cp019/credential-probe.mjs",
+        "replacements": 2,
+        "sha256": "7db408e0186732d3f8269f8c2b96dd73a5257af9298f13f750bf20128a762c78"
+      },
+      {
+        "path": "tests/qa/cp019/promotion-barrier.mjs",
+        "replacements": 2,
+        "sha256": "d0d030235d5e7c23479383a2124d07e91fb2258f39f31cdf625c997b79d5deb4"
+      },
+      {
+        "path": "tests/qa/cp019/runtime-driver.mjs",
+        "replacements": 2,
+        "sha256": "98f6c645bb3c15dc1cd47d8682c80c436540ec8f1d5a3ee86235134c51e35990"
+      },
+      {
+        "path": "tests/qa/cp019/schema-check.mjs",
+        "replacements": 1,
+        "sha256": "5cd388ecb6bc4f96551bacff0c296c1d19f8b0545619aaae6f1cdc6a43c9f9a9"
+      },
+      {
+        "path": "tests/qa/cp019/schema-fault-probe.mjs",
+        "replacements": 1,
+        "sha256": "8e10a71e3092d61038109a609f07a377184af2a0dcaad6ec838aa7dedbcb5efb"
+      },
+      {
+        "path": "tests/qa/cp019/source-driver.mjs",
+        "replacements": 1,
+        "sha256": "e6853ba040547b55bf66a5e77b9d3cbff0af2dfcaebad5a77dd5c6294fca90ca"
+      },
+      {
+        "path": "tests/qa/cp019/source-final.mjs",
+        "replacements": 1,
+        "sha256": "b7f6a5b9775943995ba489c4c2edb7b3b5a50e5def240869a594bc2eab783c5a"
+      },
+      {
+        "path": "tests/qa/cp019/sql-probe.mjs",
+        "replacements": 1,
+        "sha256": "00ecb83d8a4064265f15cb7dc9e980b2beb068dc13a50676615d2ecd1d2981ef"
+      },
+      {
+        "path": "tests/qa/cp019/target-end.mjs",
+        "replacements": 1,
+        "sha256": "7a69f8d09ea912067f6b5ed67907378b95b1a1cce539a029b2ec0239cf6f5440"
+      },
+      {
+        "path": "tests/qa/cp019/target-restart.mjs",
+        "replacements": 1,
+        "sha256": "ffe083ed681102ed0034c76d93a310a115a19382ae929b3d9ae30278abe71f17"
+      },
+      {
+        "path": "tests/qa/cp019/target-runtime.mjs",
+        "replacements": 1,
+        "sha256": "4140470653e1ff717dde0fcd679b8358779a5f8676fa4fe675a5be84e85052a0"
+      },
+      {
+        "path": "tests/qa/cp019/target-witness.mjs",
+        "replacements": 2,
+        "sha256": "50e3dbb5d3a83fcc96f19d7f1fea599ddf7e2831fd2628373a8aa5b20c79b2a0"
+      }
+    ],
+    "proof": "Igualdad byte exacta tras sustituir21 literales inet_server_addr()::text por host(inet_server_addr()) en15archivos. Comparaciones de destino, TLS, system identifier, read-only, leases, queries y presupuestos intactas.",
+    "historicalLocalRegressions": {
+      "reportedBy": "network-witness-green.json; no repetido por reviewer",
+      "tests": 296,
+      "pass": 296,
+      "fail": 0,
+      "arm64Physical": "NOT VERIFIED"
+    }
+  },
+  "newAliasFinding": {
+    "status": "CODE FIX REVIEW PASS; REAL GREEN OWNED BY ROOT",
+    "red": "development-recovery-red.json: SQLSTATE42702,83queries,begin_recovery r.id ambiguo",
+    "currentControlMigrationSha256": "d39d9883a700677518b02561ca348cd7883c1e3fd4cc9c2fcb56dd23d6431d64",
+    "proof": "Igualdad byte exacta contra012c440c salvo cuatro lineas de alias restore_row en una subquery. Sin variable_conflict/use_column ni cambio de CAS o requisitos.",
+    "additionalScan": {
+      "plpgsqlFunctions": 32,
+      "explicitFromJoinDeclareAliasCollisions": [],
+      "limitation": "Revision estatica focal, no compilador PL/pgSQL ni prueba SQL de todas las ramas."
+    },
+    "writerReadinessSqlLanguage": "Linea675 LANGUAGEsql sin variable DECLAREr; intacta."
+  },
+  "developmentRecovery": {
+    "result": "PASS FOR BOUNDED NATIVE DEVELOPMENT HELPERS",
+    "pureIndependentChecks": {
+      "syntax": "PASS",
+      "selfTestNegativeGuards": 11,
+      "sqlCommands": 0,
+      "networkUsed": false
+    },
+    "resolvedReviewFindings": [
+      "Target context compatible: hashes/mode/expectedPort, dos consumidores loopback15432/15433 y epoch actual.",
+      "Guard de material cierra siete nombres y valores string UUID antes de mutar; rechaza claves foreign y array UUID.",
+      "SQL local directo declarado como fixture y contadores centrales preparados explicitamente antes de HTTP; no se llama reconciliacion productiva."
+    ],
+    "sourceClosure": "Restricciones productivas B/TENANT y A/RESTORE, admision cerrada y barrier/tickets/reservas/fences/ACK comprobados; custodia previa a efectos. Root conserva FIN nativo/copia.",
+    "clock": "ACK descartado deliberadamente despues de COMMIT real y reconciliacion positiva createClock; no se afirma perdida fisica de red.",
+    "resume": "Sólo material original, modo explicito, run aun ausente,18SCRAM contra claves custodiadas, attrs SaaS y recibo nuevo antes de begin. Branch de reentrada no ALTER ROLE ni regenera valores.",
+    "limitations": [
+      "Helper usa anclas SQL fixture; no Docker EndProof ni journal durable externo/A2 PASS.",
+      "600 consultas/120s se aplican al helper antes de handoff; runtime y SQL de API hijos no estan globalmente medidos por ese contador.",
+      "Root debe cerrar procesos/pools/reloj y PostgreSQL propios con evidencia positiva; pool.close no es por si solo una recuperacion fisica acreditada."
+    ],
+    "recommendedBeforeFutureFreshSuppliedMaterial": "Exigir typeofstring tambien en guard inline de rolePasswords/sessionSecret; esta continuacion usa material original generado y18SCRAM positivos que verifican claves string."
+  },
+  "ci": {
+    "result": "PASS FOR DRAFT PUBLICATION REVIEW ONLY",
+    "pureIndependentChecks": {
+      "syntax": "PASS",
+      "selfTestNegativeGuards": 12,
+      "dockerUsed": false,
+      "sqlCommands": 0,
+      "networkUsed": false
+    },
+    "reviewed": [
+      "Solo SrEdgarR/MECANET/rama exacta/GitHub-hostedLinuxx64/SHA; pins actions/imagenID sin secrets ni deploy.",
+      "CID/owner/config recibidos antes START; Root privado, tmpfs UID/GID y caps/RAM/CPU/pids/PGloopback verificados.",
+      "FIN positivo propio antes rm, CREATED/CIDperdido/mismatch conservaUNKNOWN; arranque API parcial tiene cleanup.",
+      "Estados SQL/HTTP/cleanup separados y asserts siempre; continue-on-error no convierte fallo en PASS.",
+      "Diagnostico sanitizado por hashes/clases sin logs crudos/SQL/credenciales."
+    ],
+    "limits": {
+      "seconds": 600,
+      "parentSql": 8192,
+      "http": 80,
+      "postgresConnections": 60,
+      "pgCpu": 1,
+      "pgMiB": 1024,
+      "pids": 128,
+      "jobMinutes": 15
+    },
+    "limitations": [
+      "Docker local y ejecucion CI NO realizados por este reviewer.",
+      "SQL de procesos API y PG interno no comparten contador padre; no se afirma limite SQL global.",
+      "Cgroup cubre PG, no controlador/API/VM completa.",
+      "No ARM64, VPS, restauracion o Integration Gate PASS por estos controles."
+    ]
+  },
+  "evidenceReferencesSha256": {
+    "docs/evidence/cp023/development-006-red.json": "03104e742545791ea54eafa76575e14d5c1b31440e917107ee28e4887a9f1202",
+    "docs/evidence/cp023/development-006-green-rollback.json": "2d664c1255db46a4b01953981f98aba9b7e126cef479de984f20a409585947f8",
+    "docs/evidence/cp023/network-witness-red.json": "d91948b2a1e19655f87d6e6ee42f84c2cd8c153c038ba417e37b170de9f2a28d",
+    "docs/evidence/cp023/network-witness-green.json": "b030af06beec7535e98d04e82478273c66b553aa470df2e4ecdfaffb8e8cebdc",
+    "docs/evidence/cp023/development-recovery-red.json": "4a9c37056608198a0b7a63c9ddd5ed76af5fbef65cc1a131046410d670b5e173",
+    "docs/evidence/cp023/publication-safety.json": "ce779942cccacd27def57f68f080638715c1c6908cb1c352ca9da4931204382f",
+    "docs/evidence/cp023/resource-review.json": "437e7c0d9574cce03630cd4d277b09f76a06ef452f15e9e241cc2810e97884e1",
+    "docs/evidence/cp023/pos-review.md": "e6df28a9ba0466e79f509ecc532f9ee26ed82f26e7947b7e1b6d0e39acc6dfec"
+  },
+  "provenanceNotes": [
+    "Se reutilizan187tests independientes del peer B ya registrados en resource-review.json; no se suman ni repiten aqui.",
+    "No se repitieron296regresiones cuya version de15fuentes seguia byte-identica.",
+    "Aviso del reviewer sobre epoch fijo2 fue descartado: se basaba en lectura anterior609c60dd, e2af43f7 actual deriva context.scopes.targetEpoch.",
+    "No se ejecutaron SQL, SSH, Docker, HTTP, navegador, Git mutaciones o recursos por este reviewer.",
+    "P1-L3 no TERMINAL, P2 no aprobado, SC016/017 pendientes y produccion/servicios ajenos intactos."
+  ]
+}

@@ -1,6 +1,6 @@
 {
   "schema": "cp023-ci-integration-evidence-v1",
-  "collectedAt": "2026-10-15T16:52:37.687011+00:00",
+  "collectedAt": "2026-10-15T16:55:35.347871+00:00",
   "repository": "SrEdgarR/MECANET",
   "authenticatedLogin": "SrEdgarR",
   "scope": "GitHub development CI only; not L3 acceptance, VPS or physical recovery",
@@ -88,49 +88,327 @@
           "networkUsed": false
         }
       }
+    },
+    {
+      "runId": 38772726312,
+      "url": "https://github.com/SrEdgarR/MECANET/actions/runs/38772726312",
+      "jobId": 116552447947,
+      "headSha": "e2a665f652a10bf9d2b882f67ff724081a22a589",
+      "event": "push",
+      "conclusion": "FAIL",
+      "completedAt": "2026-10-15T16:53:51Z",
+      "log": {
+        "bytes": 53217,
+        "sha256": "bd5114a15f2ee39065be7460b1e20eda5cc7cad8af8b3071cc413fb105fe174a",
+        "rawPublic": false,
+        "retainedInPrivateWorkspace": true
+      },
+      "sanitizedReport": {
+        "schema": "cp023-ci-development-v1",
+        "status": "FAIL",
+        "environment": "GitHub-hosted ubuntu24.04 Linux x64; not ARM64/VPS acceptance",
+        "physicalRecovery": "NOT VERIFIED",
+        "sql": {
+          "schema": "cp023-development-integration-v1",
+          "status": "PASS",
+          "sourceSha": "e2a665f652a10bf9d2b882f67ff724081a22a589",
+          "environment": "fresh loopback PostgreSQL18.6 development; not ARM64/VPS QA",
+          "systemIdentifier": "7696938849016414236",
+          "checks": [
+            {
+              "name": "exclusive-loopback-cluster",
+              "status": "PASS",
+              "version": "180006",
+              "osArchitecture": "development host only; not ARM64 QA"
+            },
+            {
+              "name": "private-material-published-before-ddl",
+              "status": "PASS",
+              "materialHash": "4d92f9671ab66a0a671723a8f8d0289749476f3afd496b9d7725912efedd1066",
+              "directoryDurability": "NOT CLAIMED BY THIS HELPER"
+            },
+            {
+              "name": "sql001-through005-and-synthetic-fixture",
+              "status": "PASS"
+            },
+            {
+              "name": "sql006-real-ddl",
+              "status": "PASS"
+            },
+            {
+              "name": "normal-cas-idempotent-bootstrap-clock-and-runtime-guard",
+              "status": "PASS",
+              "proofScope": "synthetic local SQL bootstrap, not physical SourceFIN or restore"
+            },
+            {
+              "name": "real-product-receipt-concurrent-idempotent-replay",
+              "status": "PASS",
+              "products": 1,
+              "movements": 1,
+              "stock": "7",
+              "directTenantSql": true
+            },
+            {
+              "name": "stale-epoch-denied-and-original-history",
+              "status": "PASS"
+            }
+          ],
+          "migrations": [
+            {
+              "database": "mecanet_tenant_a",
+              "file": "002-tenant.sql",
+              "version": 2,
+              "sha256": "2777e63d4ab4a9d02308e2f5a917b8e5fdacbe08eb1c015e505ba43fc45d2a6a"
+            },
+            {
+              "database": "mecanet_tenant_b",
+              "file": "002-tenant.sql",
+              "version": 2,
+              "sha256": "2777e63d4ab4a9d02308e2f5a917b8e5fdacbe08eb1c015e505ba43fc45d2a6a"
+            },
+            {
+              "database": "mecanet_demo",
+              "file": "002-tenant.sql",
+              "version": 2,
+              "sha256": "2777e63d4ab4a9d02308e2f5a917b8e5fdacbe08eb1c015e505ba43fc45d2a6a"
+            },
+            {
+              "database": "mecanet_control",
+              "file": "003-control-writers.sql",
+              "version": 3,
+              "sha256": "c5036db5fd1a71ea94e7d7feee25e299dcb074e25108465304ac6dff92955d07"
+            },
+            {
+              "database": "mecanet_tenant_a",
+              "file": "003-tenant-writers.sql",
+              "version": 3,
+              "sha256": "5fe454b89dbc5f821f742456deb2ebde08b9142048b2eac33ef9352eb87bce06"
+            },
+            {
+              "database": "mecanet_tenant_a",
+              "file": "004-tenant-writers-fix.sql",
+              "version": 4,
+              "sha256": "5767c51cc4c7522e81dc634277e9c2135c617628a41fb3bd038a172b5cb48801"
+            },
+            {
+              "database": "mecanet_tenant_b",
+              "file": "003-tenant-writers.sql",
+              "version": 3,
+              "sha256": "5fe454b89dbc5f821f742456deb2ebde08b9142048b2eac33ef9352eb87bce06"
+            },
+            {
+              "database": "mecanet_tenant_b",
+              "file": "004-tenant-writers-fix.sql",
+              "version": 4,
+              "sha256": "5767c51cc4c7522e81dc634277e9c2135c617628a41fb3bd038a172b5cb48801"
+            },
+            {
+              "database": "mecanet_control",
+              "file": "005-control-claim-ticket.sql",
+              "version": 5,
+              "sha256": "6f50da1b59b6f2c73733aa6c2c5f1698bdb3b8afab679e854f0705f030438e1e"
+            },
+            {
+              "database": "mecanet_tenant_a",
+              "file": "006-tenant-recovery.sql",
+              "version": 6,
+              "sha256": "cefc4d33b05ab44e82c05627f919f4df8a4bbfdf7fa352f344abbe8eca1115fa"
+            },
+            {
+              "database": "mecanet_tenant_b",
+              "file": "006-tenant-recovery.sql",
+              "version": 6,
+              "sha256": "cefc4d33b05ab44e82c05627f919f4df8a4bbfdf7fa352f344abbe8eca1115fa"
+            },
+            {
+              "database": "mecanet_control",
+              "file": "006-control-recovery.sql",
+              "version": 6,
+              "sha256": "d39d9883a700677518b02561ca348cd7883c1e3fd4cc9c2fcb56dd23d6431d64"
+            }
+          ],
+          "sqlCommands": 270,
+          "physicalRecovery": "NOT VERIFIED",
+          "twoApi": "NOT VERIFIED by this runner",
+          "cleanup": "Root must call returned close() then own native PG cleanup",
+          "scope": "development controller measured; API and PG internal SQL excluded",
+          "parentCommandsAtSqlCut": 276
+        },
+        "http": {
+          "status": "FAIL"
+        },
+        "cleanup": {
+          "status": "PASS"
+        },
+        "limits": {
+          "seconds": 600,
+          "parentSqlCommands": 8192,
+          "httpCalls": 80,
+          "postgresConnections": 60,
+          "nanoCpus": 1000000000,
+          "memoryBytes": 1073741824,
+          "pids": 128
+        },
+        "sourceSha": "e2a665f652a10bf9d2b882f67ff724081a22a589",
+        "postgresReadinessFirstError": {
+          "code": "ECONNREFUSED"
+        },
+        "failure": "READY_FAILED",
+        "postgresFailureDiagnostic": {
+          "status": "running",
+          "exitCode": 0,
+          "oom": false,
+          "pid": 2675,
+          "startedAt": "2026-10-15T16:53:46.176093477Z",
+          "finishedAt": "0001-01-01T00:00:00Z",
+          "classification": "POSTGRES_LOG_UNCLASSIFIED",
+          "logBytes": 2702,
+          "boundedLogSha256": "ce57060639228e7fcfc5c9219137454d500c32ca762843345e44e1c64bf66da1",
+          "rawLogPublished": false,
+          "configuredNanoCpus": 1000000000,
+          "configuredMemory": 1073741824
+        },
+        "apiFin": [
+          {
+            "instance": "api1",
+            "exitCode": 0,
+            "events": [
+              {
+                "type": "development-api-ready",
+                "instance": "api1",
+                "pid": 2766,
+                "port": 18441
+              },
+              {
+                "type": "development-api-stopped",
+                "instance": "api1",
+                "pid": 2766,
+                "drained": true,
+                "budget": {
+                  "pools": 0,
+                  "leased": 0,
+                  "maxPools": 4,
+                  "maxLeases": 8
+                }
+              }
+            ]
+          },
+          {
+            "instance": "api2",
+            "exitCode": 0,
+            "events": [
+              {
+                "type": "development-api-ready",
+                "instance": "api2",
+                "pid": 2779,
+                "port": 18442
+              },
+              {
+                "type": "development-api-stopped",
+                "instance": "api2",
+                "pid": 2779,
+                "drained": true,
+                "budget": {
+                  "pools": 0,
+                  "leased": 0,
+                  "maxPools": 4,
+                  "maxLeases": 8
+                }
+              }
+            ]
+          }
+        ],
+        "parentSqlCommands": 291,
+        "elapsedSeconds": 11.027687519999999
+      },
+      "resultScope": "SQL001-006 real Linux/x64 development PASS; two API processes started and positively drained; HTTP readiness failed; cleanup PASS; not L3 acceptance or recovery",
+      "socketCorrection": "runtime progressed after corrected socket to real SQL PASS; first exact EXIT2 error remains unknown",
+      "httpRootCause": "NOT VERIFIED; READY_FAILED without response details; assigned to development HTTP helper owner before correction"
     }
   ],
-  "contractsRun": {
-    "runId": 38772042299,
-    "url": "https://github.com/SrEdgarR/MECANET/actions/runs/38772042299",
-    "jobId": 116550073895,
-    "headSha": "5c6b19a529e66b0ab44b09d24c46fd643a7d7c48",
-    "checkoutSha": "9f3047ad5d64a93648a2aa23584f47042e909ae8",
-    "checkoutKind": "pull request synthetic merge; head is not claimed to be the direct checkout",
-    "event": "pull_request",
-    "status": "completed",
-    "conclusion": "FAIL",
-    "completedAt": "2026-10-15T16:49:29Z",
-    "tests": 673,
-    "pass": 667,
-    "fail": 6,
-    "backendAuditFindings": 0,
-    "log": {
-      "bytes": 209792,
-      "sha256": "52e2591632f164a120ff2ed83a4e290c42a8ee10e99fcd96a6dd88b8deac1036",
-      "rawPublic": false,
-      "retainedInPrivateWorkspace": true
-    },
-    "failures": [
-      {
-        "file": "tests/qa/cp019/copy-offline.test.mjs",
-        "count": 3,
-        "observedError": "RECOVERY_DIRECTORY_ACCESS"
-      },
-      {
-        "file": "tests/qa/cp019/stage-journal.test.mjs",
-        "count": 2,
-        "observedError": "RECOVERY_DIRECTORY_ACCESS"
-      },
-      {
-        "file": "tests/qa/cp019/target-prepare.test.mjs",
-        "count": 1,
-        "observedError": "TARGET_PREPARE_COPY_ROOTS"
-      }
-    ],
-    "correctionOwner": "Root/assigned QA agent; no files changed by CI observer"
-  },
   "vpsModified": false,
   "r03Restarted": false,
-  "secretsIncluded": false
+  "secretsIncluded": false,
+  "contractsRuns": [
+    {
+      "runId": 38772042299,
+      "url": "https://github.com/SrEdgarR/MECANET/actions/runs/38772042299",
+      "jobId": 116550073895,
+      "headSha": "5c6b19a529e66b0ab44b09d24c46fd643a7d7c48",
+      "checkoutSha": "9f3047ad5d64a93648a2aa23584f47042e909ae8",
+      "checkoutKind": "pull request synthetic merge; head is not claimed to be the direct checkout",
+      "event": "pull_request",
+      "status": "completed",
+      "conclusion": "FAIL",
+      "completedAt": "2026-10-15T16:49:29Z",
+      "tests": 673,
+      "pass": 667,
+      "fail": 6,
+      "backendAuditFindings": 0,
+      "log": {
+        "bytes": 209792,
+        "sha256": "52e2591632f164a120ff2ed83a4e290c42a8ee10e99fcd96a6dd88b8deac1036",
+        "rawPublic": false,
+        "retainedInPrivateWorkspace": true
+      },
+      "failures": [
+        {
+          "file": "tests/qa/cp019/copy-offline.test.mjs",
+          "count": 3,
+          "observedError": "RECOVERY_DIRECTORY_ACCESS"
+        },
+        {
+          "file": "tests/qa/cp019/stage-journal.test.mjs",
+          "count": 2,
+          "observedError": "RECOVERY_DIRECTORY_ACCESS"
+        },
+        {
+          "file": "tests/qa/cp019/target-prepare.test.mjs",
+          "count": 1,
+          "observedError": "TARGET_PREPARE_COPY_ROOTS"
+        }
+      ],
+      "correctionOwner": "Root/assigned QA agent; no files changed by CI observer"
+    },
+    {
+      "runId": 38772738580,
+      "url": "https://github.com/SrEdgarR/MECANET/actions/runs/38772738580",
+      "jobId": 116552490488,
+      "headSha": "e2a665f652a10bf9d2b882f67ff724081a22a589",
+      "checkoutSha": "b784672e971115e89a3777b8b82fecf9335370c6",
+      "checkoutKind": "pull request synthetic merge; head is not claimed to be the direct checkout",
+      "event": "pull_request",
+      "status": "completed",
+      "conclusion": "FAIL",
+      "completedAt": "2026-10-15T16:54:34Z",
+      "tests": 673,
+      "pass": 667,
+      "fail": 6,
+      "backendAuditFindings": 0,
+      "log": {
+        "bytes": 209805,
+        "sha256": "71dd1108fefc4006df30cdb908371c109e818ae6f9d1201d5fec3f5d806215fe",
+        "rawPublic": false,
+        "retainedInPrivateWorkspace": true
+      },
+      "failures": [
+        {
+          "file": "tests/qa/cp019/copy-offline.test.mjs",
+          "count": 3,
+          "observedError": "RECOVERY_DIRECTORY_ACCESS"
+        },
+        {
+          "file": "tests/qa/cp019/stage-journal.test.mjs",
+          "count": 2,
+          "observedError": "RECOVERY_DIRECTORY_ACCESS"
+        },
+        {
+          "file": "tests/qa/cp019/target-prepare.test.mjs",
+          "count": 1,
+          "observedError": "TARGET_PREPARE_COPY_ROOTS"
+        }
+      ],
+      "correctionOwner": "Root/assigned QA agent; three Linux filesystem fixtures and CI runner partition; correction pending"
+    }
+  ]
 }
