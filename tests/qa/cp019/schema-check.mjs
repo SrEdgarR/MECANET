@@ -9,7 +9,8 @@ import {measuredPool} from './ledger.mjs';
 import {resolve} from 'node:path';
 import {pathToFileURL} from 'node:url';
 import {readPrivateJson} from './prepare.mjs';
-import {readSourceConfigPrivate} from './source-config.mjs';
+import {readSourceConfigPrivate,validateSourceArtifact} from './source-config.mjs';
+import {readRuntimeOverlayAuthority} from './runtime-overlay-authority.mjs';
 import {publishImmutable} from '../../../server/saas/recovery/protocol.js';
 const A='11111111-1111-4111-8111-111111111111',B='22222222-2222-4222-8222-222222222222';
 export async function checkUnboundSchema({connection,binding,ledger}={}){
@@ -49,7 +50,7 @@ export async function main(){
  const foundation=(await readPrivateJson('/run/qa-secrets/source-foundation.json')).value;
  const normal=(await readSourceConfigPrivate('/run/qa-secrets/source-normal-manifest.json')).value;
  const artifact=JSON.parse(await readFile('/workspace/artifact.json','utf8'));
- if(process.env.QA_CODE_SHA!==artifact.sourceSha||material.artifactDigest!==artifact.digest.replace('sha256:','')||foundation.generation!==material.source.generation)throw Error('CP019_SCHEMA_CHECK_PROVENANCE');
+ if(process.env.QA_CODE_SHA!==artifact.sourceSha||validateSourceArtifact(artifact,material,normal.migrationHashes,await readRuntimeOverlayAuthority())!==artifact.sourceSha||foundation.generation!==material.source.generation)throw Error('CP019_SCHEMA_CHECK_PROVENANCE');
  const report=await checkUnboundSchema({connection:{host:'postgres',port:5432,database:'postgres',user:'qa_bootstrap',password:material.source.rolePasswords.qa_bootstrap,ssl:{ca:await readFile('/run/qa-ca.crt','utf8'),servername:'postgres',rejectUnauthorized:true}},binding:{project:material.source.project,systemIdentifier:foundation.systemIdentifier,sourceSha:artifact.sourceSha,manifestHash:sha256(normal),generation:material.source.generation,runId:normal.runId,controllerOwner:material.controllerOwner},ledger});
  await ledger.charge('artifactFiles');await publishImmutable('/run/qa-results/source-unbound-schema.json',report);
  console.log(JSON.stringify({type:'cp019-unbound-schema',status:report.status,queries:report.queries,recoveryTested:false,httpTested:false,secretsPrinted:false}));

@@ -78,7 +78,7 @@ def browser():
  b=load('cp020_browser_config','browser-config.py');bridge=h.target_bridge();m,base,bindings=bridge.bundle_context(h)
  values={}
  for key,path,uid in [('acceptance',h.TARGET/'secrets/acceptance.json',999),('sourceHistory',h.ROOT/'secrets/source-history.json',999),('written',h.TARGET/'secrets/target-written-results.json',999)]:values[key]=bridge.read400(path,uid)[0]
- art=json.loads((h.ROOT/'staging/artifact.json').read_bytes());source_entry=[e for e in art['entries'] if e['path']=='tests/qa/cp019/acceptance.mjs'];assert len(source_entry)==1,'ACCEPTANCE_SOURCE'
+ art=json.loads((getattr(h,'runtime_directory',lambda:h.ROOT/'staging')()/'artifact.json').read_bytes());source_entry=[e for e in art['entries'] if e['path']=='tests/qa/cp019/acceptance.mjs'];assert len(source_entry)==1,'ACCEPTANCE_SOURCE'
  config=b.make_config(m,base,bindings,values,plan['browser'],source_entry[0]['sha256'])
  config_hash=h.canonical_hash(config);ref={**b.make_reference(config),'schema':'cp020-browser-reference-v1'};h.set_host_case('browser-login');h.write_plain(h.TARGET/'master/browser-config-ref.json',canon(ref),0o400,0)
  ca=(h.TARGET/'config/ca.crt').read_bytes();cert=(h.TARGET/'tls/web/server.crt').read_bytes()
@@ -112,7 +112,8 @@ finally:
  relay.stop()
  if cleanup and cleanup.get('result')!='PASS':emit({'type':'cp020-cleanup','result':cleanup})
  ledger=None
- if (h.ROOT/'budget/ledger.json').exists():ledger=json.loads((h.ROOT/'budget/ledger.json').read_bytes())
+ budget=getattr(h,'budget_directory',lambda:h.ROOT/'budget')()
+ if (budget/'ledger.json').exists():ledger=json.loads((budget/'ledger.json').read_bytes())
  report={'schema':'cp021-remote-run-v1','sourceSha':plan['sourceSha'],'startedAt':started,'completedAt':now(),'status':'FAIL' if failed else 'INTEGRAL PIPELINE PASS / SIX CRITERIA STILL TO RECONCILE','failure':failed,'events':events,'cleanup':cleanup,'ledger':ledger,'secretsPrinted':False,'sharedInfrastructureModified':False,'extraVariants':'NOT VERIFIED' if failed else 'PIPELINE COMPLETED / ACCEPTANCE RECONCILIATION REQUIRED','resourceMonitor':monitor_result,'resourceAdmission':{'lastSample':h.RESOURCE_LAST_SAMPLE,'firstFailureSample':h.RESOURCE_FIRST_REJECTED_SAMPLE}}
  if transport_failed.is_set():failed=failed or 'CONTROLLER_TRANSPORT_FAILED';report['failure']=failed;report['status']='FAIL'
  done.set();emit({'type':'cp020-final-report','report':report})

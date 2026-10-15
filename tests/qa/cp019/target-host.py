@@ -68,7 +68,7 @@ def own_current(h):
 
 def validate_created_postgres(h,cid):
  """Inspect all planned mounts/tmpfs/ports/networks before the first START."""
- compose,ch=read_private(h.TARGET/'compose.json',0,262144,0o600);check(compose.get('name')==target_project(h) and isinstance(compose.get('services',{}).get('postgres'),dict),'TARGET_CREATED_PG_SPEC')
+ compose,ch=read_private(getattr(h,'compose_path',lambda root:root/'compose.json')(h.TARGET),0,262144,0o600);check(compose.get('name')==target_project(h) and isinstance(compose.get('services',{}).get('postgres'),dict),'TARGET_CREATED_PG_SPEC')
  actual=inspect_created_service(h,cid,compose['services']['postgres']);bind=[x for x in actual['mounts'] if x.get('Destination')=='/var/lib/postgresql']
  check(len(bind)==1 and bind[0].get('Type')=='bind' and bind[0].get('Source')==str(h.TARGET/'data') and bind[0].get('RW') is True,'TARGET_CREATED_PG_BIND')
  networks=actual['networks'];name=target_project(h)+'-data'
@@ -86,7 +86,7 @@ def target_pg_start(h):
  h.compose(h.TARGET,'create','--no-build','--pull','never','--no-recreate','postgres')
  cid=h.compose(h.TARGET,'ps','-a','-q','postgres').strip();check(HASH.fullmatch(cid or ''),'TARGET_PG_CID')
  created=h.inspect_container(cid);check(h.owned_identity(created,owners) and created['status']=='created' and not created['running'] and created['pid']==0 and created.get('project')==target_project(h) and created.get('service')=='postgres' and isinstance(created.get('startedAt'),str) and created['startedAt']=='0001-01-01T00:00:00Z','TARGET_PG_CREATED')
- compose,compose_hash=read_private(h.TARGET/'compose.json',0,262144,0o600)
+ compose,compose_hash=read_private(getattr(h,'compose_path',lambda root:root/'compose.json')(h.TARGET),0,262144,0o600)
  reference={'schema':'target-postgres-created-v1','project':target_project(h),'containerId':cid,'ownerId':owners[target_project(h)]['postgres'],'service':'postgres','imageRef':h.PROFILES['postgres'][2],'nanoCpus':h.PROFILES['postgres'][0],'memory':h.PROFILES['postgres'][1],'generation':m['target']['generation'],'recoveryId':m['recoveryId'],'dataPath':str(h.TARGET/'data'),'composeHash':compose_hash,'state':'CREATED BEFORE START/SQL'}
  frozen_input(h,h.TARGET/'master/postgres-created.json',reference,0)
  validate_created_postgres(h,cid) # Identity custody is durable before a boundary rejection.
@@ -133,7 +133,7 @@ def phase_arguments(h,phase,action,source_sha,invocation_id):
 def bundle_context(h):
  m=frame(h);header,hh=read400(h.TARGET/'secrets/target-config-bundle.json');capture,ch=read400(h.TARGET/'secrets/source-capture.json');base=header['bundle']
  check(header['schema']=='cp019-target-bundle-header-v1' and HASH.fullmatch(header['parentFullBundleHash']) and base['manifest']['target']['generation']==m['target']['generation'] and base['manifest']['source']['generation']==m['source']['generation'] and base['anchors']['custodyHash']==digest(m),'TARGET_BUNDLE_BINDING')
- artifact=json.loads((h.ROOT/'staging/artifact.json').read_text());check(SHA.fullmatch(artifact.get('sourceSha','')),'TARGET_ARTIFACT_REQUIRED')
+ artifact=json.loads((getattr(h,'runtime_directory',lambda:h.ROOT/'staging')()/'artifact.json').read_text());check(SHA.fullmatch(artifact.get('sourceSha','')),'TARGET_ARTIFACT_REQUIRED')
  return m,base,{'configBundleHash':header['parentFullBundleHash'],'configBundleHeaderHash':hh,'sourceCaptureHash':ch,'custodyHash':digest(m),'sourceSha':artifact['sourceSha']}
 
 def source_end_observation(h,base):
@@ -217,7 +217,7 @@ def frozen_input(h,path,value,uid=999):
  h.write_plain(path,canonical(value),0o400,uid);old,sha=read400(path,uid);check(old==value and sha==digest(value),'TARGET_INPUT_READBACK');return sha
 
 def artifact(h):
- value,sha=read_private(h.ROOT/'staging/artifact.json',0,262144,0o444);check(SHA.fullmatch(value.get('sourceSha','')),'TARGET_ARTIFACT_REQUIRED');return value,sha
+ value,sha=read_private(getattr(h,'runtime_directory',lambda:h.ROOT/'staging')()/'artifact.json',0,262144,0o444);check(SHA.fullmatch(value.get('sourceSha','')),'TARGET_ARTIFACT_REQUIRED');return value,sha
 
 def job_provenance(h,job_id,proof,command):
  check(str(uuid.UUID(job_id))==job_id and set(proof)=={'containerId','jobCreatedHash','jobEndHash','containerFIN','sqlFIN'} and proof['containerFIN']=='PASS' and proof['sqlFIN']=='NOT VERIFIED','TARGET_JOB_PROOF')
@@ -240,7 +240,7 @@ def target_copy(h):
  if path.exists():
   existing,_=read400(path);check(all(existing.get(k)==v for k,v in cfg.items() if k!='invocationId'),'TARGET_INPUT_COLLISION');cfg=existing
  cfg_hash=frozen_input(h,path,cfg);shutdown=h.offline_pg();h.set_host_case('copy-offline')
- mounts=[(h.ROOT/'data/18/docker','/run/qa-source','ro'),(h.ROOT/'backup','/run/qa-backup','rw'),(h.ROOT/'journal','/run/qa-journal','rw'),(h.TARGET/'data','/run/qa-target','rw'),(h.TARGET/'secrets','/run/qa-secrets','rw'),(h.TARGET/'live','/run/qa-live','ro'),(h.ROOT/'budget','/run/qa-budget','rw'),(path,'/run/qa-secrets/target-prepare.json','ro')]
+ mounts=[(h.ROOT/'data/18/docker','/run/qa-source','ro'),(h.ROOT/'backup','/run/qa-backup','rw'),(h.ROOT/'journal','/run/qa-journal','rw'),(h.TARGET/'data','/run/qa-target','rw'),(h.TARGET/'secrets','/run/qa-secrets','rw'),(h.TARGET/'live','/run/qa-live','ro'),(getattr(h,'budget_directory',lambda:h.ROOT/'budget')(),'/run/qa-budget','rw'),(path,'/run/qa-secrets/target-prepare.json','ro')]
  command=['node','tests/qa/cp019/target-prepare.mjs','copy-before-target'];env={'QA_PROJECT':target_project(h),'QA_CODE_SHA':art['sourceSha'],'QA_INVOCATION_ID':cfg['invocationId']};publish=lambda:atomic_mailbox(h,'target-copy-host.json',copy_boundary(h,cfg,shutdown))
  publish();job=h.create_job(h.TARGET,'controller-tool',command,env,mounts=mounts,network='none');publish();h.start_job(job);output,proof=watch_job(h,job,publish);result=validate_copy_result(json.loads(output));job_provenance(h,job['jobId'],proof,command)
  record={'schema':'target-copy-host-result-v1','project':target_project(h),'sourceSha':art['sourceSha'],'inputConfigHash':cfg_hash,'copyCheckpointHash':cph,'sourceEndProofHash':end['hash'],'indexHash':result['indexHash'],'nodeResult':result,'jobId':job['jobId'],'jobProof':proof}
@@ -290,7 +290,7 @@ def target_prepare(h):
  art,ah=artifact(h);hashes['producerArtifact']=ah;hashes['verifierArtifact']=ah;ca,ca_hash=read_private(h.TARGET/'config/ca.crt',0,65536,0o444,False);hashes['targetCa']=ca_hash
  source=values['sourceNormalManifest']['resource'];end=values['sourceLiveEnd'];source_end_observation(h,{'sourceEndProof':end['endProof']})
  cfg={'schema':'cp019-target-prepare-v1','project':target_project(h),'sourceSha':art['sourceSha'],'producerSha':values['sourceCapture']['sourceCommit'],'inputHashes':hashes,'sourceJournalRawHash':raw_hash,'targetResource':resource,'observedResources':{'source':source,'target':resource},'sourceEndProof':end['endProof'],'observedSourceEnd':end['observedEnd'],'sourceEndProofHash':end['hash'],'sourceJournalCopyCheckpoint':copy_cp,'sourceJournalFinalCheckpoint':final_cp};path=h.TARGET/'secrets/target-assemble-config.json';cfg_hash=frozen_input(h,path,cfg)
- mounts=[(h.ROOT/'secrets','/run/qa-source-secrets','ro'),(h.ROOT/'journal','/run/qa-source-journal','ro'),(h.ROOT/'staging','/run/qa-source-artifact','ro'),(h.TARGET/'config/ca.crt','/run/qa-target-ca.crt','ro'),(h.TARGET/'secrets','/run/qa-secrets','rw'),(h.ROOT/'budget','/run/qa-budget','rw'),(path,'/run/qa-secrets/target-prepare.json','ro')]
+ mounts=[(h.ROOT/'secrets','/run/qa-source-secrets','ro'),(h.ROOT/'journal','/run/qa-source-journal','ro'),(getattr(h,'runtime_directory',lambda:h.ROOT/'staging')(),'/run/qa-source-artifact','ro'),(h.TARGET/'config/ca.crt','/run/qa-target-ca.crt','ro'),(h.TARGET/'secrets','/run/qa-secrets','rw'),(getattr(h,'budget_directory',lambda:h.ROOT/'budget')(),'/run/qa-budget','rw'),(path,'/run/qa-secrets/target-prepare.json','ro')]
  command=['node','tests/qa/cp019/target-prepare.mjs','assemble'];job=h.create_job(h.TARGET,'controller-tool',command,{'QA_PROJECT':target_project(h),'QA_CODE_SHA':art['sourceSha']},mounts=mounts,network='none');h.start_job(job);output,proof=watch_job(h,job,lambda:None);result=json.loads(output)
  check(set(result)=={'type','status','configBundleHash','configBundleHeaderHash','sourceCaptureHash','custodyHash','manifestHash','planHash','budgetCase','filesPublished','filesReused','secretOutput','physicalRecovery'}|({'variantLineageHash'} if callable(getattr(h,'variant_lineage',None)) else set()) and result['type']=='cp019-target-prepared' and result['status']=='PASS' and result['budgetCase']==target_case(h,'manifest-final') and result['sourceCaptureHash']==hashes['sourceCapture'] and result['custodyHash']==digest(m) and all(HASH.fullmatch(result[k]) for k in ['configBundleHash','configBundleHeaderHash','manifestHash','planHash']) and result['secretOutput'] is False and result['physicalRecovery']=='NOT VERIFIED','TARGET_PREPARE_RESULT')
  header,hh=read400(h.TARGET/'secrets/target-config-bundle.json');alias,mh=read400(h.TARGET/'secrets/material.json');check(hh==result['configBundleHeaderHash'] and header['parentFullBundleHash']==result['configBundleHash'] and mh==digest(m) and alias==m,'TARGET_PREPARE_READBACK');job_provenance(h,job['jobId'],proof,command)
@@ -387,11 +387,11 @@ def runtime_start(h,mode):
  if mode=='worker':check(inventory['services']=={} and not any(c.get('project')==target_project(h) and c.get('service') in BUSINESS for c in current),'TARGET_RUNTIME_ALREADY_CREATED')
  else:
   check(set(inventory['services'])=={'worker'} and all(not any(c.get('project')==target_project(h) and c.get('service')==s for c in current) for s in selected),'TARGET_RUNTIME_ALREADY_CREATED');known=inventory['services']['worker'];worker=h.inspect_container(known['containerId']);check(h.owned_identity(worker,owners) and worker['running'] and worker['ownerId']==known['ownerId'],'TARGET_RUNTIME_WORKER_REQUIRED')
- compose,cs=read_private(h.TARGET/'compose.json',0,262144,0o600);check(compose['name']==target_project(h),'TARGET_RUNTIME_COMPOSE')
+ compose,cs=read_private(getattr(h,'compose_path',lambda root:root/'compose.json')(h.TARGET),0,262144,0o600);check(compose['name']==target_project(h),'TARGET_RUNTIME_COMPOSE')
  for name in selected:
   spec=compose['services'][name];check(not spec.get('ports') and spec['restart']=='no' and spec['labels']=={'mecanet.qa.service':name,'mecanet.qa.owner-id':owners[target_project(h)][name]} and spec['image']==h.PROFILES[name][2] and set(spec['networks'])<=set(['data','front']),'TARGET_RUNTIME_COMPOSE')
   for volume in spec['volumes']:
-   source,dest,access=volume.rsplit(':',2);p=pathlib.Path(source);shared_tls=(callable(getattr(h,'variant_frame',None)) and name=='web' and p==pathlib.Path('/opt/mecanet-qa-p1l3-r03-target/tls/web') and dest=='/run/tls' and access=='ro');check(p.resolve()==p and (p.is_relative_to(h.TARGET) or p.is_relative_to(h.ROOT/'staging') or p==h.ROOT/'budget' or shared_tls) and not p.is_relative_to(h.TARGET/'master') and not p.is_relative_to(h.ROOT/'master') and access in ['ro','rw'],'TARGET_RUNTIME_MOUNT')
+   source,dest,access=volume.rsplit(':',2);p=pathlib.Path(source);shared_tls=(callable(getattr(h,'variant_frame',None)) and name=='web' and p==pathlib.Path('/opt/mecanet-qa-p1l3-r03-target/tls/web') and dest=='/run/tls' and access=='ro');check(p.resolve()==p and (p.is_relative_to(h.TARGET) or p.is_relative_to(getattr(h,'runtime_directory',lambda:h.ROOT/'staging')()) or p==getattr(h,'budget_directory',lambda:h.ROOT/'budget')() or shared_tls or getattr(h,'is_continuation_readonly_input',lambda *args:False)(p,dest,access)) and ((not p.is_relative_to(h.TARGET/'master') and not p.is_relative_to(h.ROOT/'master')) or getattr(h,'is_continuation_readonly_input',lambda *args:False)(p,dest,access)) and access in ['ro','rw'],'TARGET_RUNTIME_MOUNT')
  if mode=='worker':h.guard_effect(h.TARGET,selected)
  else:h.preserve();h.guard_resources(h.facts(),[(h.TARGET,n) for n in selected],owners)
  h.compose(h.TARGET,'create','--no-build','--pull','never','--no-recreate',*selected)
@@ -409,7 +409,7 @@ def runtime_start(h,mode):
  return {'result':'PASS FOR OWN PROCESS START ONLY','mode':mode,'createdServices':sorted(inventory['services']),'inventoryHash':digest(inventory),'runtimeConsumers':[{k:c[k] for k in ['id','service','ownerId','running','imageRef','nanoCpus','memory']} for c in actual if c.get('project')==target_project(h) and c.get('service') in inventory['services']],'readyHTTP':'NOT VERIFIED','privatePortsOnly':True,'secretsPrinted':False}
 
 def lifecycle(h):
- value,sha=artifact(h);path=h.ROOT/'staging/tests/qa/cp019/target-lifecycle.py';entries=[x for x in value['entries'] if x['path']=='tests/qa/cp019/target-lifecycle.py'];check(len(entries)==1 and path.resolve()==path and path.is_file() and not path.is_symlink() and path.stat().st_size==entries[0]['bytes'] and digest(path.read_bytes())==entries[0]['sha256'],'TARGET_LIFECYCLE_PROVENANCE');spec=importlib.util.spec_from_file_location('cp020_target_lifecycle',path);module=importlib.util.module_from_spec(spec);spec.loader.exec_module(module);return module
+ value,sha=artifact(h);path=getattr(h,'runtime_directory',lambda:h.ROOT/'staging')()/'tests/qa/cp019/target-lifecycle.py';entries=[x for x in value['entries'] if x['path']=='tests/qa/cp019/target-lifecycle.py'];check(len(entries)==1 and path.resolve()==path and path.is_file() and not path.is_symlink() and path.stat().st_size==entries[0]['bytes'] and digest(path.read_bytes())==entries[0]['sha256'],'TARGET_LIFECYCLE_PROVENANCE');spec=importlib.util.spec_from_file_location('cp020_target_lifecycle',path);module=importlib.util.module_from_spec(spec);spec.loader.exec_module(module);return module
 
 def stop_runtime(h):return lifecycle(h).stop_runtime(h)
 def target_end(h):return lifecycle(h).target_end(h)

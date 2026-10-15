@@ -66,13 +66,14 @@ def distinct_target(original,effective,existing):
  check(generated.isdisjoint(other) and effective['target']['sessionSecret']!=existing['target']['sessionSecret'] and set(effective['target']['rolePasswords'].values()).isdisjoint(existing['target']['rolePasswords'].values()),'VARIANT_SIBLING_REUSE');return True
 def caps(h):return {**h.CEILINGS,'seconds':1800,'caseSql':h.CASE_LIMITS['sql'],'caseHttp':80,'caseSeconds':45,'activePg':1,'cpuMilli':1000,'memoryMiB':2048,'dataBytes':DATA_MAX}
 def ledger_continuity(anchor,current,registry_hash,ceilings,now):
- check(anchor['registryHash']==registry_hash and current.get('schema')=='cp019-budget-v1' and current.get('project')==SOURCE and current.get('startedUptime')==anchor['startedUptime'] and type(current.get('sequence')) is int and current['sequence']>=anchor['sequence'] and 0<=now-anchor['startedUptime']<=1800,'VARIANT_LEDGER_CHANGED')
+ check(anchor['registryHash']==registry_hash and current.get('schema') in ['cp019-budget-v1','cp024-budget-continuation-v2'] and current.get('project')==SOURCE and current.get('startedUptime')==anchor['startedUptime'] and type(current.get('sequence')) is int and current['sequence']>=anchor['sequence'] and 0<=now-anchor['startedUptime']<=1800,'VARIANT_LEDGER_CHANGED')
  check(set(current['total'])==set(anchor['total'])==set(ceilings) and all(type(n) is int and anchor['total'][k]<=n<=ceilings[k] for k,n in current['total'].items()),'VARIANT_LEDGER_RESET');return True
 def case_budget(h,kind):
- name=h.HOST_CASE;allowed={case_name(kind),*(['variant-a5-membership','variant-a5-identity'] if kind=='a5-restrictions' else []),'copy-verify'};check(name in allowed,'VARIANT_CASE_ALIAS');state,sh=read(h,h.ROOT/'budget/ledger.json',999,0o600);now=h.uptime();check(state.get('schema')=='cp019-budget-v1' and state.get('project')==SOURCE and 0<=now-state['startedUptime']<=1800 and state.get('plannedScenarios',{}).get(name)==h.CASE_LIMITS,'VARIANT_CASE_BUDGET')
+ name=h.HOST_CASE;allowed={case_name(kind),*(['variant-a5-membership','variant-a5-identity'] if kind=='a5-restrictions' else []),'copy-verify'};check(name in allowed,'VARIANT_CASE_ALIAS');state,sh=read(h,getattr(h,'budget_directory',lambda:h.ROOT/'budget')()/'ledger.json',999,0o600);now=h.uptime();check(state.get('schema') in ['cp019-budget-v1','cp024-budget-continuation-v2'] and state.get('project')==SOURCE and 0<=now-state['startedUptime']<=1800 and state.get('plannedScenarios',{}).get(name)==h.CASE_LIMITS,'VARIANT_CASE_BUDGET')
  check(set(state['total'])==set(h.CEILINGS) and all(type(n) is int and 0<=n<=h.CEILINGS[k] for k,n in state['total'].items()),'VARIANT_CASE_BUDGET')
+ if state.get('schema')=='cp024-budget-continuation-v2':h.validate_budget_remaining(state,name,now)
  existing=state.get('scenarios',{}).get(name)
- if existing is not None:check(existing['limits']==h.CASE_LIMITS and 0<=now-existing['startedUptime']<=45 and set(existing['total'])==set(h.CASE_LIMITS) and all(type(n) is int and 0<=n<=h.CASE_LIMITS[k] for k,n in existing['total'].items()),'VARIANT_CASE_EXPIRED')
+ if existing is not None and existing.get('startedUptime') is not None:check(existing['limits']==h.CASE_LIMITS and 0<=now-existing['startedUptime']<=45 and set(existing['total'])==set(h.CASE_LIMITS) and all(type(n) is int and 0<=n<=h.CASE_LIMITS[k] for k,n in existing['total'].items()),'VARIANT_CASE_EXPIRED')
  return name
 def owners(material):
  c=material['target'];return {'postgres':material['controllerOwner'],'api1':c['apiOwners']['api1'],'api2':c['apiOwners']['api2'],'worker':c['workerClockOwner'],'web':c['webOwner'],**{s:material['controllerOwner'] for s in ['harness','probe','controller-tool','offline-pg']}}
@@ -96,18 +97,19 @@ def guard_references(current,references,future,profiles,base_active=()):
  if any(s=='offline-pg' for _,s,_,_ in active):check(not any(s in BUSINESS|{'postgres'} for _,s,_,_ in active),'VARIANT_OFFLINE_CONFLICT')
  cpu=sum(c for _,_,c,_ in active);mem=sum(m for _,_,_,m in active);check(cpu<=10**9 and mem<=2048*1024**2,'VARIANT_AGGREGATE_LIMIT')
  return {'nanoCpus':cpu,'memoryMiB':mem//1024**2,'postgresCount':pg,'physicalCapacityVerified':False}
-def derive_compose(template,material,kind):
+def derive_compose(template,material,kind,*,runtime_root=None,budget_root=None,readonly_input=None):
  check(template.get('name')==PROJECT,'VARIANT_COMPOSE_PROJECT');result=copy.deepcopy(template);p=paths(kind);main=pathlib.Path('/opt')/PROJECT
+ runtime_root=runtime_root or pathlib.Path('/opt')/SOURCE/'staging';budget_root=budget_root or pathlib.Path('/opt')/SOURCE/'budget';readonly_input=readonly_input or (lambda *args:False)
  for service,spec in result['services'].items():
   check(service in owners(material) and not spec.get('ports'),'VARIANT_COMPOSE_SERVICE');volumes=[]
   for value in spec.get('volumes',[]):
    src,dst,access=value.rsplit(':',2);path=pathlib.Path(src)
-   check(not path.is_relative_to(pathlib.Path('/opt')/SOURCE/'master') and not path.is_relative_to(main/'master'),'VARIANT_COMPOSE_MASTER')
+   check((not path.is_relative_to(pathlib.Path('/opt')/SOURCE/'master') and not path.is_relative_to(main/'master')) or readonly_input(path,dst,access),'VARIANT_COMPOSE_MASTER')
    if path.is_relative_to(main):
     relative=path.relative_to(main)
     if relative.parts[0] in ['data','secrets','evidence','faults','journal','live','ingress','config']:path=p['root']/relative
     else:check(relative.parts[0]=='tls' and access=='ro','VARIANT_COMPOSE_SHARED')
-   else:check(path.is_relative_to(pathlib.Path('/opt')/SOURCE/'staging') and access=='ro' or path==pathlib.Path('/opt')/SOURCE/'budget' and access=='rw','VARIANT_COMPOSE_MOUNT')
+   else:check(path.is_relative_to(runtime_root) and access=='ro' or path==budget_root and access=='rw' or readonly_input(path,dst,access),'VARIANT_COMPOSE_MOUNT')
    check(access in ['ro','rw'] and dst.startswith('/'),'VARIANT_COMPOSE_MOUNT');volumes.append(str(path)+':'+dst+':'+access)
   spec['volumes']=volumes;spec['labels']={'mecanet.qa.service':service,'mecanet.qa.owner-id':owners(material)[service]}
  return result
@@ -130,7 +132,7 @@ def make_context(h,kind,inputs,ledger,effective):
  # JSON.stringify emits an integral Number as 100, while json.dumps emits a
  # Python float as 100.0. Normalize only this new anchor, never the live ledger.
  started=ledger['startedUptime'];started=int(started) if isinstance(started,float) and started.is_integer() else started
- validate_pair(inputs['original'],effective);a={'schema':'target-variant-budget-anchor-v1','project':SOURCE,'path':str(h.ROOT/'budget/ledger.json'),'registryHash':h.BUDGET_PLAN_SHA,'startedUptime':started,'sequence':ledger['sequence'],'total':copy.deepcopy(ledger['total'])}
+ validate_pair(inputs['original'],effective);a={'schema':'target-variant-budget-anchor-v1','project':SOURCE,'path':str(getattr(h,'budget_directory',lambda:h.ROOT/'budget')()/'ledger.json'),'registryHash':h.BUDGET_PLAN_SHA,'startedUptime':started,'sequence':ledger['sequence'],'total':copy.deepcopy(ledger['total'])}
  addition={'schema':'target-variant-lineage-v1','project':PROJECT,'kind':kind,'originalMaterialHash':digest(inputs['original']),'effectiveMaterialHash':digest(effective),'sourceOriginalRecoveryId':inputs['original']['recoveryId'],'recoveryId':effective['recoveryId'],'generation':effective['target']['generation'],'sourceCaptureHash':digest(inputs['capture']),'sourceNormalManifestHash':digest(inputs['normal']),'sourceResourceHash':digest(inputs['normal']['resource']),'sourceEndProofHash':digest(inputs['end']['endProof']),'copyIndexHash':digest(inputs['index']),'sourceJournalFinalCheckpoint':inputs['head'],'ledgerAnchor':a,'paths':{k:str(value) for k,value in paths(kind).items()},'cases':[case_name(kind),*(['variant-a5-membership','variant-a5-identity'] if kind=='a5-restrictions' else [])],'caps':caps(h)}
  return {'kind':kind,'originalMaterial':inputs['original'],'effectiveMaterial':effective,'addition':addition,'additionHash':digest(addition),'sourceNormalManifest':inputs['normal'],'ledgerAnchor':a}
 def context_path(h,kind):return h.TARGET/'master'/('variant-'+kind+'-context.json')
@@ -140,7 +142,7 @@ def read_context_authority(h,kind):
  expected=make_context(h,kind,inputs,{'startedUptime':context['ledgerAnchor']['startedUptime'],'sequence':context['ledgerAnchor']['sequence'],'total':context['ledgerAnchor']['total']},m)
  check(context==expected and ch==digest(expected),'VARIANT_CONTEXT_CHANGED');return context,ch
 def load_context(h,kind):
- context,ch=read_context_authority(h,kind);ledger,_=read(h,h.ROOT/'budget/ledger.json',999,0o600);ledger_continuity(context['ledgerAnchor'],ledger,h.BUDGET_PLAN_SHA,h.CEILINGS,h.uptime())
+ context,ch=read_context_authority(h,kind);ledger,_=read(h,getattr(h,'budget_directory',lambda:h.ROOT/'budget')()/'ledger.json',999,0o600);ledger_continuity(context['ledgerAnchor'],ledger,h.BUDGET_PLAN_SHA,h.CEILINGS,h.uptime())
  return context,ch
 def target_bytes(h):
  """Both data and retained metadata share the existing TARGET 2GiB ceiling."""
@@ -158,7 +160,7 @@ def prepare(h,kind):
  registry=h.read_budget_plan();check(case in registry['plannedScenarios'] and registry['plannedScopes'][case]=='target-window','VARIANT_CASE_UNREGISTERED');root=paths(kind)['root'];reference=context_path(h,kind)
  if reference.exists() or reference.is_symlink():context,ch=load_context(h,kind)
  else:
-  check(not root.exists() and not root.is_symlink(),'VARIANT_ROOT_NOT_ADOPTED');inputs=source_inputs(h);ledger,_=read(h,h.ROOT/'budget/ledger.json',999,0o600);effective=choose_effective(inputs['original'])
+  check(not root.exists() and not root.is_symlink(),'VARIANT_ROOT_NOT_ADOPTED');inputs=source_inputs(h);ledger,_=read(h,getattr(h,'budget_directory',lambda:h.ROOT/'budget')()/'ledger.json',999,0o600);effective=choose_effective(inputs['original'])
   for sibling in KINDS:
    if sibling!=kind and context_path(h,sibling).exists():distinct_target(inputs['original'],effective,load_context(h,sibling)[0]['effectiveMaterial'])
   context=make_context(h,kind,inputs,ledger,effective);ch=publish(h,reference,context)
@@ -178,7 +180,7 @@ def prepare(h,kind):
   destination=root/'config'/name
   if destination.exists():check(read(h,destination,0,0o444,json_value=False)[0]==raw,'VARIANT_CONFIG_CONFLICT')
   else:h.write_plain(destination,raw,0o444,0)
- template,th=read(h,h.TARGET/'compose.json',0,0o600);compose=derive_compose(template,context['effectiveMaterial'],kind);publish(h,root/'master/compose.json',compose)
+ template,th=read(h,getattr(h,'compose_path',lambda root:root/'compose.json')(h.TARGET),0,0o600);compose=derive_compose(template,context['effectiveMaterial'],kind,runtime_root=getattr(h,'runtime_directory',lambda:h.ROOT/'staging')(),budget_root=getattr(h,'budget_directory',lambda:h.ROOT/'budget')(),readonly_input=getattr(h,'is_continuation_readonly_input',None));publish(h,root/'master/compose.json',compose)
  # Existing bridge readers use a Root0600 compose file. Its authority remains
  # the immutable Root0400 snapshot, and manual creation reads that snapshot.
  compose_path=root/'compose.json'
@@ -322,8 +324,9 @@ def verify_mounts(h,kind,cid):
   check(isinstance(mount,dict) and type(mount.get('RW')) is bool,'VARIANT_MOUNT_TYPE')
   if mount.get('Type')=='tmpfs':check(mount.get('Destination') in planned_tmpfs and mount.get('RW') is True,'VARIANT_TMPFS_SCOPE');tmp_destinations.append(mount['Destination']);continue
   check(mount.get('Type')=='bind','VARIANT_MOUNT_TYPE');src=pathlib.Path(mount['Source']);rw=mount['RW'];check(src.resolve()==src and not src.is_symlink(),'VARIANT_MOUNT_PATH')
-  check(not src.is_relative_to(root/'master') and not src.is_relative_to(h.ROOT/'master') and not src.is_relative_to(main/'master'),'VARIANT_MASTER_NOT_MOUNTED')
-  check(src.is_relative_to(root) or src.is_relative_to(h.ROOT/'staging') and not rw or src==h.ROOT/'budget' and rw or src.is_relative_to(main/'config') and not rw or src.is_relative_to(main/'tls') and not rw or src.is_relative_to(h.ROOT/'secrets') and not rw or src.is_relative_to(h.ROOT/'journal') and not rw or src==h.ROOT/'backup/source-copy' and not rw,'VARIANT_MOUNT_SCOPE')
+  shared=getattr(h,'is_continuation_readonly_input',lambda *args:False)(src,mount.get('Destination'),'rw' if rw else 'ro')
+  check((not src.is_relative_to(root/'master') and not src.is_relative_to(h.ROOT/'master') and not src.is_relative_to(main/'master')) or shared,'VARIANT_MASTER_NOT_MOUNTED')
+  check(shared or src.is_relative_to(root) or src.is_relative_to(getattr(h,'runtime_directory',lambda:h.ROOT/'staging')()) and not rw or src==getattr(h,'budget_directory',lambda:h.ROOT/'budget')() and rw or src.is_relative_to(main/'config') and not rw or src.is_relative_to(main/'tls') and not rw or src.is_relative_to(h.ROOT/'secrets') and not rw or src.is_relative_to(h.ROOT/'journal') and not rw or src==h.ROOT/'backup/source-copy' and not rw,'VARIANT_MOUNT_SCOPE')
  check(len(tmp_destinations)==len(set(tmp_destinations)),'VARIANT_TMPFS_SCOPE')
  if service=='postgres':
   data=[m for m in mounts if m.get('Destination')=='/var/lib/postgresql'];check(len(data)==1 and data[0]['Type']=='bind' and data[0]['Source']==str(root/'data') and data[0]['RW'] is True,'VARIANT_PG_DATA_BIND')
@@ -409,17 +412,20 @@ def job_arguments(h,kind,profile,command,environment=None,mounts=(),network=None
  check(set(env)<={'QA_PROJECT','QA_STAGE','QA_CODE_SHA','QA_INVOCATION_ID','QA_HOST_GATE','QA_READY_FILE','QA_BUSINESS_GATE','QA_FIXTURE_DONE','QA_SOURCE_STOP_GATE'} and env.get('QA_PROJECT',PROJECT)==PROJECT,'VARIANT_JOB_ENV');env['QA_PROJECT']=PROJECT;job_id=env.get('QA_INVOCATION_ID') or uid();check(UUID.fullmatch(job_id),'VARIANT_JOB_INVOCATION');volumes=[]
  if profile in ['harness','probe']:
   config,sh=read(h,root/'master/compose.json');spec=config['services'][profile];check(spec['user']=='999:999' and not spec.get('ports'),'VARIANT_JOB_SERVICE');volumes=list(spec['volumes']);network=PROJECT+'-data'
- elif profile=='controller-tool':volumes=[str(h.ROOT/'staging')+':/workspace:ro'];network=network or 'none'
+ elif profile=='controller-tool':volumes=[str(getattr(h,'runtime_directory',lambda:h.ROOT/'staging')())+':/workspace:ro'];network=network or 'none'
  else:check(not mounts,'VARIANT_OFFLINE_MOUNTS');volumes=[str(root/'data')+':/data:ro'];network='none'
  check(network in ['none',PROJECT+'-data'],'VARIANT_JOB_NETWORK')
  for src,dst,access in mounts:
   src=pathlib.Path(src);check(src.resolve()==src and not src.is_symlink() and dst.startswith('/run/') and access in ['ro','rw'],'VARIANT_JOB_MOUNT');volumes.append(str(src)+':'+dst+':'+access)
+ if callable(getattr(h,'bind_budget_service',None)):
+  bound=h.bind_budget_service({'volumes':volumes,'environment':env});volumes=bound['volumes'];env=bound['environment']
  # All variant jobs run unprivileged, including offline preparation. The only
  # writable source path is the existing global budget; backup/index stay RO.
  for volume in volumes:
   src,dst,access=volume.rsplit(':',2);p=pathlib.Path(src);check(access in ['ro','rw'] and p.resolve()==p and not p.is_symlink() and dst.startswith('/'),'VARIANT_JOB_VOLUME')
-  check(not p.is_relative_to(root/'master') and not p.is_relative_to(h.ROOT/'master') and not p.is_relative_to(h.TARGET/'master'),'VARIANT_JOB_MASTER')
-  check(p.is_relative_to(root) or p.is_relative_to(h.ROOT/'staging') and access=='ro' or p==h.ROOT/'budget' and access=='rw' or p.is_relative_to(h.ROOT/'secrets') and access=='ro' or p.is_relative_to(h.ROOT/'journal') and access=='ro' or p==h.ROOT/'backup/source-copy' and access=='ro' or p.is_relative_to(h.TARGET/'config') and access=='ro','VARIANT_JOB_VOLUME_SCOPE')
+  shared=getattr(h,'is_continuation_readonly_input',lambda *args:False)(p,dst,access)
+  check((not p.is_relative_to(root/'master') and not p.is_relative_to(h.ROOT/'master') and not p.is_relative_to(h.TARGET/'master')) or shared,'VARIANT_JOB_MASTER')
+  check(shared or p.is_relative_to(root) or p.is_relative_to(getattr(h,'runtime_directory',lambda:h.ROOT/'staging')()) and access=='ro' or p==getattr(h,'budget_directory',lambda:h.ROOT/'budget')() and access=='rw' or p.is_relative_to(h.ROOT/'secrets') and access=='ro' or p.is_relative_to(h.ROOT/'journal') and access=='ro' or p==h.ROOT/'backup/source-copy' and access=='ro' or p.is_relative_to(h.TARGET/'config') and access=='ro','VARIANT_JOB_VOLUME_SCOPE')
  args=['docker','create','--name',PROJECT+'-'+kind+'-job-'+job_id,'--label','com.docker.compose.project='+PROJECT,'--label','mecanet.qa.service='+profile,'--label','mecanet.qa.owner-id='+owner,'--label','mecanet.qa.job-id='+job_id,'--platform','linux/arm64','--network',network,'--read-only','--cap-drop','ALL','--security-opt','no-new-privileges:true','--cpus',str(cpu/10**9),'--memory',str(mem),'--pids-limit','64','--tmpfs','/tmp:size=16m,uid=999,gid=999','--user','999:999']
  if profile!='offline-pg':args+=['--workdir','/workspace']
  if profile=='probe':args+=['--group-add',str(os.stat('/home/ubuntu').st_gid)]

@@ -8,6 +8,8 @@ import {sha256,canonical} from '../../../server/saas/recovery/protocol.js';
 import {SOURCE_PHASES,makeSourceNormalManifest,validateSourceInputs,createSourceDriver,publishSourceReadonly} from './source-driver.mjs';
 import {readPrivateJson} from './prepare.mjs';
 import {newLedger} from './ledger.mjs';
+import {validateRuntimeArtifact} from './runtime-overlay.mjs';
+import {readRuntimeOverlayAuthority} from './runtime-overlay-authority.mjs';
 
 const PREFIX='/run/qa-secrets/',NORMAL=PREFIX+'source-normal-manifest.json',RESOURCE=PREFIX+'source-resource.json';
 const refuse=(ok,label)=>{if(!ok)throw Error(label)},same=(a,b)=>canonical(a)===canonical(b);
@@ -20,8 +22,9 @@ export async function readSourceConfigPrivate(path){
  refuse(before.isFile()&&!before.isSymbolicLink()&&(before.mode&0o777)===0o400&&before.size>=2&&before.size<=262144&&(process.platform==='win32'||before.uid===process.getuid()),'SOURCE_BUILDER_PRIVATE_FILE');
  const h=await open(path,constants.O_RDONLY|(constants.O_NOFOLLOW??0));try{const s=await h.stat();refuse(s.ino===before.ino&&s.dev===before.dev&&s.size===before.size,'SOURCE_BUILDER_FILE_CHANGED');const bytes=await h.readFile();refuse(bytes.length===s.size,'SOURCE_BUILDER_FILE_CHANGED');return{value:JSON.parse(bytes),sha256:sha256(bytes)}}finally{await h.close()}
 }
-export function validateSourceArtifact(artifact,material,migrationHashes){
- refuse(artifact&&/^[0-9a-f]{40}$/.test(artifact.sourceSha??'')&&artifact.digest==='sha256:'+material.artifactDigest&&Array.isArray(artifact.entries)&&sha256(artifact.entries)===material.artifactDigest,'SOURCE_BUILDER_ARTIFACT');
+export function validateSourceArtifact(artifact,material,migrationHashes,runtimeOverlay=null){
+ if(runtimeOverlay!==null)validateRuntimeArtifact({artifact,material,context:runtimeOverlay});
+ else refuse(artifact&&/^[0-9a-f]{40}$/.test(artifact.sourceSha??'')&&artifact.digest==='sha256:'+material.artifactDigest&&Array.isArray(artifact.entries)&&sha256(artifact.entries)===material.artifactDigest,'SOURCE_BUILDER_ARTIFACT');
  for(const [scope,file]of [['central','006-control-recovery.sql'],['tenant','006-tenant-recovery.sql']]){const matches=artifact.entries.filter(e=>e.path==='server/saas/db/migrations/'+file);refuse(matches.length===1&&matches[0].sha256===migrationHashes[scope],'SOURCE_BUILDER_SQL_HASH');}return artifact.sourceSha;
 }
 /** Exact template only. Root adds a fresh host receipt to a NEW invocation file;
@@ -48,7 +51,7 @@ export async function main(){
  const foundation=(await readPrivateJson(PREFIX+'source-foundation.json')).value,writers=(await readPrivateJson(PREFIX+'source-writers.json')).value,correctives=(await readPrivateJson(PREFIX+'source-correctives.json')).value;
  const resource=(await readSourceConfigPrivate(RESOURCE)).value;
  const [central,tenant]=await Promise.all([readFile(new URL('../../../server/saas/db/migrations/006-control-recovery.sql',import.meta.url)),readFile(new URL('../../../server/saas/db/migrations/006-tenant-recovery.sql',import.meta.url))]);
- const migrationHashes={central:sha256(central),tenant:sha256(tenant)},artifact=JSON.parse(await readFile('/workspace/artifact.json','utf8')),sourceCommit=validateSourceArtifact(artifact,material,migrationHashes);
+ const migrationHashes={central:sha256(central),tenant:sha256(tenant)},artifact=JSON.parse(await readFile('/workspace/artifact.json','utf8')),sourceCommit=validateSourceArtifact(artifact,material,migrationHashes,await readRuntimeOverlayAuthority());
  const normalManifest=makeSourceNormalManifest({material,custodyHash,resource,migrationHashes,sourceCommit}),normalManifestHash=sha256(normalManifest);
  // The first publication is fixed before SQL. Later phases load/match it; no
  // replacement, recaptured version or additional choice is permitted on retry.

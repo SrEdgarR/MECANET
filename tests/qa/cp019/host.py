@@ -22,6 +22,82 @@ UID999_FOLDERS=['data','secrets','evidence','faults','budget','backup','journal'
 FACTS_FORMAT='{"id":{{json .Id}},"name":{{json .Name}},"running":{{json .State.Running}},"status":{{json .State.Status}},"startedAt":{{json .State.StartedAt}},"pid":{{json .State.Pid}},"image":{{json .Image}},"imageRef":{{json .Config.Image}},"nanoCpus":{{json .HostConfig.NanoCpus}},"memory":{{json .HostConfig.Memory}},"project":{{json (index .Config.Labels "com.docker.compose.project")}},"service":{{json (index .Config.Labels "mecanet.qa.service")}},"ownerId":{{json (index .Config.Labels "mecanet.qa.owner-id")}},"jobId":{{json (index .Config.Labels "mecanet.qa.job-id")}},"exitCode":{{json .State.ExitCode}},"finishedAt":{{json .State.FinishedAt}}}'
 BUDGET_PLAN_SHA='1f2b34b5bb93ae21a74f7d2af8a51bd3cb16d3ea7baa3b55a54481b5875f243c'
 HOST_CASE=None
+CONTINUATION_CONTEXT=None
+CONTINUATION_HIGH_WATER=None
+CONTINUATION_BROKER=None
+CONTINUATION_EFFECT_RECEIPT=None
+def continuation_model():
+ source=pathlib.Path(__file__).with_name('continuation-budget.py');assert source.is_file() and source.resolve()==source and not source.is_symlink(),'CONTINUATION_HELPER_REQUIRED'
+ spec=importlib.util.spec_from_file_location('cp024_continuation_budget',source);module=importlib.util.module_from_spec(spec);spec.loader.exec_module(module);return module
+def configure_continuation(context):
+ """Caller first authenticates Root admission and RO base; no publication here."""
+ global CONTINUATION_CONTEXT
+ assert CONTINUATION_CONTEXT is None and isinstance(context,dict) and set(context)=={'baseLedger','baseLedgerHash','admission','admissionHash'},'CONTINUATION_ALREADY_CONFIGURED_OR_INVALID'
+ model=continuation_model();base=model.validate_base(context['baseLedger'],context['baseLedgerHash']);model.validate_admission(context['admission'],base,context['baseLedgerHash'])
+ assert model.sha(model.canonical(context['admission']))==context['admissionHash'],'CONTINUATION_ADMISSION_HASH'
+ import copy
+ CONTINUATION_CONTEXT=copy.deepcopy(context)
+def budget_directory():return ROOT/'budget/continuations/v2' if CONTINUATION_CONTEXT is not None else ROOT/'budget'
+def runtime_directory():return ROOT/'master/continuations/v2/runtime' if CONTINUATION_CONTEXT is not None else ROOT/'staging'
+def compose_path(root):
+ if CONTINUATION_CONTEXT is None or root not in [ROOT,TARGET]:return root/'compose.json'
+ return ROOT/'master/continuations/v2'/('source-compose.json' if root==ROOT else 'target-compose.json')
+def is_continuation_readonly_input(path,destination,access):
+ if CONTINUATION_CONTEXT is None:return False
+ return access=='ro' and ((path==budget_authority_directory() and destination=='/run/qa-budget-authority') or (path==budget_directory() and destination=='/run/qa-budget') or (path==runtime_directory() and destination in ['/workspace','/run/qa-source-artifact']) or (path.is_relative_to(runtime_directory()) and destination=='/app'))
+def runtime_overlay_context():
+ assert CONTINUATION_CONTEXT is not None,'CONTINUATION_AUTHORITY_REQUIRED'
+ bridge=target_bridge();overlay,oh=bridge.read_private(budget_authority_directory()/'runtime-overlay.json',0,262144,0o444);original,sh=bridge.read_private(budget_authority_directory()/'original-artifact.json',0,262144,0o444)
+ assert oh==CONTINUATION_CONTEXT['admission']['runtimeHash'] and sh=='1e0027ea22dd103eb51d5e0e484a831a8369c3e44eaa46cc9717468159cfb622','CONTINUATION_RUNTIME_ANCHOR'
+ return original,overlay,sh,oh
+def validate_runtime_artifact(artifact,material):
+ if CONTINUATION_CONTEXT is None:
+  assert artifact['digest']=='sha256:'+material['artifactDigest'] and canonical_hash(artifact['entries'])==material['artifactDigest'],'RUNTIME_ARTIFACT_BINDING';return artifact
+ original,overlay,sh,oh=runtime_overlay_context();source=pathlib.Path(__file__).with_name('runtime-overlay.py');spec=importlib.util.spec_from_file_location('cp024_root_overlay',source);module=importlib.util.module_from_spec(spec);spec.loader.exec_module(module)
+ assert material['artifactDigest']==overlay['originalArtifactDigest'],'CONTINUATION_ORIGINAL_ARTIFACT_CHANGED'
+ module.validate_overlay(original,artifact,'5590432f06cc93eb7a0c8490ff2afb614eb7557bc688097c13cea9db96f885c6',overlay,sh,oh);return artifact
+def derive_continuation_compose(spec):
+ import copy
+ out=copy.deepcopy(spec)
+ if CONTINUATION_CONTEXT is None:return out
+ assert spec.get('name') in [ROOT.name,TARGET.name],'CONTINUATION_COMPOSE_SCOPE'
+ old=str(ROOT/'staging');new=str(runtime_directory())
+ for name,service in out['services'].items():
+  service['volumes']=[new+v[len(old):] if v.startswith(old+'/') or v.startswith(old+':') else v for v in service.get('volumes',[])]
+  out['services'][name]=bind_budget_service(service)
+ return out
+def budget_authority_directory():
+ assert CONTINUATION_CONTEXT is not None,'CONTINUATION_AUTHORITY_REQUIRED'
+ return ROOT/'master/continuations/v2/runtime-authority'
+def budget_environment():
+ return {} if CONTINUATION_CONTEXT is None else {'QA_BUDGET_ATTEMPT':'v2','QA_BUDGET_ADMISSION_HASH':CONTINUATION_CONTEXT['admissionHash'],'QA_BUDGET_SOCKET':'/run/qa-budget/counter.sock','QA_BUDGET_ROOT_PID':str(os.getpid())}
+def bind_budget_service(spec):
+ """Pure spec derivation; never edits or re-publishes a sealed compose file."""
+ import copy
+ out=copy.deepcopy(spec)
+ if CONTINUATION_CONTEXT is None:return out
+ volumes=out.get('volumes',[]);old=str(ROOT/'budget')+':/run/qa-budget:rw';new=str(budget_directory())+':/run/qa-budget:ro';unbound=str(budget_directory())+':/run/qa-budget:rw'
+ if old not in volumes and new not in volumes and unbound not in volumes:return out
+ assert sum(x in [old,new,unbound] for x in volumes)==1,'CONTINUATION_BUDGET_MOUNT'
+ out['volumes']=[new if v in [old,unbound] else v for v in volumes]
+ authority=str(budget_authority_directory())+':/run/qa-budget-authority:ro'
+ existing=[v for v in out['volumes'] if v.rsplit(':',2)[1]=='/run/qa-budget-authority'];assert not existing or existing==[authority],'CONTINUATION_AUTHORITY_DUPLICATE'
+ if not existing:out['volumes'].append(authority)
+ env=out.get('environment',{});assert isinstance(env,dict) and all(k not in env or env[k]==v for k,v in budget_environment().items()),'CONTINUATION_ENV_CONFLICT'
+ out['environment']={**env,**budget_environment()}
+ owner=out.get('labels',{}).get('mecanet.qa.owner-id')
+ if owner:out['environment'].setdefault('QA_BUDGET_CLIENT',owner)
+ return out
+def continuation_args():
+ assert CONTINUATION_CONTEXT is not None,'CONTINUATION_AUTHORITY_REQUIRED'
+ c=CONTINUATION_CONTEXT;return c['baseLedger'],c['baseLedgerHash'],c['admission']
+def track_continuation_progress(state):
+ global CONTINUATION_HIGH_WATER
+ if CONTINUATION_CONTEXT is None:return state
+ model=continuation_model();model.validate(state,*continuation_args(),uptime())
+ if CONTINUATION_HIGH_WATER is not None:model.validate_progress(CONTINUATION_HIGH_WATER,state)
+ import copy
+ CONTINUATION_HIGH_WATER=copy.deepcopy(state);return state
 LIMITS_SHA='65cb46844d2b8a78250839ed14b25fca91561cfcdd7d46557ff5b98829f334c2'
 _limits_path=pathlib.Path(__file__).with_name('budget-limits.json')
 assert _limits_path.is_file() and not _limits_path.is_symlink() and _limits_path.stat().st_size<=1024,'BUDGET_LIMITS_FILE'
@@ -30,8 +106,30 @@ _limits=json.loads(_limits_raw)
 CEILINGS=_limits['global']
 CASE_LIMITS=_limits['case']
 SCENARIO_COUNT=_limits['scenarioCount']
-def run(*args):return subprocess.check_output(args,text=True,timeout=40)
-def run_bounded(*args,timeout):return subprocess.check_output(args,text=True,timeout=timeout,stderr=subprocess.DEVNULL)
+def continuation_effect_guard(args):
+ # Local counter adaptation is not a consumer/Environment Gate. Until the
+ # controller/overlay and all mounts are accredited, fail before new effects.
+ # STOP/KEEP and passive Docker metadata remain available to positive cleanup.
+ if CONTINUATION_CONTEXT is not None and args and args[0]=='docker':
+  effect=len(args)>1 and (args[1] in ['create','start','exec'] or args[1]=='compose' and any(x in args[2:] for x in ['up','create','run','start','restart','exec']))
+  if effect:
+   assert CONTINUATION_EFFECT_RECEIPT is not None and CONTINUATION_BROKER is not None,'CONTINUATION_CONSUMERS_NOT_ACCREDITED'
+   CONTINUATION_BROKER.guard()
+def register_continuation_start(args):
+ if CONTINUATION_CONTEXT is None or len(args)!=3 or args[:2]!=('docker','start'):return
+ actual=inspect_container(args[2]);service=actual.get('service')
+ if service not in ['api1','api2','worker','harness','probe','controller-tool']:return
+ assert actual['running'] is False and actual['pid']==0 and actual['status']=='created','BROKER_CREATED_CLIENT_REQUIRED'
+ case=HOST_CASE;state=CONTINUATION_BROKER.current();scope=state['plannedScopes'].get(case);assert scope in ['source-window','target-window'],'BROKER_CLIENT_CASE_REQUIRED'
+ uid=run('docker','inspect','--format','{{.Config.User}}',actual['id']).strip();assert uid in ['0:0','999:999'],'BROKER_CLIENT_UID'
+ client=actual.get('jobId') or actual['ownerId'];allowed=[case]
+ cmd=json.loads(run('docker','inspect','--format','{{json .Config.Cmd}}',actual['id']))
+ if isinstance(cmd,list) and 'tests/qa/cp019/runtime-driver.mjs' in cmd and 'source-live' in cmd:allowed+=['source-close-admission']
+ CONTINUATION_BROKER.register(client,{'containerId':actual['id'],'project':actual['project'],'service':service,'ownerId':actual['ownerId'],'uid':int(uid.split(':')[0]),'scope':scope,'case':case,'allowedEnterCases':allowed})
+def run(*args):
+ continuation_effect_guard(args);register_continuation_start(args);return subprocess.check_output(args,text=True,timeout=40)
+def run_bounded(*args,timeout):
+ continuation_effect_guard(args);return subprocess.check_output(args,text=True,timeout=timeout,stderr=subprocess.DEVNULL)
 def material_owned():
  own();p=ROOT/'master/material.json';ref=json.loads((ROOT/'master/material-ref.json').read_text())
  assert p.resolve()==p and not p.is_symlink() and p.stat().st_size<=262144,'MATERIAL_PATH'
@@ -47,8 +145,8 @@ def expected_owners():
  return out
 def target_bridge():
  source=pathlib.Path(__file__).with_name('target-host.py');assert source.is_file() and source.resolve()==source and not source.is_symlink(),'TARGET_BRIDGE_REQUIRED'
- if (ROOT/'staging/artifact.json').exists():
-  manifest=json.loads((ROOT/'staging/artifact.json').read_bytes());entries=[x for x in manifest['entries'] if x['path']=='tests/qa/cp019/target-host.py']
+ if (runtime_directory()/'artifact.json').exists():
+  manifest=json.loads((runtime_directory()/'artifact.json').read_bytes());entries=[x for x in manifest['entries'] if x['path']=='tests/qa/cp019/target-host.py']
   assert len(entries)==1 and hashlib.sha256(source.read_bytes()).hexdigest()==entries[0]['sha256'],'TARGET_BRIDGE_PROVENANCE'
  spec=importlib.util.spec_from_file_location('cp020_target_host',source);module=importlib.util.module_from_spec(spec);spec.loader.exec_module(module);return module
 def target_dispatch(action,args):
@@ -85,8 +183,8 @@ def guard_main_resources(current,future,owners):
  return {'nanoCpus':cpu,'memoryMiB':mem//1024**2,'postgresCount':sum(s=='postgres' for _,s in running),'physicalCapacityVerified':False}
 def auxiliary_bridge(name):
  assert name in ['target-http-host.py','target-probes-host.py','target-commit-host.py','target-cold-host.py'],'AUX_BRIDGE_NAME'
- source=ROOT/'staging/tests/qa/cp019'/name;assert source.is_file() and source.resolve()==source and not source.is_symlink(),'AUX_BRIDGE_REQUIRED'
- artifact=json.loads((ROOT/'staging/artifact.json').read_bytes());entries=[e for e in artifact['entries'] if e['path']=='tests/qa/cp019/'+name];assert len(entries)==1 and source.stat().st_size==entries[0]['bytes'] and hashlib.sha256(source.read_bytes()).hexdigest()==entries[0]['sha256'],'AUX_BRIDGE_PROVENANCE'
+ source=runtime_directory()/'tests/qa/cp019'/name;assert source.is_file() and source.resolve()==source and not source.is_symlink(),'AUX_BRIDGE_REQUIRED'
+ artifact=json.loads((runtime_directory()/'artifact.json').read_bytes());entries=[e for e in artifact['entries'] if e['path']=='tests/qa/cp019/'+name];assert len(entries)==1 and source.stat().st_size==entries[0]['bytes'] and hashlib.sha256(source.read_bytes()).hexdigest()==entries[0]['sha256'],'AUX_BRIDGE_PROVENANCE'
  sys.dont_write_bytecode=True;spec=importlib.util.spec_from_file_location('cp021_'+name.replace('-','_').replace('.py',''),source);module=importlib.util.module_from_spec(spec);spec.loader.exec_module(module);return module
 
 def http_bridge():return auxiliary_bridge('target-http-host.py')
@@ -96,14 +194,14 @@ def cold_bridge():return auxiliary_bridge('target-cold-host.py')
 
 def variant_bridge():
  source=pathlib.Path(__file__).with_name('target-variant-host.py');assert source.is_file() and source.resolve()==source and not source.is_symlink(),'VARIANT_BRIDGE_REQUIRED'
- if (ROOT/'staging/artifact.json').exists():
-  artifact=json.loads((ROOT/'staging/artifact.json').read_bytes());entries=[e for e in artifact['entries'] if e['path']=='tests/qa/cp019/target-variant-host.py'];assert len(entries)==1 and hashlib.sha256(source.read_bytes()).hexdigest()==entries[0]['sha256'],'VARIANT_BRIDGE_PROVENANCE'
+ if (runtime_directory()/'artifact.json').exists():
+  artifact=json.loads((runtime_directory()/'artifact.json').read_bytes());entries=[e for e in artifact['entries'] if e['path']=='tests/qa/cp019/target-variant-host.py'];assert len(entries)==1 and hashlib.sha256(source.read_bytes()).hexdigest()==entries[0]['sha256'],'VARIANT_BRIDGE_PROVENANCE'
  spec=importlib.util.spec_from_file_location('cp021_variant_host',source);module=importlib.util.module_from_spec(spec);spec.loader.exec_module(module);return module
 
 def readiness_bridge():
  source=pathlib.Path(__file__).with_name('target-readiness-host.py');assert source.is_file() and source.resolve()==source and not source.is_symlink(),'READINESS_BRIDGE_REQUIRED'
- if (ROOT/'staging/artifact.json').exists():
-  artifact=json.loads((ROOT/'staging/artifact.json').read_bytes());entries=[e for e in artifact['entries'] if e['path']=='tests/qa/cp019/target-readiness-host.py'];assert len(entries)==1 and hashlib.sha256(source.read_bytes()).hexdigest()==entries[0]['sha256'],'READINESS_BRIDGE_PROVENANCE'
+ if (runtime_directory()/'artifact.json').exists():
+  artifact=json.loads((runtime_directory()/'artifact.json').read_bytes());entries=[e for e in artifact['entries'] if e['path']=='tests/qa/cp019/target-readiness-host.py'];assert len(entries)==1 and hashlib.sha256(source.read_bytes()).hexdigest()==entries[0]['sha256'],'READINESS_BRIDGE_PROVENANCE'
  spec=importlib.util.spec_from_file_location('cp021_readiness_host',source);module=importlib.util.module_from_spec(spec);spec.loader.exec_module(module);return module
 
 def verify_main_target_references(current):
@@ -159,6 +257,7 @@ def initialize_budget(plan):
  with os.fdopen(fd,'wb') as f:f.write(json.dumps(state,separators=(',',':')).encode());os.fchown(f.fileno(),999,999);os.fsync(f.fileno())
  syncdir(ledger.parent)
 def budget_update(state,scenario,kind,amount,now):
+ if CONTINUATION_CONTEXT is not None:return continuation_model().update(state,*continuation_args(),scenario,now,kind=kind,amount=amount)
  assert scenario in state.get('plannedScenarios',{}) and kind in CEILINGS and isinstance(amount,int) and not isinstance(amount,bool) and amount>0,'CP019_BUDGET_ABORT'
  assert state.get('schema')=='cp019-budget-v1' and state.get('project')==ROOT.name and 0<=now-state['startedUptime']<=1800,'CP019_BUDGET_ABORT'
  assert set(state['total'])==set(CEILINGS) and all(isinstance(v,int) and not isinstance(v,bool) and v>=0 for v in state['total'].values()),'CP019_BUDGET_ABORT'
@@ -173,6 +272,7 @@ def ledger_charge(kind,amount=1,scenario=None):
  scenario=scenario or HOST_CASE;assert scenario,'HOST_CASE_REQUIRED'
  return ledger_mutate(lambda state:budget_update(state,scenario,kind,amount,uptime()))
 def budget_enter(state,scope,name,now):
+ if CONTINUATION_CONTEXT is not None:return continuation_model().update(state,*continuation_args(),name,now,scope=scope)
  assert state.get('schema')=='cp019-budget-v1' and state.get('project')==ROOT.name and 0<=now-state['startedUptime']<=1800,'CP019_BUDGET_ABORT'
  assert scope in ['source-window','target-window'] and scope in state.get('activeScenarios',{}) and state.get('plannedScopes',{}).get(name)==scope and state.get('plannedScenarios',{}).get(name)==CASE_LIMITS,'BUDGET_RUNTIME_SCOPE'
  assert set(state['total'])==set(CEILINGS) and all(type(v) is int and 0<=v<=CEILINGS[k] for k,v in state['total'].items()),'CP019_BUDGET_ABORT'
@@ -182,7 +282,8 @@ def budget_enter(state,scope,name,now):
 def enter_runtime_case(scope,name):
  return ledger_mutate(lambda state:budget_enter(state,scope,name,uptime()))
 def ledger_mutate(mutator):
- p=ROOT/'budget/ledger.json';assert p.is_file() and p.resolve()==p and not p.is_symlink(),'BUDGET_LEDGER_REQUIRED'
+ if CONTINUATION_CONTEXT is not None and CONTINUATION_BROKER is not None:return CONTINUATION_BROKER.root_update(mutator)
+ p=budget_directory()/'ledger.json';assert p.is_file() and p.resolve()==p and not p.is_symlink(),'BUDGET_LEDGER_REQUIRED'
  lock=pathlib.Path(str(p)+'.lock');fd=None;temporary=None
  for _ in range(40):
   try:fd=os.open(lock,os.O_WRONLY|os.O_CREAT|os.O_EXCL|os.O_NOFOLLOW,0o600);break
@@ -190,10 +291,10 @@ def ledger_mutate(mutator):
  assert fd is not None,'BUDGET_LOCK_BUSY' # Never remove another actor's lock by age.
  try:
   assert p.stat().st_size<=262144,'BUDGET_LEDGER_SIZE'
-  state=mutator(json.loads(p.read_bytes()))
+  state=mutator(track_continuation_progress(json.loads(p.read_bytes())))
   temporary=p.parent/('.ledger.'+secrets.token_hex(16)+'.tmp');out=os.open(temporary,os.O_WRONLY|os.O_CREAT|os.O_EXCL|os.O_NOFOLLOW,0o600)
   with os.fdopen(out,'wb') as f:f.write(json.dumps(state,separators=(',',':')).encode());os.fchown(f.fileno(),999,999);os.fsync(f.fileno())
-  os.replace(temporary,p);temporary=None;syncdir(p.parent);return state
+  os.replace(temporary,p);temporary=None;syncdir(p.parent);return track_continuation_progress(state)
  finally:
   if temporary is not None:temporary.unlink()
   os.close(fd);lock.unlink()
@@ -202,7 +303,8 @@ def set_host_case(name):
  HOST_CASE=name
 def read_budget_snapshot():
  """Read one complete UID999 ledger across bounded atomic-replace races."""
- p=ROOT/'budget/ledger.json';assert p.resolve()==p and p.parent.resolve()==p.parent,'BUDGET_LEDGER_REQUIRED'
+ if CONTINUATION_CONTEXT is not None and CONTINUATION_BROKER is not None:return track_continuation_progress(CONTINUATION_BROKER.root_snapshot())
+ p=budget_directory()/'ledger.json';assert p.resolve()==p and p.parent.resolve()==p.parent,'BUDGET_LEDGER_REQUIRED'
  def identity(s):return s.st_dev,s.st_ino
  def metadata(s):return identity(s)+(s.st_mode,s.st_uid,s.st_nlink,s.st_size,s.st_mtime_ns,s.st_ctime_ns)
  def private(s):return stat.S_ISREG(s.st_mode) and s.st_uid==999 and s.st_mode&0o777==0o600 and s.st_nlink==1 and 2<=s.st_size<=262144
@@ -216,11 +318,12 @@ def read_budget_snapshot():
    after=os.fstat(fd);named=p.lstat()
    if identity(named)!=identity(first):continue
    assert private(first) and private(after) and private(named) and metadata(before)==metadata(first)==metadata(after)==metadata(named) and len(raw)==after.st_size,'BUDGET_LEDGER_CHANGED'
-   return json.loads(raw)
+   return track_continuation_progress(json.loads(raw))
   finally:os.close(fd)
  raise AssertionError('BUDGET_LEDGER_REPLACE_BUSY')
 def validate_budget_remaining(state,scenario,now,maximum=45):
  """Validate existing authority and clocks without opening or charging a case."""
+ if CONTINUATION_CONTEXT is not None:return continuation_model().remaining(state,*continuation_args(),scenario,now,maximum)
  assert type(maximum) in [int,float] and math.isfinite(maximum) and 0<maximum<=_limits['caseSeconds'],'CP019_BUDGET_ABORT'
  assert isinstance(state,dict) and set(state)=={'schema','project','plannedScenarios','plannedScopes','activeScenarios','startedUptime','sequence','total','scenarios'} and state['schema']=='cp019-budget-v1' and state['project']==ROOT.name,'CP019_BUDGET_ABORT'
  plan={k:state[k] for k in ['project','plannedScenarios','plannedScopes']};plan.update(schema='cp019-budget-plan-v1',activeScenarios={'source-window':'source-runtime-start','target-window':'target-runtime-start'})
@@ -266,7 +369,7 @@ def browser_gate(request):
  if not directory.exists():directory.mkdir(mode=0o700);syncdir(directory.parent)
  assert directory.resolve()==directory and not directory.is_symlink() and directory.stat().st_uid==0 and directory.stat().st_mode&0o777==0o700,'BROWSER_GATE_DIRECTORY'
  immutable(directory/('gate-'+str(request['sequence']).zfill(2)+'.json'),{'schema':'cp020-browser-gate-record-v1','request':request,'referenceHash':canonical_hash(reference)},0o400)
- p=ROOT/'budget/ledger.json';assert p.resolve()==p and not p.is_symlink() and p.stat().st_size<=262144,'BROWSER_LEDGER';raw=p.read_bytes();state=json.loads(raw);case=state['scenarios'][request['caseName']];remaining=int(1000*min(45-(uptime()-case['startedUptime']),1800-(uptime()-state['startedUptime'])))
+ p=budget_directory()/'ledger.json';assert p.resolve()==p and not p.is_symlink() and p.stat().st_size<=262144,'BROWSER_LEDGER';raw=p.read_bytes();state=json.loads(raw);case=state['scenarios'][request['caseName']];remaining=int(1000*min(45-(uptime()-case['startedUptime']),1800-(uptime()-state['startedUptime'])))
  assert state['activeScenarios']['target-window']==request['caseName'] and 0<remaining<=45000,'BROWSER_GATE_DEADLINE'
  return {**request,'type':'cp020-browser-gate-ack','schema':'cp020-browser-gate-ack-v1','scope':'target-window','activeCase':request['caseName'],'chargedHttp':request['reserveHttp'],'chargedArtifacts':request['reserveArtifacts'],'ledgerSequence':state['sequence'],'ledgerHash':hashlib.sha256(raw).hexdigest(),'remainingMs':remaining}
 def immutable(path,value,mode=0o600):
@@ -343,7 +446,7 @@ def compose(root,*args):
   selected=[s for s in args[1:] if s in PROFILES];assert selected,'EXPLICIT_SERVICES_REQUIRED'
   guard_effect(root,selected)
   assert_case_budget()
- return run('docker','compose','-f',str(root/'compose.json'),*args)
+ return run('docker','compose','-f',str(compose_path(root)),*args)
 def write_plain(path,b,mode=0o600,uid=None):
  immutable(path,b if isinstance(b,bytes) else b.encode(),mode)
  if uid is not None:
@@ -356,18 +459,21 @@ def job_command(root,profile,command,environment=None,mounts=(),network=None):
  assert env.get('QA_PROJECT',root.name)==root.name,'JOB_PROJECT';env['QA_PROJECT']=root.name
  volumes=[];user='0:0' if profile=='controller-tool' else '999:999'
  if profile in ['harness','probe']:
-  config=json.loads((root/'compose.json').read_text());service=config['services'][profile];volumes=service['volumes'];assert service['user']=='999:999' and not service.get('ports'),'JOB_SERVICE_BOUNDARY';network=root.name+'-data'
- elif profile=='controller-tool':volumes=[str(ROOT/'staging')+':/workspace:ro'];network=network or 'none'
+  config=json.loads(compose_path(root).read_text());service=config['services'][profile];volumes=service['volumes'];assert service['user']=='999:999' and not service.get('ports'),'JOB_SERVICE_BOUNDARY';network=root.name+'-data'
+ elif profile=='controller-tool':volumes=[str(runtime_directory())+':/workspace:ro'];network=network or 'none'
  else:assert not mounts,'OFFLINE_MOUNTS_FIXED';volumes=[str(root/'data')+':/data:ro'];network='none'
  if command in [['node','tests/qa/cp019/target-prepare.mjs',a] for a in ['copy-before-target','assemble']]+[['node','tests/qa/cp019/'+n+'.mjs'] for n in ['copy-negatives','journal-negatives']]:
-  assert root==TARGET and profile=='controller-tool' and network=='none' and all(not pathlib.Path(src).is_relative_to(ROOT/'master') and not pathlib.Path(src).is_relative_to(TARGET/'master') for src,_,_ in mounts),'COPY_JOB_BOUNDARY'
+  assert root==TARGET and profile=='controller-tool' and network=='none' and all((not pathlib.Path(src).is_relative_to(ROOT/'master') and not pathlib.Path(src).is_relative_to(TARGET/'master')) or is_continuation_readonly_input(pathlib.Path(src),dst,access) for src,dst,access in mounts),'COPY_JOB_BOUNDARY'
   user='999:999'
  assert network in ['none',root.name+'-data'],'JOB_NETWORK'
  for src,dst,mode in mounts:
   src=pathlib.Path(src);assert src.resolve()==src and (src.is_relative_to(ROOT) or src.is_relative_to(TARGET)) and mode in ['ro','rw'] and dst.startswith('/run/'),'JOB_MOUNT';volumes+=[str(src)+':'+dst+':'+mode]
+ if CONTINUATION_CONTEXT is not None and any(v.rsplit(':',2)[1]=='/run/qa-budget' for v in volumes):
+  bound=bind_budget_service({'volumes':volumes,'environment':env});volumes=bound['volumes'];env=bound['environment']
  for volume in volumes:
   src,dst,mode=volume.rsplit(':',2);p=pathlib.Path(src);assert p.resolve()==p and (p.is_relative_to(ROOT) or p.is_relative_to(TARGET)) and mode in ['ro','rw'] and dst.startswith('/'),'JOB_VOLUME_SCOPE'
  cpu,mem,image=PROFILES[profile];owner=expected_owners()[root.name][profile];job_id=env.get('QA_INVOCATION_ID') or str(uuid.uuid4());assert str(uuid.UUID(job_id))==job_id,'JOB_INVOCATION'
+ if CONTINUATION_CONTEXT is not None and 'QA_BUDGET_ATTEMPT' in env:env['QA_BUDGET_CLIENT']=job_id
  args=['docker','create','--name',root.name+'-job-'+job_id,'--label','com.docker.compose.project='+root.name,'--label','mecanet.qa.service='+profile,'--label','mecanet.qa.owner-id='+owner,'--label','mecanet.qa.job-id='+job_id,'--platform','linux/arm64','--network',network,'--read-only','--cap-drop','ALL','--security-opt','no-new-privileges:true','--cpus',str(cpu/1_000_000_000),'--memory',str(mem),'--pids-limit','64','--tmpfs','/tmp:size=16m,uid=999,gid=999','--user',user]
  if profile!='offline-pg':args+=['-w','/workspace']
  if profile=='probe':args+=['--group-add',str(os.stat('/home/ubuntu').st_gid)]
@@ -443,16 +549,16 @@ def stage(archive):
   members=tar.getmembers();assert len(members)<=2000 and all(m.isfile() and not m.issym() and not m.islnk() and not pathlib.PurePosixPath(m.name).is_absolute() and '..' not in pathlib.PurePosixPath(m.name).parts for m in members)
   assert not any('.env' in m.name.split('/') or m.name.startswith(('.qa-private/','secrets/','master/')) for m in members)
   assert sum(m.size for m in members)<32*1024**2
-  assert not any((ROOT/'staging'/m.name).exists() for m in members),'ARTIFACT_ALREADY_STAGED'
+  assert not any((runtime_directory()/m.name).exists() for m in members),'ARTIFACT_ALREADY_STAGED'
   ledger_charge('artifactFiles',len(members))
-  tar.extractall(ROOT/'staging',filter='data')
- manifest=json.loads((ROOT/'staging/artifact.json').read_text());entries=manifest['entries']
+  tar.extractall(runtime_directory(),filter='data')
+ manifest=json.loads((runtime_directory()/'artifact.json').read_text());entries=manifest['entries']
  for x in entries:
-  p=ROOT/'staging'/x['path'];assert p.resolve().is_relative_to(ROOT/'staging') and not p.is_symlink() and p.is_file();assert p.stat().st_size==x['bytes'] and hashlib.sha256(p.read_bytes()).hexdigest()==x['sha256']
- exact={str(p.relative_to(ROOT/'staging')) for p in (ROOT/'staging').rglob('*') if p.is_file()};assert exact=={'artifact.json',*(x['path'] for x in entries)}
+  p=runtime_directory()/x['path'];assert p.resolve().is_relative_to(runtime_directory()) and not p.is_symlink() and p.is_file();assert p.stat().st_size==x['bytes'] and hashlib.sha256(p.read_bytes()).hexdigest()==x['sha256']
+ exact={str(p.relative_to(runtime_directory())) for p in (runtime_directory()).rglob('*') if p.is_file()};assert exact=={'artifact.json',*(x['path'] for x in entries)}
  digest=hashlib.sha256(json.dumps(entries,separators=(',',':'),sort_keys=True).encode()).hexdigest();assert manifest['digest']=='sha256:'+digest
- for p in (ROOT/'staging').rglob('*'):os.chmod(p,0o755 if p.is_dir() else 0o444)
- os.chmod(ROOT/'staging',0o755)
+ for p in (runtime_directory()).rglob('*'):os.chmod(p,0o755 if p.is_dir() else 0o444)
+ os.chmod(runtime_directory(),0o755)
  return {'result':'PASS','artifact':manifest['digest'],'files':len(entries),'noHostBuild':True}
 def tool(command,root=ROOT,network='none',memory='128m',cpu='0.25',mounts=()):
  assert memory=='128m' and cpu=='0.25','TOOL_PROFILE_FIXED'
@@ -487,9 +593,9 @@ def retained_copy_footprint(host,bridge,cfg):
 
 def copy_negatives():
  bridge=target_bridge();host=sys.modules.get(__name__) or types.SimpleNamespace(**globals());verified=verify_retained_backup(host,bridge)
- set_host_case('copy-negatives-env');enter_runtime_case('target-window','copy-negatives-env');m=material_owned();art=json.loads((ROOT/'staging/artifact.json').read_bytes());copy_receipt,receipt_hash=bridge.read400(TARGET/'evidence/target-copy.json',0)
+ set_host_case('copy-negatives-env');enter_runtime_case('target-window','copy-negatives-env');m=material_owned();art=json.loads((runtime_directory()/'artifact.json').read_bytes());copy_receipt,receipt_hash=bridge.read400(TARGET/'evidence/target-copy.json',0)
  cfg={'schema':'cp020-copy-negatives-v1','project':TARGET.name,'sourceSha':art['sourceSha'],'artifactDigest':m['artifactDigest'],'custodyHash':canonical_hash(m),'recoveryId':m['recoveryId'],'copyReceiptHash':receipt_hash,'indexHash':verified['indexHash'],'sourceEndProofHash':copy_receipt['sourceEndProofHash'],'sourcePgOff':True,'targetPgOff':True};footprint=retained_copy_footprint(host,bridge,cfg);cfg.update(retainedFootprint=footprint,retainedFootprintHash=canonical_hash(footprint));bridge.frozen_input(host,TARGET/'master/copy-retained-footprint.json',footprint,0);path=TARGET/'secrets/copy-negative-config.json';write_plain(path,json.dumps(cfg,separators=(',',':'),sort_keys=True),0o400,999)
- mounts=[(ROOT/'backup/source-copy','/run/qa-copy','ro'),(ROOT/'journal/copy-index.json','/run/qa-copy-index.json','ro'),(TARGET/'data','/run/qa-target-data','ro'),(TARGET/'backup','/run/qa-negative','rw'),(TARGET/'evidence','/run/qa-results','rw'),(ROOT/'budget','/run/qa-budget','rw'),(path,'/run/qa-secrets/copy-negative-config.json','ro')]
+ mounts=[(ROOT/'backup/source-copy','/run/qa-copy','ro'),(ROOT/'journal/copy-index.json','/run/qa-copy-index.json','ro'),(TARGET/'data','/run/qa-target-data','ro'),(TARGET/'backup','/run/qa-negative','rw'),(TARGET/'evidence','/run/qa-results','rw'),(budget_directory(),'/run/qa-budget','rw'),(path,'/run/qa-secrets/copy-negative-config.json','ro')]
  job=create_job(TARGET,'controller-tool',['node','tests/qa/cp019/copy-negatives.mjs'],{'QA_CODE_SHA':art['sourceSha']},mounts=mounts,network='none');start_job(job);output,proof=bridge.watch_job(host,job,lambda:None);result=json.loads(output)
  assert set(result)=={'type','status','reportHash','sourceSha','secretOutput','postgresExecuted'} and result['type']=='cp020-copy-negatives' and result['status']=='PASS' and result['sourceSha']==art['sourceSha'] and result['secretOutput'] is False and result['postgresExecuted'] is False,'COPY_NEGATIVE_OUTPUT'
  report,report_hash=bridge.read400(TARGET/'evidence/copy-negatives.json');assert report_hash==result['reportHash'] and report['copyReceiptHash']==receipt_hash and report['custodyHash']==canonical_hash(m) and report['result']['status']=='PASS','COPY_NEGATIVE_REPORT'
@@ -498,13 +604,13 @@ def copy_negatives():
 def journal_negatives():
  bridge=target_bridge();host=sys.modules.get(__name__) or types.SimpleNamespace(**globals());m,current,owners=bridge.own_current(host);assert not any(c.get('running') and c.get('project') in [ROOT.name,TARGET.name] for c in current),'JOURNAL_NEGATIVE_OFF_REQUIRED'
  set_host_case('journal-negatives-env');enter_runtime_case('target-window','journal-negatives-env');raw,raw_hash=bridge.read_private(ROOT/'journal/source.jsonl',999,1024**2,0o600,False);assert raw.endswith(b'\n') and not (ROOT/'journal/source.jsonl.controller.lock').exists(),'JOURNAL_NEGATIVE_SOURCE';records=[json.loads(s) for s in raw.splitlines()]
- checkpoint,_=bridge.read400(ROOT/'secrets/source-copy-checkpoint.json');end,_=bridge.read400(ROOT/'secrets/source-live-end.json');art=json.loads((ROOT/'staging/artifact.json').read_bytes());cfg={'schema':'cp020-journal-negatives-v1','project':TARGET.name,'sourceSha':art['sourceSha'],'custodyHash':canonical_hash(m),'sourceEndProofHash':end['hash'],'rawHash':raw_hash,'recordsHash':canonical_hash(records),'copyCheckpoint':checkpoint,'finalCheckpoint':{'sequence':records[-1]['sequence'],'hash':records[-1]['hash']}};path=TARGET/'secrets/journal-negative-config.json';write_plain(path,json.dumps(cfg,separators=(',',':'),sort_keys=True),0o400,999)
- mounts=[(ROOT/'journal','/run/qa-source-journal','ro'),(TARGET/'evidence','/run/qa-results','rw'),(ROOT/'budget','/run/qa-budget','rw'),(path,'/run/qa-secrets/journal-negative-config.json','ro')];job=create_job(TARGET,'controller-tool',['node','tests/qa/cp019/journal-negatives.mjs'],{'QA_CODE_SHA':art['sourceSha']},mounts=mounts,network='none');start_job(job);output,proof=bridge.watch_job(host,job,lambda:None);result=json.loads(output)
+ checkpoint,_=bridge.read400(ROOT/'secrets/source-copy-checkpoint.json');end,_=bridge.read400(ROOT/'secrets/source-live-end.json');art=json.loads((runtime_directory()/'artifact.json').read_bytes());cfg={'schema':'cp020-journal-negatives-v1','project':TARGET.name,'sourceSha':art['sourceSha'],'custodyHash':canonical_hash(m),'sourceEndProofHash':end['hash'],'rawHash':raw_hash,'recordsHash':canonical_hash(records),'copyCheckpoint':checkpoint,'finalCheckpoint':{'sequence':records[-1]['sequence'],'hash':records[-1]['hash']}};path=TARGET/'secrets/journal-negative-config.json';write_plain(path,json.dumps(cfg,separators=(',',':'),sort_keys=True),0o400,999)
+ mounts=[(ROOT/'journal','/run/qa-source-journal','ro'),(TARGET/'evidence','/run/qa-results','rw'),(budget_directory(),'/run/qa-budget','rw'),(path,'/run/qa-secrets/journal-negative-config.json','ro')];job=create_job(TARGET,'controller-tool',['node','tests/qa/cp019/journal-negatives.mjs'],{'QA_CODE_SHA':art['sourceSha']},mounts=mounts,network='none');start_job(job);output,proof=bridge.watch_job(host,job,lambda:None);result=json.loads(output)
  assert set(result)=={'type','status','reportHash','sourceSha','secretOutput','postgresExecuted'} and result['type']=='cp020-journal-negatives' and result['status']=='PASS' and result['sourceSha']==art['sourceSha'] and result['secretOutput'] is False and result['postgresExecuted'] is False,'JOURNAL_NEGATIVE_OUTPUT'
  report,report_hash=bridge.read400(TARGET/'evidence/journal-negatives.json');assert report_hash==result['reportHash'] and report['custodyHash']==canonical_hash(m) and report['sourceEndProofHash']==end['hash'] and report['result']['status']=='PASS','JOURNAL_NEGATIVE_REPORT';after,after_hash=bridge.read_private(ROOT/'journal/source.jsonl',999,1024**2,0o600,False);assert after==raw and after_hash==raw_hash,'JOURNAL_NEGATIVE_CHANGED'
  return {'result':'PASS','scope':'Runtime validator / real readonly SOURCE journal; no SQL writes','reportHash':report_hash,'negativeCases':6,'jobProof':proof,'secretsPrinted':False}
 def material():
- own();set_host_case('host-material');assert not (ROOT/'master/material.json').exists();manifest=json.loads((ROOT/'staging/artifact.json').read_text())
+ own();set_host_case('host-material');assert not (ROOT/'master/material.json').exists();manifest=json.loads((runtime_directory()/'artifact.json').read_text())
  js="import{chooseMaterial}from'./server/saas/recovery/custody.js';import{publishImmutable}from'./server/saas/recovery/protocol.js';const m=await chooseMaterial({project:'mecanet-qa-p1l3-r03',artifactDigest:'"+manifest['digest'][7:]+"'});const p=await publishImmutable('/run/master/material.json',m);console.log(JSON.stringify({materialHash:p.sha256,recoveryId:m.recoveryId,secretsPrinted:false}));"
  ledger_charge('artifactFiles') # Node's immutable master publication, before spawning it.
  result=json.loads(tool(['node','--input-type=module','-e',js],mounts=[(ROOT/'master','/run/master','rw')]))
@@ -525,7 +631,7 @@ def configs():
  tls,tls_files=tls_preflight(private_bytes=True)
  before=json.loads((ROOT/'evidence/preflight.json').read_text())
  assert before.get('tlsInputs')==tls,'TLS_PREFLIGHT_BINDING'
- source=ROOT/'staging/tests/qa/infra'
+ source=runtime_directory()/'tests/qa/infra'
  for root,subnet,front,web in [(ROOT,'10.77.64.0/24','10.77.65.0/24','10.77.65.2'),(TARGET,'10.77.66.0/25','10.77.66.128/25','10.77.66.130')]:
   set_host_case('host-config-target' if root==TARGET else 'host-config-source')
   write_plain(root/'config/postgresql.conf',(source/'postgresql.conf').read_bytes(),0o444)
@@ -541,15 +647,15 @@ def configs():
   write_plain(root/'config/ca.crt',(root/'tls/ca.crt').read_bytes(),0o444)
   base={'image':'node@sha256:'+PINS['node'],'platform':'linux/arm64','user':'999:999','read_only':True,'cap_drop':['ALL'],'security_opt':['no-new-privileges:true'],'pids_limit':64,'working_dir':'/workspace','tmpfs':['/tmp:size=16m'],'restart':'no','logging':{'driver':'json-file','options':{'max-size':'8m','max-file':'2'}}}
   v=lambda p,d,mode='ro':str(root/p)+':'+d+':'+mode
-  artifact=str(ROOT/'staging')+':/workspace:ro'
+  artifact=str(runtime_directory())+':/workspace:ro'
   data_ip=subnet.split('/')[0].rsplit('.',1)[0]+'.2'
   services={'postgres':{**base,'image':'postgres@sha256:'+PINS['postgres'],'cpus':0.35,'mem_limit':'640m','pids_limit':128,'environment':{'POSTGRES_USER':'qa_bootstrap','POSTGRES_DB':'postgres','POSTGRES_PASSWORD_FILE':'/run/secrets/bootstrap','POSTGRES_INITDB_ARGS':'--auth-host=scram-sha-256 --auth-local=scram-sha-256','PGDATA':'/var/lib/postgresql/18/docker'},'command':['postgres','-c','config_file=/etc/postgresql/postgresql.conf'],'volumes':[v('data','/var/lib/postgresql','rw'),v('config/postgresql.conf','/etc/postgresql/postgresql.conf'),v('config/pg_hba.conf','/etc/postgresql/pg_hba.conf'),v('tls/postgres','/run/tls'),v('secrets/bootstrap','/run/secrets/bootstrap')],'networks':{'data':{'ipv4_address':data_ip}},'tmpfs':['/tmp:size=16m','/var/run/postgresql:size=8m,mode=0770,uid=999,gid=999']}}
   for n in ['api1','api2']:
-   services[n]={**base,'cpus':0.20,'mem_limit':'320m','command':['node','tests/qa/cp019/entry.mjs'],'environment':{'QA_PROJECT':root.name,'QA_INSTANCE':n,'QA_SCENARIO':'target-window' if root==TARGET else 'source-window'},'stop_grace_period':'30s','volumes':[artifact,v('secrets/'+n+'.json','/run/qa-secrets/api.json'),v('faults','/run/qa-faults','rw'),str(ROOT/'budget')+':/run/qa-budget:rw'],'networks':['data','front']}
-  services['worker']={**base,'cpus':0.10,'mem_limit':'192m','command':['node','tests/qa/cp019/worker.mjs'],'environment':{'QA_PROJECT':root.name,'QA_SCENARIO':'target-window' if root==TARGET else 'source-window'},'volumes':[artifact,v('secrets/worker.json','/run/qa-secrets/worker.json'),v('faults','/run/qa-faults','rw'),str(ROOT/'budget')+':/run/qa-budget:rw'],'networks':['data']}
-  services['web']={**base,'image':'nginx@sha256:'+PINS['nginx'],'user':'101:101','cpus':0.10,'mem_limit':'96m','entrypoint':['nginx','-g','daemon off;','-c','/etc/nginx/nginx.conf'],'volumes':[str(ROOT/'staging/client/dist-saas')+':/app:ro',v('config/nginx.conf','/etc/nginx/nginx.conf'),v('tls/web','/run/tls'),v('ingress','/run/qa-ingress','rw')],'networks':{'front':{'ipv4_address':web}},'tmpfs':['/tmp:size=16m,uid=101,gid=101']}
-  services['harness']={**base,'profiles':['tools'],'cpus':0.25,'mem_limit':'128m','command':['node','tests/qa/cp019/prepare.mjs'],'environment':{'QA_PROJECT':root.name},'volumes':[artifact,v('secrets','/run/qa-secrets','rw'),v('config/ca.crt','/run/qa-ca.crt'),v('evidence','/run/qa-results','rw'),v('evidence/system-id','/run/qa-system-id'),v('faults','/run/qa-faults','rw'),v('journal','/run/qa-journal','rw'),str(ROOT/'budget')+':/run/qa-budget:rw'],'networks':['data']}
-  services['probe']={**base,'profiles':['tools'],'cpus':0.05,'mem_limit':'128m','group_add':[str(os.stat('/home/ubuntu').st_gid)],'command':['node','tests/qa/cp019/acceptance.mjs'],'environment':{'QA_PROJECT':root.name},'volumes':[artifact,v('secrets','/run/qa-secrets','rw'),v('config/ca.crt','/run/qa-ca.crt'),v('evidence','/run/qa-results','rw'),v('faults','/run/qa-faults','rw'),v('journal','/run/qa-journal','rw'),v('ingress','/run/qa-ingress'),str(ROOT/'budget')+':/run/qa-budget:rw'],'networks':['data']}
+   services[n]={**base,'cpus':0.20,'mem_limit':'320m','command':['node','tests/qa/cp019/entry.mjs'],'environment':{'QA_PROJECT':root.name,'QA_INSTANCE':n,'QA_SCENARIO':'target-window' if root==TARGET else 'source-window'},'stop_grace_period':'30s','volumes':[artifact,v('secrets/'+n+'.json','/run/qa-secrets/api.json'),v('faults','/run/qa-faults','rw'),str(budget_directory())+':/run/qa-budget:rw'],'networks':['data','front']}
+  services['worker']={**base,'cpus':0.10,'mem_limit':'192m','command':['node','tests/qa/cp019/worker.mjs'],'environment':{'QA_PROJECT':root.name,'QA_SCENARIO':'target-window' if root==TARGET else 'source-window'},'volumes':[artifact,v('secrets/worker.json','/run/qa-secrets/worker.json'),v('faults','/run/qa-faults','rw'),str(budget_directory())+':/run/qa-budget:rw'],'networks':['data']}
+  services['web']={**base,'image':'nginx@sha256:'+PINS['nginx'],'user':'101:101','cpus':0.10,'mem_limit':'96m','entrypoint':['nginx','-g','daemon off;','-c','/etc/nginx/nginx.conf'],'volumes':[str(runtime_directory()/'client/dist-saas')+':/app:ro',v('config/nginx.conf','/etc/nginx/nginx.conf'),v('tls/web','/run/tls'),v('ingress','/run/qa-ingress','rw')],'networks':{'front':{'ipv4_address':web}},'tmpfs':['/tmp:size=16m,uid=101,gid=101']}
+  services['harness']={**base,'profiles':['tools'],'cpus':0.25,'mem_limit':'128m','command':['node','tests/qa/cp019/prepare.mjs'],'environment':{'QA_PROJECT':root.name},'volumes':[artifact,v('secrets','/run/qa-secrets','rw'),v('config/ca.crt','/run/qa-ca.crt'),v('evidence','/run/qa-results','rw'),v('evidence/system-id','/run/qa-system-id'),v('faults','/run/qa-faults','rw'),v('journal','/run/qa-journal','rw'),str(budget_directory())+':/run/qa-budget:rw'],'networks':['data']}
+  services['probe']={**base,'profiles':['tools'],'cpus':0.05,'mem_limit':'128m','group_add':[str(os.stat('/home/ubuntu').st_gid)],'command':['node','tests/qa/cp019/acceptance.mjs'],'environment':{'QA_PROJECT':root.name},'volumes':[artifact,v('secrets','/run/qa-secrets','rw'),v('config/ca.crt','/run/qa-ca.crt'),v('evidence','/run/qa-results','rw'),v('faults','/run/qa-faults','rw'),v('journal','/run/qa-journal','rw'),v('ingress','/run/qa-ingress'),str(budget_directory())+':/run/qa-budget:rw'],'networks':['data']}
   owners=expected_owners()[root.name]
   for name,service in services.items():service['labels']={'mecanet.qa.service':name,'mecanet.qa.owner-id':owners[name]}
   nets={k:{'name':root.name+'-'+k,'internal':True,'enable_ipv6':False,'driver_opts':{'com.docker.network.bridge.gateway_mode_ipv4':'isolated'},'ipam':{'config':[{'subnet':s}]}} for k,s in [('data',subnet),('front',front)]}
@@ -565,7 +671,7 @@ def wait_pg_ready(cid,timeout=20):
   except (subprocess.CalledProcessError,subprocess.TimeoutExpired):time.sleep(.2)
  raise AssertionError('PG_START_NOT_PROVEN')
 def source_compose_spec():
- spec,_=target_bridge().read_private(ROOT/'compose.json',0,262144,0o600)
+ spec,_=target_bridge().read_private(compose_path(ROOT),0,262144,0o600)
  assert spec.get('name')==ROOT.name and isinstance(spec.get('services'),dict) and set(spec.get('networks',{}))=={'data','front'},'SOURCE_COMPOSE_SPEC'
  return spec
 def validate_source_service_boundary(cid,spec):
@@ -648,7 +754,7 @@ def prepare_result(result,stage):
  return safe
 def prepare(stage):
  own();assert stage in ['foundation','writers','correctives'],'PREPARE_PHASE'
- manifest=json.loads((ROOT/'staging/artifact.json').read_text());args=prepare_args(stage,manifest['sourceSha'])
+ manifest=json.loads((runtime_directory()/'artifact.json').read_text());args=prepare_args(stage,manifest['sourceSha'])
  cid=compose(ROOT,'ps','-q','postgres').strip();wait_pg_ready(cid)
  sid=(ROOT/'evidence/system-id').read_text().strip();assert re.fullmatch('[0-9]{10,24}',sid),'SYSTEM_IDENTIFIER_REQUIRED'
  output=ROOT/'secrets'/('source-'+stage+'.json');assert not output.exists() and not output.is_symlink(),'PREPARE_OUTPUT_EXISTS'
@@ -761,7 +867,7 @@ def fresh_source_observation(phase,resource):
  runtime=[{'service':c['service'],'containerId':c['id'],'running':c['running'],'ownerId':c['ownerId'],'imageDigest':'sha256:'+PINS['node' if c['service']!='web' else 'nginx']} for c in active]
  return {'resource':resource,'runtimeConsumers':runtime}
 def source_step(phase,action):
- own();manifest=json.loads((ROOT/'staging/artifact.json').read_text());cfg,profile,args=source_step_args(phase,action,manifest['sourceSha'])
+ own();manifest=json.loads((runtime_directory()/'artifact.json').read_text());cfg,profile,args=source_step_args(phase,action,manifest['sourceSha'])
  assert cfg.is_file() and cfg.resolve()==cfg and not cfg.is_symlink() and cfg.stat().st_size<=262144 and cfg.stat().st_uid==999 and (cfg.stat().st_mode&0o777)==0o400,'SOURCE_STEP_PRIVATE_CONFIG'
  body=json.loads(cfg.read_bytes());assert body['phase']==phase and body['action']==action and body['sourceCommit']==manifest['sourceSha'],'SOURCE_STEP_CONFIG_BINDING'
  output=ROOT/('secrets' if action=='select' else 'evidence')/(phase+'.json');assert not output.exists() and not output.is_symlink(),'SOURCE_STEP_OUTPUT_EXISTS'
@@ -792,8 +898,8 @@ def source_config(phase,action):
  return {**body,'result':'PASS','jobProof':job_proof,**preserve()}
 def source_phase(phase):
  assert phase in SOURCE_PHASES and phase!='source-clock-ack','SOURCE_COLD_PHASE'
- entry=ROOT/'staging/tests/qa/cp019/runtime-driver.mjs';assert entry.is_file() and entry.resolve()==entry,'SOURCE_ATOMIC_BRIDGE_NOT_STAGED'
- own();set_host_case(phase);manifest=json.loads((ROOT/'staging/artifact.json').read_text());cfg=ROOT/'secrets'/(phase+'-select-config.json')
+ entry=runtime_directory()/'tests/qa/cp019/runtime-driver.mjs';assert entry.is_file() and entry.resolve()==entry,'SOURCE_ATOMIC_BRIDGE_NOT_STAGED'
+ own();set_host_case(phase);manifest=json.loads((runtime_directory()/'artifact.json').read_text());cfg=ROOT/'secrets'/(phase+'-select-config.json')
  assert cfg.is_file() and cfg.resolve()==cfg and cfg.stat().st_uid==999 and (cfg.stat().st_mode&0o777)==0o400,'SOURCE_PHASE_TEMPLATE'
  body=json.loads(cfg.read_bytes());assert body['phase']==phase and body['action']=='select' and body['sourceCommit']==manifest['sourceSha'],'SOURCE_PHASE_BINDING'
  guard_effect(ROOT,['harness']);observation=fresh_source_observation(phase,body['resource']);m=material_owned();invocation_id=str(uuid.uuid4());at=datetime.datetime.now(datetime.timezone.utc).isoformat(timespec='milliseconds').replace('+00:00','Z')
@@ -817,7 +923,7 @@ def wait_source_ready(invocation_id,source_sha,timeout=10):
 def source_ack():
  own();set_host_case('source-clock-ack');base=ROOT/'secrets/source-clock-ack-select-config.json';assert base.is_file() and base.resolve()==base and base.stat().st_uid==999 and (base.stat().st_mode&0o777)==0o400,'SOURCE_ACK_TEMPLATE'
  body=json.loads(base.read_bytes());assert body['phase']=='source-clock-ack' and body['action']=='select','SOURCE_ACK_TEMPLATE'
- manifest=json.loads((ROOT/'staging/artifact.json').read_text());assert body['sourceCommit']==manifest['sourceSha'],'SOURCE_ACK_SOURCE'
+ manifest=json.loads((runtime_directory()/'artifact.json').read_text());assert body['sourceCommit']==manifest['sourceSha'],'SOURCE_ACK_SOURCE'
  assert not any(c['running'] and c.get('project') in [ROOT.name,TARGET.name] and c.get('service') in BUSINESS for c in facts()),'SOURCE_ACK_MUST_START_COLD'
  assert not (ROOT/'evidence/source-clock-ack.json').exists() and not (ROOT/'secrets/source-clock-ack.json').exists(),'SOURCE_ACK_OUTPUT_EXISTS'
  invocation_id=str(uuid.uuid4());gate=ROOT/'secrets'/('source-clock-ack-run-'+invocation_id+'-config.json');ready=ROOT/'faults'/(invocation_id+'-ready.json');assert not gate.exists() and not ready.exists(),'SOURCE_ACK_INVOCATION_EXISTS'
@@ -917,10 +1023,10 @@ def source_live():
  # One probe is imported while cold. It ACKs, enters the next registered case,
  # runs the SOURCE fixture, then measures SQL absence after the exact four exit.
  own();set_host_case('source-clock-ack');base=ROOT/'secrets/source-clock-ack-select-config.json';body,_=read_host_private(base)
- manifest=json.loads((ROOT/'staging/artifact.json').read_text());source_sha=manifest['sourceSha'];material=material_owned()
+ manifest=json.loads((runtime_directory()/'artifact.json').read_text());source_sha=manifest['sourceSha'];material=material_owned()
  assert body['phase']=='source-clock-ack' and body['action']=='select' and body['sourceCommit']==source_sha,'SOURCE_LIVE_TEMPLATE'
  assert re.fullmatch('[0-9a-f]{40}',source_sha) and body['normalManifestHash']==canonical_hash(body['normalManifest']) and body['normalManifest']['custodyHash']==canonical_hash(material) and body['normalManifest']['resource']==body['resource'] and body['normalManifest']['generation']==material['source']['generation'] and body['normalManifest']['runId']==material['source']['normal']['runId'],'SOURCE_LIVE_COLD_BINDING'
- assert (ROOT/'staging/tests/qa/cp019/runtime-driver.mjs').is_file(),'SOURCE_ATOMIC_BRIDGE_NOT_STAGED'
+ assert (runtime_directory()/'tests/qa/cp019/runtime-driver.mjs').is_file(),'SOURCE_ATOMIC_BRIDGE_NOT_STAGED'
  assert not any(c['running'] and c.get('project') in [ROOT.name,TARGET.name] and c.get('service') in BUSINESS for c in facts()),'SOURCE_LIVE_MUST_START_COLD'
  assert not any((ROOT/p).exists() for p in ['evidence/source-clock-ack.json','secrets/source-clock-ack.json','evidence/source-live.json','secrets/source-live-end.json']),'SOURCE_LIVE_OUTPUT_EXISTS'
  invocation_id=str(uuid.uuid4());ack_gate=ROOT/'secrets'/('source-clock-ack-run-'+invocation_id+'-config.json');business_gate=ROOT/'secrets'/('source-business-'+invocation_id+'-gate.json');stop_gate=ROOT/'secrets'/('source-stop-'+invocation_id+'-gate.json');done=ROOT/'faults'/(invocation_id+'-fixture-done.json');ack_ready=ROOT/'faults'/(invocation_id+'-ack-ready.json');observed={};known={}
@@ -971,7 +1077,7 @@ def final_source_observation(resource,ended,current,material):
 def source_final(phase):
  assert phase in SOURCE_FINAL_PHASES,'SOURCE_FINAL_PHASE'
  own();set_host_case(phase);guard_effect(ROOT,['harness'])
- material=material_owned();staged=json.loads((ROOT/'staging/artifact.json').read_text());source_sha=staged['sourceSha']
+ material=material_owned();staged=json.loads((runtime_directory()/'artifact.json').read_text());source_sha=staged['sourceSha']
  normal,normal_hash=read_host_private(ROOT/'secrets/source-normal-manifest.json')
  end,_=read_host_private(ROOT/'secrets/source-live-end.json')
  resource=source_resource()['resource']

@@ -1,0 +1,47 @@
+name: P1-L3 isolated continuation transport
+
+on:
+  push:
+    branches: [codex/verify-p1-l3-continuation]
+  pull_request:
+    branches: [codex/verify-p1-l3-development]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: p1-l3-continuation-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  transport:
+    name: Linux UNIX budget transport (not recovery acceptance)
+    if: github.repository == 'SrEdgarR/MECANET'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 7
+    env:
+      CI: 'true'
+      REAL_API: 'false'
+      VITEST_REAL_API: 'false'
+    steps:
+      - name: Checkout without persisted credentials
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
+        with:
+          persist-credentials: false
+      - name: Use pinned Node
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: '24.21.0'
+          package-manager-cache: false
+      - name: Prove counters, overlay and real Linux cross-process transport
+        run: |
+          test "$(node --version)" = "v24.21.0"
+          test "$(uname -m)" = "x86_64"
+          node --test tests/qa/cp019/continuation-budget.test.mjs tests/qa/cp019/continuation-broker.test.mjs tests/qa/cp019/runtime-overlay.test.mjs
+          python3 -X utf8 tests/qa/cp019/continuation-budget.test.py
+          python3 -X utf8 tests/qa/cp019/continuation-host.test.py
+          python3 -X utf8 tests/qa/cp019/runtime-overlay.test.py
+          python3 -X utf8 tests/qa/cp019/continuation-broker.test.py
+          python3 -X utf8 tests/qa/cp019/continuation-broker-unix.test.py
+      - name: Prove fixed Root fsync store in this exclusive ephemeral runner
+        run: sudo -n python3 -B -X utf8 tests/qa/cp019/continuation-store-linux.test.py
