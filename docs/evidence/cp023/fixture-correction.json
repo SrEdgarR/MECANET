@@ -118,7 +118,7 @@
       "logBytes": 70189,
       "retainedPrivately": true
     },
-    "linuxAfterCorrection": "NOT VERIFIED — fresh GitHub CI must confirm positive UID999/GID999 preflight and all673 tests",
+    "linuxAfterCorrection": "Initial corrected runner failed env prototype preflight in run38773816221 before FS tests; latest a6afb427 candidate Linux verification NOT VERIFIED pending next CI.",
     "physicalL3": "NOT VERIFIED — no ARM64/VPS/SQL/HTTP/browser or restoration acceptance by this correction"
   },
   "peerReview": {
@@ -127,5 +127,54 @@
     "requiredFindings": 0,
     "scope": "4 source objects at recorded after hashes; independent syntax/self-test8partitions2commands6identities; fixture mkdir-only delta; no Linux real execution",
     "collectedAt": "2026-10-15T17:00:36.605058+00:00"
+  },
+  "followUp": {
+    "collectedAt": "2026-10-15T17:04:25.544706+00:00",
+    "remoteRed": {
+      "runId": 38773816221,
+      "url": "https://github.com/SrEdgarR/MECANET/actions/runs/38773816221",
+      "stage": "positive UID999 filesystem environment preflight; before FS tests",
+      "failure": "CI_FILESYSTEM_ENVIRONMENT_REQUIRED",
+      "cause": "assert.deepStrictEqual compared exotic process.env prototype with a plain object despite identical own six env pairs",
+      "log": {
+        "bytes": 46807,
+        "sha256": "fbd87b2127f0db94271c5ff0acc6d610bafbb5c2d739d5666f299a7dba2642bd",
+        "retainedPrivately": true,
+        "rawPublished": false
+      }
+    },
+    "pureRed": {
+      "failure": "CI_FILESYSTEM_ENVIRONMENT_REQUIRED",
+      "exitCode": 1,
+      "toolOutput": "cb0bda",
+      "fixture": "Object.assign(Object.create(Object.getPrototypeOf(process.env)), fixedSyntheticSixVariables); no values copied from actual environment",
+      "note": "Earlier plain Object.create({}) did not reproduce; not counted as RED"
+    },
+    "correction": {
+      "path": "scripts/ci/p1-l1.mjs",
+      "beforeSha256": "e7b4e03785f04733dde2e165e08c87ac5f02f763438deabc1aa641f1876fe7e1",
+      "afterSha256": "a6afb42722a4e4d8a09f64046517b92442d92facad2769e41b881afc3a7332c7",
+      "delta": "Normalize own enumerable env pairs via Object.fromEntries(Object.entries(variables)) before the same closed key/value equality. Add positive exotic-env prototype pure test and report7 identity cases. No identity, environment value, allowlist, runner partition, assertion or product change."
+    },
+    "greenPure": {
+      "status": "PASS",
+      "syntax": "PASS",
+      "partitionCases": 8,
+      "commandCases": 2,
+      "identityCases": 7,
+      "extraNodeOptionsStillRejected": true,
+      "sudoExecuted": false,
+      "sqlCommands": 0,
+      "linuxFilesystemExecuted": false
+    },
+    "peerReview": {
+      "reviewer": "cp022_python",
+      "status": "PASS",
+      "requiredFindings": 0,
+      "sourceSha256": "a6afb42722a4e4d8a09f64046517b92442d92facad2769e41b881afc3a7332c7",
+      "independentChecks": "syntax and8partitions2commands7identities PASS; no SQL/sudo/Linux filesystem execution",
+      "collectedAt": "2026-10-15T17:04:44.683563+00:00"
+    },
+    "newLinuxCI": "NOT VERIFIED pending next push; earlier RED preserved"
   }
 }

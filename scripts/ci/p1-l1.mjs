@@ -116,7 +116,7 @@ function filesystemIdentity({ uid, gid, groups, version, environment: variables 
   assert.equal(gid, 999, 'CI_FILESYSTEM_GID_REQUIRED');
   assert.ok(Array.isArray(groups) && groups.includes(999) && groups.every(group => group === 999), 'CI_FILESYSTEM_GROUPS_REQUIRED');
   assert.equal(version, 'v24.21.0', 'CI_FILESYSTEM_NODE_REQUIRED');
-  assert.deepEqual(variables, { PATH: '/usr/bin:/bin', TMPDIR: '/tmp', NODE_ENV: 'test', CI: 'true', REAL_API: 'false', VITEST_REAL_API: 'false' }, 'CI_FILESYSTEM_ENVIRONMENT_REQUIRED');
+  assert.deepEqual(Object.fromEntries(Object.entries(variables)), { PATH: '/usr/bin:/bin', TMPDIR: '/tmp', NODE_ENV: 'test', CI: 'true', REAL_API: 'false', VITEST_REAL_API: 'false' }, 'CI_FILESYSTEM_ENVIRONMENT_REQUIRED');
   return { schema: 'cp023-filesystem-identity-v1', status: 'PASS', uid, gid, groups, node: version };
 }
 function runFilesystem(args) {
@@ -167,8 +167,9 @@ switch (mode) {
     assert.throws(() => filesystemCommand('node', []), /CI_FILESYSTEM_ABSOLUTE_NODE_REQUIRED/);
     const identity = { uid: 999, gid: 999, groups: [999], version: 'v24.21.0', environment: { PATH: '/usr/bin:/bin', TMPDIR: '/tmp', NODE_ENV: 'test', CI: 'true', REAL_API: 'false', VITEST_REAL_API: 'false' } };
     assert.equal(filesystemIdentity(identity).status, 'PASS');
+    assert.equal(filesystemIdentity({ ...identity, environment: Object.assign(Object.create(Object.getPrototypeOf(process.env)), identity.environment) }).status, 'PASS');
     for (const change of [{ uid: 0 }, { gid: 0 }, { groups: [999, 127] }, { version: 'v22.0.0' }, { environment: { ...identity.environment, NODE_OPTIONS: '--inspect' } }]) assert.throws(() => filesystemIdentity({ ...identity, ...change }));
-    console.log(JSON.stringify({ schema: 'cp023-contract-partition-self-test-v1', status: 'PASS', partitionCases: cases.length, files: tests.length, isolatedFiles: filesystem.length, commandCases: 2, identityCases: 6, filesystemEffects: false, sudoExecuted: false, sqlCommands: 0 }));
+    console.log(JSON.stringify({ schema: 'cp023-contract-partition-self-test-v1', status: 'PASS', partitionCases: cases.length, files: tests.length, isolatedFiles: filesystem.length, commandCases: 2, identityCases: 7, filesystemEffects: false, sudoExecuted: false, sqlCommands: 0 }));
     break;
   }
   case 'provenance': {

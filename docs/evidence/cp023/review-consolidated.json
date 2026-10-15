@@ -199,7 +199,8 @@
     "docs/evidence/cp023/development-recovery-red.json": "4a9c37056608198a0b7a63c9ddd5ed76af5fbef65cc1a131046410d670b5e173",
     "docs/evidence/cp023/publication-safety.json": "ce779942cccacd27def57f68f080638715c1c6908cb1c352ca9da4931204382f",
     "docs/evidence/cp023/resource-review.json": "437e7c0d9574cce03630cd4d277b09f76a06ef452f15e9e241cc2810e97884e1",
-    "docs/evidence/cp023/pos-review.md": "e6df28a9ba0466e79f509ecc532f9ee26ed82f26e7947b7e1b6d0e39acc6dfec"
+    "docs/evidence/cp023/pos-review.md": "e6df28a9ba0466e79f509ecc532f9ee26ed82f26e7947b7e1b6d0e39acc6dfec",
+    "docs/evidence/cp023/fixture-correction.json": "4ac2c83795776a8b3ba4f01f2f5cdf5d64ce5814258f4a0e167a71a06dbfc444"
   },
   "provenanceNotes": [
     "Se reutilizan187tests independientes del peer B ya registrados en resource-review.json; no se suman ni repiten aqui.",
@@ -207,5 +208,43 @@
     "Aviso del reviewer sobre epoch fijo2 fue descartado: se basaba en lectura anterior609c60dd, e2af43f7 actual deriva context.scopes.targetEpoch.",
     "No se ejecutaron SQL, SSH, Docker, HTTP, navegador, Git mutaciones o recursos por este reviewer.",
     "P1-L3 no TERMINAL, P2 no aprobado, SC016/017 pendientes y produccion/servicios ajenos intactos."
+  ],
+  "followUpReviews": [
+    {
+      "collectedAt": "2026-10-15T17:01:33.214320+00:00",
+      "status": "PASS",
+      "requiredFindings": 0,
+      "scope": "Post-review local helper hardening and bounded rollback probes; independent read-only code review",
+      "objects": [
+        {
+          "path": "tests/integration/development-recovery.mjs",
+          "sha256": "6b54f143f4a68ef025e9fa9fb9fcddf892b7f757f64241e8bc43521d78da5368",
+          "delta": "Factor existing credential guard without removal; add explicit string type for every rolePassword and sessionSecret before regex, blocking singleton array coercion",
+          "independentVerification": {
+            "syntax": "PASS",
+            "selfTestNegativeGuards": 13,
+            "sqlCommands": 0,
+            "networkUsed": false
+          },
+          "realSqlProvenance": "73-query recovery PASS remains attributed to dfcdc3fc62a3a43795e5ab0822c62f936ccff52f327ae0985248d8470041a4dd; not rerun or attributed to this hardening hash",
+          "previousRecommendedTypeGuard": "RESOLVED"
+        },
+        {
+          "path": "tests/integration/development-faults.mjs",
+          "sha256": "41cbf170a31821481ed81496520e9bec00780dea2551e93c1f6f978e7fd11b11",
+          "reviewed": "Own restored development target loopback15433/TLS/systemIdentifier/dataDirectory/no SaaS connections. Original two-operation material bound and custodied before DML. Confirmed product+receipt within TX deliberately fails before COMMIT; acknowledged ROLLBACK and unchanged inventory/ACL/control fingerprints. Four CAS/abort/proof/ACL negatives rollback positively; CAS after-fingerprint uses same max1 client after ROLLBACK instead of waiting for held pool. No pool/budget expansion. Cleanup ROLLBACK remains possible when normal query budget is exhausted.",
+          "independentVerification": {
+            "syntax": "PASS",
+            "sqlCommands": 0,
+            "networkUsed": false
+          },
+          "ownerReportedPhysicalVerification": "5 checks PASS /34 SQL on own native Windows restored development fixture, reports development-rollback-probes-red/green retained. Not repeated by reviewer; not outer L3 physical acceptance, HTTP fault injection or POS."
+        }
+      ],
+      "limitations": [
+        "No SQL, SSH, Docker, HTTP, browser, .env/credentials or Git mutations by reviewer.",
+        "Initial CI helper review remains tied to initial08a099 version. Socket/readiness and fixture fixes have their own later evidence; no historical CI PASS inferred."
+      ]
+    }
   ]
 }
