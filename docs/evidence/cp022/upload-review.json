@@ -1,0 +1,172 @@
+{
+  "at": "2026-10-15T15:15:39.563824+00:00",
+  "cases": [
+    {
+      "case": "actual596-member Git runtime archive",
+      "expected": "ACCEPT",
+      "result": "PASS"
+    },
+    {
+      "case": "wrong externally pinned manifest",
+      "expected": "REFUSE",
+      "result": "PASS"
+    },
+    {
+      "case": "wrong source SHA",
+      "expected": "REFUSE",
+      "result": "PASS"
+    },
+    {
+      "case": "changed same-size source entry",
+      "expected": "REFUSE",
+      "result": "PASS"
+    },
+    {
+      "case": "duplicate runtime member",
+      "expected": "REFUSE",
+      "result": "PASS"
+    },
+    {
+      "case": "extra runtime member",
+      "expected": "REFUSE",
+      "result": "PASS"
+    },
+    {
+      "case": "missing runtime member",
+      "expected": "REFUSE",
+      "result": "PASS"
+    },
+    {
+      "case": "unsafe runtime member ../outside",
+      "expected": "REFUSE",
+      "result": "PASS"
+    },
+    {
+      "case": "unsafe runtime member /outside",
+      "expected": "REFUSE",
+      "result": "PASS"
+    },
+    {
+      "case": "unsafe runtime member .env",
+      "expected": "REFUSE",
+      "result": "PASS"
+    },
+    {
+      "case": "unsafe runtime member .qa-private/secret",
+      "expected": "REFUSE",
+      "result": "PASS"
+    },
+    {
+      "case": "unsafe runtime member secrets/key",
+      "expected": "REFUSE",
+      "result": "PASS"
+    },
+    {
+      "case": "unsafe runtime member backup/data",
+      "expected": "REFUSE",
+      "result": "PASS"
+    },
+    {
+      "case": "runtime symlink",
+      "expected": "REFUSE",
+      "result": "PASS"
+    },
+    {
+      "case": "runtime hardlink",
+      "expected": "REFUSE",
+      "result": "PASS"
+    },
+    {
+      "case": "runtime writable mode",
+      "expected": "REFUSE",
+      "result": "PASS"
+    },
+    {
+      "case": "self-consistent manifest wrong sourceSha",
+      "expected": "REFUSE",
+      "result": "PASS"
+    },
+    {
+      "case": "self-consistent manifest wrong codeSha",
+      "expected": "REFUSE",
+      "result": "PASS"
+    },
+    {
+      "case": "self-consistent manifest wrong baseline",
+      "expected": "REFUSE",
+      "result": "PASS"
+    },
+    {
+      "case": "byte-exact closed controller package",
+      "expected": "ACCEPT",
+      "result": "PASS"
+    },
+    {
+      "case": "changed external controller plan",
+      "expected": "REFUSE",
+      "result": "PASS"
+    },
+    {
+      "case": "changed internal controller plan",
+      "expected": "REFUSE",
+      "result": "PASS"
+    },
+    {
+      "case": "changed controller helper",
+      "expected": "REFUSE",
+      "result": "PASS"
+    },
+    {
+      "case": "duplicate controller member",
+      "expected": "REFUSE",
+      "result": "PASS"
+    },
+    {
+      "case": "extra controller member",
+      "expected": "REFUSE",
+      "result": "PASS"
+    },
+    {
+      "case": "exact canonical135-case budget",
+      "expected": "ACCEPT",
+      "result": "PASS"
+    },
+    {
+      "case": "noncanonical otherwise-same budget",
+      "expected": "REFUSE",
+      "result": "PASS"
+    },
+    {
+      "case": "changed budget old project",
+      "expected": "REFUSE",
+      "result": "PASS"
+    },
+    {
+      "case": "changed budget extra case",
+      "expected": "REFUSE",
+      "result": "PASS"
+    },
+    {
+      "case": "changed budget increased SQL",
+      "expected": "REFUSE",
+      "result": "PASS"
+    },
+    {
+      "case": "changed budget changed active semantic case",
+      "expected": "REFUSE",
+      "result": "PASS"
+    }
+  ],
+  "fail": 0,
+  "manifestSha256": "1e0027ea22dd103eb51d5e0e484a831a8369c3e44eaa46cc9717468159cfb622",
+  "pass": 31,
+  "readTlsMaterial": false,
+  "remoteEffects": 0,
+  "requiredOpen": 0,
+  "reviewerSha256": "d4ec2ed769a490d110f985d80ef83fedad21bd052bc0af06541fc16e1d7529e0",
+  "runtimeArchiveSha256": "98623fa9a57e936fbbeee6bdce9d0f4375bc9a5412b36694ad3db9a82ad4b3f5",
+  "schema": "cp022-upload-independent-review-v1",
+  "scope": "Pure extracted AST functions/assertions; actual Git runtime tar; synthetic controller package; no SSH, TLS files or QA runtime",
+  "sourceSha": "7f5986f01c1cce8c35ba3e9635d9001523da0bc8",
+  "uploaderSha256": "4da4e3309d2afc96c9e658297605a9baab5d917dc33961c4ee22c327d3ac9e6c"
+}

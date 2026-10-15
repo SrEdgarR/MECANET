@@ -1,0 +1,62 @@
+{
+  "checkpoint": "CP-018",
+  "version": "P1-L3 v0.2-CP018",
+  "status": "SUGGESTED / NOT APPROVED",
+  "classification": "DETECTED",
+  "provenance": "LOCAL file hashes + root REMOTE GitHub base read-only",
+  "observedAt": "2026-10-14T00:07:53.600841+00:00",
+  "baseSha": "86985fe7589032f202ebf0cb057a9b1384217151",
+  "candidate": {
+    "path": ".agentic/P1-L3_CANDIDATE.md",
+    "sha256": "4d1cf193000106dd20555f6c70acab3cb264fd3a7bfe0a9cf8be662eddb2b3ec",
+    "bytes": 44202,
+    "approvalScope": "Whole file only; SC010/DEC065-066 exact proposed impact included. No other draft transitively approved"
+  },
+  "designGate": "PASS DOCUMENTARY ONLY",
+  "f14": "PASS LIMITED COHERENCE ONLY",
+  "A": "NOT VERIFIED",
+  "B": "NOT VERIFIED",
+  "functionalCriteria": {
+    "L3-A1": "NOT VERIFIED",
+    "L3-A2": "NOT VERIFIED",
+    "L3-A3": "NOT VERIFIED",
+    "L3-A4": "NOT VERIFIED",
+    "L3-A5": "NOT VERIFIED",
+    "L3-A6": "NOT VERIFIED"
+  },
+  "model": {
+    "sha256": "f211a552ee872f4bc49ae2d75ec215fa7b3748301c28460625c15aaa3188b414",
+    "resultsSha256": "7473aada512364f46b060c1277c5552da2d9cf9a84c47bb4f87c9a05827fc578",
+    "counts": {
+      "tests": 14,
+      "states": 40,
+      "edges": 230,
+      "mutationsDetected": 5
+    },
+    "scope": "LOCAL ABSTRACT ONLY"
+  },
+  "reviews": [
+    {
+      "path": "docs/evidence/cp018/review-independent.md",
+      "sha256": "008e73a4fbcf64ccd57dcc40a0fc4fd4b37e5f869dee02e3168b89f92234b301"
+    },
+    {
+      "path": "docs/evidence/cp018/review-sql-final.md",
+      "sha256": "b5a9e830a2d32bde8e5965dcb5acda422dce8076cd2a8d619699ae516729f96e"
+    },
+    {
+      "path": "docs/evidence/cp018/review-model.md",
+      "sha256": "77eed97146e88d1cd37f1494c404c0f1dcb6aedcdd9cafc148098a572ca0cafa"
+    }
+  ],
+  "requiredOpen": 0,
+  "criticalOpen": 0,
+  "resourcesCreatedOrModified": 0,
+  "functionalChanges": false,
+  "future": {
+    "A": "Approve exact candidate hash",
+    "B": "Authorize integral implementation conditioned on gates/preflight",
+    "environment": "NOT VERIFIED; before each resource",
+    "production": "NOT APPROVED"
+  }
+}

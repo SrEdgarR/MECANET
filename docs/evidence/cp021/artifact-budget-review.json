@@ -1,0 +1,438 @@
+{
+  "schema": "cp021-artifact-budget-review-v1",
+  "status": "FAIL",
+  "environment": "LOCAL WINDOWS x64, static call-count model and pure synthetic plan; no SSH/Docker/PG/archive/ledger",
+  "observedAt": "2026-10-15T12:40:02.703167+00:00",
+  "nodeVersion": "v24.21.0",
+  "baselineLimits": {
+    "case": {
+      "artifactFiles": 2000,
+      "http": 80,
+      "journal": 1000,
+      "sql": 8192
+    },
+    "caseSeconds": 45,
+    "cohortSeconds": 1800,
+    "global": {
+      "artifactFiles": 2000,
+      "http": 300,
+      "journal": 1000,
+      "sql": 200000
+    },
+    "scenarioCount": 135,
+    "schema": "cp021-budget-limits-v1"
+  },
+  "readOnlyHead": "99eda4381baef2ebe61c0f89915b22a4b4037104",
+  "sourceSnapshot": {
+    "tests/qa/cp019/artifact.py": "443a2994db43393d1eeb8bde797df05184d1c33451d6a4dceeb33dd8fc2e4ade",
+    "tests/qa/cp019/host.py": "db8fe31c199c55e417cc9703372979ac721ec6721efa5074f5a19fdb8d785c2f",
+    "tests/qa/cp019/target-host.py": "3ef0bbb776a41cbbbfd7bb504e09fc3a12269b5bf023e2ddb5d1695cd3515a20",
+    "tests/qa/cp019/target-variant-host.py": "352d6b039302d14c2294c0207d5b725ef0ef83286a2d22c700b6a549445c74b8",
+    "tests/qa/cp019/target-config.mjs": "5a49cfb0a77d97b1005eda6cf27abcca5e02197fbe14b9ae53f6d951193e527b",
+    "tests/qa/cp019/target-config.test.mjs": "a38b421624deaf06ce480b507cbc9f4d12bd22c09a373bcf75b5ef18a32e8c30",
+    "tests/qa/cp019/target-runtime.mjs": "a9b4dd0f5e2fa99571f6e8f7ae3b0c286ced7876366b1acabc8380694c716c25",
+    "tests/qa/cp019/target-driver.mjs": "1a55ca1e8fbbb0d89b0cc5f899226fb8f610cd356dcbfd035a815831f54da5eb",
+    "tests/qa/cp019/control.mjs": "2fd2b9b91be108b0ae3f0a94e09e6ed0e3859e3bcef234eae5fb052c7f6b3eae",
+    "server/saas/recovery/stage-journal.js": "d1440544e8df67f3a3e01c0ec002f815b39ddf6954336a8cf692ab57f2058562",
+    "tests/qa/cp019/copy-negatives.mjs": "6a60f0a2a8855885a81b0a578b5674c80647448d6cf1a55c093f0b07beee3453",
+    "tests/qa/cp019/budget-limits.json": "795c12b9fe5b3b892e6a2503570d55153ce51ab5d2ac7520f12408cbecd3eb1c",
+    "tests/qa/cp019/source-driver.mjs": "171e13a59bbcd07e5ecf32e3eda4f52e3f460003f6a1c1efd8358d0218ec0b06",
+    "server/saas/recovery/custody.js": "8ce549a0258a00758abeac5adea931ac8f93bb13c6e8d8b52e147ec6a544ded5"
+  },
+  "stage": {
+    "headSelectedSources": 83,
+    "knownUntrackedSelectedSources": 8,
+    "knownUntrackedPaths": [
+      "tests/qa/cp019/budget-limits.json",
+      "tests/qa/cp019/budget-limits.mjs",
+      "tests/qa/cp019/commit-fault-hook.mjs",
+      "tests/qa/cp019/commit-fault-probe.mjs",
+      "tests/qa/cp019/readiness-variant.mjs",
+      "tests/qa/cp019/target-commit-host.py",
+      "tests/qa/cp019/target-readiness-host.py",
+      "tests/qa/cp019/target-variant-host.py"
+    ],
+    "runtimeDependencyFiles": 494,
+    "frozenUiAssets": 3,
+    "artifactManifest": 1,
+    "headPackageFiles": 581,
+    "currentCandidatePackageFiles": 589,
+    "sourceBytesTakenFromWorkingTree": false,
+    "archiveCreated": false,
+    "releaseClosureVerified": false
+  },
+  "program": {
+    "roleCount": 18,
+    "actualGeneratedPhaseCounts": {
+      "abort-close": 2,
+      "abort-finish": 1,
+      "abort-local": 4,
+      "activation": 1,
+      "begin-enroll": 3,
+      "canary": 1,
+      "clock-plan": 1,
+      "configure": 5,
+      "post-worker-verify": 6,
+      "promotion": 7,
+      "rotate": 18
+    },
+    "normalThroughActivation": {
+      "phases": [
+        "begin-enroll",
+        "rotate",
+        "canary",
+        "configure",
+        "clock-plan",
+        "post-worker-verify",
+        "promotion",
+        "activation"
+      ],
+      "steps": 42
+    },
+    "prefixMinimum": {
+      "phases": [
+        "begin-enroll",
+        "rotate",
+        "canary",
+        "configure",
+        "clock-plan",
+        "post-worker-verify"
+      ],
+      "extraPromotionEffects": 1,
+      "steps": 35
+    },
+    "normalPrograms": 4,
+    "prefixPrograms": 1,
+    "abortEffectsCounted": 0,
+    "commitFailedPromotionJobs": 1,
+    "configJobs": 5,
+    "runJobs": 40,
+    "distinctEffectSteps": 203,
+    "globalJournalLowerBound": 420,
+    "sourceBootstrapPhases": [
+      "source-close-b",
+      "source-migrate-a",
+      "source-migrate-b",
+      "source-migrate-central",
+      "source-initialize-a",
+      "source-initialize-b",
+      "source-initialize-control",
+      "source-clock-plan",
+      "source-clock-ack"
+    ],
+    "sourceBootstrapJournalEffects": {
+      "source-close-b": 1,
+      "source-initialize-a": 1,
+      "source-initialize-b": 1,
+      "source-initialize-control": 1,
+      "source-clock-plan": 1,
+      "source-clock-ack": 2
+    }
+  },
+  "artifactLowerBound": {
+    "limit": 2000,
+    "components": [
+      {
+        "id": "stage",
+        "count": 589,
+        "formula": "83 HEAD-selected sources + 8 known untracked selected sources + 494 installed runtime package files + 3 frozen UI assets + artifact.json",
+        "source": "tests/qa/cp019/host.py:stage / artifact.py:runtime_tracked_file/runtime_dependency_file"
+      },
+      {
+        "id": "variant-preparation",
+        "count": 151,
+        "formula": "5 * 30 charged creations + shared variants directory",
+        "source": "tests/qa/cp019/target-variant-host.py:prepare/copy_variant"
+      },
+      {
+        "id": "journal-plans-heads",
+        "count": 812,
+        "formula": "203 distinct effects * 2 records(intent/observed) * 2 artifacts(plan/head)",
+        "source": "server/saas/recovery/stage-journal.js:append + tests/qa/cp019/control.mjs"
+      },
+      {
+        "id": "job-created-output-end",
+        "count": 135,
+        "formula": "45 jobs * 3 charged files",
+        "source": "tests/qa/cp019/host.py:create_job/finish_job and target-variant-host.py equivalents"
+      },
+      {
+        "id": "journal-locks-and-logs",
+        "count": 45,
+        "formula": "40 run jobs * 1 lock + 5 initial target journal logs",
+        "source": "server/saas/recovery/stage-journal.js:openStageJournal"
+      },
+      {
+        "id": "phase-and-invocation-configs",
+        "count": 84,
+        "formula": "39 stable phase configs + 45 invocation files",
+        "source": "tests/qa/cp019/target-host.py:phase_config/phase"
+      },
+      {
+        "id": "successful-phase-receipts",
+        "count": 39,
+        "formula": "39 successful run phase receipts; failed ACK attempt excluded",
+        "source": "tests/qa/cp019/target-runtime.mjs:main"
+      },
+      {
+        "id": "minimum-mailbox-publications",
+        "count": 90,
+        "formula": "45 jobs * 2 publications before START; all watch-loop samples excluded",
+        "source": "tests/qa/cp019/target-host.py:phase"
+      },
+      {
+        "id": "source-bootstrap-control-journal",
+        "count": 28,
+        "formula": "7 fixed SOURCE effects * 2 records * 2 artifacts(plan/head)",
+        "source": "tests/qa/cp019/source-driver.mjs:expectedSteps/sourceControl + server/saas/recovery/stage-journal.js:append"
+      },
+      {
+        "id": "source-bootstrap-jobs-only",
+        "count": 27,
+        "formula": "9 exported SOURCE_PHASES * minimum 1 job * 3 Root files (plan-selection jobs excluded)",
+        "source": "tests/qa/cp019/source-driver.mjs:SOURCE_PHASES and host.py:source_phase/source_step"
+      },
+      {
+        "id": "target-segmented-config-publications",
+        "count": 20,
+        "formula": "5 configs clock-plan jobs * 4 files(api1/api2/worker/acceptance)",
+        "source": "tests/qa/cp019/target-runtime.mjs:publishTargetRuntimeConfigs/publishTargetAcceptanceContext"
+      }
+    ],
+    "total": 2020,
+    "excess": 20,
+    "omitted": [
+      "SOURCE plan-selection jobs/configs and all SOURCE setup/final/HTTP journals beyond the 7 listed bootstrap effects",
+      "All abort phases (including main and commit recovery)",
+      "All runtime service CID references/inventories and stop/end receipts",
+      "All target assembly jobs and bundle/index/journal chunk copies",
+      "Runtime configuration publications beyond the mandatory 4*5 counted files",
+      "All readiness-empty setup/config/clock/close/end jobs",
+      "All target history/write/negative HTTP jobs and browser evidence",
+      "All commit-fault host/probe extra context and reconciliation jobs",
+      "All negative-copy/journal jobs, plans, reports, retained-footprint attestation",
+      "Every watch-loop mailbox sample beyond the mandatory two per phase job",
+      "QA tls/config/bootstrap/master/root metadata before provider preparation",
+      "Failure retries beyond the single required interrupted promotion"
+    ]
+  },
+  "otherBudgets": {
+    "journal": {
+      "lowerBound": 420,
+      "limit": 1000,
+      "status": "NOT VERIFIED",
+      "reason": "This incomplete lower bound fits; SOURCE, aborts and retries must be added."
+    },
+    "sql": {
+      "caseLimit": 8192,
+      "globalLimit": 200000,
+      "status": "NOT VERIFIED",
+      "nominalCompleteBackgroundSqlPerSecond": 88.3333333333,
+      "nominal45SecondBackgroundSql": 3975,
+      "nominal1800SecondBackgroundSql": 159000,
+      "remainingAfterNominalGlobalBackground": 41000,
+      "reason": "Only healthy background nominal model retained from CP020; no exact full SQL program ledger or latency proof."
+    },
+    "http": {
+      "limit": 300,
+      "status": "NOT VERIFIED",
+      "reason": "Closed whole-run HTTP plan is not yet enumerated; lifecycle variant evidence is still being integrated."
+    },
+    "time": {
+      "caseSeconds": 45,
+      "globalSeconds": 1800,
+      "status": "NOT VERIFIED",
+      "reason": "Grouped variants cannot reset first-charge time. Static counted artifacts already prevent entry; disk throughput and actual phase latency remain unproven."
+    },
+    "disk": {
+      "targetLimitBytes": 2147483648,
+      "metadataReserveBytes": 4194304,
+      "datasetMultiplesBeforeNegatives": 6,
+      "datasetMultiplesAfterFiveRetainedNegatives": 11,
+      "approxMaxDatasetMiBBeforeMetadata": 185.8181818181818,
+      "status": "NOT VERIFIED",
+      "reason": "Root must measure post-runtime retained variants + all metadata and verify the sealed footprint; no current dataset was read."
+    }
+  },
+  "scope": "Implementation QA within existing caps; no new cap approval requested. Failing lower bound blocks resource entry, not independent local implementation.",
+  "modelCorrections": [
+    "The first internal draft selected alphabetical keys from canonical bundle cloning; before delivery, phase order was corrected to the real exported TARGET_PHASES. Only this corrected result is asserted.",
+    "The first subtotal was1945, not greater than2000; the delivered FAIL includes independently required SOURCE bootstrap journal28, SOURCE run-job minimum27 and target segmented configs20, producing2020. No unsupported extra is used."
+  ],
+  "expandedConservativePlan": {
+    "status": "FAIL",
+    "baseLowerBound": 2020,
+    "additionalComponents": [
+      {
+        "id": "source-bootstrap-config-jobs",
+        "count": 27,
+        "formula": "9 source-config jobs * 3 Root files; these are separate from 9 atomic source jobs already counted",
+        "source": "host.py:source_config/source_phase"
+      },
+      {
+        "id": "source-bootstrap-templates-plan-result",
+        "count": 36,
+        "formula": "9 templates + 9 fresh atomic invocation files + 9 selected plans + 9 run receipts",
+        "source": "source-config.mjs/main + runtime-driver.mjs/source-phase + host.py:source_phase"
+      },
+      {
+        "id": "source-bootstrap-journal-locks",
+        "count": 9,
+        "formula": "At least one journal lock publication per each of 9 atomic source jobs; initial journal log extra excluded",
+        "source": "stage-journal.js/openStageJournal"
+      },
+      {
+        "id": "source-prepare-fixtures",
+        "count": 12,
+        "formula": "3 prepare jobs * (Root created/output/end3 + published source-stage fixture1)",
+        "source": "host.py:prepare + prepare.mjs:main"
+      },
+      {
+        "id": "initial-custody-tls-config",
+        "count": 38,
+        "formula": "4 ledger/owners/preflight + 6 material/master/ref/alias/job files + 28 source/target TLS/config/compose files",
+        "source": "host.py:bootstrap/material/configs"
+      },
+      {
+        "id": "target-assembly-minimum",
+        "count": 50,
+        "formula": "5 assemble jobs * (Root job3 + input config1 + host prepare receipt1 + material/capture2 + header/index/chunk minimum3)",
+        "source": "target-host.py:target_prepare + target-prepare.mjs + target-bundle-io.mjs"
+      },
+      {
+        "id": "postgres-custody-and-end",
+        "count": 22,
+        "formula": "Main PG reference+SID2; 5 variant PGs each provider ref, bridge PG ref, SID and stop receipt4",
+        "source": "target-host.py:target_pg_start + target-variant-host.py:register_service/stop_pg"
+      },
+      {
+        "id": "runtime-service-references-inventories",
+        "count": 49,
+        "formula": "17 main/variant standard service refs + 13 provider variant service refs + 18 immutable/current inventory writes + main runtime directory1",
+        "source": "target-host.py:runtime_start/publish_inventory + target-variant-host.py:create_service"
+      },
+      {
+        "id": "target-stop-end-minimum",
+        "count": 35,
+        "formula": "5 programmed target service cohorts * (stop immutable/current2 + end input1 + Root job3 + Node END pair1)",
+        "source": "target-lifecycle.py:stop_runtime/target_end + target-end.mjs"
+      },
+      {
+        "id": "empty-readiness-minimum",
+        "count": 26,
+        "formula": "4 bounded readiness jobs * Root3 + 4 job inputs + 3 segmented configs + prepared/completed/clock proof3 + 4 empty service refs",
+        "source": "target-readiness-host.py + readiness-variant.mjs + target-variant-host.py"
+      },
+      {
+        "id": "main-http-acceptance",
+        "count": 12,
+        "formula": "3 target acceptance modes * (Root job3 + report1)",
+        "source": "target-host.py:acceptance + acceptance.mjs"
+      },
+      {
+        "id": "browser-known-artifact-reservations",
+        "count": 6,
+        "formula": "browser-login1 + browser-replay5; other screenshot/report artifacts excluded",
+        "source": "host.py:BROWSER_CAPS/browser_gate"
+      },
+      {
+        "id": "copy-and-journal-negatives-minimum",
+        "count": 17,
+        "formula": "Copy-negative cfg1, Root job3, plans5, report1, footprint1; journal-negative cfg1, Root job3, plan1, report1",
+        "source": "host.py:copy_negatives/journal_negatives + copy-negatives.mjs/journal-negatives.mjs"
+      },
+      {
+        "id": "main-abort-three-phases",
+        "count": 55,
+        "formula": "7 extra effects*4 journal artifacts28; 3 jobs*3 Root files9; 3 stable+3 invocation configs6; 3 locks; 3 receipts; 6 initial mailboxes",
+        "source": "target-config.mjs abort phases + target-host.py:phase + target-runtime.mjs"
+      }
+    ],
+    "totalWithoutWatchSamples": 2414,
+    "excess": 414,
+    "remainingOmissions": [
+      "SOURCE final four phases, their journals/plans/outputs and runtime live fixture/end",
+      "Initial main offline-copy job/config/mailbox/result/index/FIN verification tools",
+      "Main clock restart choice/config/owner/delete/current/inventory/proof/second stop-end",
+      "Commit fault draft/context/occurrence/probe/reconcile/failed-end extra files beyond one extra Root job already counted",
+      "All target variant HTTP plan/inventory aliases and their mode-specific end reports",
+      "All additional variant aborts beyond the mandatory main abort",
+      "SOURCE and TARGET SQL schema/credential/security probes outside basic bootstrap",
+      "Every ongoing mailbox publication after the first two, and browser artifacts above six reservations",
+      "Any recoverable failure/retry beyond the single ACK interruption"
+    ]
+  },
+  "optimizationAssessment": {
+    "runtimeDependencyTestExampleCandidates": 53,
+    "candidatePaths": [
+      "server/saas/node_modules/bcryptjs/tests/quickbrown.txt",
+      "server/saas/node_modules/bcryptjs/tests/suite.js",
+      "server/saas/node_modules/call-bind-apply-helpers/test/index.js",
+      "server/saas/node_modules/call-bound/test/index.js",
+      "server/saas/node_modules/dunder-proto/test/get.js",
+      "server/saas/node_modules/dunder-proto/test/index.js",
+      "server/saas/node_modules/dunder-proto/test/set.js",
+      "server/saas/node_modules/es-define-property/test/index.js",
+      "server/saas/node_modules/es-errors/test/index.js",
+      "server/saas/node_modules/es-object-atoms/test/index.js",
+      "server/saas/node_modules/function-bind/test/index.js",
+      "server/saas/node_modules/get-intrinsic/test/GetIntrinsic.js",
+      "server/saas/node_modules/get-proto/test/index.js",
+      "server/saas/node_modules/gopd/test/index.js",
+      "server/saas/node_modules/has-symbols/test/index.js",
+      "server/saas/node_modules/has-symbols/test/shams/core-js.js",
+      "server/saas/node_modules/has-symbols/test/shams/get-own-property-symbols.js",
+      "server/saas/node_modules/has-symbols/test/tests.js",
+      "server/saas/node_modules/math-intrinsics/test/index.js",
+      "server/saas/node_modules/object-inspect/example/all.js",
+      "server/saas/node_modules/object-inspect/example/circular.js",
+      "server/saas/node_modules/object-inspect/example/fn.js",
+      "server/saas/node_modules/object-inspect/example/inspect.js",
+      "server/saas/node_modules/object-inspect/test/bigint.js",
+      "server/saas/node_modules/object-inspect/test/browser/dom.js",
+      "server/saas/node_modules/object-inspect/test/circular.js",
+      "server/saas/node_modules/object-inspect/test/deep.js",
+      "server/saas/node_modules/object-inspect/test/element.js",
+      "server/saas/node_modules/object-inspect/test/err.js",
+      "server/saas/node_modules/object-inspect/test/fakes.js",
+      "server/saas/node_modules/object-inspect/test/fn.js",
+      "server/saas/node_modules/object-inspect/test/global.js",
+      "server/saas/node_modules/object-inspect/test/has.js",
+      "server/saas/node_modules/object-inspect/test/holes.js",
+      "server/saas/node_modules/object-inspect/test/indent-option.js",
+      "server/saas/node_modules/object-inspect/test/inspect.js",
+      "server/saas/node_modules/object-inspect/test/lowbyte.js",
+      "server/saas/node_modules/object-inspect/test/number.js",
+      "server/saas/node_modules/object-inspect/test/quoteStyle.js",
+      "server/saas/node_modules/object-inspect/test/toStringTag.js",
+      "server/saas/node_modules/object-inspect/test/undef.js",
+      "server/saas/node_modules/object-inspect/test/values.js",
+      "server/saas/node_modules/pg-types/test/index.js",
+      "server/saas/node_modules/pg-types/test/types.js",
+      "server/saas/node_modules/qs/test/empty-keys-cases.js",
+      "server/saas/node_modules/qs/test/parse.js",
+      "server/saas/node_modules/qs/test/stringify.js",
+      "server/saas/node_modules/qs/test/utils.js",
+      "server/saas/node_modules/setprototypeof/test/index.js",
+      "server/saas/node_modules/side-channel-list/test/index.js",
+      "server/saas/node_modules/side-channel-map/test/index.js",
+      "server/saas/node_modules/side-channel-weakmap/test/index.js",
+      "server/saas/node_modules/side-channel/test/index.js"
+    ],
+    "closureAndExportVerificationRequired": true,
+    "licenseLockRemovalAuthorized": false,
+    "phaseFirstInvocationReuseMaxSavings": 39,
+    "directoryChargesCurrent": 96,
+    "directoryChargeRemovalApplied": false,
+    "afterPruneAndPhaseReuseLowerBound": 2322,
+    "afterAlsoRemovingAllDirectoryChargesHypothetically": 2226,
+    "conclusion": "Excluding fewer than50 files and reusing39 first invocation configs does not close even this incomplete lower bound; ordinary watch publications add further real charges."
+  },
+  "timeRisk": {
+    "mailboxPeriodSeconds": 0.5,
+    "baselineMandatoryPhaseJobs": 45,
+    "maximumSharedRunSeconds": 1800,
+    "mailboxSamplesAtMaximumDurationIllustration": 3600,
+    "note": "Cadence-times-duration illustration only, not a formal upper bound or predicted runtime. Per-job interval rounding, initial publications and other producers need a closed inventory. Actual wall time and each actor share one1800s clock. No hiding of sampled publications is proposed."
+  }
+}

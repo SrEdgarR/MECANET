@@ -1,0 +1,1186 @@
+{
+  "schema": "cp021-remote-run-v1",
+  "sourceSha": "7f5986f01c1cce8c35ba3e9635d9001523da0bc8",
+  "startedAt": "2026-10-15T15:17:39.660Z",
+  "completedAt": "2026-10-15T15:18:03.275Z",
+  "status": "FAIL",
+  "failure": "CP019_RESOURCE_ABORT",
+  "events": [
+    {
+      "name": "preflight",
+      "at": "2026-10-15T15:17:42.096Z",
+      "elapsedMs": 2434,
+      "resultHash": "707acbea4bc200689602693b7fb945777517dcf57cc976743b3681367c24978f",
+      "resultBody": "PRIVATE / OMITTED",
+      "acceptance": "NOT VERIFIED"
+    },
+    {
+      "name": "bootstrap",
+      "at": "2026-10-15T15:17:44.610Z",
+      "elapsedMs": 2514,
+      "resultHash": "a97472a5353540c8cc281799cb3f0239ccd0bdf32176a510f881a1369d867ac4",
+      "resultBody": "PRIVATE / OMITTED",
+      "acceptance": "NOT VERIFIED"
+    },
+    {
+      "name": "stage",
+      "at": "2026-10-15T15:17:44.980Z",
+      "elapsedMs": 370,
+      "resultHash": "8f35a3dbd64b22dca14939ed0302e79923d004b699afdace08ce35fa91db5c06",
+      "resultBody": "PRIVATE / OMITTED",
+      "acceptance": "NOT VERIFIED"
+    },
+    {
+      "name": "material",
+      "at": "2026-10-15T15:17:50.138Z",
+      "elapsedMs": 5157,
+      "resultHash": "b12adfaa903e14e7282e4e4a903952ff41dcf2a5a27fc10d4b0b5ac22e327e52",
+      "resultBody": "PRIVATE / OMITTED",
+      "acceptance": "NOT VERIFIED"
+    },
+    {
+      "name": "configs",
+      "at": "2026-10-15T15:17:50.478Z",
+      "elapsedMs": 340,
+      "resultHash": "c5c5e34daabcd805ec2679b6aaea4b1a9d0ce5ff5c56089c090d362131e8a2fa",
+      "resultBody": "PRIVATE / OMITTED",
+      "acceptance": "NOT VERIFIED"
+    },
+    {
+      "name": "source-pg-start",
+      "at": "2026-10-15T15:17:59.791Z",
+      "elapsedMs": 9313,
+      "resultHash": "9a94871f918aae38c005a8695866dfcd56fbff59f26467ee636513179fcf3649",
+      "resultBody": "PRIVATE / OMITTED",
+      "acceptance": "NOT VERIFIED"
+    },
+    {
+      "name": "cleanup",
+      "at": "2026-10-15T15:18:03.274Z",
+      "elapsedMs": 1017,
+      "resultHash": "99c2ef546522e00d2d87dedf42acfc5cf1885ecdcbe458bb2ca10e0b44d41b0a",
+      "resultBody": "PRIVATE / OMITTED",
+      "acceptance": "NOT VERIFIED"
+    }
+  ],
+  "cleanup": {
+    "result": "PASS",
+    "ownStopped": 1,
+    "unknownContainers": [],
+    "remainingOwnContainers": [],
+    "stopFailed": false,
+    "otherConsumersPreserved": 28,
+    "preflightConsumersPreserved": true,
+    "dataCopiesJournalMaterial": "KEEP PRIVATE",
+    "publicPortsCreated": false
+  },
+  "ledger": {
+    "activeScenarios": {
+      "source-window": "source-runtime-start",
+      "target-window": "target-runtime-start"
+    },
+    "plannedScenarios": {
+      "browser-denials": {
+        "artifactFiles": 2000,
+        "http": 80,
+        "journal": 1000,
+        "sql": 8192
+      },
+      "browser-history": {
+        "artifactFiles": 2000,
+        "http": 80,
+        "journal": 1000,
+        "sql": 8192
+      },
+      "browser-login": {
+        "artifactFiles": 2000,
+        "http": 80,
+        "journal": 1000,
+        "sql": 8192
+      },
+      "browser-product": {
+        "artifactFiles": 2000,
+        "http": 80,
+        "journal": 1000,
+        "sql": 8192
+      },
+      "browser-receipt": {
+        "artifactFiles": 2000,
+        "http": 80,
+        "journal": 1000,
+        "sql": 8192
+      },
+      "browser-reload": {
+        "artifactFiles": 2000,
+        "http": 80,
+        "journal": 1000,
+        "sql": 8192
+      },
+      "browser-replay": {
+        "artifactFiles": 2000,
+        "http": 80,
+        "journal": 1000,
+        "sql": 8192
+      },
+      "cleanup": {
+        "artifactFiles": 2000,
+        "http": 80,
+        "journal": 1000,
+        "sql": 8192
+      },
+      "copy-negative-extra": {
+        "artifactFiles": 2000,
+        "http": 80,
+        "journal": 1000,
+        "sql": 8192
+      },
+      "copy-negative-hardlink": {
+        "artifactFiles": 2000,
+        "http": 80,
+        "journal": 1000,
+        "sql": 8192
+      },
+      "copy-negative-hash": {
+        "artifactFiles": 2000,
+        "http": 80,
+        "journal": 1000,
+        "sql": 8192
+      },
+      "copy-negative-missing": {
+        "artifactFiles": 2000,
+        "http": 80,
+        "journal": 1000,
+        "sql": 8192
+      },
+      "copy-negative-symlink": {
+        "artifactFiles": 2000,
+        "http": 80,
+        "journal": 1000,
+        "sql": 8192
+      },
+      "copy-negatives-env": {
+        "artifactFiles": 2000,
+        "http": 80,
+        "journal": 1000,
+        "sql": 8192
+      },
+      "copy-offline": {
+        "artifactFiles": 2000,
+        "http": 80,
+        "journal": 1000,
+        "sql": 8192
+      },
+      "copy-verify": {
+        "artifactFiles": 2000,
+        "http": 80,
+        "journal": 1000,
+        "sql": 8192
+      },
+      "host-bootstrap": {
+        "artifactFiles": 2000,
+        "http": 80,
+        "journal": 1000,
+        "sql": 8192
+      },
+      "host-config-source": {
+        "artifactFiles": 2000,
+        "http": 80,
+        "journal": 1000,
+        "sql": 8192
+      },
+      "host-config-target": {
+        "artifactFiles": 2000,
+        "http": 80,
+        "journal": 1000,
+        "sql": 8192
+      },
+      "host-material": {
+        "artifactFiles": 2000,
+        "http": 80,
+        "journal": 1000,
+        "sql": 8192
+      },
+      "host-pg-start": {
+        "artifactFiles": 2000,
+        "http": 80,
+        "journal": 1000,
+        "sql": 8192
+      },
+      "host-stage": {
+        "artifactFiles": 2000,
+        "http": 80,
+        "journal": 1000,
+        "sql": 8192
+      },
+      "journal-negatives": {
+        "artifactFiles": 2000,
+        "http": 80,
+        "journal": 1000,
+        "sql": 8192
+      },
+      "journal-negatives-env": {
+        "artifactFiles": 2000,
+        "http": 80,
+        "journal": 1000,
+        "sql": 8192
+      },
+      "journal-reconcile": {
+        "artifactFiles": 2000,
+        "http": 80,
+        "journal": 1000,
+        "sql": 8192
+      },
+      "manifest-final": {
+        "artifactFiles": 2000,
+        "http": 80,
+        "journal": 1000,
+        "sql": 8192
+      },
+      "prepare-correctives": {
+        "artifactFiles": 2000,
+        "http": 80,
+        "journal": 1000,
+        "sql": 8192
+      },
+      "prepare-foundation": {
+        "artifactFiles": 2000,
+        "http": 80,
+        "journal": 1000,
+        "sql": 8192
+      },
+      "prepare-writers": {
+        "artifactFiles": 2000,
+        "http": 80,
+        "journal": 1000,
+        "sql": 8192
+      },
+      "ready-allclosed": {
+        "artifactFiles": 2000,
+        "http": 80,
+        "journal": 1000,
+        "sql": 8192
+      },
+      "ready-empty": {
+        "artifactFiles": 2000,
+        "http": 80,
+        "journal": 1000,
+        "sql": 8192
+      },
+      "source-capture": {
+        "artifactFiles": 2000,
+        "http": 80,
+        "journal": 1000,
+        "sql": 8192
+      },
+      "source-clock-ack": {
+        "artifactFiles": 2000,
+        "http": 80,
+        "journal": 1000,
+        "sql": 8192
+      },
+      "source-clock-budget": {
+        "artifactFiles": 2000,
+        "http": 80,
+        "journal": 1000,
+        "sql": 8192
+      },
+      "source-clock-plan": {
+        "artifactFiles": 2000,
+        "http": 80,
+        "journal": 1000,
+        "sql": 8192
+      },
+      "source-clock-restart-plan": {
+        "artifactFiles": 2000,
+        "http": 80,
+        "journal": 1000,
+        "sql": 8192
+      },
+      "source-clock-restart-record": {
+        "artifactFiles": 2000,
+        "http": 80,
+        "journal": 1000,
+        "sql": 8192
+      },
+      "source-close-admission": {
+        "artifactFiles": 2000,
+        "http": 80,
+        "journal": 1000,
+        "sql": 8192
+      },
+      "source-close-b": {
+        "artifactFiles": 2000,
+        "http": 80,
+        "journal": 1000,
+        "sql": 8192
+      },
+      "source-close-restore": {
+        "artifactFiles": 2000,
+        "http": 80,
+        "journal": 1000,
+        "sql": 8192
+      },
+      "source-closed-canary": {
+        "artifactFiles": 2000,
+        "http": 80,
+        "journal": 1000,
+        "sql": 8192
+      },
+      "source-copy-checkpoint": {
+        "artifactFiles": 2000,
+        "http": 80,
+        "journal": 1000,
+        "sql": 8192
+      },
+      "source-env": {
+        "artifactFiles": 2000,
+        "http": 80,
+        "journal": 1000,
+        "sql": 8192
+      },
+      "source-initialize-a": {
+        "artifactFiles": 2000,
+        "http": 80,
+        "journal": 1000,
+        "sql": 8192
+      },
+      "source-initialize-b": {
+        "artifactFiles": 2000,
+        "http": 80,
+        "journal": 1000,
+        "sql": 8192
+      },
+      "source-initialize-control": {
+        "artifactFiles": 2000,
+        "http": 80,
+        "journal": 1000,
+        "sql": 8192
+      },
+      "source-login": {
+        "artifactFiles": 2000,
+        "http": 80,
+        "journal": 1000,
+        "sql": 8192
+      },
+      "source-migrate-a": {
+        "artifactFiles": 2000,
+        "http": 80,
+        "journal": 1000,
+        "sql": 8192
+      },
+      "source-migrate-b": {
+        "artifactFiles": 2000,
+        "http": 80,
+        "journal": 1000,
+        "sql": 8192
+      },
+      "source-migrate-central": {
+        "artifactFiles": 2000,
+        "http": 80,
+        "journal": 1000,
+        "sql": 8192
+      },
+      "source-product-1": {
+        "artifactFiles": 2000,
+        "http": 80,
+        "journal": 1000,
+        "sql": 8192
+      },
+      "source-product-2": {
+        "artifactFiles": 2000,
+        "http": 80,
+        "journal": 1000,
+        "sql": 8192
+      },
+      "source-product-3": {
+        "artifactFiles": 2000,
+        "http": 80,
+        "journal": 1000,
+        "sql": 8192
+      },
+      "source-product-4": {
+        "artifactFiles": 2000,
+        "http": 80,
+        "journal": 1000,
+        "sql": 8192
+      },
+      "source-receipt-1": {
+        "artifactFiles": 2000,
+        "http": 80,
+        "journal": 1000,
+        "sql": 8192
+      },
+      "source-receipt-2": {
+        "artifactFiles": 2000,
+        "http": 80,
+        "journal": 1000,
+        "sql": 8192
+      },
+      "source-replay": {
+        "artifactFiles": 2000,
+        "http": 80,
+        "journal": 1000,
+        "sql": 8192
+      },
+      "source-runtime-start": {
+        "artifactFiles": 2000,
+        "http": 80,
+        "journal": 1000,
+        "sql": 8192
+      },
+      "source-schema-probe": {
+        "artifactFiles": 2000,
+        "http": 80,
+        "journal": 1000,
+        "sql": 8192
+      },
+      "source-schema-probe-post": {
+        "artifactFiles": 2000,
+        "http": 80,
+        "journal": 1000,
+        "sql": 8192
+      },
+      "source-schema-probe-pre": {
+        "artifactFiles": 2000,
+        "http": 80,
+        "journal": 1000,
+        "sql": 8192
+      },
+      "source-shutdown-postcanary": {
+        "artifactFiles": 2000,
+        "http": 80,
+        "journal": 1000,
+        "sql": 8192
+      },
+      "source-shutdown-precopy": {
+        "artifactFiles": 2000,
+        "http": 80,
+        "journal": 1000,
+        "sql": 8192
+      },
+      "source-verify": {
+        "artifactFiles": 2000,
+        "http": 80,
+        "journal": 1000,
+        "sql": 8192
+      },
+      "sql-probe": {
+        "artifactFiles": 2000,
+        "http": 80,
+        "journal": 1000,
+        "sql": 8192
+      },
+      "target-a5-action": {
+        "artifactFiles": 2000,
+        "http": 80,
+        "journal": 1000,
+        "sql": 8192
+      },
+      "target-a5-actor": {
+        "artifactFiles": 2000,
+        "http": 80,
+        "journal": 1000,
+        "sql": 8192
+      },
+      "target-a5-body": {
+        "artifactFiles": 2000,
+        "http": 80,
+        "journal": 1000,
+        "sql": 8192
+      },
+      "target-a5-epoch": {
+        "artifactFiles": 2000,
+        "http": 80,
+        "journal": 1000,
+        "sql": 8192
+      },
+      "target-a5-login": {
+        "artifactFiles": 2000,
+        "http": 80,
+        "journal": 1000,
+        "sql": 8192
+      },
+      "target-a5-product": {
+        "artifactFiles": 2000,
+        "http": 80,
+        "journal": 1000,
+        "sql": 8192
+      },
+      "target-abort-close": {
+        "artifactFiles": 2000,
+        "http": 80,
+        "journal": 1000,
+        "sql": 8192
+      },
+      "target-abort-finish": {
+        "artifactFiles": 2000,
+        "http": 80,
+        "journal": 1000,
+        "sql": 8192
+      },
+      "target-abort-local": {
+        "artifactFiles": 2000,
+        "http": 80,
+        "journal": 1000,
+        "sql": 8192
+      },
+      "target-activation": {
+        "artifactFiles": 2000,
+        "http": 80,
+        "journal": 1000,
+        "sql": 8192
+      },
+      "target-begin-enroll": {
+        "artifactFiles": 2000,
+        "http": 80,
+        "journal": 1000,
+        "sql": 8192
+      },
+      "target-business-start": {
+        "artifactFiles": 2000,
+        "http": 80,
+        "journal": 1000,
+        "sql": 8192
+      },
+      "target-canary": {
+        "artifactFiles": 2000,
+        "http": 80,
+        "journal": 1000,
+        "sql": 8192
+      },
+      "target-clock-plan": {
+        "artifactFiles": 2000,
+        "http": 80,
+        "journal": 1000,
+        "sql": 8192
+      },
+      "target-clock-restart-plan": {
+        "artifactFiles": 2000,
+        "http": 80,
+        "journal": 1000,
+        "sql": 8192
+      },
+      "target-clock-restart-record": {
+        "artifactFiles": 2000,
+        "http": 80,
+        "journal": 1000,
+        "sql": 8192
+      },
+      "target-commit-fault": {
+        "artifactFiles": 2000,
+        "http": 80,
+        "journal": 1000,
+        "sql": 8192
+      },
+      "target-configure": {
+        "artifactFiles": 2000,
+        "http": 80,
+        "journal": 1000,
+        "sql": 8192
+      },
+      "target-cost-probe": {
+        "artifactFiles": 2000,
+        "http": 80,
+        "journal": 1000,
+        "sql": 8192
+      },
+      "target-credential-negatives": {
+        "artifactFiles": 2000,
+        "http": 80,
+        "journal": 1000,
+        "sql": 8192
+      },
+      "target-end-initial": {
+        "artifactFiles": 2000,
+        "http": 80,
+        "journal": 1000,
+        "sql": 8192
+      },
+      "target-end-prefix": {
+        "artifactFiles": 2000,
+        "http": 80,
+        "journal": 1000,
+        "sql": 8192
+      },
+      "target-end-restarted": {
+        "artifactFiles": 2000,
+        "http": 80,
+        "journal": 1000,
+        "sql": 8192
+      },
+      "target-history-env": {
+        "artifactFiles": 2000,
+        "http": 80,
+        "journal": 1000,
+        "sql": 8192
+      },
+      "target-history-hash-post": {
+        "artifactFiles": 2000,
+        "http": 80,
+        "journal": 1000,
+        "sql": 8192
+      },
+      "target-history-login-x": {
+        "artifactFiles": 2000,
+        "http": 80,
+        "journal": 1000,
+        "sql": 8192
+      },
+      "target-history-login-y": {
+        "artifactFiles": 2000,
+        "http": 80,
+        "journal": 1000,
+        "sql": 8192
+      },
+      "target-history-old-post": {
+        "artifactFiles": 2000,
+        "http": 80,
+        "journal": 1000,
+        "sql": 8192
+      },
+      "target-history-read-1": {
+        "artifactFiles": 2000,
+        "http": 80,
+        "journal": 1000,
+        "sql": 8192
+      },
+      "target-history-read-2": {
+        "artifactFiles": 2000,
+        "http": 80,
+        "journal": 1000,
+        "sql": 8192
+      },
+      "target-history-read-3": {
+        "artifactFiles": 2000,
+        "http": 80,
+        "journal": 1000,
+        "sql": 8192
+      },
+      "target-history-read-4": {
+        "artifactFiles": 2000,
+        "http": 80,
+        "journal": 1000,
+        "sql": 8192
+      },
+      "target-history-read-5": {
+        "artifactFiles": 2000,
+        "http": 80,
+        "journal": 1000,
+        "sql": 8192
+      },
+      "target-history-read-6": {
+        "artifactFiles": 2000,
+        "http": 80,
+        "journal": 1000,
+        "sql": 8192
+      },
+      "target-history-verify": {
+        "artifactFiles": 2000,
+        "http": 80,
+        "journal": 1000,
+        "sql": 8192
+      },
+      "target-history-y-read-1": {
+        "artifactFiles": 2000,
+        "http": 80,
+        "journal": 1000,
+        "sql": 8192
+      },
+      "target-history-y-read-2": {
+        "artifactFiles": 2000,
+        "http": 80,
+        "journal": 1000,
+        "sql": 8192
+      },
+      "target-negatives-demo-get": {
+        "artifactFiles": 2000,
+        "http": 80,
+        "journal": 1000,
+        "sql": 8192
+      },
+      "target-negatives-demo-login": {
+        "artifactFiles": 2000,
+        "http": 80,
+        "journal": 1000,
+        "sql": 8192
+      },
+      "target-negatives-demo-post": {
+        "artifactFiles": 2000,
+        "http": 80,
+        "journal": 1000,
+        "sql": 8192
+      },
+      "target-negatives-env": {
+        "artifactFiles": 2000,
+        "http": 80,
+        "journal": 1000,
+        "sql": 8192
+      },
+      "target-negatives-foreign-b": {
+        "artifactFiles": 2000,
+        "http": 80,
+        "journal": 1000,
+        "sql": 8192
+      },
+      "target-negatives-login-x": {
+        "artifactFiles": 2000,
+        "http": 80,
+        "journal": 1000,
+        "sql": 8192
+      },
+      "target-negatives-old-cookie": {
+        "artifactFiles": 2000,
+        "http": 80,
+        "journal": 1000,
+        "sql": 8192
+      },
+      "target-negatives-operator-get": {
+        "artifactFiles": 2000,
+        "http": 80,
+        "journal": 1000,
+        "sql": 8192
+      },
+      "target-negatives-operator-login": {
+        "artifactFiles": 2000,
+        "http": 80,
+        "journal": 1000,
+        "sql": 8192
+      },
+      "target-negatives-operator-post": {
+        "artifactFiles": 2000,
+        "http": 80,
+        "journal": 1000,
+        "sql": 8192
+      },
+      "target-negatives-verify": {
+        "artifactFiles": 2000,
+        "http": 80,
+        "journal": 1000,
+        "sql": 8192
+      },
+      "target-pg-start": {
+        "artifactFiles": 2000,
+        "http": 80,
+        "journal": 1000,
+        "sql": 8192
+      },
+      "target-post-worker-verify": {
+        "artifactFiles": 2000,
+        "http": 80,
+        "journal": 1000,
+        "sql": 8192
+      },
+      "target-promote-fault": {
+        "artifactFiles": 2000,
+        "http": 80,
+        "journal": 1000,
+        "sql": 8192
+      },
+      "target-promotion": {
+        "artifactFiles": 2000,
+        "http": 80,
+        "journal": 1000,
+        "sql": 8192
+      },
+      "target-rotate": {
+        "artifactFiles": 2000,
+        "http": 80,
+        "journal": 1000,
+        "sql": 8192
+      },
+      "target-runtime-start": {
+        "artifactFiles": 2000,
+        "http": 80,
+        "journal": 1000,
+        "sql": 8192
+      },
+      "target-stop-initial": {
+        "artifactFiles": 2000,
+        "http": 80,
+        "journal": 1000,
+        "sql": 8192
+      },
+      "target-stop-prefix": {
+        "artifactFiles": 2000,
+        "http": 80,
+        "journal": 1000,
+        "sql": 8192
+      },
+      "target-stop-restarted": {
+        "artifactFiles": 2000,
+        "http": 80,
+        "journal": 1000,
+        "sql": 8192
+      },
+      "target-worker-start": {
+        "artifactFiles": 2000,
+        "http": 80,
+        "journal": 1000,
+        "sql": 8192
+      },
+      "target-write-create": {
+        "artifactFiles": 2000,
+        "http": 80,
+        "journal": 1000,
+        "sql": 8192
+      },
+      "target-write-create-replay": {
+        "artifactFiles": 2000,
+        "http": 80,
+        "journal": 1000,
+        "sql": 8192
+      },
+      "target-write-env": {
+        "artifactFiles": 2000,
+        "http": 80,
+        "journal": 1000,
+        "sql": 8192
+      },
+      "target-write-login-x": {
+        "artifactFiles": 2000,
+        "http": 80,
+        "journal": 1000,
+        "sql": 8192
+      },
+      "target-write-receipt-lost": {
+        "artifactFiles": 2000,
+        "http": 80,
+        "journal": 1000,
+        "sql": 8192
+      },
+      "target-write-receipt-replay": {
+        "artifactFiles": 2000,
+        "http": 80,
+        "journal": 1000,
+        "sql": 8192
+      },
+      "target-write-reload-query": {
+        "artifactFiles": 2000,
+        "http": 80,
+        "journal": 1000,
+        "sql": 8192
+      },
+      "target-write-resolve": {
+        "artifactFiles": 2000,
+        "http": 80,
+        "journal": 1000,
+        "sql": 8192
+      },
+      "target-write-verify": {
+        "artifactFiles": 2000,
+        "http": 80,
+        "journal": 1000,
+        "sql": 8192
+      },
+      "variant-a5-grant": {
+        "artifactFiles": 2000,
+        "http": 80,
+        "journal": 1000,
+        "sql": 8192
+      },
+      "variant-a5-identity": {
+        "artifactFiles": 2000,
+        "http": 80,
+        "journal": 1000,
+        "sql": 8192
+      },
+      "variant-a5-membership": {
+        "artifactFiles": 2000,
+        "http": 80,
+        "journal": 1000,
+        "sql": 8192
+      }
+    },
+    "plannedScopes": {
+      "browser-denials": "target-window",
+      "browser-history": "target-window",
+      "browser-login": "target-window",
+      "browser-product": "target-window",
+      "browser-receipt": "target-window",
+      "browser-reload": "target-window",
+      "browser-replay": "target-window",
+      "cleanup": "source-window",
+      "copy-negative-extra": "target-window",
+      "copy-negative-hardlink": "target-window",
+      "copy-negative-hash": "target-window",
+      "copy-negative-missing": "target-window",
+      "copy-negative-symlink": "target-window",
+      "copy-negatives-env": "target-window",
+      "copy-offline": "source-window",
+      "copy-verify": "source-window",
+      "host-bootstrap": "source-window",
+      "host-config-source": "source-window",
+      "host-config-target": "source-window",
+      "host-material": "source-window",
+      "host-pg-start": "source-window",
+      "host-stage": "source-window",
+      "journal-negatives": "target-window",
+      "journal-negatives-env": "target-window",
+      "journal-reconcile": "source-window",
+      "manifest-final": "source-window",
+      "prepare-correctives": "source-window",
+      "prepare-foundation": "source-window",
+      "prepare-writers": "source-window",
+      "ready-allclosed": "target-window",
+      "ready-empty": "target-window",
+      "source-capture": "source-window",
+      "source-clock-ack": "source-window",
+      "source-clock-budget": "source-window",
+      "source-clock-plan": "source-window",
+      "source-clock-restart-plan": "source-window",
+      "source-clock-restart-record": "source-window",
+      "source-close-admission": "source-window",
+      "source-close-b": "source-window",
+      "source-close-restore": "source-window",
+      "source-closed-canary": "source-window",
+      "source-copy-checkpoint": "source-window",
+      "source-env": "source-window",
+      "source-initialize-a": "source-window",
+      "source-initialize-b": "source-window",
+      "source-initialize-control": "source-window",
+      "source-login": "source-window",
+      "source-migrate-a": "source-window",
+      "source-migrate-b": "source-window",
+      "source-migrate-central": "source-window",
+      "source-product-1": "source-window",
+      "source-product-2": "source-window",
+      "source-product-3": "source-window",
+      "source-product-4": "source-window",
+      "source-receipt-1": "source-window",
+      "source-receipt-2": "source-window",
+      "source-replay": "source-window",
+      "source-runtime-start": "source-window",
+      "source-schema-probe": "source-window",
+      "source-schema-probe-post": "source-window",
+      "source-schema-probe-pre": "source-window",
+      "source-shutdown-postcanary": "source-window",
+      "source-shutdown-precopy": "source-window",
+      "source-verify": "source-window",
+      "sql-probe": "source-window",
+      "target-a5-action": "target-window",
+      "target-a5-actor": "target-window",
+      "target-a5-body": "target-window",
+      "target-a5-epoch": "target-window",
+      "target-a5-login": "target-window",
+      "target-a5-product": "target-window",
+      "target-abort-close": "target-window",
+      "target-abort-finish": "target-window",
+      "target-abort-local": "target-window",
+      "target-activation": "target-window",
+      "target-begin-enroll": "target-window",
+      "target-business-start": "target-window",
+      "target-canary": "target-window",
+      "target-clock-plan": "target-window",
+      "target-clock-restart-plan": "target-window",
+      "target-clock-restart-record": "target-window",
+      "target-commit-fault": "target-window",
+      "target-configure": "target-window",
+      "target-cost-probe": "target-window",
+      "target-credential-negatives": "target-window",
+      "target-end-initial": "target-window",
+      "target-end-prefix": "target-window",
+      "target-end-restarted": "target-window",
+      "target-history-env": "target-window",
+      "target-history-hash-post": "target-window",
+      "target-history-login-x": "target-window",
+      "target-history-login-y": "target-window",
+      "target-history-old-post": "target-window",
+      "target-history-read-1": "target-window",
+      "target-history-read-2": "target-window",
+      "target-history-read-3": "target-window",
+      "target-history-read-4": "target-window",
+      "target-history-read-5": "target-window",
+      "target-history-read-6": "target-window",
+      "target-history-verify": "target-window",
+      "target-history-y-read-1": "target-window",
+      "target-history-y-read-2": "target-window",
+      "target-negatives-demo-get": "target-window",
+      "target-negatives-demo-login": "target-window",
+      "target-negatives-demo-post": "target-window",
+      "target-negatives-env": "target-window",
+      "target-negatives-foreign-b": "target-window",
+      "target-negatives-login-x": "target-window",
+      "target-negatives-old-cookie": "target-window",
+      "target-negatives-operator-get": "target-window",
+      "target-negatives-operator-login": "target-window",
+      "target-negatives-operator-post": "target-window",
+      "target-negatives-verify": "target-window",
+      "target-pg-start": "target-window",
+      "target-post-worker-verify": "target-window",
+      "target-promote-fault": "target-window",
+      "target-promotion": "target-window",
+      "target-rotate": "target-window",
+      "target-runtime-start": "target-window",
+      "target-stop-initial": "target-window",
+      "target-stop-prefix": "target-window",
+      "target-stop-restarted": "target-window",
+      "target-worker-start": "target-window",
+      "target-write-create": "target-window",
+      "target-write-create-replay": "target-window",
+      "target-write-env": "target-window",
+      "target-write-login-x": "target-window",
+      "target-write-receipt-lost": "target-window",
+      "target-write-receipt-replay": "target-window",
+      "target-write-reload-query": "target-window",
+      "target-write-resolve": "target-window",
+      "target-write-verify": "target-window",
+      "variant-a5-grant": "target-window",
+      "variant-a5-identity": "target-window",
+      "variant-a5-membership": "target-window"
+    },
+    "project": "mecanet-qa-p1l3-r03",
+    "schema": "cp019-budget-v1",
+    "startedUptime": 1470388.38,
+    "sequence": 44,
+    "total": {
+      "artifactFiles": 639,
+      "http": 0,
+      "journal": 0,
+      "sql": 0
+    },
+    "scenarios": {
+      "host-bootstrap": {
+        "startedUptime": 1470388.39,
+        "limits": {
+          "artifactFiles": 2000,
+          "http": 80,
+          "journal": 1000,
+          "sql": 8192
+        },
+        "total": {
+          "artifactFiles": 4,
+          "http": 0,
+          "journal": 0,
+          "sql": 0
+        }
+      },
+      "host-stage": {
+        "startedUptime": 1470388.47,
+        "limits": {
+          "artifactFiles": 2000,
+          "http": 80,
+          "journal": 1000,
+          "sql": 8192
+        },
+        "total": {
+          "artifactFiles": 596,
+          "http": 0,
+          "journal": 0,
+          "sql": 0
+        }
+      },
+      "host-material": {
+        "startedUptime": 1470388.8,
+        "limits": {
+          "artifactFiles": 2000,
+          "http": 80,
+          "journal": 1000,
+          "sql": 8192
+        },
+        "total": {
+          "artifactFiles": 8,
+          "http": 0,
+          "journal": 0,
+          "sql": 0
+        }
+      },
+      "host-config-source": {
+        "startedUptime": 1470394.02,
+        "limits": {
+          "artifactFiles": 2000,
+          "http": 80,
+          "journal": 1000,
+          "sql": 8192
+        },
+        "total": {
+          "artifactFiles": 14,
+          "http": 0,
+          "journal": 0,
+          "sql": 0
+        }
+      },
+      "host-config-target": {
+        "startedUptime": 1470394.15,
+        "limits": {
+          "artifactFiles": 2000,
+          "http": 80,
+          "journal": 1000,
+          "sql": 8192
+        },
+        "total": {
+          "artifactFiles": 14,
+          "http": 0,
+          "journal": 0,
+          "sql": 0
+        }
+      },
+      "host-pg-start": {
+        "startedUptime": 1470397.27,
+        "limits": {
+          "artifactFiles": 2000,
+          "http": 80,
+          "journal": 1000,
+          "sql": 8192
+        },
+        "total": {
+          "artifactFiles": 3,
+          "http": 0,
+          "journal": 0,
+          "sql": 0
+        }
+      }
+    }
+  },
+  "secretsPrinted": false,
+  "sharedInfrastructureModified": false,
+  "extraVariants": "NOT VERIFIED",
+  "resourceMonitor": {
+    "schema": "cp021-resource-monitor-summary-v1",
+    "status": "FAIL",
+    "failed": true,
+    "error": "RESOURCE_CPU_LIMIT",
+    "samples": 10,
+    "cpuSamples": 8,
+    "sampleIntervalSeconds": 2,
+    "maxSampleSeconds": 0.291709,
+    "monitorCpuSeconds": 0.021876,
+    "monitorCpuScope": "RUSAGE_THREAD delta during samples; controller process CPU hard cap not established",
+    "controllerProcessCpuSeconds": 0.697666,
+    "controllerCpuScope": "RUSAGE_SELF start/stop delta, includes the controller and monitor; no hard cap",
+    "rootCpuHardCapVerified": false,
+    "maxHostCpuBusyPercent": 62.626,
+    "minimumAvailableMiB": 8303,
+    "minimumDiskFreeBytes": 140630716416,
+    "maxPostgresTcpConnections": 0,
+    "positivePostgresStopTransitions": 0,
+    "tcpScope": "ESTABLISHED local port 5432 sockets in exact PG PID network namespace; SQL and UNIX sessions not measured",
+    "observedOwnCids": 2,
+    "preservedForeignConsumers": 28,
+    "sqlPerPoll": 0,
+    "artifactsPerPoll": 0,
+    "containerFIN": "NOT VERIFIED",
+    "sqlFIN": "NOT VERIFIED"
+  },
+  "localBrowser": null,
+  "remoteProcessExitCode": 1,
+  "localProcessObservation": {
+    "remotePid": 14552,
+    "remoteExitCode": 1,
+    "remoteTransportEnd": "OBSERVED LOCAL CHILD EXIT",
+    "remoteControllerUncertain": false,
+    "remoteCleanup": {
+      "result": "PASS",
+      "ownStopped": 1,
+      "unknownContainers": [],
+      "remainingOwnContainers": [],
+      "stopFailed": false,
+      "otherConsumersPreserved": 28,
+      "preflightConsumersPreserved": true,
+      "dataCopiesJournalMaterial": "KEEP PRIVATE",
+      "publicPortsCreated": false
+    },
+    "localChildrenUnverified": 0
+  },
+  "remoteStatus": "FAIL",
+  "localFailure": "REMOTE_PROCESS_FAILED"
+}

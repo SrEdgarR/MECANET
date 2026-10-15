@@ -1,0 +1,34 @@
+{
+  "schema": "cp023-authority-v1",
+  "date": "2026-10-15",
+  "classification": "CONFIRMED",
+  "provenance": "DIRECT HUMAN MESSAGE CP-023 in current thread; not inferred from prior checkpoints",
+  "decision": "DEC-073 / SC-015 APPROVED",
+  "quotes": [
+    "Primero funcionalidad real → después integración completa → finalmente validación del entorno objetivo.",
+    "Autorizo preparar y, si es seguro, publicar una rama de verificación y un PR en borrador exclusivamente para CI, incluso si P1-L3 todavía no ha terminado.",
+    "No existe autorización para reiniciar r03, crear r04 ni cambiar límites temporales."
+  ],
+  "scope": {
+    "development": "isolated synthetic PostgreSQL18 outside VPS, productive components and two APIs, corrections under B",
+    "publication": "verification branch and draft CI PR only after known deployment mechanisms reviewed",
+    "merge": false,
+    "vpsConnection": false,
+    "production": false,
+    "p2Implementation": false,
+    "targetTemporalChange": false
+  },
+  "unchangedApprovals": [
+    "DEC-067",
+    "DEC-068",
+    "SC-011",
+    "SC-012",
+    "SC-013",
+    "SC-014"
+  ],
+  "pendingProposals": [
+    "SC-016 / DEC-074 finite target reentry",
+    "SC-017 / DEC-075 limited parallel POS order",
+    "P2-L1 A/B"
+  ]
+}

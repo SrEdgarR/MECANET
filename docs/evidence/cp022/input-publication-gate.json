@@ -1,0 +1,18 @@
+{
+  "at": "2026-10-15T15:16:46.562847+00:00",
+  "result": "PASS",
+  "scope": "fresh input-publication prerequisite, no QA runtime yet",
+  "priorContainers": 28,
+  "preserved27Original": true,
+  "allPriorQaInactive": true,
+  "r03RootsAndInputsAbsent": true,
+  "newSubnetOverlap": false,
+  "resources": {
+    "availableMiB": 8390,
+    "diskFreeBytes": 140688257024,
+    "cpuBusyPercent": 4.53,
+    "sampleSeconds": 2,
+    "generalCapacityVerified": false
+  },
+  "mutations": 0
+}

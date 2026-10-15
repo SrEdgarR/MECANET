@@ -5,6 +5,7 @@ import { createHash } from 'node:crypto';
 import { resolve, relative } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { spawnSync } from 'node:child_process';
+import { sourceFiles as saasSources } from './saas-toolchain.mjs';
 
 const root = fileURLToPath(new URL('../../', import.meta.url));
 const mode = process.argv[2];
@@ -31,6 +32,45 @@ const tests = [
   'tests/qa/cp017/quota-boundary.test.mjs',
   'tests/qa/cp017/quota-growth-boundary.test.mjs', 'tests/qa/cp017/claim-corrective.test.mjs', 'tests/qa/cp017/uncertain-retention.test.mjs', 'tests/qa/cp017/recovery-check.test.mjs',
   'tests/qa/read-abort-lifecycle.test.js', 'tests/qa/write-ticket-owner.test.js', 'tests/qa/post-response-diagnostic.test.js', 'tests/qa/read-rollback-lifecycle.test.js', 'tests/qa/cp017/read-closure.test.mjs', 'tests/qa/cp017/concurrency.unit.test.mjs', 'tests/qa/cp017/canonical-gap.unit.test.mjs',
+  'tests/qa/cp019/budget-plan.test.mjs',
+  'tests/qa/cp019/acceptance-observer.test.mjs',
+  'tests/qa/cp019/control.test.mjs',
+  'tests/qa/cp019/copy-offline.test.mjs',
+  'tests/qa/cp019/custody.test.mjs',
+  'tests/qa/cp019/fixture.test.mjs',
+  'tests/qa/cp019/ledger.test.mjs',
+  'tests/qa/cp019/prepare-contract.test.mjs',
+  'tests/qa/cp019/protocol.test.mjs',
+  'tests/qa/cp019/runtime.test.mjs',
+  'tests/qa/cp019/schema-check.test.mjs',
+  'tests/qa/cp019/source-driver.test.mjs',
+  'tests/qa/cp019/source-final.test.mjs',
+  'tests/qa/cp019/runtime-driver.test.mjs',
+  'tests/qa/cp019/sql-contract.test.mjs',
+  'tests/qa/cp019/stage-journal.test.mjs',
+  'tests/qa/cp019/target-driver.test.mjs',
+  'tests/qa/cp019/target-config.test.mjs',
+  'tests/qa/cp019/target-witness.test.mjs',
+  'tests/qa/cp019/target-prepare.test.mjs',
+  'tests/qa/cp019/target-restart.test.mjs',
+  'tests/qa/cp019/browser.test.mjs',
+  'tests/qa/cp019/browser-sql.test.mjs',
+  'tests/qa/cp019/target-end.test.mjs',
+  'tests/qa/cp019/target-runtime.test.mjs',
+  'tests/qa/cp019/target-bundle-io.test.mjs',
+  'tests/qa/cp019/clock-restart-plan.test.mjs',
+  'tests/qa/cp019/abort-prefix-plan.test.mjs',
+  'tests/qa/cp019/a5-negatives.test.mjs',
+  'tests/qa/cp019/copy-negatives.test.mjs',
+  'tests/qa/cp019/credential-probe.test.mjs',
+  'tests/qa/cp019/journal-negatives.test.mjs',
+  'tests/qa/cp019/runtime-budget.test.mjs',
+  'tests/qa/cp019/schema-fault-probe.test.mjs',
+  'tests/qa/cp019/target-variant-lineage.test.mjs',
+  'tests/qa/cp019/commit-fault-hook.test.mjs',
+  'tests/qa/cp019/commit-fault-probe.test.mjs',
+  'tests/qa/cp019/readiness-variant.test.mjs',
+  'tests/qa/cp019/promotion-barrier.test.mjs',
 ];
 
 // Allow only process support variables. No inherited DB URLs, session secrets,
@@ -86,6 +126,21 @@ switch (mode) {
     run(['scripts/ci/saas-toolchain.mjs', 'verify']);
     break;
   case 'assets': {
+    // CP019 changes lookup semantics within the approved L3 baseline. This is
+    // reproducible build provenance, not PostgreSQL/browser acceptance.
+    if(readdirSync(resolve(root,'docs/evidence/cp019')).includes('ui-canonical-assets.json')){
+      const build=JSON.parse(readFileSync(resolve(root,'docs/evidence/cp019/ui-canonical-assets.json'),'utf8'));
+      assert.equal(build.schema,'cp019-ui-epoch-build-v1');assert.equal(build.status,'PASS');assert.equal(build.secretOutput,false);
+      assert.equal(build.baselineSha256,'4d1cf193000106dd20555f6c70acab3cb264fd3a7bfe0a9cf8be662eddb2b3ec');
+      const sources=new Set([...saasSources,'scripts/ci/saas-toolchain/package.json','scripts/ci/saas-toolchain/package-lock.json']);
+      assert.equal(build.inputs.length,sources.size);
+      for(const input of build.inputs){assert.equal(sources.delete(input.source),true);assert.equal(createHash('sha256').update(readFileSync(resolve(root,input.source))).digest('hex'),input.sha256);}
+      assert.equal(sources.size,0);assert.equal(build.assets.length,3);
+      const files=new Set(['client/dist-saas/saas.html',...readdirSync(resolve(root,'client/dist-saas/assets')).map(n=>'client/dist-saas/assets/'+n)]);
+      assert.equal(files.size,3);
+      for(const entry of build.assets){assert.match(entry.path,/^client\/dist-saas\/(?:saas\.html|assets\/saas-[A-Za-z0-9_-]+\.(?:js|css))$/);assert.equal(files.delete(entry.path),true);const bytes=readFileSync(resolve(root,entry.path));assert.equal(bytes.length,entry.bytes);assert.equal(createHash('sha256').update(bytes).digest('hex'),entry.sha256);}
+      assert.equal(files.size,0);console.log('PASS: three L3 assets match the frozen build inputs; physical UI acceptance remains separate');break;
+    }
     // P1-L2 has new approved UI. F remains the immutable historical L1 oracle.
     if(readdirSync(resolve(root,'docs/evidence/cp017')).includes('accepted-ui-assets.json')){
       const accepted=JSON.parse(readFileSync(resolve(root,'docs/evidence/cp017/accepted-ui-assets.json'),'utf8'));

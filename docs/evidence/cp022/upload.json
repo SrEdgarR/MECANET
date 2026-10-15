@@ -1,0 +1,50 @@
+{
+  "schema": "cp022-upload-v1",
+  "sourceSha": "7f5986f01c1cce8c35ba3e9635d9001523da0bc8",
+  "planHash": "ca1f70ddcade223660a215e9b0b3db40e157ec9b752767b95ec141ae8db9e0c8",
+  "helpers": {
+    "browser-config.py": "fbaa269b87ed41f05b9642c042eeaa2c1a111ee020cadd6c2ec814270fff124a",
+    "budget-limits.json": "65cb46844d2b8a78250839ed14b25fca91561cfcdd7d46557ff5b98829f334c2",
+    "controller.py": "347734f44f889a754b547a7f161dc46011685f898882509d5c80f698feb3774c",
+    "host.py": "bcecffab7d9bfade1c4af46c32bf895dc87fba4ca923240450e6340489fcd725",
+    "resource-monitor.py": "e307c2d42269bc08c3c5ea793a1243c002e54db862c562dce38a37f8cb539680",
+    "run.py": "9af303e7e836fc126e5bfcea8aacc47aa9a785b1f618cbbf01bd89ed36fd2bd6",
+    "target-host.py": "1f064d8ee86e151004b48cea12266bbcbe8aaf61ca77a6d9ba44eaa52957f73b",
+    "target-lifecycle.py": "7063005f867c3fd23982751d361276c0535e137bf1d4ffb8270df8418e52efa4",
+    "target-readiness-host.py": "13b38fa0175a658a7e34021e27b6caab9f659a6bc5b216f54bd9f74140a059fc",
+    "target-variant-host.py": "0a8eba08123014432dd568579bc567fc0523f316e061d985e87a1e8e0461df09",
+    "tls_bundle.py": "897ef66d6e4b93873566156dcdc973cab3aedcf74438a77ac3390d1c690a9875"
+  },
+  "inputs": {
+    "result": "PASS",
+    "hashes": {
+      "controllers.tar": "aa090c8037f0a0c9f3118569d53174f28244696983672f3b5f7217536e1aac16",
+      "artifact.tar": "98623fa9a57e936fbbeee6bdce9d0f4375bc9a5412b36694ad3db9a82ad4b3f5",
+      "budget.json": "1f2b34b5bb93ae21a74f7d2af8a51bd3cb16d3ea7baa3b55a54481b5875f243c",
+      "tls.tar": "72713a0164e3a9a3688b3ae79633f37bafa91d4f90b9f5a6f4a0a73c4d6abbdc"
+    },
+    "helpers": 12,
+    "tlsFiles": 19,
+    "tlsProof": {
+      "schema": "cp019-tls-verification-v1",
+      "result": "PASS",
+      "manifestHash": "8e23b48c574af86fb4fad966eda2a7cb779e93cb5c975a4c22e696520e21b98c",
+      "projects": [
+        "mecanet-qa-p1l3-r03",
+        "mecanet-qa-p1l3-r03-target"
+      ],
+      "verifiedKeyPairs": 4,
+      "independentCAs": 2,
+      "networkUsed": false,
+      "secretOutput": false
+    },
+    "newQaRoots": 0,
+    "containers": 0,
+    "rootModes": "0700/0400",
+    "secretOutputs": false
+  },
+  "newQaRoots": 0,
+  "publicationProgramSha256": "2435e6757438ed5deda4a3ead9df2542b85c7626b43d639ee30a5ac8222214da",
+  "uploaderSha256": "4da4e3309d2afc96c9e658297605a9baab5d917dc33961c4ee22c327d3ac9e6c",
+  "secretOutputs": false
+}

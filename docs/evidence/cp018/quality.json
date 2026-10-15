@@ -1,0 +1,89 @@
+{
+  "checkpoint": "CP-018",
+  "status": "PASS DOCUMENTARY QUALITY ONLY",
+  "provenance": "LOCAL documentary/model evidence + REMOTE GitHub base read-only",
+  "observedAt": "2026-10-14T00:13:00.402983+00:00",
+  "baseSha": "86985fe7589032f202ebf0cb057a9b1384217151",
+  "checks": {
+    "noFunctionalDeployConfigDependencyDelta": "PASS",
+    "protectedSnapshotsAndPrompt": "PASS",
+    "historicalPrefixesPreserved": "PASS",
+    "oneCandidateSixCompleteCriteriaAndApprovalPending": "PASS",
+    "localReferences": "PASS",
+    "mapCanonicalCoherenceAndSyntax": "PASS",
+    "modelSourcesAndEvidenceBound": "PASS",
+    "reviewHashesAndNoSecretPattern": "PASS",
+    "primaryIsolationAndRemoteCanonical": "PASS"
+  },
+  "changedPaths": [
+    ".agentic/P1-L3_CANDIDATE.md",
+    ".agentic/PLANNING_STATE.md",
+    ".agentic/SAAS_DISCOVERY.md",
+    ".agentic/experiments/cp018/model.mjs",
+    ".agentic/experiments/cp018/plan.md",
+    ".agentic/experiments/cp018/results.json",
+    "AGENTS.md",
+    "docs/CHECKPOINTS.md",
+    "docs/DECISIONS.md",
+    "docs/PROJECT_MAP_DATA.json",
+    "docs/PROJECT_STATE.md",
+    "docs/README.md",
+    "docs/ROADMAP.md",
+    "docs/audit/CP-018.md",
+    "docs/evidence/cp018/baseline-manifest.json",
+    "docs/evidence/cp018/design-gate.md",
+    "docs/evidence/cp018/git-base.json",
+    "docs/evidence/cp018/model-sensitivity.json",
+    "docs/evidence/cp018/pos-preparation.md",
+    "docs/evidence/cp018/quality.json",
+    "docs/evidence/cp018/readiness-custody-design.md",
+    "docs/evidence/cp018/review-independent.md",
+    "docs/evidence/cp018/review-model.md",
+    "docs/evidence/cp018/review-sql-final.md",
+    "docs/evidence/cp018/review-terminal-docs.md",
+    "docs/evidence/cp018/sql-recovery-design.md",
+    "docs/project-map/index.html",
+    "tasks/plan.md",
+    "tasks/todo.md"
+  ],
+  "protectedHashes": {
+    "docs/methodology/Prompt_Maestro_v2.0.md": "d2dafd5f75df32aae33e421953fab6e99e723aa88744b918b555562c7b6a550d",
+    "docs/specs/p1-l2-approved/baseline.md": "ca975dc822c0bd5e872d3debe824abc536f662007513170f327727878ff3ac71",
+    "docs/specs/p1-l1-approved/DEP-IND.md": "3794a49dcb47141af5a5a4d5649b4ad99508c6308ca5cd5784a9924726c33f33",
+    "docs/specs/p1-l1-approved/S-18.md": "77a3084b937f107b5c00e87dba35e4f8fb47d87cff98ff8596d136442063bec0",
+    "docs/specs/p1-l1-approved/eight-cuts.md": "4febc9bc5d70e59c4c38adff902a22a0bd2f755c9ed1de25de247a2c30b1e3e3",
+    "docs/specs/p1-l1-approved/manifest.json": "c4c0d290b95c47ed54a2d8e78554118acad1c4fbde763e1e8bf182cabf26ebd9"
+  },
+  "historicalPrefixBytes": {
+    "checkpoints": 106423,
+    "saasDiscovery": 136032
+  },
+  "candidateHash": "4d1cf193000106dd20555f6c70acab3cb264fd3a7bfe0a9cf8be662eddb2b3ec",
+  "referencesChecked": 324,
+  "brokenReferences": [],
+  "mapCheck": "Verified local map: 8 phases, 66 decisions, 288 criteria; progress is qualitative.",
+  "map": {
+    "phases": 8,
+    "decisions": 66,
+    "criteria": 288,
+    "pending": 16,
+    "blocking": 0,
+    "checkpointPass": 11,
+    "checkpointNotVerified": 9,
+    "activePhase": "P1"
+  },
+  "model": {
+    "scope": "LOCAL ABSTRACT ONLY",
+    "counts": {
+      "tests": 14,
+      "states": 40,
+      "edges": 230,
+      "mutationsDetected": 5
+    },
+    "modelHash": "f211a552ee872f4bc49ae2d75ec215fa7b3748301c28460625c15aaa3188b414",
+    "resultHash": "7473aada512364f46b060c1277c5552da2d9cf9a84c47bb4f87c9a05827fc578"
+  },
+  "functionalTestsExecuted": false,
+  "resourcesCreatedOrModified": 0,
+  "ciExecutedThisCheckpoint": false
+}

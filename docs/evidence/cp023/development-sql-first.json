@@ -1,0 +1,9 @@
+{
+  "schema": "cp023-development-integration-v1",
+  "status": "FAIL",
+  "stage": "preflight",
+  "sqlCommands": 1,
+  "sqlState": null,
+  "guard": "EXCLUSIVE_CLUSTER_IDENTITY_REQUIRED",
+  "secretOutput": false
+}

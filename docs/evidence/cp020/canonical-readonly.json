@@ -1,0 +1,14 @@
+{
+  "schema": "cp020-canonical-readonly-v1",
+  "at": "2026-10-15T11:40:21.315949+00:00",
+  "account": "SrEdgarR",
+  "repository": "SrEdgarR/MECANET",
+  "develop": "86985fe7589032f202ebf0cb057a9b1384217151",
+  "expectedBase": "86985fe7589032f202ebf0cb057a9b1384217151",
+  "matchesExpected": true,
+  "readOnly": true,
+  "push": false,
+  "pr": false,
+  "remoteCI": false,
+  "merge": false
+}

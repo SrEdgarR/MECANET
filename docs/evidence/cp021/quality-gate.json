@@ -1,0 +1,52 @@
+{
+  "schema": "cp021-quality-gate-v1",
+  "at": "2026-10-15T13:46:18.080455+00:00",
+  "sourceSha": "ca15ed980de8167cc6144285a43b85cfbf71a7d3",
+  "result": "PASS",
+  "scope": "LOCAL QA delta, not physical acceptance",
+  "node": {
+    "tests": 411,
+    "fail": 0,
+    "skip": 0,
+    "source": "local-node.json",
+    "allInputHashesIdenticalToCurrent": true,
+    "provenance": "Prior run on working tree; exact Node bytes are identical to committed sources, not a claimed fresh all-suite run"
+  },
+  "python": {
+    "files": 15,
+    "tests": 340,
+    "source": "local-python-final.json",
+    "exactCommit": true
+  },
+  "syntax": {
+    "javascriptFiles": 216,
+    "python": "all cp019 modules compiled without bytecode"
+  },
+  "artifact": {
+    "source": "git-artifact-smoke.json",
+    "files": 595,
+    "bytes": 3902579,
+    "imports": 13,
+    "temporaryStageRemoved": true,
+    "tarCreated": false
+  },
+  "ui": {
+    "frozenAssets": 3,
+    "frozenInputs": 28,
+    "rebuild": false,
+    "historicalEvidenceKept": true,
+    "physicalBrowser": "NOT VERIFIED"
+  },
+  "dependencies": {
+    "productAndLocksUnchangedSinceIncoming": true,
+    "reuse": "CP020 full/runtime SaaS/backend audits0 by unchanged locks; legacy TD21 remains FAIL"
+  },
+  "review": {
+    "requiredOpen": 0,
+    "scopes": "provider/readiness/commit/promotion/Rootguards/runner/monitor; message provenance in review-progress.json and final review"
+  },
+  "environmentGate": "NOT VERIFIED before fresh actual preflight",
+  "physicalSixCriteria": "NOT VERIFIED except A1 documentary/local",
+  "infrastructureMutationsDuringLocalQuality": 0,
+  "secretsPrinted": false
+}

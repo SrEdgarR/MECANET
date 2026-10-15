@@ -1,0 +1,32 @@
+{
+  "schema": "cp022-documentation-quality-v1",
+  "at": "2026-10-15T15:40:55.021261+00:00",
+  "result": "PASS",
+  "scope": "Affected documentary diff, not new functional or physical tests",
+  "runtimeSha": "7f5986f01c1cce8c35ba3e9635d9001523da0bc8",
+  "localDiagnosticSha": "67f9c448a3e56b7040e3f937a4e1b17588373d97",
+  "linksChecked": 431,
+  "newMissingLinks": 0,
+  "preexistingMissingLinks": [],
+  "evidenceFilesIndexedAndHashVerified": 31,
+  "jsonParsed": 31,
+  "map": {
+    "check": "Verified local map: 8 phases, 72 decisions, 366 criteria; progress is qualitative.",
+    "phases": 8,
+    "active": "P1",
+    "decisions": 72,
+    "criteria": 366,
+    "pending": 14,
+    "blocking": [
+      "Q-32",
+      "Q-35"
+    ],
+    "future": 12,
+    "debts": 22,
+    "noInventedPercentage": true
+  },
+  "diffCheck": "PASS",
+  "publicEvidenceSecretPatternScan": "PASS / bounded, not universal DLP",
+  "rawRuntimeFailurePreserved": true,
+  "physicalRecoveryAcceptance": "NOT VERIFIED"
+}

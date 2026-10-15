@@ -1,0 +1,246 @@
+{
+  "schema": "cp022-consolidated-independent-review-v1",
+  "at": "2026-10-15T15:32:19.761695+00:00",
+  "result": "PASS",
+  "scope": "Independent focused LOCAL preparation and post-execution local monitor correction only; not integral physical acceptance of P1-L3",
+  "baseline": {
+    "snapshotSha256": "4d1cf193000106dd20555f6c70acab3cb264fd3a7bfe0a9cf8be662eddb2b3ec",
+    "functionalApprovals": "DEC-067/068 APPROVED",
+    "environmentChange": "SC-014 / DEC-072 APPROVED exact b58ad6a856fd987bd6a23358b2f129e0a44a3a75c4206cf57b6d49a9e2d1df05",
+    "canonicalBaseSha": "86985fe7589032f202ebf0cb057a9b1384217151"
+  },
+  "runtimeSourceSha": "7f5986f01c1cce8c35ba3e9635d9001523da0bc8",
+  "qualityEvidence": {
+    "file": "quality-gate.json",
+    "sha256": "88c2cb750f3e2999a02f2911e78e4b001dd7b232fc9568ed9e9005494eced2a1"
+  },
+  "reviews": [
+    {
+      "id": "CP022-REV-BINDINGS",
+      "scope": "Exact r03/r03-target bindings, old/mixed/foreign denials, fixed data/front ranges,135 semantic cases and unchanged budgets",
+      "result": "PASS",
+      "sourceSha": "7f5986f01c1cce8c35ba3e9635d9001523da0bc8",
+      "evidence": [
+        {
+          "file": "approval.json",
+          "sha256": "e8c73f318edb0411ca8e6e2caff5fb68a612e88bcda906e39ced820743229cd8"
+        },
+        {
+          "file": "local-node.json",
+          "sha256": "1606c6326764fba2a186cb697d79b4a126e790a4c643394570b101f990fce5c7"
+        },
+        {
+          "file": "local-python.json",
+          "sha256": "3a37b3727539104e065e6cc423b57555d7ea95583fe4a2444541fa335c895328"
+        }
+      ],
+      "requiredOpen": 0
+    },
+    {
+      "id": "CP022-REV-UPLOADER",
+      "scope": "Same verified bytes, exact internal/external plan, Git runtime manifest/inventory/content, canonical budget, closed tar members and transfer custody",
+      "result": "PASS",
+      "uploaderSha256": "4da4e3309d2afc96c9e658297605a9baab5d917dc33961c4ee22c327d3ac9e6c",
+      "testProgramSha256": "d4ec2ed769a490d110f985d80ef83fedad21bd052bc0af06541fc16e1d7529e0",
+      "pureCases": 31,
+      "evidence": {
+        "file": "upload-review.json",
+        "sha256": "842a5a83ef39d85452031bba8e5864f3cfb02d790387a6d81e338e297423233b"
+      },
+      "requiredOpen": 0
+    },
+    {
+      "id": "CP022-REV-WRAPPER",
+      "scope": "Exact seven prepared browser options plus fixed origin, private frame suppression, report source binding, safe fallback and original180+45s cleanup wait",
+      "result": "PASS",
+      "wrapperSha256": "405b571e068bf18553592250f7a849078d0d0dd35794ef90c96ea926b3ad1cd3",
+      "testSha256": "fcdfaa8d4b3474a2206d76f9db6615d948aae314624cf2aae83b431d4c83ff7a",
+      "pureCases": 7,
+      "evidence": {
+        "file": "run-peer-review.json",
+        "sha256": "f3e5b6feb16aa723b399cc132a9f9668642b68436d212beb7e427b4205df08ae"
+      },
+      "requiredOpen": 0
+    },
+    {
+      "id": "CP022-REV-LOCAL-MONITOR-DELTA",
+      "scope": "Valid rejected CPU/RAM/disk observations retained before unchanged guards; NaN/Infinity excluded from extrema; irreversible original abort latch",
+      "result": "PASS",
+      "source": {
+        "file": "tests/qa/cp019/resource-monitor.py",
+        "sha256": "eb14f355ff7d925094f0e038d8c60901c39c93451aa882d76658020dd2a66a74"
+      },
+      "tests": {
+        "file": "tests/qa/cp019/resource-monitor.test.py",
+        "sha256": "857b6f9ee05458fb9ca6d17ac6b31d19221a8bd0bc2194110a1f1d75be19ec9e",
+        "pass": 31,
+        "fail": 0
+      },
+      "baseRuntimeSourceSha": "7f5986f01c1cce8c35ba3e9635d9001523da0bc8",
+      "executedOnVps": false,
+      "replacesSealedRemoteHelper": false,
+      "requiredOpen": 0,
+      "sourceSha": "67f9c448a3e56b7040e3f937a4e1b17588373d97",
+      "evidence": {
+        "file": "local-quality-close.json",
+        "sha256": "791dfd319027e1003c3ba8d1dee7545d9f8c7729b7b13e2fcf71916c19dce350"
+      },
+      "redProof": {
+        "originalRuntimeSourceSha": "7f5986f01c1cce8c35ba3e9635d9001523da0bc8",
+        "tests": 31,
+        "failingSubcases": 3,
+        "scope": "New retained-extrema regression against original monitor; does not replay physical load"
+      },
+      "greenProof": {
+        "tests": 31,
+        "fail": 0,
+        "sourceSha": "67f9c448a3e56b7040e3f937a4e1b17588373d97"
+      }
+    }
+  ],
+  "findings": [
+    {
+      "id": "BROWSER-ENTRY",
+      "detected": "Old cp020 config basename survived output-path replacement; pure browser gates did not exercise CLI source selector",
+      "disposition": "CLOSED IN LOCAL RUNTIME7f",
+      "verification": "New CLI selector regression RED8/9 to GREEN9/9, folded into415 Node union; main uses cp022-browser-config.json"
+    },
+    {
+      "id": "UPLOADER-PLAN",
+      "detected": "Controller archive plan lacked byte-exact external plan binding",
+      "disposition": "CLOSED BEFORE PUBLICATION",
+      "verification": "Internal plan equals canonical externally pinned plan and chosen plan hash checked before effects"
+    },
+    {
+      "id": "UPLOADER-RUNTIME",
+      "detected": "Transferred runtime tar had not been structurally/content validated before entering the protected cohort",
+      "disposition": "CLOSED BEFORE PUBLICATION",
+      "verification": "Actual596-member archive plus corruption/traversal/duplicate/link/mode/source/baseline negatives in31 pure cases"
+    },
+    {
+      "id": "UPLOADER-BUDGET",
+      "detected": "Transferred budget lacked an explicit publication-time registry pin",
+      "disposition": "CLOSED BEFORE PUBLICATION",
+      "verification": "Canonical exact registry hash1f2b34b5bb93ae21a74f7d2af8a51bd3cb16d3ea7baa3b55a54481b5875f243c and135-case shape checked"
+    },
+    {
+      "id": "WRAPPER-BROWSER-OPTIONS",
+      "detected": "Prepared absolute CA path and seven options required exact equality rather than an inferred relative path or eighth option",
+      "disposition": "CLOSED BEFORE EXECUTION",
+      "verification": "Seven prepared keys compared canonically, fixed origin separate,7 pure tests"
+    },
+    {
+      "id": "MONITOR-REJECTED-SAMPLE",
+      "detected": "Physical CPU abort occurred before updating extrema, so the reported maximum excluded its rejecting sample",
+      "disposition": "CLOSED LOCALLY ONLY; ORIGINAL PHYSICAL REPORT PRESERVED",
+      "verification": "Two added affected models,31/31 total; same guards/latch. Local correction did not run on the VPS or reconstruct the missing old sample"
+    },
+    {
+      "id": "READONLY-FOUNDATION-SELECTOR",
+      "detected": "Initial post-abort inspector checked host-prepare-foundation instead of the registered prepare-foundation case",
+      "disposition": "CORRECTED BY FINAL READ-ONLY INSPECTION; ORIGINAL REPORT KEPT",
+      "verification": "preservation-final.json confirms prepare-foundation exists in the135-case registry and is absent from the charged ledger; ledger sequence44 and counters unchanged",
+      "evidence": {
+        "file": "preservation-final.json",
+        "sha256": "7c3a424090e03463781660a508c53ec2f4f1291b116ff6f9c10272cbbcd2452d"
+      }
+    }
+  ],
+  "requiredOpen": 0,
+  "requiredOpenScope": "These focused local reviews only; does not close physical L3 gates or pending Q-32/Q-35",
+  "physicalResult": {
+    "status": "FAIL",
+    "failure": "CP019_RESOURCE_ABORT",
+    "resourceMonitorFailure": "RESOURCE_CPU_LIMIT",
+    "sourceSha": "7f5986f01c1cce8c35ba3e9635d9001523da0bc8",
+    "environmentEntry": "PASS / bounded preconditions only",
+    "postgresStarted": true,
+    "postgresVersionArchitecture": "18.6 / aarch64 from post-abort selected own logs",
+    "harnessSql": 0,
+    "http": 0,
+    "journal": 0,
+    "artifactFiles": 639,
+    "initdbInternalSqlNotCountedByHarness": true,
+    "cleanup": "PASS",
+    "preservedPriorContainers": 28,
+    "ownPostgresFinal": "STOPPED / exited0 / PID0 / KEEP",
+    "recoveryAndReopening": "NOT VERIFIED",
+    "evidence": [
+      {
+        "file": "environment-entry.json",
+        "sha256": "50f3e2997e76776bb87883099b15e1713fd0c94e532447f90f9556631bdad099"
+      },
+      {
+        "file": "remote-run.json",
+        "sha256": "9bd6b77c0f3de7de60c9e9790146989672067478126102fc18bc976819754453"
+      },
+      {
+        "file": "post-abort-readonly.json",
+        "sha256": "e5c7aa69dab3dcac4924b76850a5af9c66276e5ef7aa939820da9ec17714a463"
+      },
+      {
+        "file": "preservation-final.json",
+        "sha256": "7c3a424090e03463781660a508c53ec2f4f1291b116ff6f9c10272cbbcd2452d"
+      }
+    ],
+    "totalFinalContainers": 29,
+    "sourcePgData": {
+      "regularFiles": 971,
+      "logicalBytes": 40560908,
+      "allocatedFileBytes": 40611840
+    },
+    "targetPgDataFiles": 0,
+    "ledgerUnchangedSinceAbort": true
+  },
+  "criterionSummary": {
+    "PASS": 1,
+    "NOT VERIFIED": 5,
+    "passScope": "A1 documentary/local only",
+    "A2toA6": "NOT VERIFIED mandatory exits",
+    "integration": "NOT VERIFIED"
+  },
+  "limits": [
+    "Local review PASS is not a physical PostgreSQL recovery, two-API, HTTP, browser, rollback or security acceptance",
+    "PG startup is physical evidence of its own startup only; no SaaS schema/roles/restore/promotion tested",
+    "Zero SQL is the charged harness count; initdb performs its own internal database work",
+    "No new source SHA is attributed to the sealed remote artifact by the post-execution local monitor correction",
+    "No source/helper/material/ledger reset, r04, production or shared infrastructure change"
+  ],
+  "postExecutionLocalSourceSha": "67f9c448a3e56b7040e3f937a4e1b17588373d97",
+  "localQualityUnion": {
+    "sourceSha": "67f9c448a3e56b7040e3f937a4e1b17588373d97",
+    "python": {
+      "tests": 395,
+      "files": 18,
+      "derivation": "393 at runtime7f minus29 replaced monitor models plus31 corrected monitor models",
+      "baseEvidence": {
+        "file": "local-python.json",
+        "sha256": "3a37b3727539104e065e6cc423b57555d7ea95583fe4a2444541fa335c895328"
+      },
+      "affectedSourceHash": "eb14f355ff7d925094f0e038d8c60901c39c93451aa882d76658020dd2a66a74",
+      "affectedTestHash": "857b6f9ee05458fb9ca6d17ac6b31d19221a8bd0bc2194110a1f1d75be19ec9e",
+      "peerAffectedTests": 31,
+      "closingEvidence": {
+        "file": "local-quality-close.json",
+        "sha256": "791dfd319027e1003c3ba8d1dee7545d9f8c7729b7b13e2fcf71916c19dce350"
+      }
+    },
+    "node": {
+      "tests": 415,
+      "files": 39,
+      "sourceSha": "67f9c448a3e56b7040e3f937a4e1b17588373d97",
+      "freshCompleteRun": true,
+      "evidence": {
+        "file": "local-node-after-monitor.json",
+        "sha256": "d09321e8045f8a5ae611aeea50f1613e9332af2108f5c22c06cc8386e399d300"
+      },
+      "reason": "The broad input inventory recorded by the earlier run included changed monitor files, so a fresh complete Node run was executed"
+    },
+    "result": "PASS / LOCAL ONLY",
+    "sourceShaAuthority": "Root committed local correction with fresh Node run and affected monitor regressions; sealed physical runtime7f unchanged"
+  },
+  "closingQualityEvidence": {
+    "file": "local-quality-close.json",
+    "sha256": "791dfd319027e1003c3ba8d1dee7545d9f8c7729b7b13e2fcf71916c19dce350"
+  }
+}

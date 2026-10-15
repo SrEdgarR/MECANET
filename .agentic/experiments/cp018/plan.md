@@ -1,0 +1,13 @@
+# CP-018 — prerregistro del modelo de recuperación
+
+LOCAL / SUGGESTED, 2026-10-13. Base canónica y rama antes de editar: `86985fe7589032f202ebf0cb057a9b1384217151`, `codex/p1-l3-design`, worktree de integración limpio. Sin A/B L3. Modelo independiente fuera de producto, CI y deploy; no importar ni invocar módulos con I/O, `.env`, PG, HTTP, Docker, SSH o secretos.
+
+Incertidumbres reales: COMMIT aplicado/no aplicado sin ACK; continuación con material/owner estables; CAS exacto y desvío por restricción concurrente; ventana central/local distinta; cero empresas y empresas cerradas legítimamente; restricciones antiguas y sesiones que nunca se reviven. La revisión del código y el diseño SQL se realizan por separado: el modelo no demuestra implementación, locks, fsync, grants, dos API ni recuperación física.
+
+Ensayo: Node24.21.0 Windows x64, librería estándar, estados inmutables finitos de dos empresas A activa/B bloqueada; explorar intercalados de promoción A, crash, observación/reconciliación y nueva restricción de A. Pruebas independientes de propiedades (admisión sólo con conformidad y autoridad; monotonía; igualdad de material por retry; no dos escritores origen/destino). Vectores negativos de corrupción/owner/version/generación/journal, contexto/epoch/SID anteriores y overflow. Tabla ready para cero empresas, todas cerradas, A OPEN+B CLOSED, UNKNOWN, proceso down, reloj/esquema incoherentes y draining.
+
+Cotas: ≤20.000 estados únicos, ≤100.000 aristas, ≤30s de proceso, sin red ni escrituras salvo informe JSON dentro de este directorio. Superar cota aborta con FAIL; no subirla para obtener PASS. No TTL/sleeps/timeouts usados como evidencia de fin; deadline30s sólo limita la ejecución del ensayo.
+
+Control de sensibilidad: variantes deliberadamente inseguras deben producir contraejemplo: ready requiere una empresaOPEN, promoción adopta la versión actual, sesión vieja vuelve a válida, y admisión ignora barrier/pareja central-local. Se identifican como variantes de modelo, no bugs ejecutados del producto. Si una propiedad falla, conservar la primera evidencia y corregir modelo/diseño antes de repetir sólo el control afectado.
+
+Aceptación documental: propiedades/vectores PASS, counterexamples de mutantes acreditados, revisión independiente del modelo y correspondencia con candidato final. Registra versión/hash de modelo y candidato, entorno, fecha, conteos exactos y límites. Reabrir no significa eliminar restricciones comerciales o de sujeto; ausencia de ACK no significa ausencia de COMMIT. Cleanup: ningún proceso persistente/recurso; archivos del modelo y resultados KEEP en Git, sin fixtures de negocio ni secretos.

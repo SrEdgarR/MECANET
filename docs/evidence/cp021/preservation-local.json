@@ -1,0 +1,14 @@
+{
+  "schema": "cp021-preservation-local-v1",
+  "at": "2026-10-15T13:33:13.781214+00:00",
+  "incomingHead": "bcc268814b3e59e375960f87f6b5d8e0d8aff253",
+  "currentHead": "191dd8a62a74d717f262c2f4373fc6470f350b30",
+  "functionalProductAndLocksUnchangedSinceIncoming": true,
+  "hashes": {
+    "docs/methodology/Prompt_Maestro_v2.0.md": "d2dafd5f75df32aae33e421953fab6e99e723aa88744b918b555562c7b6a550d",
+    ".agentic/P1-L3_CANDIDATE.md": "4d1cf193000106dd20555f6c70acab3cb264fd3a7bfe0a9cf8be662eddb2b3ec",
+    "docs/specs/P1-L2.md": "776393ad96d1628b6c6e61ff8722257570b058147a94cdd71103419b8ece3cba",
+    "tests/qa/cp019/budget-limits.json": "65cb46844d2b8a78250839ed14b25fca91561cfcdd7d46557ff5b98829f334c2"
+  },
+  "l1L2PhysicalTestsRepeated": false
+}

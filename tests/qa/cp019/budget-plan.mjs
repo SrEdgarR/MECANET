@@ -1,0 +1,18 @@
+import {CASE_LIMITS} from './budget-limits.mjs';
+// Fixed semantic cases selected before resource creation. No retry aliases.
+import {ACCEPTANCE_SCENARIOS} from './acceptance.mjs';
+import {canonical} from '../../../server/saas/recovery/protocol.js';
+const sourcePhases=['close-b','migrate-a','migrate-b','migrate-central','initialize-a','initialize-b','initialize-control','clock-plan','clock-ack','capture','close-restore','close-admission','closed-canary','clock-restart-plan','clock-restart-record'];
+const targetPhases=['begin-enroll','rotate','canary','configure','clock-plan','post-worker-verify','promotion','activation','abort-close','abort-local','abort-finish','clock-restart-plan','clock-restart-record'];
+const extra=['host-pg-start','host-bootstrap','host-stage','host-material','host-config-source','host-config-target','prepare-foundation','prepare-writers','prepare-correctives','sql-probe','copy-offline','copy-verify','manifest-final','journal-reconcile','cleanup','source-schema-probe','source-clock-budget','target-cost-probe','target-credential-negatives','target-promote-fault','target-commit-fault','browser-login','browser-history','browser-product','browser-receipt','browser-reload','browser-replay','browser-denials','ready-empty','ready-allclosed'];
+export const CASE_SCOPES=Object.freeze({...ACCEPTANCE_SCENARIOS,...Object.fromEntries(sourcePhases.map(n=>['source-'+n,'source-window'])),...Object.fromEntries(targetPhases.map(n=>['target-'+n,'target-window'])),...Object.fromEntries(extra.map(n=>[n,n.startsWith('target-')||n.startsWith('browser-')||n.startsWith('ready-')?'target-window':'source-window']))});
+export const HOST_STAGE_SCOPES=Object.freeze(Object.fromEntries(['target-pg-start','target-worker-start','target-business-start','target-stop-initial','target-end-initial','target-stop-restarted','target-end-restarted','target-stop-prefix','target-end-prefix'].map(n=>[n,'target-window']).concat(['source-shutdown-precopy','source-shutdown-postcanary','source-copy-checkpoint'].map(n=>[n,'source-window']))));
+// Exact helper cases. Variant lifecycle stages remain unregistered until their
+// host provider exists; these names cannot create a new cohort or reset a clock.
+export const PROBE_CASE_SCOPES=Object.freeze(Object.fromEntries([
+ ...['source-schema-probe-pre','source-schema-probe-post'].map(n=>[n,'source-window']),
+ ...['copy-negatives-env','copy-negative-missing','copy-negative-extra','copy-negative-hash','copy-negative-symlink','copy-negative-hardlink','journal-negatives-env','journal-negatives','target-a5-login','target-a5-body','target-a5-action','target-a5-product','target-a5-epoch','target-a5-actor','variant-a5-grant','variant-a5-membership','variant-a5-identity'].map(n=>[n,'target-window']),
+]));
+export function budgetRegistry(){const scopes={...CASE_SCOPES,...HOST_STAGE_SCOPES,...PROBE_CASE_SCOPES};return {schema:'cp019-budget-plan-v1',project:'mecanet-qa-p1l3-r03',plannedScenarios:Object.fromEntries(Object.keys(scopes).sort().map(n=>[n,{...CASE_LIMITS}])),plannedScopes:scopes,activeScenarios:{'source-window':'source-runtime-start','target-window':'target-runtime-start'}};}
+export function validateBudgetRegistry(plan){if(canonical(plan)!==canonical(budgetRegistry()))throw Error('CP019_FIXED_BUDGET_REGISTRY_REQUIRED');return plan;}
+export function initialBudget(plan,startedUptime){validateBudgetRegistry(plan);if(!Number.isFinite(startedUptime)||startedUptime<0)throw Error('CP019_UPTIME_REQUIRED');const {schema,...rest}=plan;return{...rest,schema:'cp019-budget-v1',startedUptime,sequence:0,total:{sql:0,http:0,journal:0,artifactFiles:0},scenarios:{}};}

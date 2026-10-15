@@ -1,0 +1,9 @@
+{
+  "schema": "cp023-development-http-start-v1",
+  "status": "FAIL",
+  "stage": "private-api-config-fsync",
+  "code": "EPERM",
+  "syscall": "fsync",
+  "processesStarted": 0,
+  "secretOutput": false
+}

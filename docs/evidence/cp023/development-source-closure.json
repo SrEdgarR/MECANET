@@ -1,0 +1,12 @@
+{
+  "schema": "cp023-development-source-closure-v1",
+  "status": "PASS",
+  "sourceSha": "a3b5752c178afa20d3835aebc8e3c88d04fbc02a",
+  "closureMaterialHash": "85f4a97ea498a212b8872844053f6c0f9d27556fe9842ce1ea6f1cc600fe56ad",
+  "tenants": 2,
+  "barrier": true,
+  "tickets": 0,
+  "reservations": 0,
+  "nativeProcessEnded": "NOT VERIFIED by SQL helper",
+  "physicalCopy": "NOT VERIFIED by SQL helper"
+}

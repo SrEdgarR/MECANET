@@ -1,0 +1,12 @@
+{
+  "time": "2026-10-14T15:14:58.274656+00:00",
+  "result": "PASS",
+  "allPriorConsumersUnchanged": true,
+  "priorConsumers": 26,
+  "r01FailedToolStoppedKeep": true,
+  "currentConsumers": 27,
+  "preflightSourceHash": "66313b03f7c3b4d57128c0635ccbf513cf2fe5b53d70a64f88e8a6ba545f8f77",
+  "qaR02Resources": 0,
+  "readOnly": true,
+  "secretsRead": false
+}

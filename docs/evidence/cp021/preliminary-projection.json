@@ -1,0 +1,78 @@
+{
+  "schema": "cp021-preliminary-projection-v1",
+  "at": "2026-10-15T13:33:32.540562+00:00",
+  "scope": "DESIGN/STATIC, not throughput or capacity measurement",
+  "approvedCaps": {
+    "case": {
+      "artifactFiles": 2000,
+      "http": 80,
+      "journal": 1000,
+      "sql": 8192
+    },
+    "caseSeconds": 45,
+    "cohortSeconds": 1800,
+    "global": {
+      "artifactFiles": 8192,
+      "http": 300,
+      "journal": 1000,
+      "sql": 200000
+    },
+    "scenarioCount": 135,
+    "schema": "cp021-budget-limits-v1"
+  },
+  "hostSnapshot": "physical-preflight.json",
+  "sql": {
+    "nominalBackgroundPerSecond": 88.33333333333333,
+    "nominalBackgroundCase45s": 3975,
+    "nominalBackgroundGlobal1800s": 159000,
+    "remainingGlobalForCommandsAndRetries": 41000,
+    "fullWorstCaseBound": "NOT VERIFIED",
+    "onExceed": "ABORT/KEEP, no reset"
+  },
+  "http": {
+    "closedFamiliesUpper": 244,
+    "cap": 300,
+    "headroom": 56,
+    "components": {
+      "source": 9,
+      "mainHistoryWriteNegatives": 34,
+      "mainA5": 9,
+      "variantA5": 9,
+      "emptyUnreadyReadyAndAllclosedReady": 84,
+      "prefix": 5,
+      "browserReservations": 94
+    }
+  },
+  "artifacts": {
+    "historicalIncompleteLower": 2414,
+    "newPublisherMinimum": 38,
+    "globalApprovedCap": 8192,
+    "caseCap": 2000,
+    "pollingIllustration": "Up to 3600 replacements at2Hz over1800s plus job start samples; not a complete upper bound",
+    "sufficiency": "NOT DEMONSTRATED; hard ledger abort required"
+  },
+  "time": {
+    "copyVerifyFixedSleepLowerSeconds": 32,
+    "allclosedCaseFixedSleepLowerSeconds": 26,
+    "commitCaseFixedSleepLowerSeconds": 32,
+    "prefixCaseFixedSleepLowerSeconds": 34,
+    "emptyCaseFixedSleepLowerSeconds": 20,
+    "caseCapSeconds": 45,
+    "meaning": "Excludes Docker, IO, TLS, SQL, fsync and hashing; no measured completion guarantee"
+  },
+  "resources": {
+    "configuredDockerMaxNanoCpus": 1000000000,
+    "configuredDockerMemoryMaxMiB": 2048,
+    "hostCpuCount": 2,
+    "rootControllerOutsideDocker": "Must measure overhead and abort on actual pressure; no hard cgroup cap claimed",
+    "pgMaxConnections": 60,
+    "activePgMax": 1,
+    "sourceMaxBytes": 2147483648,
+    "aggregateTargetAllVariantsMaxBytes": 2147483648,
+    "allConsumerChangesForbidden": true
+  },
+  "environmentGate": "NOT VERIFIED: code/review and fresh physical preflight still required",
+  "qaRootsCreated": 0,
+  "physicalSQL": 0,
+  "physicalHTTP": 0
+}

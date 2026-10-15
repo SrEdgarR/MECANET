@@ -1,0 +1,107 @@
+{
+  "schema": "cp023-resource-independent-review-v1",
+  "reviewer": "cp022_protocol; autor distinto del frente Python B",
+  "reviewedAt": "2026-10-15T16:27:43Z",
+  "status": "PASS FOR LOCAL DIAGNOSTIC REVIEW ONLY",
+  "requiredFindings": [],
+  "sourceFilesSha256": {
+    "tests/qa/cp019/resource-sample.py": "44893b80107298fa17fc644c6b1e3eab18a3d508170ec61098fc8c04ac63a2b8",
+    "tests/qa/cp019/resource-sample.test.py": "a45b05428a639a3db4bb9cd9cc9555a425ef795073e807ecc2f0c4a1e489e983",
+    "tests/qa/cp019/resource-monitor.py": "5d46c3cd73bb3c71ae365e596be20c59e95fa3962c7bae4b2109ccc1f8e0043e",
+    "tests/qa/cp019/resource-monitor.test.py": "757c1f7f0b07fbbf1147fa329d0ef56fe8c7cadaae48aad8878a6e4f3b6fbc6b",
+    "tests/qa/cp019/host.py": "b27ce6fbb0abb9018aa8df09e67312e17683d893738a7f19681932b7cee8b035",
+    "tests/qa/cp019/host.test.py": "248a55b04fec4c8eafa2ebcb5598ab2fd16d30acd9e6a7ae35fc9328ad6324d3",
+    "tests/qa/cp019/runner.py": "8c8908d6c6a01f4c85daadb17fda0b38f5b1052d78d174a3c8131fc434139f9f",
+    "tests/qa/cp019/runner.test.py": "6c7bc80f68a47e3e837a279be83ad2038caf6e3fa47bcf5e051542f751b27ee5",
+    "tests/qa/cp019/artifact.test.py": "98f69760e1ee0acc5ca949862efb68ed5ab250bf845215e0e6044380f20e2eb7",
+    "docs/evidence/cp023/resource-policy-and-reentry.md": "6e1fe2d6ef789eef9637fd0ec9f6c5703998899cbc9df4f8a8c35990364bfc92"
+  },
+  "baseReadSha": "685a09fa5b3167322ebd3c3deb6a13bfe9e790be",
+  "testedCodeSha": null,
+  "codeProvenance": "Cambios locales sin commit; atribucion por SHA-256 de cada archivo congelado, coincidente tras las pruebas.",
+  "environment": {
+    "os": "Windows",
+    "python": "3.14.3",
+    "mode": "Pruebas puras y mocks; sin SSH, Docker, PostgreSQL, HTTP ni navegador"
+  },
+  "tests": [
+    {
+      "command": "C:/Python314/python.exe tests/qa/cp019/resource-sample.test.py",
+      "pass": 9,
+      "fail": 0,
+      "skip": 0
+    },
+    {
+      "command": "C:/Python314/python.exe tests/qa/cp019/resource-monitor.test.py",
+      "pass": 33,
+      "fail": 0,
+      "skip": 0
+    },
+    {
+      "command": "C:/Python314/python.exe tests/qa/cp019/host.test.py",
+      "pass": 110,
+      "fail": 0,
+      "skip": 0
+    },
+    {
+      "command": "C:/Python314/python.exe tests/qa/cp019/runner.test.py",
+      "pass": 17,
+      "fail": 0,
+      "skip": 0
+    },
+    {
+      "command": "C:/Python314/python.exe tests/qa/cp019/artifact.test.py",
+      "pass": 18,
+      "fail": 0,
+      "skip": 0
+    }
+  ],
+  "testsTotal": {
+    "pass": 187,
+    "fail": 0,
+    "skip": 0
+  },
+  "reviewAxes": [
+    {
+      "axis": "Politica de recursos",
+      "result": "PASS",
+      "evidence": "Comparadores80/90%, RAM5120/3072MiB, margen disco, poll2s, caps Docker/conexiones, latch y cleanup conservados. Counter reset ahora es UNKNOWN fail-closed; no nueva tolerancia."
+    },
+    {
+      "axis": "Captura del primer fallo",
+      "result": "PASS",
+      "evidence": "firstFailureSample es copia inmutable; lastSample no lo sustituye. CPU sin redondeo, contadores/deltas8, instanteUTC/monotonico e intervalo real; sin muestra se declara UNAVAILABLE."
+    },
+    {
+      "axis": "Provenance y sanitizacion",
+      "result": "PASS",
+      "evidence": "Campos permitidos/numeros finitos; rusage es CPU acumulada/RSS pico del controlador, no PG/cgroup. Recursos de contenedor son limites configurados. TCP solo de PID PG autorizado, sin afirmar SQL FIN."
+    },
+    {
+      "axis": "Integridad y fallo seguro",
+      "result": "PASS",
+      "evidence": "Helper exigido por path regular sin symlink, inventario cerrado runner y selector de artefacto; cleanup sigue aun fallo monitor. No efecto remoto ejecutado por esta revision."
+    },
+    {
+      "axis": "SC016 de reentrada",
+      "result": "PASS DOCUMENTAL / APPROVAL PENDING",
+      "evidence": "Propuesta explicita de una continuacion adicional v2 con nuevas ventanas45/1800; v1 inmutable y acumulado v1+v2, recibos/FIN/identidad, mismos demas caps. No implementa ni ejecuta cambio temporal."
+    }
+  ],
+  "followUpBeforeExecution": [
+    "Revisar consumidores CI/wrapper/relay contra el nuevo helper y nuevas claves de informe antes de publicar un controlador.",
+    "Adaptador temporal futuro debe cargar primer efecto y nuevos recibos antes de ejecutarlos; conservar v1 byte exacto y validar acumulado concurrente.",
+    "SC016/DEC074 requiere aprobacion humana exacta y gates propios antes de cambiar o ejecutar ventanas; A/B funcionales L3 existentes no la sustituyen."
+  ],
+  "limitations": [
+    "No reconstruye el valor perdido ni el causante del pico CPU fisico CP022.",
+    "No acredita capacidad, Environment Gate, recuperacion/reapertura ni aceptacion L3.",
+    "No se aprueba politica temporal por revisar este documento."
+  ],
+  "externalActions": {
+    "ssh": false,
+    "infrastructureCreatedOrModified": false,
+    "production": false,
+    "gitMutations": false
+  }
+}

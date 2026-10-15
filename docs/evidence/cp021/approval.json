@@ -1,0 +1,37 @@
+{
+  "schema": "cp021-human-approval-v1",
+  "recordedAt": "2026-10-15T11:54:29.646837+00:00",
+  "source": "Direct human message: APRUEBO SC-012 / DEC-070",
+  "status": "CONFIRMED / APPROVED",
+  "decision": "DEC-070",
+  "change": "SC-012",
+  "objectCommit": "bcc268814b3e59e375960f87f6b5d8e0d8aff253",
+  "objectPath": ".agentic/P1-L3_SQL_BUDGET_CHANGE.md",
+  "objectSha256": "7a3c8e4d1701e35b9474911b0da5ae61bd4336b8ee513510a6db54e7a1d602ab",
+  "approved": {
+    "sqlCase": 8192,
+    "sqlGlobal": 200000
+  },
+  "unchanged": {
+    "scenarioCount": 135,
+    "caseSeconds": 45,
+    "caseHttp": 80,
+    "activeSeconds": 1800,
+    "http": 300,
+    "artifactFiles": 2000,
+    "journal": 1000,
+    "cpuMilli": 1000,
+    "memoryMiB": 2048,
+    "connections": 60
+  },
+  "noNewABRequired": true,
+  "noNewSC011Required": true,
+  "qaStartConditional": [
+    "all budget consumers coherent",
+    "variant provider/publishers complete",
+    "physical current preflight/environment",
+    "projected SQL load safe to existing consumers"
+  ],
+  "integrationConditional": "six outputs and gates; PR/CI/review/merge under existing approval only",
+  "productionAndSharedChangesAuthorized": false
+}

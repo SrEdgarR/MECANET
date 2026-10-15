@@ -1,0 +1,9 @@
+{
+  "schema": "cp023-development-integration-v1",
+  "status": "FAIL",
+  "stage": "migration:006-tenant-recovery.sql:mecanet_tenant_a",
+  "sqlCommands": 225,
+  "sqlState": "42601",
+  "guard": "DEVELOPMENT_INTEGRATION_FAILED",
+  "secretOutput": false
+}

@@ -1,0 +1,155 @@
+{
+  "schema": "cp022-post-abort-readonly-v1",
+  "at": "2026-10-15T15:21:58.734243+00:00",
+  "provenance": "REMOTE / read only",
+  "preservation": {
+    "result": "PASS",
+    "preservedOtherConsumers": 28
+  },
+  "priorConsumers": 28,
+  "ownPostgres": {
+    "id": "aa35afe3ea406009410be0e1a7eef759c619c8386a290ce9cbf620fe890cc500",
+    "imageRef": "postgres@sha256:67ba68a22dc7d5af3627b7e0f33d10bbefad07562ff9703b3a6c2de247649129",
+    "startedAt": "2026-10-15T15:17:56.083807678Z",
+    "finishedAt": "2026-10-15T15:18:02.598236798Z",
+    "exitCode": 0,
+    "status": "exited",
+    "running": false,
+    "pid": 0,
+    "nanoCpus": 350000000,
+    "memory": 671088640
+  },
+  "rootSourceReferenceValidated": true,
+  "oomKilled": false,
+  "restartCount": 0,
+  "publishedPorts": {},
+  "postgresLogPositiveSignals": [
+    "waiting for server to start....2026-10-15 15:17:58.904 GMT [93] LOG:  starting PostgreSQL 18.6 (Debian 18.6-1.pgdg12+2) on aarch64-unknown-linux-gnu, compiled by gcc (Debian 12.2.0-14+deb12u1) 12.2.0, 64-bit",
+    "2026-10-15 15:17:58.920 GMT [93] LOG:  database system is ready to accept connections",
+    "2026-10-15 15:17:59.225 GMT [93] LOG:  database system is shut down",
+    "2026-10-15 15:17:59.328 GMT [1] LOG:  starting PostgreSQL 18.6 (Debian 18.6-1.pgdg12+2) on aarch64-unknown-linux-gnu, compiled by gcc (Debian 12.2.0-14+deb12u1) 12.2.0, 64-bit",
+    "2026-10-15 15:17:59.344 GMT [1] LOG:  database system is ready to accept connections",
+    "2026-10-15 15:18:02.594 GMT [1] LOG:  database system is shut down"
+  ],
+  "postgresLogHash": "00d903a851e08ea23ec65351e73c96500321f1515e22fcb0ac0b961531950f69",
+  "ledgerTotal": {
+    "artifactFiles": 639,
+    "http": 0,
+    "journal": 0,
+    "sql": 0
+  },
+  "ledgerSequence": 44,
+  "globalElapsedSeconds": 254.17,
+  "hostPgCaseElapsedSeconds": 245.28,
+  "foundationCaseExists": false,
+  "cpuSamplesAfterAbort": [
+    {
+      "cpuBusyPercent": 4.523,
+      "perFieldDelta": [
+        10,
+        0,
+        7,
+        380,
+        0,
+        0,
+        1,
+        0
+      ],
+      "sampleSeconds": 2
+    },
+    {
+      "cpuBusyPercent": 7.305,
+      "perFieldDelta": [
+        15,
+        0,
+        14,
+        368,
+        0,
+        0,
+        0,
+        0
+      ],
+      "sampleSeconds": 2
+    },
+    {
+      "cpuBusyPercent": 1.508,
+      "perFieldDelta": [
+        4,
+        0,
+        2,
+        392,
+        0,
+        0,
+        0,
+        0
+      ],
+      "sampleSeconds": 2
+    }
+  ],
+  "currentRunningContainerUtilization": [
+    {
+      "id": "0743f7803020",
+      "name": "coolify",
+      "cpuPercent": "0.48%",
+      "memoryPercent": "3.23%"
+    },
+    {
+      "id": "2df4bfb80746",
+      "name": "coolify-db",
+      "cpuPercent": "0.00%",
+      "memoryPercent": "0.28%"
+    },
+    {
+      "id": "a14d7f4484ef",
+      "name": "coolify-redis",
+      "cpuPercent": "1.22%",
+      "memoryPercent": "0.08%"
+    },
+    {
+      "id": "bf610dbf592d",
+      "name": "anxlw7yetk0ocvbyzwbpjint-163548116612",
+      "cpuPercent": "0.10%",
+      "memoryPercent": "0.72%"
+    },
+    {
+      "id": "4de25bf15c14",
+      "name": "7lr48ioylpn4uwuwmzdr84xv",
+      "cpuPercent": "2.03%",
+      "memoryPercent": "10.07%"
+    },
+    {
+      "id": "c0d29e4a0d03",
+      "name": "tofxqwcillfystizcppgwefs-152517892574",
+      "cpuPercent": "0.10%",
+      "memoryPercent": "0.67%"
+    },
+    {
+      "id": "b1cd805a5a3c",
+      "name": "coolify-sentinel",
+      "cpuPercent": "0.04%",
+      "memoryPercent": "0.06%"
+    },
+    {
+      "id": "bfdb0b54cf15",
+      "name": "kwbztz6s0wntvtw7wc3n6sv4",
+      "cpuPercent": "0.75%",
+      "memoryPercent": "10.65%"
+    },
+    {
+      "id": "c34ed1b7659f",
+      "name": "l5xb1i1sv6xmndnradzxzlhz",
+      "cpuPercent": "0.80%",
+      "memoryPercent": "5.70%"
+    },
+    {
+      "id": "094b5a932539",
+      "name": "coolify-proxy",
+      "cpuPercent": "0.06%",
+      "memoryPercent": "0.56%"
+    }
+  ],
+  "notAttributionOfPastCpuSpike": true,
+  "mutations": 0,
+  "physicalSqlExecuted": 0,
+  "unrelatedContainersModified": false
+}

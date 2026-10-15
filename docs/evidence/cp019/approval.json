@@ -1,0 +1,16 @@
+{
+  "humanSource": "attachment/2e724c7c-a1e8-4812-a713-c181042c0aba",
+  "authorityDate": "2026-10-13",
+  "candidateSha256": "4d1cf193000106dd20555f6c70acab3cb264fd3a7bfe0a9cf8be662eddb2b3ec",
+  "checkpoint": "cace66cd34dbad31d480bef8f902bd71effbc0b1",
+  "canonicalBase": "86985fe7589032f202ebf0cb057a9b1384217151",
+  "A": "APPROVED/DEC-067",
+  "B": "APPROVED/DEC-068 conditional",
+  "SC-010": "APPROVED limited",
+  "DEC-065": "APPROVED limited",
+  "DEC-066": "APPROVED limited",
+  "verifiedByteExactBeforeRegistration": true,
+  "QA": "own synthetic only after preflight",
+  "integration": "conditional six outputs/gates/deployment safety",
+  "production": false
+}

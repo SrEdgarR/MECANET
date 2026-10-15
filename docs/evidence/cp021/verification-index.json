@@ -1,0 +1,298 @@
+{
+  "schema": "cp021-evidence-index-v1",
+  "at": "2026-10-15T14:34:47.842911+00:00",
+  "incomingHead": "bcc268814b3e59e375960f87f6b5d8e0d8aff253",
+  "localCodeSha": "ec1c5c9cfd3a39ab3702d52fbd014183ddc52429",
+  "remoteRuntimeSha": "ca15ed980de8167cc6144285a43b85cfbf71a7d3",
+  "externalControllerRevision": "79fab18359e49703b9fb823f8fc099fa6c1a7f7f",
+  "canonicalBase": "86985fe7589032f202ebf0cb057a9b1384217151",
+  "rows": [
+    {
+      "path": "docs/evidence/cp021/approval-artifacts.json",
+      "sha256": "d10deb4869f77e37bfb1211fbe09b6eddbcbe368ab15b9605aeb1fdc3e74276a",
+      "bytes": 901,
+      "classification": "HISTORICAL/INTERMEDIATE, retain own timestamp and scope",
+      "gitBlobSha256": "d10deb4869f77e37bfb1211fbe09b6eddbcbe368ab15b9605aeb1fdc3e74276a",
+      "sha256Meaning": "working-tree bytes at indexing time"
+    },
+    {
+      "path": "docs/evidence/cp021/approval.json",
+      "sha256": "d1f23c56ca76ec3f8dcf73617f373b308e3e830d891f4e97bd03d66aa57ab152",
+      "bytes": 1176,
+      "classification": "HISTORICAL/INTERMEDIATE, retain own timestamp and scope",
+      "gitBlobSha256": "d1f23c56ca76ec3f8dcf73617f373b308e3e830d891f4e97bd03d66aa57ab152",
+      "sha256Meaning": "working-tree bytes at indexing time"
+    },
+    {
+      "path": "docs/evidence/cp021/artifact-budget-review.json",
+      "sha256": "b76559c9aeb6d24a6915ed039bc3cd19ea9066df57a70fbc1995c66a6716762b",
+      "bytes": 20707,
+      "classification": "HISTORICAL/INTERMEDIATE, retain own timestamp and scope",
+      "gitBlobSha256": "ef08188abfa621aca6c2580d57b6849a7ff8dd622640b504d0b7be82660ec2ed",
+      "sha256Meaning": "working-tree bytes at indexing time",
+      "gitNormalization": "CRLF to LF only; original evidence not rewritten"
+    },
+    {
+      "path": "docs/evidence/cp021/artifact-budget-review.md",
+      "sha256": "07b0850be0629fc390db787c0bbb34ed731d8274e51a79e4846666ce29c1138c",
+      "bytes": 9214,
+      "classification": "HISTORICAL/INTERMEDIATE, retain own timestamp and scope",
+      "gitBlobSha256": "bc883a8545cc86b8994fa846a8938c1bca377d791ebbfe2a1d3a72708c0e697a",
+      "sha256Meaning": "working-tree bytes at indexing time",
+      "gitNormalization": "CRLF to LF only; original evidence not rewritten"
+    },
+    {
+      "path": "docs/evidence/cp021/compose-compatibility.json",
+      "sha256": "f371cec2e860100e2b3e2fbfa1613a7579b0b59c22329a9e0e9e9e549f30f9c3",
+      "bytes": 355,
+      "classification": "HISTORICAL/INTERMEDIATE, retain own timestamp and scope",
+      "gitBlobSha256": "f371cec2e860100e2b3e2fbfa1613a7579b0b59c22329a9e0e9e9e549f30f9c3",
+      "sha256Meaning": "working-tree bytes at indexing time"
+    },
+    {
+      "path": "docs/evidence/cp021/environment-entry.json",
+      "sha256": "60f31a6512f7c77628228b798149178835b5fe99747c1e67b6a8f5353212a6e3",
+      "bytes": 20741,
+      "classification": "HISTORICAL/INTERMEDIATE, retain own timestamp and scope",
+      "gitBlobSha256": "60f31a6512f7c77628228b798149178835b5fe99747c1e67b6a8f5353212a6e3",
+      "sha256Meaning": "working-tree bytes at indexing time"
+    },
+    {
+      "path": "docs/evidence/cp021/extension-quality.json",
+      "sha256": "3343c9c1df13505cfaccdac451fb8bdedaa57c737cf2f59541786f294b7c4303",
+      "bytes": 786,
+      "classification": "HISTORICAL/INTERMEDIATE, retain own timestamp and scope",
+      "gitBlobSha256": "3343c9c1df13505cfaccdac451fb8bdedaa57c737cf2f59541786f294b7c4303",
+      "sha256Meaning": "working-tree bytes at indexing time"
+    },
+    {
+      "path": "docs/evidence/cp021/extension-upload.json",
+      "sha256": "fc1084b050539eba8bdf2a3f018ec25dc209e177f9dfb69cf87275eb9e67dce6",
+      "bytes": 1284,
+      "classification": "HISTORICAL/INTERMEDIATE, retain own timestamp and scope",
+      "gitBlobSha256": "fc1084b050539eba8bdf2a3f018ec25dc209e177f9dfb69cf87275eb9e67dce6",
+      "sha256Meaning": "working-tree bytes at indexing time"
+    },
+    {
+      "path": "docs/evidence/cp021/git-artifact-smoke.json",
+      "sha256": "9a8e0e8774ad30561175850804a4e1e68edb7fbe04db6c1d2b4d119000fcaaf6",
+      "bytes": 1320,
+      "classification": "HISTORICAL/INTERMEDIATE, retain own timestamp and scope",
+      "gitBlobSha256": "9a8e0e8774ad30561175850804a4e1e68edb7fbe04db6c1d2b4d119000fcaaf6",
+      "sha256Meaning": "working-tree bytes at indexing time"
+    },
+    {
+      "path": "docs/evidence/cp021/local-browser-smoke.json",
+      "sha256": "9a18657ed168658d4e568d9b956abc58b40c493dedc21fdf91ebbab8492d0c87",
+      "bytes": 143,
+      "classification": "HISTORICAL/INTERMEDIATE, retain own timestamp and scope",
+      "gitBlobSha256": "9a18657ed168658d4e568d9b956abc58b40c493dedc21fdf91ebbab8492d0c87",
+      "sha256Meaning": "working-tree bytes at indexing time"
+    },
+    {
+      "path": "docs/evidence/cp021/local-node.json",
+      "sha256": "c4780234f6723d716175b2c731abff8fa1355b6826186ac0b9a919f6d79c3d55",
+      "bytes": 10785,
+      "classification": "HISTORICAL/INTERMEDIATE, retain own timestamp and scope",
+      "gitBlobSha256": "c4780234f6723d716175b2c731abff8fa1355b6826186ac0b9a919f6d79c3d55",
+      "sha256Meaning": "working-tree bytes at indexing time"
+    },
+    {
+      "path": "docs/evidence/cp021/local-python-correction.json",
+      "sha256": "3005d38c2a1e80c88b9a5a262abefed004fe2536621e6dc04cefea85867e0f45",
+      "bytes": 6291,
+      "classification": "HISTORICAL/INTERMEDIATE, retain own timestamp and scope",
+      "gitBlobSha256": "3005d38c2a1e80c88b9a5a262abefed004fe2536621e6dc04cefea85867e0f45",
+      "sha256Meaning": "working-tree bytes at indexing time"
+    },
+    {
+      "path": "docs/evidence/cp021/local-python-final.json",
+      "sha256": "7d83ed0a995a51d8b56f0dcd3a86508f1e19f96e9a0140f2e7fd05dc80f88eb7",
+      "bytes": 14002,
+      "classification": "HISTORICAL/INTERMEDIATE, retain own timestamp and scope",
+      "gitBlobSha256": "7d83ed0a995a51d8b56f0dcd3a86508f1e19f96e9a0140f2e7fd05dc80f88eb7",
+      "sha256Meaning": "working-tree bytes at indexing time"
+    },
+    {
+      "path": "docs/evidence/cp021/local-python.json",
+      "sha256": "049e134b886702716a60b72262323ba1adb260d4d466aed8e6ddf00b672c38d9",
+      "bytes": 4697,
+      "classification": "HISTORICAL/INTERMEDIATE, retain own timestamp and scope",
+      "gitBlobSha256": "049e134b886702716a60b72262323ba1adb260d4d466aed8e6ddf00b672c38d9",
+      "sha256Meaning": "working-tree bytes at indexing time"
+    },
+    {
+      "path": "docs/evidence/cp021/local-quality-close.json",
+      "sha256": "5bc9d854ca656951d029036be700fe7ee809fe636a472fc7aafd40788da22e69",
+      "bytes": 11501,
+      "classification": "FINAL/SCOPED",
+      "gitBlobSha256": "5bc9d854ca656951d029036be700fe7ee809fe636a472fc7aafd40788da22e69",
+      "sha256Meaning": "working-tree bytes at indexing time"
+    },
+    {
+      "path": "docs/evidence/cp021/local-quality-interim.json",
+      "sha256": "3a7f0c0c10a1e71975119ae5f1dd3fe931328fd4dcfa5b6e7db8c9b572408536",
+      "bytes": 11653,
+      "classification": "HISTORICAL/INTERMEDIATE, retain own timestamp and scope",
+      "gitBlobSha256": "3a7f0c0c10a1e71975119ae5f1dd3fe931328fd4dcfa5b6e7db8c9b572408536",
+      "sha256Meaning": "working-tree bytes at indexing time"
+    },
+    {
+      "path": "docs/evidence/cp021/local-ssh-failure.json",
+      "sha256": "922e6f024ae6df68abaead670dc53f63955477a32fc22aa68b98272257d98705",
+      "bytes": 325,
+      "classification": "HISTORICAL/INTERMEDIATE, retain own timestamp and scope",
+      "gitBlobSha256": "922e6f024ae6df68abaead670dc53f63955477a32fc22aa68b98272257d98705",
+      "sha256Meaning": "working-tree bytes at indexing time"
+    },
+    {
+      "path": "docs/evidence/cp021/matrix.md",
+      "sha256": "bc531ea7ad90829eebd8d979d728508036dd61fb259d87fffc79c9c0480d1d66",
+      "bytes": 2628,
+      "classification": "FINAL/SCOPED",
+      "gitBlobSha256": "bc531ea7ad90829eebd8d979d728508036dd61fb259d87fffc79c9c0480d1d66",
+      "sha256Meaning": "working-tree bytes at indexing time"
+    },
+    {
+      "path": "docs/evidence/cp021/mount-readonly.json",
+      "sha256": "52daa0a299c50869786d7c6ac60ba5ae8f8711810129e19a0ebf01749b7fcd54",
+      "bytes": 2956,
+      "classification": "HISTORICAL/INTERMEDIATE, retain own timestamp and scope",
+      "gitBlobSha256": "52daa0a299c50869786d7c6ac60ba5ae8f8711810129e19a0ebf01749b7fcd54",
+      "sha256Meaning": "working-tree bytes at indexing time"
+    },
+    {
+      "path": "docs/evidence/cp021/physical-preflight.json",
+      "sha256": "4feffff1d0403b825a700f3914c09a4b09d20eb0074a18fb35d4b8e5c9d897d2",
+      "bytes": 1639,
+      "classification": "HISTORICAL/INTERMEDIATE, retain own timestamp and scope",
+      "gitBlobSha256": "4feffff1d0403b825a700f3914c09a4b09d20eb0074a18fb35d4b8e5c9d897d2",
+      "sha256Meaning": "working-tree bytes at indexing time"
+    },
+    {
+      "path": "docs/evidence/cp021/preliminary-projection.json",
+      "sha256": "1092177563a95c32e7b4f5c459c61a35990aa765531d417aab61c9747da52f0b",
+      "bytes": 2445,
+      "classification": "HISTORICAL/INTERMEDIATE, retain own timestamp and scope",
+      "gitBlobSha256": "1092177563a95c32e7b4f5c459c61a35990aa765531d417aab61c9747da52f0b",
+      "sha256Meaning": "working-tree bytes at indexing time"
+    },
+    {
+      "path": "docs/evidence/cp021/preservation-final.json",
+      "sha256": "6ddcd989d3f46626a09ea73cb437f890391fc3b0ca0735a8fddca94d040c0132",
+      "bytes": 1456,
+      "classification": "FINAL/SCOPED",
+      "gitBlobSha256": "6ddcd989d3f46626a09ea73cb437f890391fc3b0ca0735a8fddca94d040c0132",
+      "sha256Meaning": "working-tree bytes at indexing time"
+    },
+    {
+      "path": "docs/evidence/cp021/preservation-local-final.json",
+      "sha256": "288ab07fa7bb170adc11e2d67cd235a606f33b7f0f678f4e5de095096ca41502",
+      "bytes": 4848,
+      "classification": "HISTORICAL/INTERMEDIATE, retain own timestamp and scope",
+      "gitBlobSha256": "288ab07fa7bb170adc11e2d67cd235a606f33b7f0f678f4e5de095096ca41502",
+      "sha256Meaning": "working-tree bytes at indexing time"
+    },
+    {
+      "path": "docs/evidence/cp021/preservation-local.json",
+      "sha256": "9e2c55b1be0333a9edc72a7ca008d4f25bfd8f2518ed2fe0981f52de3fc62959",
+      "bytes": 750,
+      "classification": "HISTORICAL/INTERMEDIATE, retain own timestamp and scope",
+      "gitBlobSha256": "9e2c55b1be0333a9edc72a7ca008d4f25bfd8f2518ed2fe0981f52de3fc62959",
+      "sha256Meaning": "working-tree bytes at indexing time"
+    },
+    {
+      "path": "docs/evidence/cp021/quality-gate.json",
+      "sha256": "3bf5fdf88e8cb2af334bcd2329d2801952f62483cd74e3a418e2f63c5f10f4f9",
+      "bytes": 1629,
+      "classification": "HISTORICAL/INTERMEDIATE, retain own timestamp and scope",
+      "gitBlobSha256": "3bf5fdf88e8cb2af334bcd2329d2801952f62483cd74e3a418e2f63c5f10f4f9",
+      "sha256Meaning": "working-tree bytes at indexing time"
+    },
+    {
+      "path": "docs/evidence/cp021/remote-resume.json",
+      "sha256": "e41de400ca671a2cca61baf38e846339182001f2497f7e2a3da1e04ec0d37898",
+      "bytes": 31009,
+      "classification": "HISTORICAL/INTERMEDIATE, retain own timestamp and scope",
+      "gitBlobSha256": "e41de400ca671a2cca61baf38e846339182001f2497f7e2a3da1e04ec0d37898",
+      "sha256Meaning": "working-tree bytes at indexing time"
+    },
+    {
+      "path": "docs/evidence/cp021/remote-run.json",
+      "sha256": "7d7966113f79ec219a90ea41e7a6dc564d9c5c4a7696c499693674a68ea47090",
+      "bytes": 30107,
+      "classification": "HISTORICAL/INTERMEDIATE, retain own timestamp and scope",
+      "gitBlobSha256": "7d7966113f79ec219a90ea41e7a6dc564d9c5c4a7696c499693674a68ea47090",
+      "sha256Meaning": "working-tree bytes at indexing time"
+    },
+    {
+      "path": "docs/evidence/cp021/resume-preflight.json",
+      "sha256": "380e0b8a4372075ebcc5ff962c7ba6127e26a10e81ff37fe86562fd9b48d45d3",
+      "bytes": 676,
+      "classification": "HISTORICAL/INTERMEDIATE, retain own timestamp and scope",
+      "gitBlobSha256": "380e0b8a4372075ebcc5ff962c7ba6127e26a10e81ff37fe86562fd9b48d45d3",
+      "sha256Meaning": "working-tree bytes at indexing time"
+    },
+    {
+      "path": "docs/evidence/cp021/review-budget-and-guards.md",
+      "sha256": "f3f07fcedfd3ae16d99ea88d248bf7ba620e83dcf490e476b053e282995aa5cc",
+      "bytes": 11403,
+      "classification": "HISTORICAL/INTERMEDIATE, retain own timestamp and scope",
+      "gitBlobSha256": "f3f07fcedfd3ae16d99ea88d248bf7ba620e83dcf490e476b053e282995aa5cc",
+      "sha256Meaning": "working-tree bytes at indexing time"
+    },
+    {
+      "path": "docs/evidence/cp021/review-close.json",
+      "sha256": "42f9ef7d70aa68e32c2bafc1791530b5313babf54bce3181231edadf4c4be4e4",
+      "bytes": 2854,
+      "classification": "FINAL/SCOPED",
+      "gitBlobSha256": "42f9ef7d70aa68e32c2bafc1791530b5313babf54bce3181231edadf4c4be4e4",
+      "sha256Meaning": "working-tree bytes at indexing time"
+    },
+    {
+      "path": "docs/evidence/cp021/review-progress.json",
+      "sha256": "088a77d7b941177b2ccb8f64a916aa47ba7a9effc94ee288bed4d4d4ff78b047",
+      "bytes": 1349,
+      "classification": "HISTORICAL/INTERMEDIATE, retain own timestamp and scope",
+      "gitBlobSha256": "088a77d7b941177b2ccb8f64a916aa47ba7a9effc94ee288bed4d4d4ff78b047",
+      "sha256Meaning": "working-tree bytes at indexing time"
+    },
+    {
+      "path": "docs/evidence/cp021/upload-first-failure.json",
+      "sha256": "966347f36995ad6f472fb4d9ef5b1daf93eb7dcf9846e37acaa30b37da4e469c",
+      "bytes": 821,
+      "classification": "HISTORICAL/INTERMEDIATE, retain own timestamp and scope",
+      "gitBlobSha256": "966347f36995ad6f472fb4d9ef5b1daf93eb7dcf9846e37acaa30b37da4e469c",
+      "sha256Meaning": "working-tree bytes at indexing time"
+    },
+    {
+      "path": "docs/evidence/cp021/upload.json",
+      "sha256": "4dc0be40d6bf07f9159437d1da9d0a6ecd9c37bed993ed24c881eb19b1345c46",
+      "bytes": 2231,
+      "classification": "HISTORICAL/INTERMEDIATE, retain own timestamp and scope",
+      "gitBlobSha256": "4dc0be40d6bf07f9159437d1da9d0a6ecd9c37bed993ed24c881eb19b1345c46",
+      "sha256Meaning": "working-tree bytes at indexing time"
+    },
+    {
+      "path": "docs/evidence/cp021/vps-readonly.json",
+      "sha256": "919da5f3f7d1a86549e91f132e23665bbf090d83a84b988d8c403eeaaee89971",
+      "bytes": 29981,
+      "classification": "HISTORICAL/INTERMEDIATE, retain own timestamp and scope",
+      "gitBlobSha256": "919da5f3f7d1a86549e91f132e23665bbf090d83a84b988d8c403eeaaee89971",
+      "sha256Meaning": "working-tree bytes at indexing time"
+    }
+  ],
+  "proposal": {
+    "path": ".agentic/P1-L3_QA_RETRY_R03.md",
+    "sha256": "b58ad6a856fd987bd6a23358b2f129e0a44a3a75c4206cf57b6d49a9e2d1df05",
+    "status": "SUGGESTED / NOT APPROVED"
+  },
+  "checkpointSha": "identified externally after documentation commit, no self reference",
+  "limits": "SC012/013 applied; all other bounds unchanged",
+  "outputAcceptance": "A1 documentary/local PASS; A2..A6 NOT VERIFIED",
+  "actualRemoteSqlHttpJournal": 0,
+  "cleanup": "FAIL / UNKNOWN1 / CREATED INACTIVE KEEP",
+  "selfHashExcluded": true,
+  "documentationQuality": "separate documentation-quality.json; no cyclic hash inclusion",
+  "hashContract": "sha256 is observed working-tree bytes; gitBlobSha256 is canonical committed bytes. Historical evidence files may have checkout CRLF."
+}

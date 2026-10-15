@@ -1,0 +1,62 @@
+{
+  "schema": "cp021-preservation-final-v1",
+  "at": "2026-10-15T14:22:57.810161+00:00",
+  "provenance": "REMOTE / READ ONLY",
+  "priorConsumers": 27,
+  "priorConsumersPreserved": true,
+  "totalContainers": 28,
+  "ownCreatedInactive": [
+    {
+      "id": "ddcbb1b7902718fd2aa78f1a1e36a195d52085b7239e0c4005dfafa009f5bdb0",
+      "project": "mecanet-qa-p1l3-r02",
+      "service": "postgres",
+      "status": "created",
+      "pid": 0,
+      "running": false,
+      "startedAt": "0001-01-01T00:00:00Z",
+      "restartCount": 0,
+      "publicPorts": {}
+    }
+  ],
+  "roots": [
+    {
+      "path": "/opt/mecanet-qa-p1l3-r02",
+      "exists": true,
+      "uid": 0,
+      "mode": "0o711",
+      "dataEntries": 0
+    },
+    {
+      "path": "/opt/mecanet-qa-p1l3-r02-target",
+      "exists": true,
+      "uid": 0,
+      "mode": "0o711",
+      "dataEntries": 0
+    }
+  ],
+  "ownNetworks": [
+    {
+      "name": "mecanet-qa-p1l3-r02-data",
+      "internal": true,
+      "subnets": [
+        "10.77.61.0/24"
+      ],
+      "endpoints": 0
+    }
+  ],
+  "proposedR03SubnetsCurrentlyOverlap": false,
+  "ledgerTotal": {
+    "artifactFiles": 642,
+    "http": 0,
+    "journal": 0,
+    "sql": 0
+  },
+  "ledgerSequence": 43,
+  "startedUptime": 1465333.09,
+  "elapsedSeconds": 1768.53,
+  "hostPgCaseAge": 600.9,
+  "sourceServiceReferenceExists": false,
+  "cleanupStatus": "HISTORICAL FAIL / UNKNOWN 1 / CREATED INACTIVE KEEP",
+  "noStartNoSqlNoHttp": true,
+  "mutations": 0
+}

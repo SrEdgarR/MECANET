@@ -1,0 +1,71 @@
+{
+  "schema": "cp022-budget-resource-projection-v1",
+  "at": "2026-10-15T15:11:23.984493+00:00",
+  "sourceSha": "7f5986f01c1cce8c35ba3e9635d9001523da0bc8",
+  "provenance": "LOCAL static/design reuse, not throughput",
+  "sourceEstimate": "docs/evidence/cp021/preliminary-projection.json",
+  "sourceEstimateSha256": "1092177563a95c32e7b4f5c459c61a35990aa765531d417aab61c9747da52f0b",
+  "registryHash": "1f2b34b5bb93ae21a74f7d2af8a51bd3cb16d3ea7baa3b55a54481b5875f243c",
+  "limitHash": "65cb46844d2b8a78250839ed14b25fca91561cfcdd7d46557ff5b98829f334c2",
+  "scenarios": 135,
+  "sql": {
+    "nominalBackgroundPerSecond": 88.33333333333333,
+    "nominalBackgroundCase45s": 3975,
+    "nominalBackgroundGlobal1800s": 159000,
+    "remainingGlobalForCommandsAndRetries": 41000,
+    "fullWorstCaseBound": "NOT VERIFIED",
+    "onExceed": "ABORT/KEEP, no reset"
+  },
+  "http": {
+    "closedFamiliesUpper": 244,
+    "cap": 300,
+    "headroom": 56,
+    "components": {
+      "source": 9,
+      "mainHistoryWriteNegatives": 34,
+      "mainA5": 9,
+      "variantA5": 9,
+      "emptyUnreadyReadyAndAllclosedReady": 84,
+      "prefix": 5,
+      "browserReservations": 94
+    }
+  },
+  "time": {
+    "copyVerifyFixedSleepLowerSeconds": 32,
+    "allclosedCaseFixedSleepLowerSeconds": 26,
+    "commitCaseFixedSleepLowerSeconds": 32,
+    "prefixCaseFixedSleepLowerSeconds": 34,
+    "emptyCaseFixedSleepLowerSeconds": 20,
+    "caseCapSeconds": 45,
+    "meaning": "Excludes Docker, IO, TLS, SQL, fsync and hashing; no measured completion guarantee"
+  },
+  "resources": {
+    "configuredDockerMaxNanoCpus": 1000000000,
+    "configuredDockerMemoryMaxMiB": 2048,
+    "hostCpuCount": 2,
+    "rootControllerOutsideDocker": "Must measure overhead and abort on actual pressure; no hard cgroup cap claimed",
+    "pgMaxConnections": 60,
+    "activePgMax": 1,
+    "sourceMaxBytes": 2147483648,
+    "aggregateTargetAllVariantsMaxBytes": 2147483648,
+    "allConsumerChangesForbidden": true
+  },
+  "artifacts": {
+    "capGlobal": 8192,
+    "caseCap": 2000,
+    "originalIncompleteLower": 2414,
+    "runtimeFilesIncludingManifest": 596,
+    "sourceRefReorderAddsArtifacts": 0,
+    "sufficiency": "NOT DEMONSTRATED, abort on hard ledger cap"
+  },
+  "scopeOfReuse": "Namespace/ranges and capture order change; no SQL cadence/pool/scenario/time/budget change. Runtime registry tests prove semantic135 unchanged. New outputs/control metadata are independently counted. Retained r01/r02 storage remains part of host free space.",
+  "physicalSqlBeforeRun": 0,
+  "fullWorstCaseCapacity": "NOT VERIFIED",
+  "guardrails": [
+    "no start without fresh physical prerequisites",
+    "abort any case45s/global1800s/SQL8192case200000global",
+    "CPU/memory/disk/OOM/connection/ownership/foreign-preservation monitor",
+    "exact CID cleanup independently of spent ledger",
+    "no r04 automatic if prePG abort"
+  ]
+}

@@ -1,0 +1,28 @@
+{
+  "schema": "cp021-extension-quality-v1",
+  "controllerRevision": "79fab18359e49703b9fb823f8fc099fa6c1a7f7f",
+  "runtimeSourceSha": "ca15ed980de8167cc6144285a43b85cfbf71a7d3",
+  "result": "PASS",
+  "tests": [
+    {
+      "test": "tests/qa/cp019/compose-compat.test.py",
+      "count": 9,
+      "result": "PASS"
+    },
+    {
+      "test": "tests/qa/cp019/resume-state.test.py",
+      "count": 18,
+      "result": "PASS"
+    },
+    {
+      "test": "tests/qa/cp019/resume.test.py",
+      "count": 5,
+      "result": "PASS"
+    }
+  ],
+  "exactGitSyntax": 3,
+  "parentRuntimeArtifactUnchanged": true,
+  "source": "Models/read-only/passive source compilation only; no physical acceptance",
+  "reviews": "cp021_budget and cp021_variants scopes and message provenance",
+  "requiredOpen": 0
+}

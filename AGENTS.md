@@ -1,6 +1,28 @@
 # Mecanet — protocolo de trabajo
 
-## Vigencia actual CP-017 — sustituye únicamente los límites anteriores del lote/Git
+## Vigencia CP-022 — PostgreSQL inició; ensayo abortado por CPU
+
+**CP-022 — PARCIAL, 2026-10-15. P1 única fase EN CURSO; L1/L2 TERMINAL, L3 EN CURSO.** SC014/DEC072 exacta APPROVED/aplicada a r03/r03-target; A/B y demás SC vigentes. Runtime7f5986f: **PostgreSQL18.6 ARM64 sí arrancó**; aborto posterior de recursos/CPU antes del esquema SaaS. Cleanup PASS, PG EXITED0/PID0/KEEP sin puertos;28 anteriores preservados, incluido r02 CREATED/UNKNOWN histórico. Ledger seq44:639 artefactos/0SQL del arnés/0HTTP/0journal; initdb interno se distingue de esas cifras. A1 PASS documental/local; A2…A6 e Integration NOT VERIFIED. Quality local PASS:415 Node fresh67f9c44 y395 Python por unión393−29+31. Correctivo del monitor sólo local, sin alterar la evidencia física. Environment entrada PASS/ejecución FAIL.72 DEC,14 pendientes: Q32/Q35 BLOCKING y12 FUTURE. Q32: falta contrato de reentrada tras vencer el caso START45s; no reset/alias/r04. Q35: faltan salidas físicas. Sin push/PR/CI/merge, P2 funcional o cambios productivos/compartidos. [Auditoría CP-022](docs/audit/CP-022.md), [matriz](docs/evidence/cp022/matrix.md) y [causa raíz/continuación](docs/evidence/cp022/root-cause-and-continuation.md).
+
+No reanudar START tras el caso vencido ni transferir correcciones locales a helpers sellados. No volver a pedir A/B o SC-011/012/013/014. Conservar r01/r02/r03 y CP017, primary/.kilo, producción y todos los servicios ajenos.
+
+## Antecedente CP-021 — r02 abortado, continuación local cerrada
+
+A/B L3 DEC067/068 y SC011/012/013 APPROVED; no volver a pedirlas. SQL8192/caso200000global, artefactos2000/caso8192global,135 escenarios y demás cotas intactas. Controlador/proveedor integral QA local implementado; leer docs/audit/CP-021.md e índice cp021 por SHA. r02 abortó antes PG START,0SQL/HTTP/restore; un PG CREATED/PID0/sin puertos KEEP y cleanup FAIL UNKNOWN1.27 previos intactos, CP017/r01/primario/.kilo preservados. Relojes r02 agotados: no START, reset, regeneración o caso alias; no adoptar CID por etiquetas. SC014/DEC072 sólo propuesta de pareja r03/r03-target y rangos64/65/66, aprobación específica pendiente antes de aplicar consumidores/recursos. Correcciones locales posteriores no reemplazan helpers sellados r02. P1 única activa, L1/L2 TERMINAL, L3 EN CURSO/A2…A6 e Integration NV. No publicación/CI/merge antes salidas; no P2 funcional/producción/compartidos/Prompt. Próximo paso acotado en propuesta, sin redescubrimiento general.
+
+## Antecedente CP-019 — A/B integral de P1-L3
+
+Fuente humana2e724c7c-a1e8-4812-a713-c181042c0aba: A exacta/B integral hash4d1cf193000106dd20555f6c70acab3cb264fd3a7bfe0a9cf8be662eddb2b3ec/cace66cd34dbad31d480bef8f902bd71effbc0b1 verificadas. DEC067/068; DEC065/066/SC010 aprobadas en ese alcance. Rama codex/p1-l3/basecanónica86985fe. Desarrollo integral y QA propia tras gates/preflight; PR/review/CI/merge condicional sólo con seis salidas PASS y sin despliegues accidentales. Los límites CP018 eran preparación histórica, no revocan esta B. No P2 funcional/costes/producción/compartidos/DNS/público/realdata; CP017 STOPPED/KEEP. Conservar Prompt, snapshots, primario, .kilo, otras aplicaciones y PR1. Plan .agentic/P1-L3_PLAN.md; no otra aprobación por corte. No elevar cuotas/secretos/versiones en retry, no TTL como prueba de cierre.
+
+CP019 resultado parcial2026-10-14: r01 material publicado/Environment FAIL TLS127 antesPG,0SQL/HTTP;1tool STOPPED/KEEP y26previos intactos. Noreset/recreación/regeneración. SC011/DEC069 PROPOSED para parejaexactar02 requiereaprobación antesnamespace/recursos; originalsnapshotintacto. CódigooriginalL3 puedecontinuarlocalmente. Q32/35 BLOCKING,12FUTURE; no publicar rama hasta seis salidas eIntegration.
+
+
+
+## Antecedente CP-018 — preparación únicamente
+
+Fuente humana CP-018 autoriza cerrar diseño/seguridad/F14/candidato L3 y preparación POS independiente; NO A/B L3 ni código funcional/recursos/restore. Base86985fe7589032f202ebf0cb057a9b1384217151/develop verificada, PR #3/#4 y CI final PASS. Rama aislada codex/p1-l3-design; primario704b4ae y .kilo preservados. L1/L2 TERMINAL, no reabrir/repetir pruebas intactas. P1 única activa/P0PARCIAL/SaaSgeneralNOTAPPROVED. Candidato único .agentic/P1-L3_CANDIDATE.md v0.2-CP018 sigue SUGGESTED/NOTAPPROVED, A exacta/B diferenciada pendientes; design/review/modelo local no son verificación PG/HTTP ni READYFORDEVELOPMENT. No push/merge en esta ejecución de preparación. Sin .env/secrets/SSH/infra ni cambios a Prompt. CP017STOPPEDKEEP/29de29 intacto. Actualizar cánones/mapa al hito y §27; no generar nuevos checkpoints administrativos.
+
+## Antecedente CP-017 — sustituye únicamente los límites anteriores del lote/Git
 
 CP-017 terminal para P1-L2, 2026-10-13: A exacta P1-L2 v0.2-CP016/DEC-061 y B diferenciada DEC-062 recibidas del adjunto58f74b6d, hash verificado. P1 única fase EN CURSO; P0 PARCIAL/RG-001 y SaaS general NOT APPROVED. Base develop a0098178fc27467bf4c12da0e97723e0b80ce683/PR #2; P1-L1 TERMINAL conservado. Specification/Design/Development locales acreditados para el lote; QA nueva exclusiva CP017 con preflight ARM64/pins/headroom/redes/secretos propios PASS. P1-L2 TERMINAL con doce criterios PASS e Integration Gate PASS: PR#3 head df9219a, merge/develop7ff9a6c y CI push/PR/canónica PASS; integración documental continua del mismo CP017, sin nuevo lote autorizado. No se hereda PASS L1. Sin lanzamiento ni cambio de infraestructura compartida. DEC-063 admin.mecanet.app futuro y DEC-064 PayPal candidato, ambos fuera del lote.
 
@@ -15,7 +37,7 @@ Responder en español. Esta es una adopción de un producto existente, no un pro
 3. Verificar Git, base, cambios ajenos y alcance autorizado. GitHub permitido: **SrEdgarR/MECANET** exclusivamente.
 4. Consultar las decisiones aprobadas; no convertir propuestas ni comportamiento heredado en requisitos.
 
-## Fase y límites actuales
+## Antecedentes de fase y límites — prevalece vigencia CP-022
 
 - CP-016: **P1 EN CURSO**, única fase activa; P1-L1 **TERMINAL**, ocho PASS e Integration Gate PASS. [PR #2](https://github.com/SrEdgarR/MECANET/pull/2), head `04c5d41299bffc15e201c168677079809feb6a0f`, merge/develop `a0098178fc27467bf4c12da0e97723e0b80ce683`; [CI push](https://github.com/SrEdgarR/MECANET/actions/runs/38440714202), [CI PR](https://github.com/SrEdgarR/MECANET/actions/runs/38440720838) y [CI develop](https://github.com/SrEdgarR/MECANET/actions/runs/38441611717) PASS. Q-42/Q-43 resueltas para SC-008/DEC-060 aprobada, audit SaaS/backend0; legacy FAIL/TD-21 conservado. Código local 0d8285cef117d6174a6053f18ceaac180f8aa1c5. L2 v0.2 candidato revisado A/B pendientes, doce salidas NV, sin implementación/P2/despliegue. Snapshot remoto premerge conservado; cierre posterior solo primary.
 - CP-006 amplía solo la evidencia local: fixtures, simulaciones y caracterización acotada en .agentic/experiments/cp006, con plan previo, destinos locales acreditados, límites y cleanup. No cargar .env ni integrar experimentos en producto/deploy. Delegación por archivos permitida; no preguntas durante la ejecución autónoma solicitada. Esto no autoriza implementación SaaS.

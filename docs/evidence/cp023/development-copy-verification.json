@@ -1,0 +1,10 @@
+{
+  "schema": "cp023-development-copy-verification-v1",
+  "status": "PASS",
+  "sourceVerified": true,
+  "targetVerified": true,
+  "files": 2393,
+  "bytes": 95653430,
+  "copyIndexHash": "ec584f377985c66e73bcdf90c3d9002999682a8a8b066d0ffb7c4da36a6c08c7",
+  "implementation": "production verifyCopyIndex; no directory-fsync claim"
+}

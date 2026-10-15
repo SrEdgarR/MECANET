@@ -1,0 +1,111 @@
+{
+  "checkpoint": "CP-018",
+  "status": "PASS LOCAL ABSTRACT MODEL ONLY",
+  "classification": "DETECTED",
+  "provenance": "LOCAL",
+  "observedAt": "2026-10-13T23:57:39.681Z",
+  "baseSha": "86985fe7589032f202ebf0cb057a9b1384217151",
+  "node": "v24.21.0",
+  "platform": "win32",
+  "architecture": "x64",
+  "modelSha256": "f211a552ee872f4bc49ae2d75ec215fa7b3748301c28460625c15aaa3188b414",
+  "cases": [
+    {
+      "id": "readiness-zero-companies",
+      "status": "PASS"
+    },
+    {
+      "id": "readiness-all-legitimately-closed",
+      "status": "PASS"
+    },
+    {
+      "id": "readiness-open-plus-blocked",
+      "status": "PASS"
+    },
+    {
+      "id": "uncertainty-process-dependency-negatives",
+      "status": "PASS"
+    },
+    {
+      "id": "versions-never-wrap",
+      "status": "PASS"
+    },
+    {
+      "id": "old-session-context-permission-denied",
+      "status": "PASS"
+    },
+    {
+      "id": "central-local-mismatch-never-admits",
+      "status": "PASS"
+    },
+    {
+      "id": "retry-does-not-regenerate-material",
+      "status": "PASS"
+    },
+    {
+      "id": "lost-not-applied-only-exact-step-retries",
+      "status": "PASS"
+    },
+    {
+      "id": "new-restriction-is-not-an-adoptable-retry",
+      "status": "PASS"
+    },
+    {
+      "id": "eligible-unpromoted-is-not-a-legitimate-closure",
+      "status": "PASS"
+    },
+    {
+      "id": "roster-omitted-duplicate-load-error-and-extra-denied",
+      "status": "PASS"
+    },
+    {
+      "id": "activation-ack-unknown-observes-exact-before-or-after",
+      "status": "PASS"
+    },
+    {
+      "id": "bounded-crash-ack-restriction-state-exploration",
+      "status": "PASS",
+      "states": 40,
+      "edges": 230
+    }
+  ],
+  "mutations": [
+    {
+      "id": "require-one-open",
+      "detected": true,
+      "counterexample": "zero-company healthy service incorrectly unavailable"
+    },
+    {
+      "id": "ignore-expected-roster",
+      "detected": true,
+      "counterexample": "missing eligible A incorrectly read as legitimate absence"
+    },
+    {
+      "id": "ignore-barrier-pair",
+      "detected": true,
+      "counterexample": "local OPEN before central confirmation"
+    },
+    {
+      "id": "adopt-current-version",
+      "detected": true,
+      "counterexample": "restriction version7 incorrectly opened instead of conflicting with prepared version6"
+    },
+    {
+      "id": "revive-old-session",
+      "detected": true,
+      "counterexample": "old session incorrectly valid after OPEN"
+    }
+  ],
+  "counts": {
+    "tests": 14,
+    "states": 40,
+    "edges": 230,
+    "mutationsDetected": 5
+  },
+  "durationMs": 9,
+  "limitations": [
+    "No PostgreSQL/HTTP/browser/physical restore executed",
+    "Abstract prerequisites and lock exclusion are assumptions to exercise in QA after A/B",
+    "Not product implementation, CI integration or approval"
+  ]
+}

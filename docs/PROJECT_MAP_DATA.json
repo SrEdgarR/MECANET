@@ -4,36 +4,36 @@
   "active_phase": "P1",
   "active_phase_name": "Fundación aislada y operable",
   "status": "EN CURSO",
-  "last_updated": "2026-10-13",
-  "next_gate": "Revisar diseño/baseline P1-L3 y A exacta; B diferenciada y Development/Environment Gates antes de código o recurso. L2 TERMINAL/Integration PASS; sin producción o reapertura por extensión",
-  "readiness_scope": "P1-L2 v0.2-CP016 APPROVED exacta DEC-061/B DEC-062; QA sintética propia con preflight. SaaS general NOT APPROVED",
+  "last_updated": "2026-10-15",
+  "next_gate": "Q-32: contrato seguro de reentrada tras aborto CPU/caso host-pg-start vencido y nuevo Environment pertinente; Q-35: seis salidas físicas; luego integración condicional antes de TERMINAL",
+  "readiness_scope": "L1/L2 TERMINAL; L3 APPROVED v0.2-CP018 limitado, implementación en curso; SaaS general NOT APPROVED",
   "progress_basis": "Estado cualitativo, sin porcentaje. P1-L1 TERMINAL/ocho PASS e Integration PASS; P1-L2 TERMINAL/doce PASS e Integration PASS. P1 general EN CURSO, SaaS general NOT APPROVED",
-  "implementation": "P1-L1 y P1-L2 TERMINAL integrados; L2 PR #3/develop7ff9a6c41060e186c8e8c6ce475957c53d40de38; sin inventario comercial/publicación ni A/B/implementación L3",
-  "current_checkpoint": "CP-017 cierre documental posterior al PR del mismo checkpoint; aceptación c7335f9bc24b68b578c2a165bbab341962fa6854, transición TERMINAL acreditada, SHA final externa sin autorreferencia",
+  "implementation": "CP022: bindings cerrados SC014/r03, preflight/CREATE/tmpfs/CID y controlador QA verificados; PostgreSQL inició físicamente. Correctivo posterior del resumen del monitor sólo local; SHA67f9c448a3e56b7040e3f937a4e1b17588373d97 con415 Node nuevos/31 monitor, separado del runtime7f5986f",
+  "current_checkpoint": "CP-022 PARCIAL: Quality local PASS; entrada Environment acotada PASS, ejecución r03 FAIL por RESOURCE_CPU_LIMIT tras iniciar PG; A1 documental PASS/A2…A6 NV; checkpoint final identificado externamente",
   "hosting_target": "CONFIRMED DEC-021/SC-005: VPS existente, operación propia independiente de Coolify; PostgreSQL DEC-054. Dominio futuro mecanet.app DEC-059/SC-007",
-  "hosting_execution": "QA CP017 fuente/destino CLOSED y6 contenedores STOPPED/KEEP;20 consumidores ajenos intactos, túnel4312 detenido/18443 cerrado. CP013/CP014 preservadas detenidas; sin URL pública nueva",
+  "hosting_execution": "r03: raíces/material propios, una red Source-data interna y un PostgreSQL EXITED0/PID0/KEEP sin puertos tras cleanup PASS;639 artefactos/seq44/0SQL del arnés/0HTTP/0journal;28 anteriores intactos. r02 CREATED/UNKNOWN conservado; ninguna infraestructura compartida modificada",
   "progress_percent": null,
   "trace": {
-    "base_sha": "a0098178fc27467bf4c12da0e97723e0b80ce683 — develop canónico verificado al iniciar L2",
-    "research_head_sha": "9fcdd9540848edbbdef1cfc94667491c9ab2ba92; lectura focalizada sin reinventariar el VPS",
-    "tested_code_sha": "8199a414ff06220e147b062ce37fa55709311627 — producto L2 actual; resultados separados por fuente/entorno en docs/evidence/cp017. Local258/258 y sintaxis134/Python PASS reportados, sin atribuir pruebas históricas al artefacto actual",
+    "base_sha": "86985fe7589032f202ebf0cb057a9b1384217151 — canónica develop, revalidada sólo lectura15octubre CP020; base del alcance L3",
+    "research_head_sha": "2a3ca97a5353b078bfd6494c00479ea3e02d8d9c — entrada CP022 conservada; no nuevo descubrimiento general",
+    "tested_code_sha": "7f5986f01c1cce8c35ba3e9635d9001523da0bc8 —415 Node/393 Python locales y ejecución física hasta PG START/aborto CPU. Correctivo posterior del monitor31 pruebas locales, unión395 Python; SHA local posterior67f9c448a3e56b7040e3f937a4e1b17588373d97,415 Node nuevos, sin reatribuirle la ejecución física",
     "historical_tested_code_sha": "0d8285cef117d6174a6053f18ceaac180f8aa1c5 — SC-008/L1 local; código/QA de CP-013…016 conservan sus propios SHA",
-    "qa_artifact_sha": "2b0dd67f7f19fa563ae5eae802da533572da7abe — artefacto QA actual, distinto del producto/base y del checkpoint documental",
-    "qa_artifact_digest": "sha256:85f959d949897298450b49a705d30b9688bfbaf9573d142fe4e08acae010e75c",
+    "qa_artifact_sha": "7f5986f01c1cce8c35ba3e9635d9001523da0bc8 — runtime/controlador r03 sellados; no sustituidos tras aborto. ca15ed9/79fab18 de r02 conservan fuentes históricas en CP021",
+    "qa_artifact_digest": "Consultar evidencia cp022/upload.json e índice Git de cp022/git-artifact-smoke.json por sus hashes exactos; artefacto r03 de7f5986f. El índice490abc1b…/tar d39dca11… son exclusivamente r02 histórico",
     "historical_qa_controller_sha": "409880a513bee1eff909caf68d23325af55e9be4 — cierre QA CP-014, sin reatribuirlo a CP017",
     "experimental_test_reference": "CP-006/010 históricos no repetidos ni atribuidos a PostgreSQL; las90 pruebas Mongo f5afaa2 no prueban este lote",
     "HEAD": "Resolver git rev-parse HEAD en cada worktree; checkpoint final no se escribe en su propio commit",
-    "checkpoint_sha": "CP-017 primer checkpoint de aceptación c7335f9bc24b68b578c2a165bbab341962fa6854; cierre documental posterior al PR dentro del mismo CP-017, SHA final identificada externamente/Git sin autoSHA. CP-016 conservado en su auditoría",
-    "approved_head_sha": "704b4ae22f1af7fe868d3faf6bdf17a227fb0f50 — objeto aprobado: archivo completo .agentic/NEXT_LOT_CANDIDATE.md v0.2-CP016, SHA-256 ca975dc822c0bd5e872d3debe824abc536f662007513170f327727878ff3ac71, DEC-061; no aprobación transitiva de todo el commit/código; B separada DEC-062",
+    "checkpoint_sha": "CP022 documental final identificado externamente después del commit; no autorreferencia. Snapshot aprobado cace66cd34dbad31d480bef8f902bd71effbc0b1 intacto",
+    "approved_head_sha": "cace66cd34dbad31d480bef8f902bd71effbc0b1 — objeto P1-L3 completo v0.2-CP018/hash4d1cf193… A DEC-067; B DEC-068 diferenciada. L1/L2 snapshots intactos",
     "historical_approved_head_sha": "3b387b38784907b67e2209a35c3d5f400d70742e — solamente S-18/manifiestoL-01/ocho cortes L1 por DEC-058",
     "merge_sha": "7ff9a6c41060e186c8e8c6ce475957c53d40de38 — PR #3/L2,2026-10-13T23:05:36Z",
-    "current_main_baseline_sha": "7ff9a6c41060e186c8e8c6ce475957c53d40de38 — develop verificado tras CI canónica38482079889 SUCCESS",
-    "next_phase_base_sha": "7ff9a6c41060e186c8e8c6ce475957c53d40de38 — base canónica disponible tras L2, sin aprobar baseline/A/B de L3 ni iniciar otra fase",
-    "local_branch": "codex/cp017-close sobre develop7ff9a6c41060e186c8e8c6ce475957c53d40de38 para cierre documental; codex/p1-l2 integrada por PR #3. Primary/fuente y worktree anterior preservados",
-    "remote_branch": "Rama funcional L2 publicada e integrada por PR #3; L1 PR #2 conservado. PR #1/codex/deploy-vercel-coolify preservados",
+    "current_main_baseline_sha": "86985fe7589032f202ebf0cb057a9b1384217151 — PR #4/cierre L2 y CI develop38483733526 SUCCESS, verificado CP018",
+    "next_phase_base_sha": "86985fe7589032f202ebf0cb057a9b1384217151 — canónica de entrada; CP018 documental conservado, CP019 local pendiente integración",
+    "local_branch": "codex/p1-l3, worktree p1l1-integration aislado desde checkpoint cace66cd34dbad31d480bef8f902bd71effbc0b1 sobre develop86985fe; primario preservado",
+    "remote_branch": "codex/p1-l3 no publicada todavía; develop86985fe canónico. PR/CI/merge condicionados a salidas y ausencia de despliegues accidentales",
     "worktree": "Primario fuente/planning y C:/Users/thede/.codex/worktrees/p1l1-integration/MECANET-develop; .kilo/worktrees/majestic-chiller conservado",
     "integration_target": "develop; [PR #3](https://github.com/SrEdgarR/MECANET/pull/3) MERGED head df9219a202542fca173ffba25fe8d523b40e54cb→merge7ff9a6c41060e186c8e8c6ce475957c53d40de38, head/merge tree iguales; CI canónica SUCCESS. L1 [PR #2](https://github.com/SrEdgarR/MECANET/pull/2) conserva su evidencia histórica",
-    "CI": "L2 [push38481922405](https://github.com/SrEdgarR/MECANET/actions/runs/38481922405), [PR38481927763](https://github.com/SrEdgarR/MECANET/actions/runs/38481927763), [develop38482079889](https://github.com/SrEdgarR/MECANET/actions/runs/38482079889) SUCCESS por SHA propio; checkout PR synthetic merge3bd4dcbe6b44fc78ede161c5b82fc9d640400198 con tree igual al head df9219a, push df9219a y canónica7ff9a6c. Primer FAIL c733255PASS/3FAIL y corrección de fixture conservados en ci-correction.json. Local258/134/Python conserva procedencia; legacy FAIL/TD-21 intacto"
+    "CI": "CP022 sin CI remota/push/PR/merge: matriz de seis salidas aún incompleta. Quality local por sus SHA; historial CP016/017 conserva checkouts propios"
   },
   "readiness": [
     {
@@ -46,25 +46,43 @@
       "id": "R-02",
       "name": "Specification Gate del lote",
       "status": "PASS",
-      "evidence": "P1-L2 v0.2-CP016 completo APPROVED DEC-061: snapshot SHA-256 ca975dc822c0bd5e872d3debe824abc536f662007513170f327727878ff3ac71; no baseline SaaS general por extensión. L1 DEC-058 conservada"
+      "evidence": "Baseline L3 exacta DEC067/068 y SC011/012/013/014 APPROVED en su alcance exacto; snapshot intacto y SaaS general no aprobado"
     },
     {
       "id": "R-03",
       "name": "Design Gates del lote",
       "status": "PASS",
-      "evidence": "Revisión focal F14-L2 y SQL/servicio/UI CP-017 sobre el objeto A exacto, PostgreSQL/Compose independiente; integración pública compartida pendiente"
+      "evidence": "Diseño/F14 CP018 del objeto exacto conservados. SC014 aprobada sólo para r03; diseño no acredita salidas físicas y Q-32 mantiene el contrato de reentrada pendiente"
     },
     {
       "id": "R-04",
-      "name": "READY FOR DEVELOPMENT limitado",
+      "name": "READY FOR DEVELOPMENT L2 histórico",
       "status": "PASS",
-      "evidence": "DEC-062 autorizó B/QA propia; gates/preflight acreditados antes del uso, doce criterios e Integration PASS, P1-L2 TERMINAL. No autoriza L3 ni producción"
+      "evidence": "DEC-062 autorizó B/QA propia; doce criterios e Integration PASS, P1-L2 TERMINAL. Evidencia L2 conservada, sin transferirla a L3 ni producción"
     },
     {
       "id": "R-05",
       "name": "READY FOR PRODUCTION",
       "status": "NOT VERIFIED",
       "evidence": "No producto SaaS completo, pagos/fiscalidad, capacidad, custodia externa, operación ni autorización de corte públicos"
+    },
+    {
+      "id": "R-06",
+      "name": "F14/Design Gate documental P1-L3",
+      "status": "PASS",
+      "evidence": "Objeto4d1cf193… completo/review CP018; A exacta DEC-067 recibida. Ningún PASS físico por aprobación"
+    },
+    {
+      "id": "R-07",
+      "name": "Development Gate local P1-L3",
+      "status": "PASS",
+      "evidence": "Baseline protegida DEC-067/B DEC-068, worktree/Node24.21/npm11.9/locks propios conocidos; entorno suficiente para código/contratos locales. Environment QA separado por recurso"
+    },
+    {
+      "id": "R-08",
+      "name": "Environment QA P1-L3",
+      "status": "FAIL",
+      "evidence": "CP022: entrada acotada PASS, PostgreSQL r03 inició; ejecución FAIL RESOURCE_CPU_LIMIT, cleanup PASS/28 previos intactos. Caso host-pg-start vencido; reentrada segura NOT VERIFIED, sin reset o nueva cohorte"
     }
   ],
   "phases": [
@@ -76,19 +94,19 @@
       "summary": "Mantener candidato SaaS general y resolver diseños antes de sus módulos; no segunda fase activa",
       "closure": "Gates globales antes de baselines posteriores; aceptar baselines limitadas no cierra SaaS general",
       "blockers": "Restos Q-02/11/31/33 y proveedores/fiscalidad/servicios en sus resolve-before; Q-36 resuelta para los lotes aprobados",
-      "evidence": "CP-017: DEC-061/062 limitadas;14 FUTURE/0 BLOCKING, Q-35 conserva garantías posteriores; no cierre global",
+      "evidence": "CP-018: DesignL3 PASS documental;16 FUTURE/0 BLOCKING documental, Q-35 conserva garantías posteriores; no cierre global",
       "document": "../.agentic/PLANNING_STATE.md"
     },
     {
       "id": "P1",
       "name": "Fundación aislada y operable",
       "status": "EN CURSO",
-      "dependencies": "Entradas/gates propios L1/L2 acreditados según RG-001",
-      "summary": "Conservar L1/L2 TERMINAL, sin lote siguiente aprobado",
-      "closure": "L2 doce criterios e Integration Gate PASS; P1 general conserva entregas/gates posteriores",
-      "blockers": "14 FUTURE/0 BLOCKING actuales. Q-35 sólo garantías posteriores; L3 candidato sin A/B/implementación y reapertura fuera de L2",
-      "evidence": "L1 PR #2; L2 PR #3/head df9219a/merge7ff9a6c/tres CI SUCCESS, matriz doce PASS/review0/Quality/cleanup por fuentes",
-      "document": "specs/P1-L2.md"
+      "dependencies": "L1/L2 TERMINAL y A/B L3",
+      "summary": "Cerrar contrato seguro de reentrada y verificar L3; r03 inició PG y abortó CPU, cleanup PASS",
+      "closure": "Seis salidas y Phase/Integration Gates propios",
+      "blockers": "Q32/Q35 BLOCKING;12 FUTURE",
+      "evidence": "CP022 Quality local PASS; entrada acotada PASS/ejecución FAIL; SC014 APPROVED/aplicada",
+      "document": "specs/P1-L3.md"
     },
     {
       "id": "P2",
@@ -241,6 +259,48 @@
       "name": "Integration Gate del lote (§8.5)",
       "status": "PASS",
       "criterion": "[PR #3](https://github.com/SrEdgarR/MECANET/pull/3), head df9219a202542fca173ffba25fe8d523b40e54cb, merge/develop7ff9a6c41060e186c8e8c6ce475957c53d40de38, tres CI SUCCESS por checkout real; [integration](evidence/cp017/integration.json) conserva provenance. L2 TERMINAL; sin A/B L3"
+    },
+    {
+      "phase": "P1",
+      "id": "P1-L3-DESIGN",
+      "name": "F14/Design Gate documental",
+      "status": "PASS",
+      "criterion": "CP018 objeto íntegro4d1cf193… y peer/documentación; SC010/DEC065066 APPROVED CP019. Función/PG independientes"
+    },
+    {
+      "phase": "P1",
+      "id": "P1-L3-A",
+      "name": "Baseline aprobada exacta",
+      "status": "PASS",
+      "criterion": "DEC-067 hash4d1cf193…/cace66cd… completos verificados; Q44 resuelta, snapshot protegido"
+    },
+    {
+      "phase": "P1",
+      "id": "P1-L3-B",
+      "name": "Implementación integral y Development Gate local",
+      "status": "PASS",
+      "criterion": "DEC-068/B integral condicionada y entrada local suficiente; Q45 resuelta. Environment/preflight y salidas independientes"
+    },
+    {
+      "phase": "P1",
+      "id": "P1-L3-E",
+      "name": "Environment y preflight por recurso",
+      "status": "FAIL",
+      "criterion": "CP022: SC014 exacta APPROVED/aplicada; entrada fresca acotada PASS y PG18.6 ARM64 iniciado. Aborto RESOURCE_CPU_LIMIT antes SQL del arnés/HTTP; cleanup PASS/28 previos. Caso host-pg-start45s vencido, contrato de reentrada seguro NOT VERIFIED; sin reset/r04"
+    },
+    {
+      "phase": "P1",
+      "id": "P1-L3-OUT",
+      "name": "Seis criterios de aceptación",
+      "status": "NOT VERIFIED",
+      "criterion": "A1 documental/local PASS; A2…A6 pendientes de PG/dosAPI/restore/reapertura/browser/rollback reales. r03 llegó a PG START pero0 SQL del arnés/HTTP/journal; no TERMINAL"
+    },
+    {
+      "phase": "P1",
+      "id": "P1-L3-INT",
+      "name": "Integration Gate L3",
+      "status": "NOT VERIFIED",
+      "criterion": "Seis salidas/Quality/revisión local antes de publicar; luego PR/CI/review/merge condicional y CI canónica/Integration antes TERMINAL. Sin push/PR/CI remota/merge CP022"
     }
   ],
   "screens": [
@@ -693,6 +753,54 @@
       "title": "PayPal como candidato adicional recurrente",
       "status": "PROPOSED",
       "detail": "- Fecha/estado/tipo: 2026-10-13, CP-017 / PROPOSED / evaluación externa futura.\n- Fuente humana: adjunto actual solicita considerar PayPal además de CardNET/AZUL; CONFIRMED únicamente su incorporación a la evaluación. No proveedor aprobado ni sustitución de DEC-008/alternativas actuales.\n- Pendiente técnico/contractual/comercial Q-03/38 antes de primer código de pagos/P3: disponibilidad para el comerciante concreto RD, recurrencia/monedas/fees/cancelación/webhooks y condiciones verificables. No conexión/cobro/contratación ni afirmación de disponibilidad en esta ejecución; no bloquea QA sintética L2."
+    },
+    {
+      "id": "DEC-065",
+      "title": "Recuperación y reapertura reanudables de P1-L3",
+      "status": "APPROVED",
+      "detail": "**Vigencia CP-019: CONFIRMED / APPROVED / en el objeto exacto DEC-067; B separada DEC-068.** El estado PROPOSED siguiente describe exclusivamente CP-018 y se conserva como historia.\n\n- Fecha/estado/tipo: 2026-10-13, CP-018 / PROPOSED / SUGGESTED arquitectura/seguridad/operación; parte propuesta SC-010, sin A/B.\n- Fuente: instrucción humana CP-018 pide completar diseño; no aprueba mecanismo. [Candidato único](../.agentic/P1-L3_CANDIDATE.md) v0.2-CP018 contiene el objeto exacto para A futura. No duplicar baseline ni extender DEC-061/062.\n- Problema: restore CLOSED L2 no acredita procedimiento de apertura/continuación, material una-vez, cierre original, bindings de recursos o barreras entre generaciones.\n- Propuesta exacta:006/registros por run/tenant/guard, custodia write-ahead privada antes de SQL, expected before/after/CAS y compensación monotónica, reloj con transferencia registrada, promoción individual y activación final central atómica. Conservar namespace/resultados históricos/tombstones/SID antiguos revocados y recursos inciertos hasta fin positivo. Sólo RESTORE identificado consumible; TENANT/subject nunca retirados por recovery.\n- Alternativas descartadas: simple up/copiarcluster, regenerar claves por retry, adoptar versión actual, TTL/takeover, eliminar restricciones globalmente, 2PC/vault externo/microservicios sin necesidad.\n- Impacto/reverse-impact: schema3/006, authority/readerpools/descriptores, coordinator/SQLbarreras/results, entry/worker/clock, custodia/harness/regresiones y estado/mapa; snapshots y003–005 intactos. P2/P3/P4 mantienen gates de dominio, no implementación por extensión.\n- Validación/límites: revisión y modelo LOCAL sólo; SQL/HTTP/fsync/clock/restore/apertura reales NOT VERIFIED. CP017STOPPEDKEEP, nueva cohorte/margen/cotas/preflight sólo después de A/B/Development/Environment. Rollback cerrado/KEEP, sin datos reales ni origen abierto; resolve-before primer código L3/recurso/reapertura respectivamente."
+    },
+    {
+      "id": "DEC-066",
+      "title": "Readiness técnico independiente del número de empresas OPEN",
+      "status": "APPROVED",
+      "detail": "**Vigencia CP-019: CONFIRMED / APPROVED / en el objeto exacto DEC-067; B separada DEC-068.** El estado PROPOSED siguiente describe exclusivamente CP-018 y se conserva como historia.\n\n- Fecha/estado/tipo: 2026-10-13, CP-018 / PROPOSED / SUGGESTED contrato observable; parte propuesta SC-010, sin A/B.\n- Fuente: instrucción humana CP-018 pide evaluar cero empresas y contrato único; no cambio del handler actual. [Candidato L3§5](../.agentic/P1-L3_CANDIDATE.md#5-contrato-único-de-salud-y-autorización).\n- Propuesta exacta: live prueba proceso; ready200 sólo conformidad técnica/config/schema/clock/barrera/inventario completo y NORMAL válido o recovery COMPLETE. Cero empresas custodiado vacío o todas legítimamente CLOSED pueden200; elegible pendiente, UNKNOWN de recovery/cierre, error/conjunto incompleto dan503. Cuerpos mínimos/no-store; permiso/tenant/acción/cupo se comprueban por request y SQL, nunca concedidos por health.\n- Alternativas: exigir≥1OPEN o que todos OPEN produce503 engañoso con cero clientes/Bbloqueada; omitir DB/scopes o ignorar incertidumbre para conseguir200 descarta garantías.\n- Impacto/reverse-impact: app/ready/writes/observador SQL y consumidores QA/Compose propios; Nginx estático no ofrece healthcheck ni autoactivación actual. Misma barrera durable impide negocio aun si un proxy reenvía. Regresión diferencia ordinaryUNKNOWN con guardas íntegras del recoveryUNKNOWN; no falsear readinessCP017 histórica.\n- Gate/límites: DG-ready/F14/review documental antes A; handler/006/consumidores sólo después A/B y pruebas HTTP/SQL de salida L3. Sin proxy/DNS/production/cambios compartidos. A exacta debe incluir explícitamente SC-010 y ambas DEC propuestas; B separada.\n\n### SC-010 — APPROVED CP-019 / propuesta histórica CP-018\n\nCambio real de mecanismo y readiness respecto de los fragmentos aprobados L1/L2, no SPEC ERRATA. Análisis de impacto en DEC-065/066 y candidato§9; cada garantía previa preservada o cambio exacto propuesto. Ninguna aprobación implícita, ninguna migración/handler modificado en CP-018. Resolver A del hash completo y B diferenciada antes del primer cambio funcional; verificar delta real en el lote autorizado, sin trasladar pruebas L3 a P6."
+    },
+    {
+      "id": "DEC-067",
+      "title": "A exacta de P1-L3 v0.2-CP018",
+      "status": "APPROVED",
+      "detail": "- Fecha/estado/tipo: 2026-10-13, CP-019 / CONFIRMED / APPROVED / A de baseline limitada.\n- Fuente humana directa: adjunto `2e724c7c-a1e8-4812-a713-c181042c0aba` §1, «APRUEBO A y AUTORIZO B»; verificación byte exacta del candidato en checkpoint `cace66cd34dbad31d480bef8f902bd71effbc0b1`, hash `4d1cf193000106dd20555f6c70acab3cb264fd3a7bfe0a9cf8be662eddb2b3ec`, antes de registrar.\n- Objeto: archivo completo, SC-010 y DEC-065/066, seis criterios, recuperación, custodia, promoción/readiness. DEC-065/066 y SC-010 pasan a APPROVED en este alcance; sus textos CP018 PROPOSED se conservan como historia. Es SPEC CHANGE real de mecanismo, no errata ni permiso de alterar snapshots L1/L2.\n- Impacto inverso aprobado: SQL006/schema3/guards, runtime/authority/pools/coordinator, reloj/entry propios, health/consumidores, protocolo privado y pruebas. Ningún cambio fiscal/comercial/operador/pagos/P2 por extensión. [Baseline protegida](specs/P1-L3.md)."
+    },
+    {
+      "id": "DEC-068",
+      "title": "B integral e integración condicionada de P1-L3",
+      "status": "APPROVED",
+      "detail": "- Fecha/estado/tipo: 2026-10-13, CP-019 / CONFIRMED / APPROVED / ejecución diferenciada de A.\n- Fuente: mismo adjunto §1B/§§2…8; implementación integral L3 y QA nueva autorizadas tras Development/Environment/preflight, sin B por archivo/prueba/corrección/corte. PR/CI/review/merge exclusivamente con seis salidas y gates PASS y sin despliegue no autorizado.\n- Límites: PostgreSQL18.6 ARM64/dosAPI/privado/Compose propios, presupuesto exacto aprobado antes de recursos; preservar CP017/29de29, Coolify/Traefik/Nexora/EAK/DNS/puertos/producción/secretos ajenos y PR1. No P2 funcional, gastos, datos reales ni RPO/RTO comercial.\n- Q44/Q45 resueltas por fuente humana exacta; Environment y salida Q35 siguen pruebas independientes antes del recurso/TERMINAL. [Plan previo](../.agentic/P1-L3_PLAN.md)."
+    },
+    {
+      "id": "DEC-069",
+      "title": "Cohorte sucesora tras el aborto inicial de Environment L3",
+      "status": "APPROVED",
+      "detail": "- Fecha/estado/tipo:2026-10-14, continuación posterior a CP-019 / CONFIRMED / APPROVED / infraestructura de ensayo y seguridad; **SC-011 APPROVED**.\n- Fuente humana directa actual: «Apruebo SC-011». Aprueba exactamente el objeto registrado en82569344118307d0165912f11ddc94bd93d9ee2d/P1-L3_ENV_RETRY, con r01KEEP/r02cerrado y todas sus cotas. Estado PROPOSED de CP-019 conservado en su checkpoint; no otra A/B L3 ni tercera cohorte por extensión.\n- Problema DETECTED: r01 publicó material definitivo y abortó TLS127 antes de PostgreSQL; caso45s vencido durante diagnóstico, ledger y recurso STOPPED/KEEP. No autoriza reset/regeneración ni declarar capacidad insuficiente. [Evidencia real](evidence/cp019/remote-run.json).\n- Decisión aprobada exacta (propuesta originalmente en CP-019): una pareja nueva r02/r02-target en sus raíces propias, con preflight/TLS corregido y mismos límites por cohorte, conservando r01/material/1061 cargos/evidencia y26 consumidores previos. Sin namespace libre, reutilización de secretos o tercera cohorte por extensión.\n- Motivo/alternativas: no se puede sustituir silenciosamente la whitelist de identidad del objeto aprobado ni reiniciar el caso para obtener PASS; mantener abortado y resolver el cambio acotado es la alternativa segura. [Objeto/impacto/reversión](../.agentic/P1-L3_ENV_RETRY.md).\n- Documentos/código afectados: enmienda del wrapper de baseline sin alterar snapshot; protocol/custody y adaptadores QA/ledger/config/fixture/copy/entry/tests con identidad cerrada nueva. L1/L2/P2…P6 conservan alcance y evidencia; P2 no autorizada. No imágenes/puertos compartidos/DNS/gasto.\n- Validación/resolve-before: revisión independiente de autoridad§6/8 y Prompt§5.1; aprobación SC-011 recibida antes de implementar r02. Quality/Environment/preflight y salida L3 se acreditan por separado. **No otra A/B integral L3**; el Prompt y el snapshot original siguen intactos.\n\n### SC-011 — APPROVED / propuesta CP-019 conservada históricamente\n\nCambia exclusivamente los destinos y la identidad cerrada del siguiente intento QA; no es SPEC ERRATA ni cambio de contrato de producto. Los IDs r01 de la baseline corresponden al entorno realmente creado y al material final confirmado. Análisis/reverse-impact/rollback en P1-L3_ENV_RETRY; preservación y límites expresos. La implementación r02 queda autorizada por la aprobación actual, condicionada a Quality/Environment/preflight frescos, no a otra decisión humana."
+    },
+    {
+      "id": "DEC-070",
+      "title": "Ajuste SQL del ensayo r02 aprobado",
+      "status": "APPROVED",
+      "detail": "- Fecha/estado/tipo: 2026-10-15, CP-021 / CONFIRMED / APPROVED / condición cuantitativa de QA; **SC-012 APPROVED**. Fuente humana directa actual: «APRUEBO SC-012 / DEC-070», exclusivamente8192SQL/caso y200000global, sin ampliar los demás límites ni el número de escenarios. Objeto CP020 SHA-256 `7a3c8e4d1701e35b9474911b0da5ae61bd4336b8ee513510a6db54e7a1d602ab` en bcc268814b3e59e375960f87f6b5d8e0d8aff253.\n- Antecedente CP020: conteo local reproducible de módulos reales con dobles, [viabilidad](evidence/cp020/sql-budget-feasibility.md); propuesta aún no aprobada entonces. El mensaje humano CP021 sustituye únicamente ese estado y aprueba las dos cifras; no otras cotas o permisos.\n- Decisión aprobada exacta: **8192 SQL por caso y 200000 SQL global**, en vez de 140/3000. Cada query/transacción/observer/retry/reloj sigue contado; fuente/destino/variantes comparten el total. Ningún cambio de tiempo, HTTP, archivos, journal, CPU/RAM/conexiones, cuotas o identidad SC-011.\n- Motivo: 97 SQL de admisión por petición; subconjunto principal3298>3000 y caso de siete GET679>140 antes de otros costes. Fondo nominal88,333SQL/s da3975 por45s/159000 por30min exclusivos. Márgenes propuestos, no capacidad real ni garantía ante contención/fallos.\n- Impacto/alternativas/reverse-impact/rollback y condiciones: [objeto completo SC-012](../.agentic/P1-L3_SQL_BUDGET_CHANGE.md). SPEC CHANGE real, no errata; snapshot original y propuesta CP020 intactos. Aplicar8192/200000 a consumidores antes de recursos, conservando135escenarios del registro vigente y las otras cotas. Detener/conservar al agotar cualquier cota, sin ocultar consultas ni resetear casos.\n- Resolve-before: aprobación exacta recibida antes de modificar cotas; ahora coherencia de consumidores/registro, provider/publishers, review/Quality, proyección de carga y Environment/preflight físico actual antes de recursos. No nueva A/B funcional o SC011; no tercera cohorte, despliegue público o permiso compartido. Q-32 conserva evidencia de entrada; Q-35 salidas físicas e Integration. No aumentar número de escenarios ni otro presupuesto sin autorización específica."
+    },
+    {
+      "id": "DEC-071",
+      "title": "Límite acumulado de artefactos del ensayo r02",
+      "status": "APPROVED",
+      "detail": "2026-10-15 / APPROVED / CONFIRMED. Fuente humana directa: respuesta actual «Aprobar SC-013 / DEC-071 exclusivamente». Objeto técnico SC-013 v0.1-CP021 aprobado: [objeto revisable](../.agentic/P1-L3_ARTIFACT_BUDGET_CHANGE.md), SHA-256 `acd92b9ddb980a6bd0731610eb60b340601873ba39c981a21015c61d2514acf0`. Autoriza cambiar únicamente2000→8192 artefactos acumulados; mantener2000por caso y todos los demás límites, incluidas las135identidades de escenarios y las cotas SQL aprobadas DEC070.\n\nFuente DETECTED/local: [conteo del programa real](evidence/cp021/artifact-budget-review.md), mínimo cerrado2020 y ampliado incompleto2414. Las dos optimizaciones puntuales evaluadas no aplicadas dejan2322antes de otras creaciones; no habilitan r02. La cota8192 quedó APPROVED por esta respuesta; su suficiencia y la capacidad siguen NOT VERIFIED. La propuesta original permanece histórica. Impacto/reverse-impact/alternativas/rollback y condiciones en el objeto. No autoriza recursos ni cambios compartidos; A/B DEC067/068 y SC011/SC012 conservadas, no se vuelven a solicitar. La aprobación resuelve sólo la decisión del contador. Resolve-before: aplicar/revisar todos los consumidores antes del primer ledger/material/recurso r02; Quality/controlador integral/preflight siguen separados."
+    },
+    {
+      "id": "DEC-072",
+      "title": "Cohorte sucesora r03 aprobada tras abortar r02",
+      "status": "APPROVED",
+      "detail": "2026-10-15 / APPROVED / CONFIRMED. **SC-014 APPROVED**, por fuente humana directa actual, tras verificar hash exacto y alcance. Autoriza aplicar coherentemente consumidores y crear únicamente QA r03/r03-target después de sus gates/preflight. No altera A/B DEC067/068 o SC011/012/013 ya aprobadas. Objeto exacto: [P1-L3_QA_RETRY_R03](../.agentic/P1-L3_QA_RETRY_R03.md), SHA-256 `b58ad6a856fd987bd6a23358b2f129e0a44a3a75c4206cf57b6d49a9e2d1df05`.\n\nMotivo DETECTED/REMOTE: r02 falló antes PG START por dos errores del arnés; el caso host-pg-start y el reloj global originales no habilitan continuar. Un contenedor CREATED inactivo se conserva con cleanup FAIL UNKNOWN1; no se adopta ni detiene por etiquetas. No es fallo SQL del producto. Propuesta: únicamente IDs/rutas r03/r03-target y redes privadas64/65/66, material/TLS/ledger nuevos propios elegidos una vez tras aprobación, conservando r01/r02/CP017. Mismos135 escenarios semánticos y todas las cotas; no r04, reset o gasto.\n\nSPEC CHANGE de identidad protegida, no errata. Impacto y reverse-impact/alternativas/riesgos/reversión y consumidores afectados en objeto. §5.1 exige aprobación explícita antes del cambio, seguida de coherencia/Quality/review/preflight físico fresco y Environment. La foto14:22 sin solapamientos no prueba disponibilidad futura. Fuente humana CP022: «APRUEBO SC-014 / DEC-072» exclusivamente para el objeto b58ad6a8…e2d1df05; [verificación previa](evidence/cp022/approval.json). Propuesta histórica y snapshot intactos. No r04 automático si aborta antes PG: análisis de causa raíz del procedimiento primero. Q32 localizado; Q35 y seis salidas/Integration permanecen NOT VERIFIED. No código funcional, P2, compartidos o producción autorizados por esta propuesta.\n\n### SE-003 — orden de integración y representación documental\n\nCP021 / SPEC ERRATA: precisión del wrapper SC012 y de la propuesta SC014 antes de aprobarla. Integration Gate requiere PR/CI/review/merge/canónica y no puede preceder al PR; seis salidas/Quality/review local sí lo preceden. Fuente: Prompt§8.5 y autorización condicional DEC068. No nueva garantía, excepción o permiso; snapshot protegido intacto y ninguna nueva aprobación inferida. DEC071 también aclara que8192 es una cota aprobada y su suficiencia sigue NOT VERIFIED. Evidencia: auditoría CP021 y review-close."
     }
   ],
   "pending": [
@@ -740,9 +848,9 @@
     },
     {
       "id": "Q-32",
-      "title": "evidencia — Capas y entornos posteriores a la QA actual",
-      "priority": "FUTURE",
-      "resolve_before": "Environment Gate antes de cada recurso/entorno nuevo; entrada pública y producción separadas"
+      "title": "evidencia — contrato de reentrada segura y entorno QA L3",
+      "priority": "BLOCKING",
+      "resolve_before": "Antes de cualquier START/reentrada física posterior al aborto CPU; mantener relojes y cargos originales, gates/preflight pertinentes"
     },
     {
       "id": "Q-33",
@@ -758,9 +866,9 @@
     },
     {
       "id": "Q-35",
-      "title": "evidencia — Garantías posteriores; salida e Integration Gate L2 resueltos",
-      "priority": "FUTURE",
-      "resolve_before": "Antes de depender de cada garantía futura, reapertura verificada fuera de L2 o salida del lote/fase correspondiente P1…P6; no bloquea L2 TERMINAL"
+      "title": "evidencia — Seis salidas reales L3 y recuperación/reapertura",
+      "priority": "BLOCKING",
+      "resolve_before": "Phase Gate P1-L3 antes de COMPLETADA/TERMINAL y antes de publicación dependiente; Integration Gate antes TERMINAL y P2 dependiente"
     },
     {
       "id": "Q-38",
@@ -1032,6 +1140,18 @@
       "priority": "FUTURE",
       "resolve_before": "Antes de volver a usar tooling legacy; revalidar lane por cambio de inputs/dependencias, CI antes de merge",
       "evidence": "docs/evidence/cp016; diagnóstico legacy FAIL y verificación propia PASS separados",
+      "status": "OPEN"
+    },
+    {
+      "id": "TD-22",
+      "type": "Defecto del arnés QA L3",
+      "severity": "Alta operativa, ámbito QA",
+      "description": "Tras aborto de recursos con PG iniciado, execute monolítico no tiene transición de reentrada antes de foundation; caso START45s vence. La observación rechazada no se guardaba",
+      "mitigation": "Monitor corregido sólo local67f/RED→GREEN31; diseñar recibos/FIN/reconciliación y resolver explícitamente cualquier cambio de garantía temporal antes de ejecutar, sin reset/alias/cohorte automática",
+      "owner": "Ingeniería QA/P1-L3",
+      "priority": "BLOCKING",
+      "resolve_before": "Q32 antes del siguiente START/efecto QA; Q35 antes de salidas e integración L3. No reabre L1/L2",
+      "evidence": "docs/evidence/cp022/root-cause-and-continuation.md; runtime7f físico FAIL/cleanupPASS; local67f distinto",
       "status": "OPEN"
     }
   ],
@@ -3715,6 +3835,986 @@
       "sha": "ninguna baseline L3 aprobada",
       "date": "2026-10-13",
       "provenance": "DETECTED"
+    },
+    {
+      "id": "C-269",
+      "name": "L3-A1 Design/F14 coherente",
+      "status": "PASS",
+      "evidence": "[Design Gate](evidence/cp018/design-gate.md), candidate/reviews0REQUIRED",
+      "environment": "LOCAL DOCUMENTAL",
+      "sha": "candidate4d1cf193…",
+      "date": "2026-10-13",
+      "provenance": "LOCAL"
+    },
+    {
+      "id": "C-270",
+      "name": "L3-A2 Design/F14 coherente",
+      "status": "PASS",
+      "evidence": "[Design Gate](evidence/cp018/design-gate.md), candidate/reviews0REQUIRED",
+      "environment": "LOCAL DOCUMENTAL",
+      "sha": "candidate4d1cf193…",
+      "date": "2026-10-13",
+      "provenance": "LOCAL"
+    },
+    {
+      "id": "C-271",
+      "name": "L3-A3 Design/F14 coherente",
+      "status": "PASS",
+      "evidence": "[Design Gate](evidence/cp018/design-gate.md), candidate/reviews0REQUIRED",
+      "environment": "LOCAL DOCUMENTAL",
+      "sha": "candidate4d1cf193…",
+      "date": "2026-10-13",
+      "provenance": "LOCAL"
+    },
+    {
+      "id": "C-272",
+      "name": "L3-A4 Design/F14 coherente",
+      "status": "PASS",
+      "evidence": "[Design Gate](evidence/cp018/design-gate.md), candidate/reviews0REQUIRED",
+      "environment": "LOCAL DOCUMENTAL",
+      "sha": "candidate4d1cf193…",
+      "date": "2026-10-13",
+      "provenance": "LOCAL"
+    },
+    {
+      "id": "C-273",
+      "name": "L3-A5 Design/F14 coherente",
+      "status": "PASS",
+      "evidence": "[Design Gate](evidence/cp018/design-gate.md), candidate/reviews0REQUIRED",
+      "environment": "LOCAL DOCUMENTAL",
+      "sha": "candidate4d1cf193…",
+      "date": "2026-10-13",
+      "provenance": "LOCAL"
+    },
+    {
+      "id": "C-274",
+      "name": "L3-A6 Design/F14 coherente",
+      "status": "PASS",
+      "evidence": "[Design Gate](evidence/cp018/design-gate.md), candidate/reviews0REQUIRED",
+      "environment": "LOCAL DOCUMENTAL",
+      "sha": "candidate4d1cf193…",
+      "date": "2026-10-13",
+      "provenance": "LOCAL"
+    },
+    {
+      "id": "C-275",
+      "name": "L3-A1 aceptación funcional",
+      "status": "NOT VERIFIED",
+      "evidence": "Pruebas reales despuésA/B/gates/preflight; diseño no ejecución",
+      "environment": "FUTURE QA propia",
+      "sha": "Sin código L3",
+      "date": "2026-10-13",
+      "provenance": "LOCAL"
+    },
+    {
+      "id": "C-276",
+      "name": "L3-A2 aceptación funcional",
+      "status": "NOT VERIFIED",
+      "evidence": "Pruebas reales despuésA/B/gates/preflight; diseño no ejecución",
+      "environment": "FUTURE QA propia",
+      "sha": "Sin código L3",
+      "date": "2026-10-13",
+      "provenance": "LOCAL"
+    },
+    {
+      "id": "C-277",
+      "name": "L3-A3 aceptación funcional",
+      "status": "NOT VERIFIED",
+      "evidence": "Pruebas reales despuésA/B/gates/preflight; diseño no ejecución",
+      "environment": "FUTURE QA propia",
+      "sha": "Sin código L3",
+      "date": "2026-10-13",
+      "provenance": "LOCAL"
+    },
+    {
+      "id": "C-278",
+      "name": "L3-A4 aceptación funcional",
+      "status": "NOT VERIFIED",
+      "evidence": "Pruebas reales despuésA/B/gates/preflight; diseño no ejecución",
+      "environment": "FUTURE QA propia",
+      "sha": "Sin código L3",
+      "date": "2026-10-13",
+      "provenance": "LOCAL"
+    },
+    {
+      "id": "C-279",
+      "name": "L3-A5 aceptación funcional",
+      "status": "NOT VERIFIED",
+      "evidence": "Pruebas reales despuésA/B/gates/preflight; diseño no ejecución",
+      "environment": "FUTURE QA propia",
+      "sha": "Sin código L3",
+      "date": "2026-10-13",
+      "provenance": "LOCAL"
+    },
+    {
+      "id": "C-280",
+      "name": "L3-A6 aceptación funcional",
+      "status": "NOT VERIFIED",
+      "evidence": "Pruebas reales despuésA/B/gates/preflight; diseño no ejecución",
+      "environment": "FUTURE QA propia",
+      "sha": "Sin código L3",
+      "date": "2026-10-13",
+      "provenance": "LOCAL"
+    },
+    {
+      "id": "C-281",
+      "name": "A exacta L3",
+      "status": "NOT VERIFIED",
+      "evidence": "Q44/hash completo/A no recibida",
+      "environment": "LOCAL DOCUMENTAL",
+      "sha": "base86985fe",
+      "date": "2026-10-13",
+      "provenance": "LOCAL"
+    },
+    {
+      "id": "C-282",
+      "name": "B integral L3",
+      "status": "NOT VERIFIED",
+      "evidence": "Q45/condicionada/gates/B no recibida",
+      "environment": "LOCAL DOCUMENTAL",
+      "sha": "base86985fe",
+      "date": "2026-10-13",
+      "provenance": "LOCAL"
+    },
+    {
+      "id": "C-283",
+      "name": "Environment L3 efectivo",
+      "status": "NOT VERIFIED",
+      "evidence": "Preflight por recurso antes de crear/usar; recursos0",
+      "environment": "LOCAL DOCUMENTAL",
+      "sha": "base86985fe",
+      "date": "2026-10-13",
+      "provenance": "LOCAL"
+    },
+    {
+      "id": "C-284",
+      "name": "Preparación POS sin implementación",
+      "status": "PASS",
+      "evidence": "Apéndice existente/POS7NV/guardia/monetaria/Q18",
+      "environment": "LOCAL DOCUMENTAL",
+      "sha": "base86985fe",
+      "date": "2026-10-13",
+      "provenance": "LOCAL"
+    },
+    {
+      "id": "C-285",
+      "name": "Producto/protegidos/historia preservados",
+      "status": "PASS",
+      "evidence": "Diff sólo documentos/modelo, Prompt/baselines exactos",
+      "environment": "LOCAL DOCUMENTAL",
+      "sha": "base86985fe",
+      "date": "2026-10-13",
+      "provenance": "LOCAL"
+    },
+    {
+      "id": "C-286",
+      "name": "Quality documental/modelo",
+      "status": "PASS",
+      "evidence": "quality.json/model14/40/230/5/peer0",
+      "environment": "LOCAL DOCUMENTAL",
+      "sha": "base86985fe",
+      "date": "2026-10-13",
+      "provenance": "LOCAL"
+    },
+    {
+      "id": "C-287",
+      "name": "Mapa derivado coherente",
+      "status": "PASS",
+      "evidence": "66DEC/16FUTURE/0BLOCKING/P1única/--check",
+      "environment": "LOCAL DOCUMENTAL",
+      "sha": "base86985fe",
+      "date": "2026-10-13",
+      "provenance": "LOCAL"
+    },
+    {
+      "id": "C-288",
+      "name": "Git/base/aislamiento",
+      "status": "PASS",
+      "evidence": "git-base.json/branchdesde86985fe/primarypreservado",
+      "environment": "LOCAL DOCUMENTAL",
+      "sha": "base86985fe",
+      "date": "2026-10-13",
+      "provenance": "LOCAL"
+    },
+    {
+      "id": "C-289",
+      "name": "L3-A1 baseline/contratos/entrada",
+      "status": "PASS",
+      "evidence": "[Matriz](evidence/cp019/matrix.md); approval.json + Design/F14 CP018 reutilizado; A/B exactas, ningún PASS físico",
+      "environment": "LOCAL DOCUMENTAL + HUMAN",
+      "sha": "64e647e3b3e95f5559d32ed9bb84bfe962e08496 local / f715 intento cuando corresponde",
+      "date": "2026-10-14",
+      "provenance": "DETECTED/HUMAN según fuente"
+    },
+    {
+      "id": "C-290",
+      "name": "L3-A2 integridad/identidad/fin",
+      "status": "NOT VERIFIED",
+      "evidence": "[Matriz](evidence/cp019/matrix.md); Protocolo/copia/journal/SQL006/testigos locales; ningúnPG/copia física",
+      "environment": "LOCAL MODELS; REMOTE NO DB",
+      "sha": "64e647e3b3e95f5559d32ed9bb84bfe962e08496 local / f715 intento cuando corresponde",
+      "date": "2026-10-14",
+      "provenance": "DETECTED/HUMAN según fuente"
+    },
+    {
+      "id": "C-291",
+      "name": "L3-A3 custodia/credenciales/reloj",
+      "status": "NOT VERIFIED",
+      "evidence": "[Matriz](evidence/cp019/matrix.md); Material r01 durable PASS acotado; reinicio/fsync/auth/COMMIT físico ausente",
+      "environment": "LOCAL + REMOTE material only",
+      "sha": "64e647e3b3e95f5559d32ed9bb84bfe962e08496 local / f715 intento cuando corresponde",
+      "date": "2026-10-14",
+      "provenance": "DETECTED/HUMAN según fuente"
+    },
+    {
+      "id": "C-292",
+      "name": "L3-A4 promoción/readiness",
+      "status": "NOT VERIFIED",
+      "evidence": "[Matriz](evidence/cp019/matrix.md); CAS/readiness/aborto prospectivo y replayACK local; faltaPG/dosAPI/worker/variants",
+      "environment": "LOCAL MODELS",
+      "sha": "64e647e3b3e95f5559d32ed9bb84bfe962e08496 local / f715 intento cuando corresponde",
+      "date": "2026-10-14",
+      "provenance": "DETECTED/HUMAN según fuente"
+    },
+    {
+      "id": "C-293",
+      "name": "L3-A5 operaciones nuevas/historial",
+      "status": "NOT VERIFIED",
+      "evidence": "[Matriz](evidence/cp019/matrix.md); Frontend59/build/epoch19 locales; sin nueva sesión/negocio/replay/browser reales",
+      "environment": "LOCAL",
+      "sha": "64e647e3b3e95f5559d32ed9bb84bfe962e08496 local / f715 intento cuando corresponde",
+      "date": "2026-10-14",
+      "provenance": "DETECTED/HUMAN según fuente"
+    },
+    {
+      "id": "C-294",
+      "name": "L3-A6 salida/reversión/integración",
+      "status": "NOT VERIFIED",
+      "evidence": "[Matriz](evidence/cp019/matrix.md); Quality local separado/cleanup del fallo PASS; rollback/restauración/wiring/Integration pendientes",
+      "environment": "LOCAL + REMOTE failed setup",
+      "sha": "64e647e3b3e95f5559d32ed9bb84bfe962e08496 local / f715 intento cuando corresponde",
+      "date": "2026-10-14",
+      "provenance": "DETECTED/HUMAN según fuente"
+    },
+    {
+      "id": "C-295",
+      "name": "A exacta P1-L3",
+      "status": "PASS",
+      "evidence": "[Matriz](evidence/cp019/matrix.md); DEC-067/snapshot4d1cf193…/cace66cd… comprobado antes registrar",
+      "environment": "HUMAN + LOCAL",
+      "sha": "64e647e3b3e95f5559d32ed9bb84bfe962e08496 local / f715 intento cuando corresponde",
+      "date": "2026-10-14",
+      "provenance": "DETECTED/HUMAN según fuente"
+    },
+    {
+      "id": "C-296",
+      "name": "B integral P1-L3",
+      "status": "PASS",
+      "evidence": "[Matriz](evidence/cp019/matrix.md); DEC-068 implement/QA/Integration condicionadas; no nueva autorización por corte",
+      "environment": "HUMAN",
+      "sha": "64e647e3b3e95f5559d32ed9bb84bfe962e08496 local / f715 intento cuando corresponde",
+      "date": "2026-10-14",
+      "provenance": "DETECTED/HUMAN según fuente"
+    },
+    {
+      "id": "C-297",
+      "name": "Quality local commit corregido",
+      "status": "PASS",
+      "evidence": "[Matriz](evidence/cp019/matrix.md); Quality local por unión trazada: 496/496 contratos Node y 184 sintaxis en1770261c815d36e3c3575dfc29637adfa504b59d; controles afectados del correctivo `64e647e3b3e95f5559d32ed9bb84bfe962e08496` PASS, con reuso por hashes. 59 host/11 TLS reutilizados y 5 artifact Python reejecutados; seis fuentes Python cubiertas por original+delta. Backend full/runtime audit0 reutilizados con locks intactos. UI59/sanitizador3/guard4/full y runtime audit0 del build canónico nuevo. Ningún PASS PostgreSQL/HTTP/browser/restore.",
+      "environment": "LOCAL Windows x64",
+      "sha": "64e647e3b3e95f5559d32ed9bb84bfe962e08496 local / f715 intento cuando corresponde",
+      "date": "2026-10-14",
+      "provenance": "DETECTED/HUMAN según fuente"
+    },
+    {
+      "id": "C-298",
+      "name": "Environment QA r01",
+      "status": "FAIL",
+      "evidence": "[Matriz](evidence/cp019/matrix.md); remote-run.json configs127/OpenSSL ausente; caso45s vencido sinreset/secret nuevo",
+      "environment": "REMOTE ARM64",
+      "sha": "64e647e3b3e95f5559d32ed9bb84bfe962e08496 local / f715 intento cuando corresponde",
+      "date": "2026-10-14",
+      "provenance": "DETECTED/HUMAN según fuente"
+    },
+    {
+      "id": "C-299",
+      "name": "Cleanup/preservación QA abortada",
+      "status": "PASS",
+      "evidence": "[Matriz](evidence/cp019/matrix.md); preservation-final.json:26anteriores exactos/1propioSTOPPED/0PG;2raícesKEEP",
+      "environment": "REMOTE read-only final",
+      "sha": "64e647e3b3e95f5559d32ed9bb84bfe962e08496 local / f715 intento cuando corresponde",
+      "date": "2026-10-14",
+      "provenance": "DETECTED/HUMAN según fuente"
+    },
+    {
+      "id": "C-300",
+      "name": "Frontend/build/dependencias de lane",
+      "status": "PASS",
+      "evidence": "[Matriz](evidence/cp019/matrix.md); ui-epoch-assets.json59/3/4+auditfull/runtime0;28inputs/3assets exactos; no browser",
+      "environment": "LOCAL Windows x64",
+      "sha": "64e647e3b3e95f5559d32ed9bb84bfe962e08496 local / f715 intento cuando corresponde",
+      "date": "2026-10-14",
+      "provenance": "DETECTED/HUMAN según fuente"
+    },
+    {
+      "id": "C-301",
+      "name": "Reviews focales/correcciones",
+      "status": "PASS",
+      "evidence": "[Matriz](evidence/cp019/matrix.md); review-controller/host-review/runtime/sql; bugs cerrados localmente y wiring/end pending explícitosNV; no review integral de salida",
+      "environment": "LOCAL STATIC + MODELS",
+      "sha": "64e647e3b3e95f5559d32ed9bb84bfe962e08496 local / f715 intento cuando corresponde",
+      "date": "2026-10-14",
+      "provenance": "DETECTED/HUMAN según fuente"
+    },
+    {
+      "id": "C-302",
+      "name": "Protected/history/primary preservados",
+      "status": "PASS",
+      "evidence": "[Matriz](evidence/cp019/matrix.md); Prompt/snapshots/L2/SQL001…005/CP017/primary/kilo sin delta; git-state y qualitydocumental",
+      "environment": "LOCAL Git/hash",
+      "sha": "64e647e3b3e95f5559d32ed9bb84bfe962e08496 local / f715 intento cuando corresponde",
+      "date": "2026-10-14",
+      "provenance": "DETECTED/HUMAN según fuente"
+    },
+    {
+      "id": "C-303",
+      "name": "Quality documental/referencias",
+      "status": "PASS",
+      "evidence": "[Matriz](evidence/cp019/matrix.md); documentation-quality.json:referencias/estados/historia/14pendientes/69DEC/gates",
+      "environment": "LOCAL DOCUMENTAL",
+      "sha": "64e647e3b3e95f5559d32ed9bb84bfe962e08496 local / f715 intento cuando corresponde",
+      "date": "2026-10-14",
+      "provenance": "DETECTED/HUMAN según fuente"
+    },
+    {
+      "id": "C-304",
+      "name": "Mapa derivado de CP019",
+      "status": "PASS",
+      "evidence": "[Matriz](evidence/cp019/matrix.md); documentation-quality.json y map --check;1faseactiva/2BLOCKING12FUTURE/ningúnporcentaje",
+      "environment": "LOCAL DOCUMENTAL",
+      "sha": "64e647e3b3e95f5559d32ed9bb84bfe962e08496 local / f715 intento cuando corresponde",
+      "date": "2026-10-14",
+      "provenance": "DETECTED/HUMAN según fuente"
+    },
+    {
+      "id": "C-305",
+      "name": "Integración L3/canónica",
+      "status": "NOT VERIFIED",
+      "evidence": "[Matriz](evidence/cp019/matrix.md); No push/PR/CI/merge; develop86985fe vigente; gatesfaltantes impiden publicación",
+      "environment": "LOCAL + REMOTE GitHub read-only",
+      "sha": "64e647e3b3e95f5559d32ed9bb84bfe962e08496 local / f715 intento cuando corresponde",
+      "date": "2026-10-14",
+      "provenance": "DETECTED/HUMAN según fuente"
+    },
+    {
+      "id": "C-306",
+      "name": "SC-011 cohorte sucesora",
+      "status": "NOT VERIFIED",
+      "evidence": "[Matriz](evidence/cp019/matrix.md); DEC-069 PROPOSED/r02NOcreado; aprobación explícita antes cambio QA, despuésEnvironmentfresh",
+      "environment": "HUMAN PENDING",
+      "sha": "64e647e3b3e95f5559d32ed9bb84bfe962e08496 local / f715 intento cuando corresponde",
+      "date": "2026-10-14",
+      "provenance": "DETECTED/HUMAN según fuente"
+    },
+    {
+      "id": "C-307",
+      "name": "SC-011 aprobación exacta",
+      "status": "PASS",
+      "evidence": "[Matriz](evidence/cp020/matrix.md); DEC069/humano; objeto825693... y registro0bb9cb26; no nuevaA/B",
+      "environment": "HUMAN",
+      "sha": "dd7dc0d303e0bacff354c8e6b70a8df1c2b191c2 local; remoto/humano por sus fuentes",
+      "date": "2026-10-15",
+      "provenance": "DETECTED/LOCAL/HUMAN según fuente"
+    },
+    {
+      "id": "C-308",
+      "name": "L3-A1 baseline/namespace cerrado",
+      "status": "PASS",
+      "evidence": "[Matriz](evidence/cp020/matrix.md); Snapshot4d1cf193... intacto; DEC067068/SC011 y guards r02; sólo documental/local",
+      "environment": "LOCAL DOCUMENTAL",
+      "sha": "dd7dc0d303e0bacff354c8e6b70a8df1c2b191c2 local; remoto/humano por sus fuentes",
+      "date": "2026-10-15",
+      "provenance": "DETECTED/LOCAL/HUMAN según fuente"
+    },
+    {
+      "id": "C-309",
+      "name": "Quality local por unión",
+      "status": "PASS",
+      "evidence": "[Matriz](evidence/cp020/matrix.md); local-quality-final/verification-index:600Node históricoe6ac802,delta21Node/25target-host; FAIL original preservado",
+      "environment": "LOCAL Windows x64",
+      "sha": "dd7dc0d303e0bacff354c8e6b70a8df1c2b191c2 local; remoto/humano por sus fuentes",
+      "date": "2026-10-15",
+      "provenance": "DETECTED/LOCAL/HUMAN según fuente"
+    },
+    {
+      "id": "C-310",
+      "name": "Registro/dispatch de negativas",
+      "status": "PASS",
+      "evidence": "[Matriz](evidence/cp020/matrix.md); 135casos/hashba43bef8...;19casos reales; caps140/3000 intactos; review-copy-journal",
+      "environment": "LOCAL MODELS",
+      "sha": "dd7dc0d303e0bacff354c8e6b70a8df1c2b191c2 local; remoto/humano por sus fuentes",
+      "date": "2026-10-15",
+      "provenance": "DETECTED/LOCAL/HUMAN según fuente"
+    },
+    {
+      "id": "C-311",
+      "name": "Viabilidad del presupuesto vigente",
+      "status": "FAIL",
+      "evidence": "[Matriz](evidence/cp020/matrix.md); runtime-budget3PASS:principal3298>3000/caso679>140 antes fondo; SC012 propuesta no aplicada",
+      "environment": "LOCAL COUNT MODELS",
+      "sha": "dd7dc0d303e0bacff354c8e6b70a8df1c2b191c2 local; remoto/humano por sus fuentes",
+      "date": "2026-10-15",
+      "provenance": "DETECTED/LOCAL/HUMAN según fuente"
+    },
+    {
+      "id": "C-312",
+      "name": "TLS aislado/material previo",
+      "status": "PASS",
+      "evidence": "[Matriz](evidence/cp020/matrix.md); tls-local/tls-vps:4pares/dosCA MemoryBIO,19inputs privados; scope TLS noPG; archivos custodia por fuente",
+      "environment": "LOCAL + REMOTE14oct TLS only",
+      "sha": "dd7dc0d303e0bacff354c8e6b70a8df1c2b191c2 local; remoto/humano por sus fuentes",
+      "date": "2026-10-15",
+      "provenance": "DETECTED/LOCAL/HUMAN según fuente"
+    },
+    {
+      "id": "C-313",
+      "name": "Cierre runtime desde Git",
+      "status": "PASS",
+      "evidence": "[Matriz](evidence/cp020/matrix.md); SmokeGit580files/3539776B/9imports/3assets; temporal retirado, no tar nuevo",
+      "environment": "LOCAL GIT BLOBS",
+      "sha": "dd7dc0d303e0bacff354c8e6b70a8df1c2b191c2 local; remoto/humano por sus fuentes",
+      "date": "2026-10-15",
+      "provenance": "DETECTED/LOCAL/HUMAN según fuente"
+    },
+    {
+      "id": "C-314",
+      "name": "Reviews/correctivos focales",
+      "status": "PASS",
+      "evidence": "[Matriz](evidence/cp020/matrix.md); review-copy-journal/review-a5-schema; Root ejecutó delta/negative; provider físico pendiente explícito",
+      "environment": "LOCAL STATIC + MODELS",
+      "sha": "dd7dc0d303e0bacff354c8e6b70a8df1c2b191c2 local; remoto/humano por sus fuentes",
+      "date": "2026-10-15",
+      "provenance": "DETECTED/LOCAL/HUMAN según fuente"
+    },
+    {
+      "id": "C-315",
+      "name": "Protegidos/otros worktrees",
+      "status": "PASS",
+      "evidence": "[Matriz](evidence/cp020/matrix.md); git-preservation:Prompt/L3/L2 exactos, primary704b4ae/kilo010aab6; sin cambios ajenos",
+      "environment": "LOCAL HASH/GIT",
+      "sha": "dd7dc0d303e0bacff354c8e6b70a8df1c2b191c2 local; remoto/humano por sus fuentes",
+      "date": "2026-10-15",
+      "provenance": "DETECTED/LOCAL/HUMAN según fuente"
+    },
+    {
+      "id": "C-316",
+      "name": "L3-A2 integridad/identidad/FIN",
+      "status": "NOT VERIFIED",
+      "evidence": "[Matriz](evidence/cp020/matrix.md); Copias/journal/FIN locales; sin copia/PG/FIN físicos r02",
+      "environment": "NO PHYSICAL r02",
+      "sha": "dd7dc0d303e0bacff354c8e6b70a8df1c2b191c2 local; remoto/humano por sus fuentes",
+      "date": "2026-10-15",
+      "provenance": "DETECTED/LOCAL/HUMAN según fuente"
+    },
+    {
+      "id": "C-317",
+      "name": "L3-A3 custodia/reloj",
+      "status": "NOT VERIFIED",
+      "evidence": "[Matriz](evidence/cp020/matrix.md); Credential/schema/restart/lineage locales; sin auth/transferenciaPG r02",
+      "environment": "NO PHYSICAL r02",
+      "sha": "dd7dc0d303e0bacff354c8e6b70a8df1c2b191c2 local; remoto/humano por sus fuentes",
+      "date": "2026-10-15",
+      "provenance": "DETECTED/LOCAL/HUMAN según fuente"
+    },
+    {
+      "id": "C-318",
+      "name": "L3-A4 promoción/readiness",
+      "status": "NOT VERIFIED",
+      "evidence": "[Matriz](evidence/cp020/matrix.md); Modelos;56fases sin provider/registro y preparadores físicos pendientes",
+      "environment": "NO PHYSICAL r02",
+      "sha": "dd7dc0d303e0bacff354c8e6b70a8df1c2b191c2 local; remoto/humano por sus fuentes",
+      "date": "2026-10-15",
+      "provenance": "DETECTED/LOCAL/HUMAN según fuente"
+    },
+    {
+      "id": "C-319",
+      "name": "L3-A5 efectos/historial/browser",
+      "status": "NOT VERIFIED",
+      "evidence": "[Matriz](evidence/cp020/matrix.md); Drivers ycontextos locales,sinSQL/HTTP/GUI r02; no capturas nuevas",
+      "environment": "NO PHYSICAL r02",
+      "sha": "dd7dc0d303e0bacff354c8e6b70a8df1c2b191c2 local; remoto/humano por sus fuentes",
+      "date": "2026-10-15",
+      "provenance": "DETECTED/LOCAL/HUMAN según fuente"
+    },
+    {
+      "id": "C-320",
+      "name": "L3-A6 reversión/cleanup/salida",
+      "status": "NOT VERIFIED",
+      "evidence": "[Matriz](evidence/cp020/matrix.md); Quality local separado; rollback/salidas físicas no ejecutadas; r02inexistente",
+      "environment": "NO PHYSICAL r02",
+      "sha": "dd7dc0d303e0bacff354c8e6b70a8df1c2b191c2 local; remoto/humano por sus fuentes",
+      "date": "2026-10-15",
+      "provenance": "DETECTED/LOCAL/HUMAN según fuente"
+    },
+    {
+      "id": "C-321",
+      "name": "Integration/Phase L3",
+      "status": "NOT VERIFIED",
+      "evidence": "[Matriz](evidence/cp020/matrix.md); develop86985fe revalidadaSrEdgarR; sinpush/PR/CIremoto/merge",
+      "environment": "GITHUB READ ONLY",
+      "sha": "dd7dc0d303e0bacff354c8e6b70a8df1c2b191c2 local; remoto/humano por sus fuentes",
+      "date": "2026-10-15",
+      "provenance": "DETECTED/LOCAL/HUMAN según fuente"
+    },
+    {
+      "id": "C-322",
+      "name": "Quality documental",
+      "status": "PASS",
+      "evidence": "[Matriz](evidence/cp020/matrix.md); documentation-quality.json:referencias/coherencia/14pendientes/70DEC/protegidos/cotas",
+      "environment": "LOCAL DOCUMENTAL",
+      "sha": "dd7dc0d303e0bacff354c8e6b70a8df1c2b191c2 local; remoto/humano por sus fuentes",
+      "date": "2026-10-15",
+      "provenance": "DETECTED/LOCAL/HUMAN según fuente"
+    },
+    {
+      "id": "C-323",
+      "name": "Mapa CP020 derivado",
+      "status": "PASS",
+      "evidence": "[Matriz](evidence/cp020/matrix.md); map --check/70DEC/323criterios/P1única/2BLOCKING12FUTURE, sin porcentaje",
+      "environment": "LOCAL DOCUMENTAL",
+      "sha": "dd7dc0d303e0bacff354c8e6b70a8df1c2b191c2 local; remoto/humano por sus fuentes",
+      "date": "2026-10-15",
+      "provenance": "DETECTED/LOCAL/HUMAN según fuente"
+    },
+    {
+      "id": "C-324",
+      "name": "SC012 aprobación SQL",
+      "status": "PASS",
+      "evidence": "[Matriz](evidence/cp021/matrix.md); DEC070/99eda438;8192 por caso,200000 acumuladas",
+      "environment": "fuente humana directa / propuesta separada",
+      "sha": "ec1c5c9 local por unión; ca15/79fab remoto por sus fuentes",
+      "date": "2026-10-15",
+      "provenance": "HUMAN-ASSISTED"
+    },
+    {
+      "id": "C-325",
+      "name": "SC013 aprobación artefactos",
+      "status": "PASS",
+      "evidence": "[Matriz](evidence/cp021/matrix.md); DEC071/191dd8a;8192 global,2000 por caso, sólo ese cambio",
+      "environment": "fuente humana directa / propuesta separada",
+      "sha": "ec1c5c9 local por unión; ca15/79fab remoto por sus fuentes",
+      "date": "2026-10-15",
+      "provenance": "HUMAN-ASSISTED"
+    },
+    {
+      "id": "C-326",
+      "name": "Consumidores y135 casos",
+      "status": "PASS",
+      "evidence": "[Matriz](evidence/cp021/matrix.md); limits65cb4684/registry193c5b53; negativas y cotas cerradas",
+      "environment": "Windowsx64 / modelos/temporales",
+      "sha": "ec1c5c9 local por unión; ca15/79fab remoto por sus fuentes",
+      "date": "2026-10-15",
+      "provenance": "LOCAL"
+    },
+    {
+      "id": "C-327",
+      "name": "Proveedor/controlador integral",
+      "status": "PASS",
+      "evidence": "[Matriz](evidence/cp021/matrix.md); 176acciones/124jobsnominales, cinco variantes y componentes QA implementados/modelados; no ejecución integral física",
+      "environment": "Windowsx64 / modelos/temporales",
+      "sha": "ec1c5c9 local por unión; ca15/79fab remoto por sus fuentes",
+      "date": "2026-10-15",
+      "provenance": "LOCAL"
+    },
+    {
+      "id": "C-328",
+      "name": "Quality local por unión",
+      "status": "PASS",
+      "evidence": "[Matriz](evidence/cp021/matrix.md); local-quality-close:387Python/18files;104Sourceec1 y193afectados4472,411Node/78inputs iguales; sin suite completa del producto nueva",
+      "environment": "Windowsx64 / modelos/temporales",
+      "sha": "ec1c5c9 local por unión; ca15/79fab remoto por sus fuentes",
+      "date": "2026-10-15",
+      "provenance": "LOCAL"
+    },
+    {
+      "id": "C-329",
+      "name": "Artefacto Git y imports",
+      "status": "PASS",
+      "evidence": "[Matriz](evidence/cp021/matrix.md); git-artifact-smoke ca15:595files/3902579B/13imports; tar d39dca11, índice490abc1b; no correctivos posteriores remotos",
+      "environment": "Windowsx64 / modelos/temporales",
+      "sha": "ec1c5c9 local por unión; ca15/79fab remoto por sus fuentes",
+      "date": "2026-10-15",
+      "provenance": "LOCAL"
+    },
+    {
+      "id": "C-330",
+      "name": "Entrada Environment acotada",
+      "status": "PASS",
+      "evidence": "[Matriz](evidence/cp021/matrix.md); environment-entry13:51 yresume-preflight14:12; fotos/pins/márgenes, no capacidad general",
+      "environment": "VPS ARM64 / lectura o intento acotado",
+      "sha": "ec1c5c9 local por unión; ca15/79fab remoto por sus fuentes",
+      "date": "2026-10-15",
+      "provenance": "REMOTE"
+    },
+    {
+      "id": "C-331",
+      "name": "Primera ejecución r02",
+      "status": "FAIL",
+      "evidence": "[Matriz](evidence/cp021/matrix.md); remote-run: CREATEflag no soportado;0PGiniciados/SQL/HTTP, primer cleanupPASS",
+      "environment": "VPS ARM64 / lectura o intento acotado",
+      "sha": "ec1c5c9 local por unión; ca15/79fab remoto por sus fuentes",
+      "date": "2026-10-15",
+      "provenance": "REMOTE"
+    },
+    {
+      "id": "C-332",
+      "name": "Continuación r02",
+      "status": "FAIL",
+      "evidence": "[Matriz](evidence/cp021/matrix.md); remote-resume: SOURCE_CREATED_MOUNT antes START; mismo material/ledger/reloj;642artefactos/0SQLHTTPjournal",
+      "environment": "VPS ARM64 / lectura o intento acotado",
+      "sha": "ec1c5c9 local por unión; ca15/79fab remoto por sus fuentes",
+      "date": "2026-10-15",
+      "provenance": "REMOTE"
+    },
+    {
+      "id": "C-333",
+      "name": "Preservación27 anteriores",
+      "status": "PASS",
+      "evidence": "[Matriz](evidence/cp021/matrix.md); preservation-final14:22:57 todos idénticos; sin cambios compartidos o productivos",
+      "environment": "VPS ARM64 / lectura o intento acotado",
+      "sha": "ec1c5c9 local por unión; ca15/79fab remoto por sus fuentes",
+      "date": "2026-10-15",
+      "provenance": "REMOTE"
+    },
+    {
+      "id": "C-334",
+      "name": "Cleanup final r02",
+      "status": "FAIL",
+      "evidence": "[Matriz](evidence/cp021/matrix.md); UNKNOWN1/CIDddcbb1... sin ref Source; CREATED/PID0/inactivo KEEP no es STOP ni FIN/ownership",
+      "environment": "VPS ARM64 / lectura o intento acotado",
+      "sha": "ec1c5c9 local por unión; ca15/79fab remoto por sus fuentes",
+      "date": "2026-10-15",
+      "provenance": "REMOTE"
+    },
+    {
+      "id": "C-335",
+      "name": "L3-A1 baseline/diseño",
+      "status": "PASS",
+      "evidence": "[Matriz](evidence/cp021/matrix.md); Snapshot4d1cf193 y F14/Design por su autoridad; alcance sólo documental/local",
+      "environment": "Windowsx64 / modelos/temporales",
+      "sha": "ec1c5c9 local por unión; ca15/79fab remoto por sus fuentes",
+      "date": "2026-10-15",
+      "provenance": "LOCAL"
+    },
+    {
+      "id": "C-336",
+      "name": "L3-A2 integridad/identidad/FIN",
+      "status": "NOT VERIFIED",
+      "evidence": "[Matriz](evidence/cp021/matrix.md); Sin PG/copia/FIN nuevo ejecutado; modelos conservan su alcance",
+      "environment": "VPS ARM64 / lectura o intento acotado",
+      "sha": "ec1c5c9 local por unión; ca15/79fab remoto por sus fuentes",
+      "date": "2026-10-15",
+      "provenance": "REMOTE"
+    },
+    {
+      "id": "C-337",
+      "name": "L3-A3 custodia/reloj único",
+      "status": "NOT VERIFIED",
+      "evidence": "[Matriz](evidence/cp021/matrix.md); Probes/rotación/restart locales; sin autenticación/transferencia PG r02",
+      "environment": "VPS ARM64 / lectura o intento acotado",
+      "sha": "ec1c5c9 local por unión; ca15/79fab remoto por sus fuentes",
+      "date": "2026-10-15",
+      "provenance": "REMOTE"
+    },
+    {
+      "id": "C-338",
+      "name": "L3-A4 promoción/readiness",
+      "status": "NOT VERIFIED",
+      "evidence": "[Matriz](evidence/cp021/matrix.md); Provider/preparadores modelados, sin SQL/dosAPI/HTTP reales",
+      "environment": "VPS ARM64 / lectura o intento acotado",
+      "sha": "ec1c5c9 local por unión; ca15/79fab remoto por sus fuentes",
+      "date": "2026-10-15",
+      "provenance": "REMOTE"
+    },
+    {
+      "id": "C-339",
+      "name": "L3-A5 efectos/historial/GUI",
+      "status": "NOT VERIFIED",
+      "evidence": "[Matriz](evidence/cp021/matrix.md); Driver local y Chromium vacío no son recorrido SaaS;0SQLHTTP",
+      "environment": "VPS ARM64 / lectura o intento acotado",
+      "sha": "ec1c5c9 local por unión; ca15/79fab remoto por sus fuentes",
+      "date": "2026-10-15",
+      "provenance": "REMOTE"
+    },
+    {
+      "id": "C-340",
+      "name": "L3-A6 reversión/salida",
+      "status": "NOT VERIFIED",
+      "evidence": "[Matriz](evidence/cp021/matrix.md); Sin rollback real ni cleanupPASS final; no TERMINAL",
+      "environment": "VPS ARM64 / lectura o intento acotado",
+      "sha": "ec1c5c9 local por unión; ca15/79fab remoto por sus fuentes",
+      "date": "2026-10-15",
+      "provenance": "REMOTE"
+    },
+    {
+      "id": "C-341",
+      "name": "Integration/Phase Gate L3",
+      "status": "NOT VERIFIED",
+      "evidence": "[Matriz](evidence/cp021/matrix.md); Sin seis salidas; no push/PR/CI remota/merge/canónica nueva",
+      "environment": "Windowsx64 / modelos/temporales",
+      "sha": "ec1c5c9 local por unión; ca15/79fab remoto por sus fuentes",
+      "date": "2026-10-15",
+      "provenance": "LOCAL"
+    },
+    {
+      "id": "C-342",
+      "name": "SC014 cohorte r03",
+      "status": "NOT VERIFIED",
+      "evidence": "[Matriz](evidence/cp021/matrix.md); DEC072 PROPOSED, hashb58ad6a8...;sin consumidores/material/recursos r03",
+      "environment": "fuente humana directa / propuesta separada",
+      "sha": "ec1c5c9 local por unión; ca15/79fab remoto por sus fuentes",
+      "date": "2026-10-15",
+      "provenance": "HUMAN-ASSISTED"
+    },
+    {
+      "id": "C-343",
+      "name": "Quality documental",
+      "status": "PASS",
+      "evidence": "[Matriz](evidence/cp021/matrix.md); documentation-quality.json: referencias/coherencia/protegidos/72DEC/14pendientes y traza exacta",
+      "environment": "Windowsx64 / modelos/temporales",
+      "sha": "ec1c5c9 local por unión; ca15/79fab remoto por sus fuentes",
+      "date": "2026-10-15",
+      "provenance": "LOCAL"
+    },
+    {
+      "id": "C-344",
+      "name": "Mapa CP021 derivado",
+      "status": "PASS",
+      "evidence": "[Matriz](evidence/cp021/matrix.md); map --check; P1únicaactiva,14pendientes/2BLOCKING12FUTURE y72DEC, sinporcentaje",
+      "environment": "Windowsx64 / modelos/temporales",
+      "sha": "ec1c5c9 local por unión; ca15/79fab remoto por sus fuentes",
+      "date": "2026-10-15",
+      "provenance": "LOCAL"
+    },
+    {
+      "id": "C-345",
+      "name": "SC014/DEC072 exacta",
+      "status": "PASS",
+      "evidence": "[Matriz](evidence/cp022/matrix.md); approval.json: hashb58ad6a8… antes de registro/aplicación; sólo r03/r03-target",
+      "environment": "HUMAN / LOCAL",
+      "sha": "7f5986f físico/entrada;67f9c44 sólo local posterior;fuente humana según registro",
+      "date": "2026-10-15",
+      "provenance": "HUMAN-ASSISTED"
+    },
+    {
+      "id": "C-346",
+      "name": "Consumidores r03 y límites",
+      "status": "PASS",
+      "evidence": "[Matriz](evidence/cp022/matrix.md); 135 nombres/scopes; bindings por lado; límites hash65cb4684… intactos",
+      "environment": "LOCAL",
+      "sha": "7f5986f físico/entrada;67f9c44 sólo local posterior;fuente humana según registro",
+      "date": "2026-10-15",
+      "provenance": "LOCAL"
+    },
+    {
+      "id": "C-347",
+      "name": "TLS previo Linux ARM64",
+      "status": "PASS",
+      "evidence": "[Matriz](evidence/cp022/matrix.md); tls-arm64-memory.json:4 parejas TLS1.3/cadenas/SAN en12memfd, sin persistencia/sockets en ese ensayo",
+      "environment": "REMOTE ARM64",
+      "sha": "7f5986f físico/entrada;67f9c44 sólo local posterior;fuente humana según registro",
+      "date": "2026-10-15",
+      "provenance": "REMOTE"
+    },
+    {
+      "id": "C-348",
+      "name": "Compatibilidad CLI real Compose",
+      "status": "PASS",
+      "evidence": "[Matriz](evidence/cp022/matrix.md); compose-config-preflight.json:7servicios/2redes/cero puertos; config en memoria, sin CREATE/START",
+      "environment": "REMOTE CLI",
+      "sha": "7f5986f físico/entrada;67f9c44 sólo local posterior;fuente humana según registro",
+      "date": "2026-10-15",
+      "provenance": "REMOTE"
+    },
+    {
+      "id": "C-349",
+      "name": "Orden identidad/referencia/tmpfs",
+      "status": "PASS",
+      "evidence": "[Matriz](evidence/cp022/matrix.md); Quality local: CID/owner/profile/CREATED antes ref; mounts/puertos/red antes START; negativas",
+      "environment": "LOCAL",
+      "sha": "7f5986f físico/entrada;67f9c44 sólo local posterior;fuente humana según registro",
+      "date": "2026-10-15",
+      "provenance": "LOCAL"
+    },
+    {
+      "id": "C-350",
+      "name": "Conservación r02 UNKNOWN",
+      "status": "PASS",
+      "evidence": "[Matriz](evidence/cp022/matrix.md); preparation-readonly y preservation-final: CREATED/PID0/inactivo, sin adoptar/eliminar/reusar; FAIL histórico preservado",
+      "environment": "REMOTE READ ONLY",
+      "sha": "7f5986f físico/entrada;67f9c44 sólo local posterior;fuente humana según registro",
+      "date": "2026-10-15",
+      "provenance": "REMOTE"
+    },
+    {
+      "id": "C-351",
+      "name": "Quality de entrada7f",
+      "status": "PASS",
+      "evidence": "[Matriz](evidence/cp022/matrix.md); quality-gate.json:415Node/393Python,13imports/3assets/28inputs; local, no recuperación",
+      "environment": "LOCAL Windowsx64",
+      "sha": "7f5986f físico/entrada;67f9c44 sólo local posterior;fuente humana según registro",
+      "date": "2026-10-15",
+      "provenance": "LOCAL"
+    },
+    {
+      "id": "C-352",
+      "name": "Publicador y relay privados",
+      "status": "PASS",
+      "evidence": "[Matriz](evidence/cp022/matrix.md); orchestrator-preflight.json:31+7 modelos, plan7opciones e inputs cerrados,0REQUIRED focales",
+      "environment": "LOCAL / REMOTE publicación",
+      "sha": "7f5986f físico/entrada;67f9c44 sólo local posterior;fuente humana según registro",
+      "date": "2026-10-15",
+      "provenance": "LOCAL+REMOTE"
+    },
+    {
+      "id": "C-353",
+      "name": "Environment entrada r03",
+      "status": "PASS",
+      "evidence": "[Matriz](evidence/cp022/matrix.md); environment-entry.json15:17:29:ARM64,pins,CPU7.81%,8400MiB y disco; no capacidad sostenida",
+      "environment": "REMOTE ARM64",
+      "sha": "7f5986f físico/entrada;67f9c44 sólo local posterior;fuente humana según registro",
+      "date": "2026-10-15",
+      "provenance": "REMOTE"
+    },
+    {
+      "id": "C-354",
+      "name": "PostgreSQL r03 arrancado",
+      "status": "PASS",
+      "evidence": "[Matriz](evidence/cp022/matrix.md); post-abort-readonly.json:18.6ARM64 final disponible15:17:59.344Z,9.313s paso; no esquema SaaS",
+      "environment": "REMOTE ARM64",
+      "sha": "7f5986f físico/entrada;67f9c44 sólo local posterior;fuente humana según registro",
+      "date": "2026-10-15",
+      "provenance": "REMOTE"
+    },
+    {
+      "id": "C-355",
+      "name": "Ejecución r03 tras PG",
+      "status": "FAIL",
+      "evidence": "[Matriz](evidence/cp022/matrix.md); remote-run.json:CP019_RESOURCE_ABORT/monitorRESOURCE_CPU_LIMIT antes foundation;0SQLarnés/HTTPjournal",
+      "environment": "REMOTE ARM64",
+      "sha": "7f5986f físico/entrada;67f9c44 sólo local posterior;fuente humana según registro",
+      "date": "2026-10-15",
+      "provenance": "REMOTE"
+    },
+    {
+      "id": "C-356",
+      "name": "Cleanup y preservación r03",
+      "status": "PASS",
+      "evidence": "[Matriz](evidence/cp022/matrix.md); remote-run/preservation-final:PGEXITED0PID0KEEP,refRoot,28previosidénticos;1redinterna sinendpoints",
+      "environment": "REMOTE ARM64",
+      "sha": "7f5986f físico/entrada;67f9c44 sólo local posterior;fuente humana según registro",
+      "date": "2026-10-15",
+      "provenance": "REMOTE"
+    },
+    {
+      "id": "C-357",
+      "name": "L3-A1 baseline/diseño/impacto",
+      "status": "PASS",
+      "evidence": "[Matriz](evidence/cp022/matrix.md); matrix.md: documental/local; A/B y SC014exacta, snapshot íntegro; no PASS físico por extensión",
+      "environment": "DOCUMENTAL LOCAL",
+      "sha": "7f5986f físico/entrada;67f9c44 sólo local posterior;fuente humana según registro",
+      "date": "2026-10-15",
+      "provenance": "LOCAL+HUMAN"
+    },
+    {
+      "id": "C-358",
+      "name": "L3-A2 integridad/identidad/fin",
+      "status": "NOT VERIFIED",
+      "evidence": "[Matriz](evidence/cp022/matrix.md); matrix.md: sin cierre SaaS/copia/journalfinal/canario/restore de la cohorte",
+      "environment": "NO PHYSICAL ACCEPTANCE",
+      "sha": "7f5986f físico/entrada;67f9c44 sólo local posterior;fuente humana según registro",
+      "date": "2026-10-15",
+      "provenance": "REMOTE"
+    },
+    {
+      "id": "C-359",
+      "name": "L3-A3 custodia/reloj",
+      "status": "NOT VERIFIED",
+      "evidence": "[Matriz](evidence/cp022/matrix.md); matrix.md: material/TLS publicados, sin rotación de roles/reloj/CAS PG",
+      "environment": "NO PHYSICAL ACCEPTANCE",
+      "sha": "7f5986f físico/entrada;67f9c44 sólo local posterior;fuente humana según registro",
+      "date": "2026-10-15",
+      "provenance": "REMOTE"
+    },
+    {
+      "id": "C-360",
+      "name": "L3-A4 promoción/readiness",
+      "status": "NOT VERIFIED",
+      "evidence": "[Matriz](evidence/cp022/matrix.md); matrix.md: sin target/twoAPI/worker/promoción ni HTTP health",
+      "environment": "NO PHYSICAL ACCEPTANCE",
+      "sha": "7f5986f físico/entrada;67f9c44 sólo local posterior;fuente humana según registro",
+      "date": "2026-10-15",
+      "provenance": "REMOTE"
+    },
+    {
+      "id": "C-361",
+      "name": "L3-A5 efectos/historial",
+      "status": "NOT VERIFIED",
+      "evidence": "[Matriz](evidence/cp022/matrix.md); matrix.md: sin productos/recepciones/replay/historial/sesiones/browser del producto",
+      "environment": "NO PHYSICAL ACCEPTANCE",
+      "sha": "7f5986f físico/entrada;67f9c44 sólo local posterior;fuente humana según registro",
+      "date": "2026-10-15",
+      "provenance": "REMOTE"
+    },
+    {
+      "id": "C-362",
+      "name": "L3-A6 reversión/salida",
+      "status": "NOT VERIFIED",
+      "evidence": "[Matriz](evidence/cp022/matrix.md); matrix.md: cleanup parcial PASS no sustituye rollback ni seis salidas conjuntas/integración",
+      "environment": "NO PHYSICAL ACCEPTANCE",
+      "sha": "7f5986f físico/entrada;67f9c44 sólo local posterior;fuente humana según registro",
+      "date": "2026-10-15",
+      "provenance": "REMOTE"
+    },
+    {
+      "id": "C-363",
+      "name": "Correctivo diagnóstico local67f",
+      "status": "PASS",
+      "evidence": "[Matriz](evidence/cp022/matrix.md); local-quality-close.json:RED3subcasos→GREEN31,Node415nuevo,Python395unión,peer0REQUIRED; remoto7f intacto",
+      "environment": "LOCAL Windowsx64",
+      "sha": "7f5986f físico/entrada;67f9c44 sólo local posterior;fuente humana según registro",
+      "date": "2026-10-15",
+      "provenance": "LOCAL"
+    },
+    {
+      "id": "C-364",
+      "name": "Contrato de continuación QA",
+      "status": "NOT VERIFIED",
+      "evidence": "[Matriz](evidence/cp022/matrix.md); root-cause-and-continuation.md: casoSTART45s vencido; sin transición antes foundation; diseño SUGGESTED, no reset/r04",
+      "environment": "DOCUMENTAL / código inspeccionado",
+      "sha": "7f5986f físico/entrada;67f9c44 sólo local posterior;fuente humana según registro",
+      "date": "2026-10-15",
+      "provenance": "DETECTED"
+    },
+    {
+      "id": "C-365",
+      "name": "Integration L3",
+      "status": "NOT VERIFIED",
+      "evidence": "[Matriz](evidence/cp022/matrix.md); Sin push/PR/CI/merge: cinco salidas físicas pendientes; no revalidación GitHub para publicar todavía",
+      "environment": "NOT EXECUTED",
+      "sha": "7f5986f físico/entrada;67f9c44 sólo local posterior;fuente humana según registro",
+      "date": "2026-10-15",
+      "provenance": "DETECTED"
+    },
+    {
+      "id": "C-366",
+      "name": "Documentación y mapa CP022",
+      "status": "PASS",
+      "evidence": "[Matriz](evidence/cp022/matrix.md); documentation-quality.json: referencias/coherencia/hashes y build --check; sin modificar Prompt/snapshots",
+      "environment": "LOCAL DOCUMENTAL",
+      "sha": "7f5986f físico/entrada;67f9c44 sólo local posterior;fuente humana según registro",
+      "date": "2026-10-15",
+      "provenance": "LOCAL"
     }
   ],
   "feedback": [
@@ -3737,27 +4837,27 @@
   "source_files": [
     {
       "path": "docs/PROJECT_STATE.md",
-      "sha256": "ca0006862c914a165ee2df8af4035fd654d754377a117d82bc91071e2c5937db"
+      "sha256": "946ed550e25d167acdf07d3ad43e8a205a45f5294554dd1fca0e1dfb2f7f1cea"
     },
     {
       "path": "docs/ROADMAP.md",
-      "sha256": "32f1ff768031221f0418c025f4d947d0691b526696b3914c4c52c720a4143749"
+      "sha256": "5d2cbcc017d8c5ab78dedee9fa05d37edae6fd3078d88479a50f6db7002795e7"
     },
     {
       "path": "docs/DECISIONS.md",
-      "sha256": "4562901ebc3e98c3ff1386f1d00bdf07e0c1bd904ad3bc11f0f209be514b4c27"
+      "sha256": "6966b15f23b6e090235be350e20cebc7632d28197d082163e9e2054e4c668587"
     },
     {
       "path": "docs/TECH_DEBT.md",
-      "sha256": "9328c19f0e9bab152c4dfe8aa530eff95bc117023eb9f1752ebe00391bb88f73"
+      "sha256": "80b1c21c3e1857c6428f708ddb8cb6c1268cbb01b5d817549cd7d7d18545cf6a"
     },
     {
       "path": "docs/CHECKPOINTS.md",
-      "sha256": "a20224033516e6966e4649a5ca09afb7bf5244341fa9d7c5e2fadc660959daec"
+      "sha256": "80a7dee92246a0c4232bc1a5eb5845d7b2b2e2343e54259a0ce495497b044471"
     },
     {
       "path": ".agentic/PLANNING_STATE.md",
-      "sha256": "e2cabfaed223b8c269cb94bef10997c4dc25b65f38a8f824b59e87114c9ab5a9"
+      "sha256": "f1e02ddfeab7f47d85266b8f54d7f1c643282c487990a8e423a6e85c1707d3ac"
     },
     {
       "path": ".agentic/METHODOLOGY_FEEDBACK.md",

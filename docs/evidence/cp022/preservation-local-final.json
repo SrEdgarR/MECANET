@@ -1,0 +1,34 @@
+{
+  "schema": "cp022-preservation-local-v1",
+  "at": "2026-10-15T15:33:14.601335+00:00",
+  "result": "PASS",
+  "protectedFiles": {
+    "docs/methodology/Prompt_Maestro_v2.0.md": "d2dafd5f75df32aae33e421953fab6e99e723aa88744b918b555562c7b6a550d",
+    "docs/specs/p1-l3-approved/baseline.md": "4d1cf193000106dd20555f6c70acab3cb264fd3a7bfe0a9cf8be662eddb2b3ec",
+    ".agentic/P1-L3_CANDIDATE.md": "4d1cf193000106dd20555f6c70acab3cb264fd3a7bfe0a9cf8be662eddb2b3ec",
+    "docs/specs/p1-l2-approved/baseline.md": "ca975dc822c0bd5e872d3debe824abc536f662007513170f327727878ff3ac71",
+    "docs/specs/P1-L2.md": "776393ad96d1628b6c6e61ff8722257570b058147a94cdd71103419b8ece3cba",
+    ".agentic/P1-L3_QA_RETRY_R03.md": "b58ad6a856fd987bd6a23358b2f129e0a44a3a75c4206cf57b6d49a9e2d1df05"
+  },
+  "otherWorktrees": {
+    "primary": {
+      "head": "704b4ae22f1af7fe868d3faf6bdf17a227fb0f50",
+      "status": "?? Metodologia_Desarrollo_Software_Agentes_IA_v2.md"
+    },
+    "kilo": {
+      "head": "010aab670c638d168c971df3e3e53b97e72ff443",
+      "status": ""
+    }
+  },
+  "recoveryModuleChanges": {
+    "files": [
+      "server/saas/recovery/custody.js",
+      "server/saas/recovery/protocol.js"
+    ],
+    "scope": "SC014 r03 closed project bindings and exact Source/Target subnet+IP validation; no new business feature",
+    "physicalAcceptance": "NOT VERIFIED"
+  },
+  "qaCodeChanged": true,
+  "remoteRuntimeSha": "7f5986f01c1cce8c35ba3e9635d9001523da0bc8",
+  "localDiagnosticSha": "67f9c448a3e56b7040e3f937a4e1b17588373d97"
+}

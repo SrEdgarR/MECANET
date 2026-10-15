@@ -1,0 +1,46 @@
+{
+  "schema": "cp021-physical-preflight-v1",
+  "observedAt": "2026-10-15T12:49:52.816240+00:00",
+  "status": "PASS FOR READONLY PHYSICAL PREREQUISITES ONLY",
+  "architecture": "aarch64",
+  "cpuCount": 2,
+  "cpuBusyPercent": 6.297,
+  "sampleSeconds": 2,
+  "availableMiB": 8412,
+  "reservedMiB": 2048,
+  "remainingMiB": 6364,
+  "requiredRemainingMiB": 3072,
+  "diskFreeBytes": 140709564416,
+  "reservedFootprintBytes": 9831448576,
+  "consumerCount": 27,
+  "consumerMetadataHash": "3b5ea98d85bc1c1e0704c08ffe212a06fc1530649f45f1d04d590a8011fbce7b",
+  "consumersUnchanged": true,
+  "priorQaActive": false,
+  "r02RootsAbsent": true,
+  "networkNamesAndRangesFree": true,
+  "arm64PinsVerified": {
+    "node": "ba6b7d0ee561d9d49deb99e2b93c98632cc287b6cca1a6b18d66127054efa4dc",
+    "postgres": "67ba68a22dc7d5af3627b7e0f33d10bbefad07562ff9703b3a6c2de247649129",
+    "nginx": "3abad30db61dfb2a339ea21acc9f3e6bbe78e291fcff2f835f4510c8fdfcbd83"
+  },
+  "tls": {
+    "schema": "cp019-tls-verification-v1",
+    "result": "PASS",
+    "manifestHash": "c8209a068a92a4d81bf05e82f1cb28764b0f81cd38d2568194a6e4c950707e39",
+    "projects": [
+      "mecanet-qa-p1l3-r02",
+      "mecanet-qa-p1l3-r02-target"
+    ],
+    "verifiedKeyPairs": 4,
+    "independentCAs": 2,
+    "networkUsed": false,
+    "secretOutput": false
+  },
+  "resourcesCreatedOrModified": 0,
+  "sqlExecuted": 0,
+  "httpExecuted": 0,
+  "queryThroughputVerified": false,
+  "environmentGate": "FAIL: artifact budget2000 incompatible; controller integration remains gated",
+  "secretsPrinted": false,
+  "localHostConsumerSha256": "e1005843dcba9b65517fd320b0253bb50be9f07ab8294179ebf59bb3b9579fa3"
+}

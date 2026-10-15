@@ -1,0 +1,40 @@
+{
+  "schema": "cp020-git-preservation-v1",
+  "observedAt": "2026-10-15T11:27:11.472954+00:00",
+  "head": "0bb9cb26e37dced8d73e52085d29121f430672d3",
+  "branch": "codex/p1-l3",
+  "origin": "https://github.com/SrEdgarR/MECANET.git",
+  "canonicalBase": "86985fe7589032f202ebf0cb057a9b1384217151",
+  "protected": [
+    {
+      "path": "docs/specs/p1-l3-approved/baseline.md",
+      "sha256": "4d1cf193000106dd20555f6c70acab3cb264fd3a7bfe0a9cf8be662eddb2b3ec"
+    },
+    {
+      "path": "docs/methodology/Prompt_Maestro_v2.0.md",
+      "sha256": "d2dafd5f75df32aae33e421953fab6e99e723aa88744b918b555562c7b6a550d"
+    },
+    {
+      "path": "docs/specs/P1-L2.md",
+      "sha256": "776393ad96d1628b6c6e61ff8722257570b058147a94cdd71103419b8ece3cba"
+    }
+  ],
+  "baselineL3Expected": "4d1cf193000106dd20555f6c70acab3cb264fd3a7bfe0a9cf8be662eddb2b3ec",
+  "promptExpected": "d2dafd5f75df32aae33e421953fab6e99e723aa88744b918b555562c7b6a550d",
+  "worktrees": [
+    {
+      "path": "C:/Users/thede/Desktop/Proyectos de programacion/MECANET-develop",
+      "head": "704b4ae22f1af7fe868d3faf6bdf17a227fb0f50",
+      "branch": "codex/saas-discovery",
+      "status": [
+        "?? Metodologia_Desarrollo_Software_Agentes_IA_v2.md"
+      ]
+    },
+    {
+      "path": "C:/Users/thede/Desktop/Proyectos de programacion/MECANET-develop/.kilo/worktrees/majestic-chiller",
+      "head": "010aab670c638d168c971df3e3e53b97e72ff443",
+      "branch": "",
+      "status": []
+    }
+  ]
+}

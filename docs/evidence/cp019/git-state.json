@@ -1,0 +1,40 @@
+{
+  "schema": "cp019-git-state-v1",
+  "at": "2026-10-14T07:57:25.893640+00:00",
+  "remote": "https://github.com/SrEdgarR/MECANET.git",
+  "remoteRead": {
+    "at": "2026-10-14T07:44:11Z",
+    "account": "SrEdgarR",
+    "canonicalSha": "86985fe7589032f202ebf0cb057a9b1384217151",
+    "provenance": "REMOTE gh api user + git ls-remote read-only"
+  },
+  "baseSha": "86985fe7589032f202ebf0cb057a9b1384217151",
+  "approvedCheckpoint": "cace66cd34dbad31d480bef8f902bd71effbc0b1",
+  "testedCodeSha": "64e647e3b3e95f5559d32ed9bb84bfe962e08496",
+  "fullContractsCodeSha": "1770261c815d36e3c3575dfc29637adfa504b59d",
+  "failedRemoteSourceSha": "f715cf86ce3874eb1f740e1ef16bc4fc6234edb5",
+  "failedRemoteArtifact": "sha256:c0505c1e63a90be9b25c72cbe544b0cc0f8420bf5bdbcc0039dbc89baeb6d110",
+  "documentaryCheckpoint": "identified externally after final documentary commit; no self reference",
+  "branch": "codex/p1-l3",
+  "worktree": "C:/Users/thede/.codex/worktrees/p1l1-integration/MECANET-develop",
+  "primary": {
+    "sha": "704b4ae22f1af7fe868d3faf6bdf17a227fb0f50",
+    "status": "?? Metodologia_Desarrollo_Software_Agentes_IA_v2.md",
+    "preserved": true
+  },
+  "kilo": {
+    "sha": "010aab670c638d168c971df3e3e53b97e72ff443",
+    "clean": true,
+    "preserved": true
+  },
+  "publication": {
+    "push": false,
+    "pullRequest": null,
+    "ciRemote": "NOT RUN",
+    "merge": null,
+    "integrationGate": "NOT VERIFIED"
+  },
+  "sourceInputProof": "local-final.json preserves initial FAIL/496PASS; local-canonical.json affected checks and reuse by unchanged input hashes; UI manifest28 matches code Git blobs; no secrets",
+  "prompt": "d2dafd5f75df32aae33e421953fab6e99e723aa88744b918b555562c7b6a550d",
+  "baselineL3": "4d1cf193000106dd20555f6c70acab3cb264fd3a7bfe0a9cf8be662eddb2b3ec"
+}

@@ -36,13 +36,14 @@ const safeError=error=>{
 };
 
 /** API-side protocol. This factory never receives a maintenance credential. */
-export function createWriteService({controlPool,authority,writerPools,readerPools,ownerId,generation,checkpoint=async()=>{},now=()=>performance.now()}={}){
+export function createWriteService({controlPool,authority,writerPools,readerPools,ownerId,generation,recovery=null,checkpoint=async()=>{},now=()=>performance.now()}={}){
  ownerId=canonicalUuid(ownerId);
  if(!controlPool||!authority||!writerPools||!readerPools)throw new Error('WRITE_DEPENDENCIES_REQUIRED');
  const control=async(text,values,deadline=now()+500)=>{
   try{return await serializable(controlPool,async client=>(await client.query(text,values)).rows,{deadline:Math.min(deadline,now()+500)})}
   catch(error){throw safeError(error)}
  };
+ const runtimeGuard=async deadline=>{if(recovery&&!await recovery.guard({deadline}))throw failure('SERVICE_UNAVAILABLE')};
  const ownIntent=async(tenantId,operationId,sid,generation,deadline)=>{
   const rows=await control('SELECT * FROM saas.own_write_intent($1::uuid,$2::uuid,$3::text,$4::uuid)',[tenantId,operationId,sid,generation],deadline);
   if(!rows[0])throw failure('NOT_FOUND',404);return rows[0];
@@ -58,6 +59,7 @@ export function createWriteService({controlPool,authority,writerPools,readerPool
   if(result.operationId!==intent.operation_id||result.dataEpoch!==String(intent.data_epoch))throw failure('WRITE_RESULT_INVALID');return {row,result};
  }
  async function write({authorityContext,sid,action,productId=null,input,operationId,dataEpoch,ticketId,deadline=now()+8000}){
+  await runtimeGuard(deadline);
   const a=ownCompany(authorityContext);if(!a.descriptor)throw failure('ACCESS_DENIED',403);
   operationId=canonicalUuid(operationId);ticketId=canonicalUuid(ticketId);
   const canonical=canonicalWrite({tenantId:a.descriptor.tenantId,actorId:a.user.id,action,productId,dataEpoch,input});
@@ -117,6 +119,7 @@ export function createWriteService({controlPool,authority,writerPools,readerPool
   }
  }
  async function classifyWork({authorityContext,sid,operationId,deadline=now()+8000}){
+  await runtimeGuard(deadline);
   const a=ownCompany(authorityContext);if(!a.descriptor)throw failure('ACCESS_DENIED',403);
   try{const intent=await ownIntent(a.descriptor.tenantId,canonicalUuid(operationId),sid,a.generation,deadline);return terminal.has(intent.status)?1:3}
   catch(error){if(error.status===404)return 3;throw error}
@@ -128,6 +131,7 @@ export function createWriteService({controlPool,authority,writerPools,readerPool
   return rows[0]?.finished===true;
  }
  async function status({authorityContext,sid,tenantId=authorityContext?.descriptor?.tenantId,operationId,deadline=now()+8000}){
+  await runtimeGuard(deadline);
   const a=ownCompany(authorityContext);tenantId=canonicalUuid(tenantId);operationId=canonicalUuid(operationId);
   const intent=await ownIntent(tenantId,operationId,sid,a.generation,deadline);const fresh=await authorize(a,sid,tenantId,intent.action);
   if(terminal.has(intent.status)){
@@ -137,6 +141,7 @@ export function createWriteService({controlPool,authority,writerPools,readerPool
   return {...envelope(fresh),operationId,state:publicState(intent.status)};
  }
  async function listOperations({authorityContext,sid,tenantId=authorityContext?.descriptor?.tenantId,query,deadline=now()+8000}){
+  await runtimeGuard(deadline);
   const a=ownCompany(authorityContext);tenantId=canonicalUuid(tenantId);
   const scoped=await authority.tenantContext({sid,purpose:'company',tenantId});
   const visible=[];let cursor=query.cursor,scanned=0,exhausted=false;
@@ -159,19 +164,22 @@ export function createWriteService({controlPool,authority,writerPools,readerPool
   return fitPage(visible,envelope(scoped),'items',{maxRows:query.limit,cursorKey:'operationId'});
  }
  async function inventory({authorityContext,query,deadline=now()+8000}){
+  await runtimeGuard(deadline);
   const a=ownCompany(authorityContext);const rows=await readerPools.withTenant(a.descriptor,client=>inventoryRows(client,query,{deadline,now}),{deadline});
   return fitPage(rows,envelope(a),'items',{maxRows:query.limit});
  }
  async function movements({authorityContext,productId,query,deadline=now()+8000}){
+  await runtimeGuard(deadline);
   const a=ownCompany(authorityContext);productId=canonicalUuid(productId);const rows=await readerPools.withTenant(a.descriptor,client=>movementRows(client,productId,query,{deadline,now}),{deadline});
   const values=rows.map(row=>({...row,recordedAt:new Date(row.recordedAt).toISOString()}));return fitPage(values,{...envelope(a),productId},'items',{maxRows:query.limit});
  }
  async function requestSessionRevocation({sid,ctx,deadline=now()+8000}){
+  await runtimeGuard(deadline);
   const a=ownCompany(ctx);const id=randomUUID();const rows=await control('SELECT * FROM saas.request_session_restriction($1::text,$2::uuid,$3::uuid,$4::uuid)',[sid,a.user.id,a.generation,id],deadline);
   const restriction=rows[0];if(!restriction)throw failure('WRITE_CLOSED');
   while(now()<deadline){const state=await control('SELECT * FROM saas.own_session_restriction($1::uuid,$2::text,$3::uuid,$4::uuid)',[restriction.id,sid,a.user.id,a.generation],deadline);if(state[0]?.status==='ACKNOWLEDGED')return true;await sleep(Math.min(40,Math.max(1,deadline-now())))}
   throw failure('WRITE_UNCERTAIN');
  }
- async function ready(){try{const rows=await control('SELECT saas.writer_readiness($1::uuid) AS ready',[canonicalUuid(generation)]);return rows[0]?.ready===true}catch{return false}}
+ async function ready(){if(recovery)return recovery.guard();try{const rows=await control('SELECT saas.writer_readiness($1::uuid) AS ready',[canonicalUuid(generation)]);return rows[0]?.ready===true}catch{return false}}
  return {write,classifyWork,finish,status,listOperations,readInventory:inventory,readMovements:movements,requestSessionRevocation,ready,ownerId};
 }

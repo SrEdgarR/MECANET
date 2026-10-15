@@ -1,0 +1,41 @@
+{
+  "schema": "cp023-network-witness-green-v1",
+  "at": "2026-10-15T16:20:51.499262+00:00",
+  "status": "PASS / LOCAL affected regressions",
+  "files": [
+    "tests/qa/cp019/a5-negatives.test.mjs",
+    "tests/qa/cp019/abort-prefix-plan.test.mjs",
+    "tests/qa/cp019/acceptance-observer.test.mjs",
+    "tests/qa/cp019/browser-sql.test.mjs",
+    "tests/qa/cp019/browser.test.mjs",
+    "tests/qa/cp019/budget-plan.test.mjs",
+    "tests/qa/cp019/commit-fault-probe.test.mjs",
+    "tests/qa/cp019/credential-probe.test.mjs",
+    "tests/qa/cp019/prepare-contract.test.mjs",
+    "tests/qa/cp019/promotion-barrier.test.mjs",
+    "tests/qa/cp019/readiness-variant.test.mjs",
+    "tests/qa/cp019/runtime-driver.test.mjs",
+    "tests/qa/cp019/schema-check.test.mjs",
+    "tests/qa/cp019/schema-fault-probe.test.mjs",
+    "tests/qa/cp019/source-driver.test.mjs",
+    "tests/qa/cp019/source-final.test.mjs",
+    "tests/qa/cp019/sql-contract.test.mjs",
+    "tests/qa/cp019/target-config.test.mjs",
+    "tests/qa/cp019/target-driver.test.mjs",
+    "tests/qa/cp019/target-end.test.mjs",
+    "tests/qa/cp019/target-prepare.test.mjs",
+    "tests/qa/cp019/target-restart.test.mjs",
+    "tests/qa/cp019/target-runtime.test.mjs",
+    "tests/qa/cp019/target-variant-lineage.test.mjs",
+    "tests/qa/cp019/target-witness.test.mjs"
+  ],
+  "stats": [
+    "\u2139 tests 296",
+    "\u2139 pass 296",
+    "\u2139 fail 0"
+  ],
+  "logSha256": "9f2dafecc278e0dce47be4619860d409d05d82ae15d4d2f3bb4f425c1fd54ee6",
+  "realSqlRedSource": "network-witness-red.json",
+  "normalization": "host(inet_server_addr()) unchanged exact destination comparisons; query count unchanged",
+  "arm64Physical": "NOT VERIFIED"
+}

@@ -1,0 +1,45 @@
+{
+  "schema": "cp023-006-green-rollback-v1",
+  "status": "PASS",
+  "cases": [
+    {
+      "database": "mecanet_tenant_a",
+      "file": "006-tenant-recovery.sql",
+      "sha256": "cefc4d33b05ab44e82c05627f919f4df8a4bbfdf7fa352f344abbe8eca1115fa",
+      "status": "PASS",
+      "error": null,
+      "rollbackAcknowledged": true,
+      "catalogCountsUnchanged": true,
+      "before": {
+        "relations": 20,
+        "functions": 14
+      },
+      "after": {
+        "relations": 20,
+        "functions": 14
+      },
+      "negativeClosedWriter": "P0001 WRITER_FENCE_CLOSED if PASS"
+    },
+    {
+      "database": "mecanet_control",
+      "file": "006-control-recovery.sql",
+      "sha256": "012c440c59c8acbb012ef6a019822643660b008f014cf505719ccec900ca44e9",
+      "status": "PASS",
+      "error": null,
+      "rollbackAcknowledged": true,
+      "catalogCountsUnchanged": true,
+      "before": {
+        "relations": 60,
+        "functions": 26
+      },
+      "after": {
+        "relations": 60,
+        "functions": 26
+      },
+      "negativeClosedWriter": "NOT APPLICABLE"
+    }
+  ],
+  "sqlCommands": 18,
+  "scope": "Real PostgreSQL18.6 Winx64 DDL and closed-writer SQL denial under SET ROLE; not role authentication, recovery or ARM64 QA",
+  "secretOutput": false
+}

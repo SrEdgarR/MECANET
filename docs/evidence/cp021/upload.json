@@ -1,0 +1,42 @@
+{
+  "schema": "cp021-upload-v1",
+  "at": "2026-10-15T13:50:56.237950+00:00",
+  "sourceSha": "ca15ed980de8167cc6144285a43b85cfbf71a7d3",
+  "helpers": {
+    "browser-config.py": "a98a806a7e850360517767ec1857b578ec8e11afea00e8303551afb89822b3a1",
+    "budget-limits.json": "65cb46844d2b8a78250839ed14b25fca91561cfcdd7d46557ff5b98829f334c2",
+    "controller.py": "521d32181a703fdafafc41e9b60202d2e05d0ca6c496541cca5c0ba5e1353566",
+    "host.py": "7b58b5ca32d30569d5c7eaf08691cdf8975c35555b44fed77fcf042462f3722f",
+    "resource-monitor.py": "50c771921df3e9496728b6f17f246555b424539236806fc8ae6e70652d731830",
+    "run.py": "9af303e7e836fc126e5bfcea8aacc47aa9a785b1f618cbbf01bd89ed36fd2bd6",
+    "target-host.py": "40a5c111a1d69e30b5a8515fd83cce1c12e75f4eeba9d951765b40dfd95203f6",
+    "target-lifecycle.py": "f5eb34145f27c3b357348fa46b29255ce08794eefeadf438965467483f024a99",
+    "target-readiness-host.py": "bc459b6952c6575e8290eb6bcd24eb72ba0596430307d066db2bca785c737d9f",
+    "target-variant-host.py": "6cab622f6a4b10023192d117c959ee1623cd20f2cba5bd1446dacce87de3fd3b",
+    "tls_bundle.py": "f31a71be42759130e5182678ea1d968cc98c8d87d8a3f2fd8e1de31440f52894"
+  },
+  "planHash": "ca6b57c002446a8cd1549680a2fb187f1d524b1ff1d064e69aa4ad7307c71263",
+  "inputs": {
+    "result": "PASS",
+    "hashes": {
+      "controllers.tar": "974463fd4dbfd20f89908e35599c62e5fb16cba7e1dbd3a931b42ecad89e0d97",
+      "artifact.tar": "d39dca11b09544e52eab4c2baca6b3422936614b337433585a7f5dadbca70819",
+      "budget.json": "193c5b53f0df3243fa9c3c30b6bafdfd4a4cfdc7299db46db0016b182fa75b84"
+    },
+    "helperFiles": 12,
+    "helperDirectoryMode": "0700",
+    "publishedMode": "0400",
+    "uid": 0,
+    "resourcesQA": 0,
+    "secretOutputs": false
+  },
+  "newQaRoots": 0,
+  "containers": 0,
+  "recovery": "Same prepared bundle; initial UID1000 assertion corrected to positively observed Ubuntu1001; no new IDs or material",
+  "privateHelpers": {
+    "cp021-upload.py": "eb6d0eba563722c485b25384c3925b873c4946a46853e0be50c4f9db317baeb6",
+    "cp021-run.py": "4ea1b1b35d52939fb53c53f00c317effa944402ee74eee4799ee6bd7647ea214"
+  },
+  "publicationProgramSha256": "024c713da9dd36664912de1d5f17fb087b02d18223f7e0dd6fca0b1872672050",
+  "secretOutputs": false
+}

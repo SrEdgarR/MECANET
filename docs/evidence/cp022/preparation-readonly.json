@@ -1,0 +1,100 @@
+{
+  "schema": "cp022-preparation-readonly-v1",
+  "at": "2026-10-15T14:54:06.364921+00:00",
+  "result": "PASS",
+  "scope": "read-only preparation; not execution Environment or PG acceptance",
+  "prior27Preserved": true,
+  "containers": 28,
+  "r02": {
+    "cid": "ddcbb1b7902718fd2aa78f1a1e36a195d52085b7239e0c4005dfafa009f5bdb0",
+    "status": "CREATED",
+    "pid": 0,
+    "running": false,
+    "restartCount": 0,
+    "startedAtZero": true,
+    "rootMaterialOwnerAndProfileMatch": true,
+    "bindsAndHostConfigTmpfsMatch": true,
+    "serviceReferenceExists": false,
+    "cleanupHistorical": "FAIL / UNKNOWN1 / KEEP",
+    "ledgerTotal": {
+      "artifactFiles": 642,
+      "http": 0,
+      "journal": 0,
+      "sql": 0
+    },
+    "mutations": 0
+  },
+  "r03PathsAllAbsent": true,
+  "r03SubnetOverlap": false,
+  "images": {
+    "node": {
+      "id": "sha256:ba6b7d0ee561d9d49deb99e2b93c98632cc287b6cca1a6b18d66127054efa4dc",
+      "architecture": "arm64",
+      "entrypoint": [
+        "docker-entrypoint.sh"
+      ],
+      "cmd": [
+        "node"
+      ],
+      "user": null,
+      "volumes": []
+    },
+    "postgres": {
+      "id": "sha256:67ba68a22dc7d5af3627b7e0f33d10bbefad07562ff9703b3a6c2de247649129",
+      "architecture": "arm64",
+      "entrypoint": [
+        "docker-entrypoint.sh"
+      ],
+      "cmd": [
+        "postgres"
+      ],
+      "user": null,
+      "volumes": [
+        "/var/lib/postgresql"
+      ]
+    },
+    "nginx": {
+      "id": "sha256:3abad30db61dfb2a339ea21acc9f3e6bbe78e291fcff2f835f4510c8fdfcbd83",
+      "architecture": "arm64",
+      "entrypoint": [
+        "/docker-entrypoint.sh"
+      ],
+      "cmd": [
+        "nginx",
+        "-g",
+        "daemon off;"
+      ],
+      "user": null,
+      "volumes": []
+    }
+  },
+  "compose": {
+    "version": "5.5.1",
+    "createNoRecreateSupported": true,
+    "createNoDepsUnsupported": true,
+    "startHelpRead": true
+  },
+  "resources": {
+    "availableMiB": 8373,
+    "diskFreeBytes": 140688977920,
+    "cpuBusyPercent": 9.55,
+    "sampleSeconds": 2,
+    "generalCapacityVerified": false
+  },
+  "oldR02Tls": {
+    "schema": "cp019-tls-verification-v1",
+    "result": "PASS",
+    "manifestHash": "c8209a068a92a4d81bf05e82f1cb28764b0f81cd38d2568194a6e4c950707e39",
+    "projects": [
+      "mecanet-qa-p1l3-r02",
+      "mecanet-qa-p1l3-r02-target"
+    ],
+    "verifiedKeyPairs": 4,
+    "independentCAs": 2,
+    "networkUsed": false,
+    "secretOutput": false
+  },
+  "newR03Tls": "pending local verification",
+  "newR03Resources": 0,
+  "mutations": 0
+}

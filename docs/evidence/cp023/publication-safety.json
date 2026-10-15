@@ -1,0 +1,47 @@
+{
+  "schema": "cp023-publication-safety-v1",
+  "observedAtUtc": "2026-10-15 16:35:03 UTC",
+  "repository": "SrEdgarR/MECANET",
+  "branchAllowed": "codex/verify-p1-l3-development",
+  "operation": "verification push and DRAFT PR only; no merge",
+  "gitHubHooks": [],
+  "gitHubRepoAccountPermissions": "{\"default_branch\":\"develop\",\"full_name\":\"SrEdgarR/MECANET\",\"permissions\":{\"admin\":true,\"maintain\":true,\"pull\":true,\"push\":true,\"triage\":true},\"private\":false}\nSrEdgarR\n{\"enabled\":true,\"allowed_actions\":\"all\",\"sha_pinning_required\":false}",
+  "canonicalDevelop": "86985fe7589032f202ebf0cb057a9b1384217151",
+  "canonicalWorkflow": {
+    "path": ".github/workflows/p1-l1-verify.yml",
+    "deploymentSteps": [],
+    "semantics": "local contracts/build/audit only; reviewed CP023"
+  },
+  "localHooks": {
+    "coreHooksPath": null,
+    "executableNonSampleHooks": []
+  },
+  "vercel": {
+    "provenance": "connected Vercel list_projects filtered by repository1383698839 CP023",
+    "response": {
+      "result": {
+        "projects": [],
+        "pagination": {
+          "count": 0
+        }
+      }
+    },
+    "humanEvidence": "projects disconnected manually; preserved projects and Nexora"
+  },
+  "coolify": {
+    "provenance": "historical READ ONLY CP017, not a fresh VPS observation",
+    "evidence": "docs/evidence/cp017/coolify-trigger-precheck.json",
+    "branch": "codex/deploy-vercel-coolify",
+    "autoDeploy": false,
+    "previewDeploy": false,
+    "matchingVerificationBranch": false,
+    "limitation": "No VPS connection CP023. No claim of universal discovery or present UI configuration. No known matching trigger; GitHub repository hooks freshly empty."
+  },
+  "otherReadChecks": {
+    "pages": "404 absent CP023",
+    "rulesets": [],
+    "latestDeployments": "2026-10-07 historical Vercel; no new deployment reported by GitHub CP023"
+  },
+  "result": "PASS bounded for known mechanisms targeting the new verification branch; not authorization for deploy or merge",
+  "mutations": []
+}

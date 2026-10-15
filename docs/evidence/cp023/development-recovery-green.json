@@ -1,0 +1,115 @@
+{
+  "schema": "cp023-development-recovery-sql-v1",
+  "status": "PASS",
+  "sourceSha": "a3b5752c178afa20d3835aebc8e3c88d04fbc02a",
+  "environment": "PostgreSQL18.6 physically copied Windows development fixture; not ARM64/VPS QA",
+  "sourceSnapshotHash": "ed6c26c452539dd75d690cf9822b1669eef9b29660f33942c55a1976fcad604f",
+  "materialHash": "0eafbce4f4e94399fa2ed95e731588b0a564e33c7ae7540bc2308f8fb1afd30b",
+  "checks": [
+    {
+      "name": "physical-copy-sql-identity-and-closed-source",
+      "status": "PASS",
+      "copyIndexHash": "ec584f377985c66e73bcdf90c3d9002999682a8a8b066d0ffb7c4da36a6c08c7",
+      "outerProtocol": "NOT VERIFIED; native evidence supplied by Root"
+    },
+    {
+      "name": "target-material-before-first-effect",
+      "status": "PASS",
+      "materialHash": "0eafbce4f4e94399fa2ed95e731588b0a564e33c7ae7540bc2308f8fb1afd30b",
+      "directoryDurability": "NOT VERIFIED ON WINDOWS"
+    },
+    {
+      "name": "positive-reentry-skips-all-confirmed-role-mutations",
+      "status": "PASS",
+      "roles": 18,
+      "mutations": 0,
+      "verification": "all18 SCRAM against previously custodied chosen values; SaaS role attributes exact"
+    },
+    {
+      "name": "old-api-password-permanently-rejected",
+      "status": "PASS",
+      "sqlState": "28P01"
+    },
+    {
+      "name": "fresh-passwords-and-role-attributes-preserved",
+      "status": "PASS",
+      "roles": 18,
+      "authenticatedRole": "saas_api",
+      "backupAuthentication": "NOT VERIFIED; replication role has no normal database CONNECT"
+    },
+    {
+      "name": "restore-A-does-not-enroll-B",
+      "status": "PASS",
+      "sqlState": "P0001"
+    },
+    {
+      "name": "activation-before-proofs-is-closed",
+      "status": "PASS",
+      "sqlState": "P0001"
+    },
+    {
+      "name": "begin-enroll-idempotent-and-scoped",
+      "status": "PASS"
+    },
+    {
+      "name": "configure-new-generation-and-revoke-old-sessions",
+      "status": "PASS",
+      "priorSessions": 1
+    },
+    {
+      "name": "production-clock-commit-ack-loss-and-positive-reconciliation",
+      "status": "PASS",
+      "fault": "COMMIT ACK deliberately discarded after real server ACK; not physical network loss",
+      "clockVersion": "6043"
+    },
+    {
+      "name": "tenant-a-stale-verify-CAS",
+      "status": "PASS",
+      "sqlState": "P0001"
+    },
+    {
+      "name": "tenant-b-stale-verify-CAS",
+      "status": "PASS",
+      "sqlState": "P0001"
+    },
+    {
+      "name": "restricted-B-cannot-open",
+      "status": "PASS",
+      "sqlState": "P0001"
+    },
+    {
+      "name": "A-individually-reopened-B-tombstone-retained-and-runtime-ready",
+      "status": "PASS"
+    },
+    {
+      "name": "old-generation-and-epoch-write-denied",
+      "status": "PASS",
+      "sqlState": "P0001"
+    },
+    {
+      "name": "new-product-and-receipt-after-recovery-idempotent",
+      "status": "PASS",
+      "directTenantSql": true,
+      "onHand": "3"
+    },
+    {
+      "name": "private-fixture-counter-setup-before-http",
+      "status": "PASS",
+      "directSqlHasNoServiceIntents": true,
+      "productionReconciliationClaimed": false
+    }
+  ],
+  "sqlCommands": 73,
+  "fixtureAnchors": true,
+  "outerEndProof": "NOT VERIFIED",
+  "stageJournalDurability": "NOT VERIFIED",
+  "l3A2": "NOT VERIFIED",
+  "http": "NOT VERIFIED by SQL helper",
+  "cleanup": "Root must close returned context then own native PG cleanup",
+  "provenance": {
+    "helperSha256": "dfcdc3fc62a3a43795e5ab0822c62f936ccff52f327ae0985248d8470041a4dd",
+    "sourceFixtureBaseline": "a3b5752c178afa20d3835aebc8e3c88d04fbc02a",
+    "repair": "development-recovery-alias-repair.json",
+    "currentControlMigrationSha256": "d39d9883a700677518b02561ca348cd7883c1e3fd4cc9c2fcb56dd23d6431d64"
+  }
+}

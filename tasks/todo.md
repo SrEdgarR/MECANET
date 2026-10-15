@@ -1,6 +1,37 @@
+## Vigencia CP-022 — tareas pendientes de P1-L3
+
+**CP-022 — PARCIAL, 2026-10-15. P1 única fase EN CURSO; L1/L2 TERMINAL, L3 EN CURSO.** SC014/DEC072 exacta APPROVED/aplicada a r03/r03-target; A/B y demás SC vigentes. Runtime7f5986f: **PostgreSQL18.6 ARM64 sí arrancó**; aborto posterior de recursos/CPU antes del esquema SaaS. Cleanup PASS, PG EXITED0/PID0/KEEP sin puertos;28 anteriores preservados, incluido r02 CREATED/UNKNOWN histórico. Ledger seq44:639 artefactos/0SQL del arnés/0HTTP/0journal; initdb interno se distingue de esas cifras. A1 PASS documental/local; A2…A6 e Integration NOT VERIFIED. Quality local PASS:415 Node fresh67f9c44 y395 Python por unión393−29+31. Correctivo del monitor sólo local, sin alterar la evidencia física. Environment entrada PASS/ejecución FAIL.72 DEC,14 pendientes: Q32/Q35 BLOCKING y12 FUTURE. Q32: falta contrato de reentrada tras vencer el caso START45s; no reset/alias/r04. Q35: faltan salidas físicas. Sin push/PR/CI/merge, P2 funcional o cambios productivos/compartidos. [Auditoría CP-022](../docs/audit/CP-022.md), [matriz](../docs/evidence/cp022/matrix.md) y [causa raíz/continuación](../docs/evidence/cp022/root-cause-and-continuation.md).
+
+- [x] Aplicar SC-014 exacta y corregir/verificar preparación TLS/CREATE/tmpfs/CID antes de recursos.
+- [x] Iniciar PostgreSQL propio en r03 y conservar evidencia del aborto CPU y cleanup PASS.
+- [x] Corregir localmente la pérdida del punto infractor del resumen del monitor, sin cambiar límites.
+- [ ] Q-32: acreditar un contrato seguro de reentrada con relojes/cargos originales; no reanudar el caso vencido ni crear otra cohorte.
+- [ ] Q-35: verificar copia/recuperación/reapertura, dos API, negativas, navegador y rollback reales; después integración condicionada.
+- [ ] Preparar el siguiente corte P2 únicamente si L3 queda TERMINAL; sin implementación P2 por extensión.
+
+Antecedente CP019: A/B exactas aprobadas; implementación local L3 y correcciones en curso. QA r01 FAIL TLS127 antesPG;0SQL/HTTP,STOPPED/KEEP y26 anteriores intactos. Q32/35 BLOCKING;SC011/DEC069 propuesta única de sucesora r02, sinreset ni otra A/B general. Quality local porhashes y pruebas físicas/Integration antesTERMINAL; P2 todavía NO INICIADA.
+
 # Tareas de adopción SaaS y P1 limitado
 
-CP-017 — cierre del mismo checkpoint, 2026-10-13: **P1-L2 TERMINAL**, doce criterios PASS e Integration Gate PASS; P1-L1 TERMINAL conservado. P1 única fase EN CURSO, P0 PARCIAL/RG-001 y SaaS general NOT APPROVED. Baseline completa v0.2-CP016/DEC-061 y B diferenciada DEC-062, snapshot ca975dc822c0bd5e872d3debe824abc536f662007513170f327727878ff3ac71; base de implementación L2 a0098178fc27467bf4c12da0e97723e0b80ce683. Cierre documental en codex/cp017-close sobre develop7ff9a6c41060e186c8e8c6ce475957c53d40de38. Catorce pendientes FUTURE, cero BLOCKING; Q-35 conserva sólo garantías posteriores/reapertura fuera de L2. P1-L3 SUGGESTED/NOT APPROVED, sin A/B ni implementación. Sin lanzamiento público, datos reales o cambios compartidos.
+## Antecedente CP-018 — diseño L3 y próxima autorización
+
+Base86985fe7589032f202ebf0cb057a9b1384217151, rama aislada codex/p1-l3-design. L1/L2 TERMINAL; P1 única activa/P0 PARCIAL/SaaS NOT APPROVED. [Candidato único P1-L3v0.2](../.agentic/P1-L3_CANDIDATE.md): seis criterios con propiedad/esperado/ensayo/negativas/entorno/dependencias/reversión/evidencia/gate. Modelo puro local, review independiente y F14/Design antes de A. No implementación, QA L3, nueva restauración, push/merge o cambio compartido.
+
+| Trabajo CP018 | Estado actual | Límite |
+|---|---|---|
+| Recuperar Git, base y documentos reales | PASS | Reutilizar CP017, no reabrir/reensayar L1/L2 |
+| Concretar recuperación/CAS/custodia/clock/ready y plan de seis criterios | PASS documental | Candidato único4d1cf193… SUGGESTED; review final0REQUIRED; sin pruebas físicas |
+| Modelo local y controles de sensibilidad | PASS limitado |14 comprobaciones/40 estados/230 aristas/5 variantes inseguras; sin PG/HTTP/fsync/restore |
+| Revisión final/F14/Design y hash de A | PASS documental | Hash4d1cf193…/peer0REQUIRED, A/B humanas pendientes |
+| Preparación POS en documento existente | PASS documental | P2-VENTA-01 SUGGESTED; no entrada P2 ni código, guardia/monetaria/fiscalidad pendientes |
+| A exacta y B integral L3 | NOT VERIFIED | Q44/Q45, humanas diferenciadas; juntas posibles, sin aprobación por extensión |
+| Development/Environment y cohortes nuevas | NOT VERIFIED | Después de autorización, before first code/resource, preflight por recurso; CP017 STOPPED/KEEP |
+
+Próximo paso habilitado al cerrar revisión: resolver A/B exactas en un mensaje. Después conservar snapshot aprobado, verificar Git/locks/gates/preflight y ejecutar íntegramente L3 con pruebas/salidas/cleanup/Integration propios, sin otra ronda general de planificación. No diseñar POS en paralelo como implementación; su apéndice independiente es informativo.
+
+## Antecedentes conservados
+
+Antecedente CP-017 — cierre del mismo checkpoint, 2026-10-13: **P1-L2 TERMINAL**, doce criterios PASS e Integration Gate PASS; P1-L1 TERMINAL conservado. P1 única fase EN CURSO, P0 PARCIAL/RG-001 y SaaS general NOT APPROVED. Baseline completa v0.2-CP016/DEC-061 y B diferenciada DEC-062, snapshot ca975dc822c0bd5e872d3debe824abc536f662007513170f327727878ff3ac71; base de implementación L2 a0098178fc27467bf4c12da0e97723e0b80ce683. Cierre documental en codex/cp017-close sobre develop7ff9a6c41060e186c8e8c6ce475957c53d40de38. Catorce pendientes FUTURE, cero BLOCKING; Q-35 conserva sólo garantías posteriores/reapertura fuera de L2. P1-L3 SUGGESTED/NOT APPROVED, sin A/B ni implementación. Sin lanzamiento público, datos reales o cambios compartidos.
 
 [Integración acreditada](../docs/evidence/cp017/integration.json): [PR #3](https://github.com/SrEdgarR/MECANET/pull/3), head `df9219a202542fca173ffba25fe8d523b40e54cb`, merge/develop `7ff9a6c41060e186c8e8c6ce475957c53d40de38`, fusionado2026-10-13T23:05:36Z. [CI push](https://github.com/SrEdgarR/MECANET/actions/runs/38481922405), [CI PR](https://github.com/SrEdgarR/MECANET/actions/runs/38481927763) y [CI canónica](https://github.com/SrEdgarR/MECANET/actions/runs/38482079889) SUCCESS. Checkout real push df9219a202542fca173ffba25fe8d523b40e54cb, PR synthetic merge3bd4dcbe6b44fc78ede161c5b82fc9d640400198 con tree igual al head df9219a, canónica7ff9a6c41060e186c8e8c6ce475957c53d40de38; no se atribuye el checkout del PR directamente al head. Primer checkpoint de aceptación `c7335f9bc24b68b578c2a165bbab341962fa6854`; cierre posterior dentro de CP-017, SHA documental final identificada externamente, sin autorreferencia. [Corrección CI](../docs/evidence/cp017/ci-correction.json) conserva primeras ejecuciones255PASS/3FAIL y checkout limpio RED12/15→GREEN15/15; sólo fixture mkdtemp/tmpdir, sin cambiar producto8199 ni helpers/runtime QA2b0. Suite completa258PASS y peer de fixture0 REQUIRED; no se reetiquetan los FAIL iniciales.
 

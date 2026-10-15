@@ -1,0 +1,11 @@
+{
+  "failure": "WINDOWS_OPENSSH_FILTERED_ENV_EXIT255",
+  "stderrBytes": 0,
+  "readback": {
+    "rootsExist": false,
+    "ledgerExists": false
+  },
+  "correction": "Required Windows support path variables supplied only to SSH; Node/browser keep filtered environment",
+  "materialRegenerated": false,
+  "resourcesCreated": 0
+}

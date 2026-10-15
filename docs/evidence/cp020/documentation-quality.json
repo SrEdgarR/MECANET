@@ -1,0 +1,252 @@
+{
+  "schema": "cp020-documentation-quality-v1",
+  "at": "2026-10-15T11:45:22.735883+00:00",
+  "status": "PASS",
+  "testedCodeSha": "dd7dc0d303e0bacff354c8e6b70a8df1c2b191c2",
+  "scope": "Changed documentation, references, state/map, protected hashes/proposal and existing reports; no DB or remote mutations",
+  "checks": {
+    "changedReferences": {
+      "status": "PASS",
+      "references": 50
+    },
+    "canonicalMap": {
+      "status": "PASS",
+      "decisions": 70,
+      "criteria": 323,
+      "pending": 14,
+      "blocking": 2,
+      "future": 12,
+      "activePhase": "P1",
+      "feedback": 3
+    },
+    "protected": {
+      "status": "PASS",
+      "l3": "4d1cf193000106dd20555f6c70acab3cb264fd3a7bfe0a9cf8be662eddb2b3ec",
+      "prompt": "d2dafd5f75df32aae33e421953fab6e99e723aa88744b918b555562c7b6a550d",
+      "l2": "776393ad96d1628b6c6e61ff8722257570b058147a94cdd71103419b8ece3cba"
+    },
+    "immutableReportsAndProposal": {
+      "status": "PASS"
+    },
+    "effectiveBudgetUnchanged": {
+      "status": "PASS",
+      "cases": 135,
+      "sha256": "ba43bef8cdd8351c58c9cc3a6ccc4b109f0aaf0e59d1856fe6c67903912e182f",
+      "sqlCase": 140,
+      "sqlGlobal": 3000
+    },
+    "mapSourceHashes": {
+      "status": "PASS",
+      "files": 7
+    },
+    "noPrivateMaterialInNewFiles": {
+      "status": "PASS"
+    }
+  },
+  "references": [
+    {
+      "source": "docs/README.md",
+      "target": "audit/CP-020.md"
+    },
+    {
+      "source": "docs/PROJECT_STATE.md",
+      "target": "audit/CP-020.md"
+    },
+    {
+      "source": "docs/ROADMAP.md",
+      "target": "audit/CP-020.md"
+    },
+    {
+      "source": "docs/DECISIONS.md",
+      "target": "evidence/cp020/sql-budget-feasibility.md"
+    },
+    {
+      "source": "docs/DECISIONS.md",
+      "target": "../.agentic/P1-L3_SQL_BUDGET_CHANGE.md"
+    },
+    {
+      "source": "docs/CHECKPOINTS.md",
+      "target": "audit/CP-020.md"
+    },
+    {
+      "source": "docs/CHECKPOINTS.md",
+      "target": "evidence/cp020/matrix.md"
+    },
+    {
+      "source": "docs/CHECKPOINTS.md",
+      "target": "evidence/cp020/matrix.md"
+    },
+    {
+      "source": "docs/CHECKPOINTS.md",
+      "target": "evidence/cp020/matrix.md"
+    },
+    {
+      "source": "docs/CHECKPOINTS.md",
+      "target": "evidence/cp020/matrix.md"
+    },
+    {
+      "source": "docs/CHECKPOINTS.md",
+      "target": "evidence/cp020/matrix.md"
+    },
+    {
+      "source": "docs/CHECKPOINTS.md",
+      "target": "evidence/cp020/matrix.md"
+    },
+    {
+      "source": "docs/CHECKPOINTS.md",
+      "target": "evidence/cp020/matrix.md"
+    },
+    {
+      "source": "docs/CHECKPOINTS.md",
+      "target": "evidence/cp020/matrix.md"
+    },
+    {
+      "source": "docs/CHECKPOINTS.md",
+      "target": "evidence/cp020/matrix.md"
+    },
+    {
+      "source": "docs/CHECKPOINTS.md",
+      "target": "evidence/cp020/matrix.md"
+    },
+    {
+      "source": "docs/CHECKPOINTS.md",
+      "target": "evidence/cp020/matrix.md"
+    },
+    {
+      "source": "docs/CHECKPOINTS.md",
+      "target": "evidence/cp020/matrix.md"
+    },
+    {
+      "source": "docs/CHECKPOINTS.md",
+      "target": "evidence/cp020/matrix.md"
+    },
+    {
+      "source": "docs/CHECKPOINTS.md",
+      "target": "evidence/cp020/matrix.md"
+    },
+    {
+      "source": "docs/CHECKPOINTS.md",
+      "target": "evidence/cp020/matrix.md"
+    },
+    {
+      "source": "docs/CHECKPOINTS.md",
+      "target": "evidence/cp020/matrix.md"
+    },
+    {
+      "source": "docs/CHECKPOINTS.md",
+      "target": "evidence/cp020/matrix.md"
+    },
+    {
+      "source": "docs/CHECKPOINTS.md",
+      "target": "evidence/cp020/matrix.md"
+    },
+    {
+      "source": ".agentic/PLANNING_STATE.md",
+      "target": "../docs/audit/CP-020.md"
+    },
+    {
+      "source": ".agentic/PLANNING_STATE.md",
+      "target": "P1-L3_SQL_BUDGET_CHANGE.md"
+    },
+    {
+      "source": ".agentic/PLANNING_STATE.md",
+      "target": "../docs/evidence/cp020/qa-entry.md"
+    },
+    {
+      "source": ".agentic/P1-L3_PLAN.md",
+      "target": "P1-L3_SQL_BUDGET_CHANGE.md"
+    },
+    {
+      "source": ".agentic/P1-L3_PLAN.md",
+      "target": "../docs/evidence/cp020/qa-entry.md"
+    },
+    {
+      "source": ".agentic/P1-L3_SQL_BUDGET_CHANGE.md",
+      "target": "../docs/evidence/cp020/sql-budget-feasibility.md"
+    },
+    {
+      "source": "docs/audit/CP-020.md",
+      "target": "../../.agentic/P1-L3_SQL_BUDGET_CHANGE.md"
+    },
+    {
+      "source": "docs/audit/CP-020.md",
+      "target": "../evidence/cp020/verification-index.json"
+    },
+    {
+      "source": "docs/audit/CP-020.md",
+      "target": "../evidence/cp020/local-quality.json"
+    },
+    {
+      "source": "docs/audit/CP-020.md",
+      "target": "../evidence/cp020/local-quality-final.json"
+    },
+    {
+      "source": "docs/audit/CP-020.md",
+      "target": "../evidence/cp020/review-copy-journal.json"
+    },
+    {
+      "source": "docs/audit/CP-020.md",
+      "target": "../evidence/cp020/review-a5-schema.md"
+    },
+    {
+      "source": "docs/audit/CP-020.md",
+      "target": "../evidence/cp020/sql-budget-feasibility.md"
+    },
+    {
+      "source": "docs/audit/CP-020.md",
+      "target": "../evidence/cp020/preservation-before.json"
+    },
+    {
+      "source": "docs/audit/CP-020.md",
+      "target": "../evidence/cp020/tls-vps.json"
+    },
+    {
+      "source": "docs/audit/CP-020.md",
+      "target": "../evidence/cp020/tls-archive-custody.json"
+    },
+    {
+      "source": "docs/audit/CP-020.md",
+      "target": "../evidence/cp020/canonical-readonly.json"
+    },
+    {
+      "source": "docs/audit/CP-020.md",
+      "target": "../evidence/cp020/git-preservation.json"
+    },
+    {
+      "source": "docs/audit/CP-020.md",
+      "target": "../evidence/cp020/matrix.md"
+    },
+    {
+      "source": "docs/audit/CP-020.md",
+      "target": "../evidence/cp020/qa-entry.md"
+    },
+    {
+      "source": "docs/evidence/cp020/matrix.md",
+      "target": "verification-index.json"
+    },
+    {
+      "source": "docs/evidence/cp020/matrix.md",
+      "target": "local-quality.json"
+    },
+    {
+      "source": "docs/evidence/cp020/matrix.md",
+      "target": "local-quality-final.json"
+    },
+    {
+      "source": "docs/evidence/cp020/matrix.md",
+      "target": "../../../.agentic/P1-L3_SQL_BUDGET_CHANGE.md"
+    },
+    {
+      "source": "docs/evidence/cp020/matrix.md",
+      "target": "qa-entry.md"
+    },
+    {
+      "source": "docs/evidence/cp020/sql-budget-feasibility.md",
+      "target": "../../../.agentic/P1-L3_SQL_BUDGET_CHANGE.md"
+    }
+  ],
+  "newCriteria": "C307..C323",
+  "historicalCriteriaPreserved": 306,
+  "validatorCorrection": "First validator invocation failed on Windows default cp1252 while reading UTF-8 map; explicit UTF-8 used for this successful run. No project source or threshold altered.",
+  "checkpointSha": "Recorded externally after documentary commit; no self-reference"
+}
