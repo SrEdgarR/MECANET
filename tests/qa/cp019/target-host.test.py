@@ -51,7 +51,10 @@ class Boundaries(unittest.TestCase):
  def test_mailbox_budget_denial_precedes_temporary_or_replace(self):
   with tempfile.TemporaryDirectory() as tmp:
    h=Fake(pathlib.Path(tmp));directory=h.TARGET/'live';directory.mkdir(parents=True);h.ledger_charge=lambda *_:(_ for _ in ()).throw(AssertionError('BUDGET_CLOSED'))
-   with patch.object(t.pathlib.Path,'stat',return_value=types.SimpleNamespace(st_uid=999,st_mode=0o40700)),patch.object(t.os,'open',side_effect=AssertionError('NO_EFFECT')) as opened:
+   original_stat=t.pathlib.Path.stat
+   def directory_stat(path,*args,**kwargs):
+    return types.SimpleNamespace(st_uid=999,st_mode=0o40700) if path==directory else original_stat(path,*args,**kwargs)
+   with patch.object(t.pathlib.Path,'stat',new=directory_stat),patch.object(t.os,'open',side_effect=AssertionError('NO_EFFECT')) as opened:
     body={'schema':'target-host-receipt-v1'}
     with self.assertRaisesRegex(AssertionError,'BUDGET_CLOSED'):t.atomic_mailbox(h,'target-host.json',{'receipt':body,'receiptHash':t.digest(body)})
     opened.assert_not_called()
