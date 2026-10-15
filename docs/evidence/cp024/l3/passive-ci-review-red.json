@@ -1,0 +1,28 @@
+{
+  "schema": "cp024-passive-ci-review-red-v1",
+  "date": "2026-10-15",
+  "status": "FAIL",
+  "tool": "ce0821",
+  "environment": "Windowsx64 Python3.12.14",
+  "newCiPublished": false,
+  "results": [
+    {
+      "suite": "continuation-admission.test.py",
+      "exit": 0
+    },
+    {
+      "suite": "continuation-publication.test.py",
+      "exit": 0
+    },
+    {
+      "suite": "continuation-port.test.py",
+      "tests": 5,
+      "errors": 1,
+      "exit": 1,
+      "cause": "new test empty_runtime stub expected(host,kind,action), actual existing controller calls(host,action)"
+    }
+  ],
+  "sourceNote": "Port test changed after earlier freeze; final hashes must be captured and checked again, no old PASS reused",
+  "correctionRequired": "Fix fixture against actual controller contract, retain error, rerun affected test and freeze before CI-only publication",
+  "vpsEffects": 0
+}

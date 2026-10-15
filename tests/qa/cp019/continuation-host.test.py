@@ -48,6 +48,10 @@ class Host(unittest.TestCase):
  def test_partial_configuration_does_not_disable_metadata_or_cleanup(self):
   h.configure_continuation(context())
   for args in [('docker','inspect','cid'),('docker','stop','cid'),('docker','ps','-aq')]:h.continuation_effect_guard(args)
+ def test_live_claim_without_positive_transport_still_denies_effects(self):
+  import types
+  h.configure_continuation(context());h.CONTINUATION_BROKER=types.SimpleNamespace(guard=lambda:None);h.CONTINUATION_EFFECT_RECEIPT=types.SimpleNamespace(check_live=lambda:True,effect_ready=False)
+  with self.assertRaisesRegex(AssertionError,'TRANSPORT_NOT_READY'):h.continuation_effect_guard(('docker','start','cid'))
  def test_root_reader_high_water_rejects_a_known_delta_regression(self):
   h.configure_continuation(context());s=f.change(f.fresh(),'source-close-b',kind='sql',amount=3);old=copy.deepcopy(s);old['sequence']-=1;old['total']['sql']-=1;old['scenarios']['source-close-b']['total']['sql']-=1
   with patch.object(h,'uptime',return_value=f.NOW):

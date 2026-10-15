@@ -114,6 +114,8 @@ def continuation_effect_guard(args):
   effect=len(args)>1 and (args[1] in ['create','start','exec'] or args[1]=='compose' and any(x in args[2:] for x in ['up','create','run','start','restart','exec']))
   if effect:
    assert CONTINUATION_EFFECT_RECEIPT is not None and CONTINUATION_BROKER is not None,'CONTINUATION_CONSUMERS_NOT_ACCREDITED'
+   assert callable(getattr(CONTINUATION_EFFECT_RECEIPT,'check_live',None)) and CONTINUATION_EFFECT_RECEIPT.check_live() is True,'CONTINUATION_ROOT_CLAIM_REQUIRED'
+   assert getattr(CONTINUATION_EFFECT_RECEIPT,'effect_ready',False) is True,'CONTINUATION_TRANSPORT_NOT_READY'
    CONTINUATION_BROKER.guard()
 def register_continuation_start(args):
  if CONTINUATION_CONTEXT is None or len(args)!=3 or args[:2]!=('docker','start'):return
