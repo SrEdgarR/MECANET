@@ -1,8 +1,8 @@
 // P1-L1 local contracts only. This runner never loads .env or QA connection files.
-import { readFileSync, readdirSync } from 'node:fs';
+import { readFileSync, readdirSync, lstatSync, realpathSync, chmodSync } from 'node:fs';
 import assert from 'node:assert/strict';
 import { createHash } from 'node:crypto';
-import { resolve, relative } from 'node:path';
+import { resolve, relative, posix } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { spawnSync } from 'node:child_process';
 import { sourceFiles as saasSources } from './saas-toolchain.mjs';
@@ -119,11 +119,56 @@ function filesystemIdentity({ uid, gid, groups, version, environment: variables 
   assert.deepEqual(Object.fromEntries(Object.entries(variables)), { PATH: '/usr/bin:/bin', TMPDIR: '/tmp', NODE_ENV: 'test', CI: 'true', REAL_API: 'false', VITEST_REAL_API: 'false' }, 'CI_FILESYSTEM_ENVIRONMENT_REQUIRED');
   return { schema: 'cp023-filesystem-identity-v1', status: 'PASS', uid, gid, groups, node: version };
 }
-function runFilesystem(args) {
+function runFilesystem(args, capture = false) {
   const command = filesystemCommand(process.execPath, args);
-  const result = spawnSync(command.executable, command.args, { cwd: root, env: { PATH: '/usr/bin:/bin' }, stdio: 'inherit' });
+  const result = spawnSync(command.executable, command.args, { cwd: root, env: { PATH: '/usr/bin:/bin' }, ...(capture ? { encoding: 'utf8', maxBuffer: 65536, stdio: ['ignore', 'pipe', 'pipe'] } : { stdio: 'inherit' }) });
   if (result.error) throw result.error;
-  if (result.signal || result.status !== 0) process.exit(result.status || 1);
+  if (result.signal || result.status !== 0) throw Object.assign(Error('CI_FILESYSTEM_CHILD_FAILED'), { exitStatus: result.status, signal: result.signal });
+  return result;
+}
+function traversalPaths(checkout, home) {
+  assert.ok(typeof home === 'string' && home.startsWith('/home/') && home === posix.resolve(home) && checkout === posix.resolve(checkout) && checkout.startsWith(home + '/') && !/[\\\r\n\0]/.test(home + checkout) && !checkout.split('/').some(part => part === '.qa-private' || part === '.env' || part === 'node_modules'), 'CI_FILESYSTEM_TRAVERSAL_SCOPE_REQUIRED');
+  const paths = []; for (let path = posix.dirname(checkout); path.startsWith(home); path = posix.dirname(path)) { paths.unshift(path); if (path === home) break; }
+  assert.equal(paths[0], home, 'CI_FILESYSTEM_HOME_ANCESTRY_REQUIRED'); return paths;
+}
+function traversalSnapshot(path, stat) {
+  assert.ok(stat.isDirectory() && !stat.isSymbolicLink() && stat.uid === 1001, 'CI_FILESYSTEM_OWN_ANCESTOR_REQUIRED');
+  return { path, uid: stat.uid, gid: stat.gid, dev: stat.dev, ino: stat.ino, mode: stat.mode & 0o7777 };
+}
+function assertTraversalIdentity(snapshot, stat, allowedModes) {
+  assert.deepEqual(traversalSnapshot(snapshot.path, stat), { ...snapshot, mode: stat.mode & 0o7777 }, 'CI_FILESYSTEM_ANCESTOR_IDENTITY_CHANGED');
+  assert.ok(allowedModes.includes(stat.mode & 0o7777), 'CI_FILESYSTEM_ANCESTOR_MODE_CHANGED');
+}
+function withTraversal(snapshots, action, io = { stat: lstatSync, chmod: chmodSync }) {
+  const changed = []; let failure;
+  try {
+    for (const snapshot of snapshots) {
+      assertTraversalIdentity(snapshot, io.stat(snapshot.path), [snapshot.mode]);
+      if (snapshot.mode & 0o001) continue;
+      changed.push(snapshot); io.chmod(snapshot.path, snapshot.mode | 0o001);
+      assertTraversalIdentity(snapshot, io.stat(snapshot.path), [snapshot.mode | 0o001]);
+    }
+    return action();
+  } catch (error) { failure = error; throw error; }
+  finally {
+    const failed = [];
+    for (const snapshot of [...changed].reverse()) {
+      try {
+        const stat = io.stat(snapshot.path); assertTraversalIdentity(snapshot, stat, [snapshot.mode, snapshot.mode | 0o001]);
+        if ((stat.mode & 0o7777) !== snapshot.mode) io.chmod(snapshot.path, snapshot.mode);
+        assertTraversalIdentity(snapshot, io.stat(snapshot.path), [snapshot.mode]);
+      } catch { failed.push(snapshot.path); }
+    }
+    io.report?.({ schema: 'cp023-filesystem-traversal-cleanup-v1', status: failed.length ? 'UNKNOWN' : 'PASS', changed, restoreFailedPaths: failed });
+    if (failed.length) throw Error('CI_FILESYSTEM_TRAVERSAL_RESTORE_UNKNOWN', { cause: failure });
+  }
+}
+function filesystemReadability() {
+  const paths = filesystemTests.map(file => resolve(root, file));
+  const probe = `import{lstatSync,realpathSync,readFileSync}from'node:fs';const paths=${JSON.stringify(paths)};const files=paths.map(path=>{try{const stat=lstatSync(path);if(!stat.isFile()||stat.isSymbolicLink()||realpathSync(path)!==path)throw Object.assign(Error(),{code:'UNSAFE_FILE'});const bytes=readFileSync(path);return{path,status:'PASS',uid:stat.uid,mode:stat.mode&4095,bytes:bytes.length}}catch(error){return{path,status:'FAIL',code:/^[A-Z_]{2,40}$/.test(error.code??'')?error.code:'UNKNOWN'}}});console.log(JSON.stringify({schema:'cp023-filesystem-readability-v1',status:files.every(file=>file.status==='PASS')?'PASS':'FAIL',files}));`;
+  const result = runFilesystem(['--input-type=module', '-e', probe], true), report = JSON.parse(result.stdout);
+  assert.equal(report.schema, 'cp023-filesystem-readability-v1'); assert.deepEqual(report.files.map(file => file.path), paths);
+  assert.ok(['PASS', 'FAIL'].includes(report.status)); console.log(JSON.stringify(report)); return report;
 }
 
 function javascriptFiles(directory) {
@@ -169,7 +214,19 @@ switch (mode) {
     assert.equal(filesystemIdentity(identity).status, 'PASS');
     assert.equal(filesystemIdentity({ ...identity, environment: Object.assign(Object.create(Object.getPrototypeOf(process.env)), identity.environment) }).status, 'PASS');
     for (const change of [{ uid: 0 }, { gid: 0 }, { groups: [999, 127] }, { version: 'v22.0.0' }, { environment: { ...identity.environment, NODE_OPTIONS: '--inspect' } }]) assert.throws(() => filesystemIdentity({ ...identity, ...change }));
-    console.log(JSON.stringify({ schema: 'cp023-contract-partition-self-test-v1', status: 'PASS', partitionCases: cases.length, files: tests.length, isolatedFiles: filesystem.length, commandCases: 2, identityCases: 7, filesystemEffects: false, sudoExecuted: false, sqlCommands: 0 }));
+    assert.deepEqual(traversalPaths('/home/runner/work/MECANET/MECANET', '/home/runner'), ['/home/runner', '/home/runner/work', '/home/runner/work/MECANET']);
+    for (const [checkout, home] of [['/other/repo', '/home/runner'], ['/home/runner', '/home/runner'], ['/home/runner/work/repo', '/'], ['/home/runner/.qa-private/repo', '/home/runner']]) assert.throws(() => traversalPaths(checkout, home));
+    const owned = { uid: 1001, gid: 1001, dev: 1, ino: 10, mode: 0o40750, isDirectory: () => true, isSymbolicLink: () => false };
+    assert.equal(traversalSnapshot('/home/runner', owned).mode, 0o750);
+    assert.throws(() => traversalSnapshot('/home/runner', { ...owned, uid: 0 }));
+    let observedMode = 0o750, attempts = 0;
+    const snapshot = traversalSnapshot('/home/runner', owned), io = { stat: () => ({ ...owned, mode: 0o40000 | observedMode }), chmod: (_, value) => { attempts++; observedMode = value; } };
+    assert.throws(() => withTraversal([snapshot], () => { assert.equal(observedMode, 0o751); throw Error('INDUCED_CHILD_FAILURE'); }, io), /INDUCED_CHILD_FAILURE/);
+    assert.equal(observedMode, 0o750); assert.equal(attempts, 2);
+    attempts = 0; withTraversal([{ ...snapshot, mode: 0o751 }], () => {}, { stat: () => ({ ...owned, mode: 0o40751 }), chmod: () => attempts++ }); assert.equal(attempts, 0);
+    observedMode = 0o750; attempts = 0; let changedIdentity = false;
+    assert.throws(() => withTraversal([snapshot], () => { changedIdentity = true; }, { stat: () => ({ ...owned, ino: changedIdentity ? 20 : 10, mode: 0o40000 | observedMode }), chmod: (_, value) => { attempts++; observedMode = value; } }), /CI_FILESYSTEM_TRAVERSAL_RESTORE_UNKNOWN/); assert.equal(attempts, 1);
+    console.log(JSON.stringify({ schema: 'cp023-contract-partition-self-test-v1', status: 'PASS', partitionCases: cases.length, files: tests.length, isolatedFiles: filesystem.length, commandCases: 2, identityCases: 7, traversalCases: 10, filesystemEffects: false, sudoExecuted: false, sqlCommands: 0 }));
     break;
   }
   case 'provenance': {
@@ -194,7 +251,15 @@ switch (mode) {
       const preflight = `import assert from 'node:assert/strict';console.log(JSON.stringify((${filesystemIdentity.toString()})({uid:process.getuid(),gid:process.getgid(),groups:process.getgroups(),version:process.version,environment:process.env})));`;
       runFilesystem(['--input-type=module', '-e', preflight]);
       console.log(`Filesystem suite: ${plan.filesystem.length} exact files as UID/GID999; remaining ${plan.ordinary.length} as UID1001`);
-      runFilesystem(['--test', '--test-reporter=spec', ...plan.filesystem]);
+      const checkout = resolve(root), home = process.env.HOME, paths = traversalPaths(checkout, home);
+      assert.equal(realpathSync(home), home, 'CI_FILESYSTEM_HOME_ALIAS');
+      const snapshots = paths.map(path => { assert.equal(realpathSync(path), path, 'CI_FILESYSTEM_ANCESTOR_ALIAS'); return traversalSnapshot(path, lstatSync(path)); });
+      const before = filesystemReadability();
+      if (before.status !== 'PASS') assert.ok(before.files.every(file => file.status === 'PASS' || file.code === 'EACCES') && snapshots.some(snapshot => !(snapshot.mode & 0o001)), 'CI_FILESYSTEM_READABILITY_UNEXPLAINED');
+      withTraversal(before.status === 'PASS' ? [] : snapshots, () => {
+        assert.equal(filesystemReadability().status, 'PASS', 'CI_FILESYSTEM_FILES_NOT_READABLE');
+        runFilesystem(['--test', '--test-reporter=spec', ...plan.filesystem.map(file => resolve(root, file))]);
+      }, { stat: lstatSync, chmod: chmodSync, report: receipt => console.log(JSON.stringify(receipt)) });
     }
     run(['--test', '--test-reporter=spec', ...plan.ordinary]);
     break;
