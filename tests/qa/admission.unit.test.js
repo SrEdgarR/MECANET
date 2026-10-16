@@ -90,6 +90,6 @@ test('a stalled SQL control command destroys the connection at the complete dead
   let discarded;
   const pool={async connect(){return{query(){return new Promise(()=>{});},release(error){discarded=error;}};}};
   const started=performance.now();
-  await assert.rejects(serializable(pool,async()=>1,{deadline:started+25}),{code:'ADMISSION_BUSY'});
+  await assert.rejects(serializable(pool,async()=>1,{deadline:started+25}),{code:'ROLLBACK_UNCERTAIN'});
   assert.ok(performance.now()-started<150);assert.ok(discarded);
 });

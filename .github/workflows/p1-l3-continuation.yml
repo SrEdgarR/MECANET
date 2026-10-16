@@ -53,3 +53,52 @@ jobs:
         run: sudo -n python3 -B -X utf8 tests/qa/cp019/continuation-store-linux.test.py
       - name: Prove one immutable Root claim and reject a second OS process
         run: sudo -n python3 -B -X utf8 tests/qa/cp019/continuation-admission-linux.test.py
+
+  development-clock:
+    name: PostgreSQL real clock contention and two API (not ARM64 acceptance)
+    if: github.repository == 'SrEdgarR/MECANET' && github.event_name == 'push' && github.ref == 'refs/heads/codex/verify-p1-l3-continuation'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    env:
+      CI: 'true'
+      REAL_API: 'false'
+      VITEST_REAL_API: 'false'
+    steps:
+      - name: Checkout exact source without persisted credentials
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
+        with:
+          persist-credentials: false
+      - name: Use pinned Node without package cache
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: '24.21.0'
+          package-manager-cache: false
+      - name: Install locked backend without lifecycle scripts
+        run: |
+          npm install --global npm@11.9.0 --ignore-scripts --no-audit --no-fund
+          test "$(node --version)" = "v24.21.0"
+          test "$(npm --version)" = "11.9.0"
+          npm ci --prefix server/saas --ignore-scripts --no-audit --no-fund
+      - name: Prove generic clock and CI boundary guards
+        run: |
+          node --check tests/integration/ci-postgres.mjs
+          node --check tests/integration/development-clock-probe.mjs
+          node tests/integration/ci-postgres.mjs --self-test
+          node tests/integration/p1-l3-postgres.mjs --self-test
+          node --test tests/qa/admission-clock.unit.test.js tests/qa/cp023/clock-regression.test.mjs tests/qa/cp023/clock-contention.test.mjs tests/qa/cp023/clock-driver.test.mjs
+      - name: Run existing bounded PostgreSQL TLS and two API harness
+        id: integration
+        continue-on-error: true
+        run: node tests/integration/ci-postgres.mjs run
+      - name: Require SQL development result
+        if: always()
+        run: node tests/integration/ci-postgres.mjs assert-sql
+      - name: Require HTTP development result
+        if: always()
+        run: node tests/integration/ci-postgres.mjs assert-http
+      - name: Confirm positive own PostgreSQL cleanup
+        if: always()
+        run: node tests/integration/ci-postgres.mjs cleanup
+      - name: Require real contention, same clock continuation and cleanup PASS
+        if: always()
+        run: node tests/integration/ci-postgres.mjs assert-pass

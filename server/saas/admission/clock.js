@@ -4,16 +4,25 @@ import { UUID } from './policy.js';
 import { serializable, AdmissionError, CommitUncertainError } from './transaction.js';
 
 // Private worker only. Never include the clock credential in the API configuration.
-export function createClock({ pool, generation, owner = randomUUID(), recoveryTransfer=null, now = () => performance.now() }) {
+export function createClock({ pool, generation, owner = randomUUID(), recoveryTransfer=null, now = () => performance.now(), onDiagnostic=null }) {
   if (!UUID.test(generation) || !UUID.test(owner)) throw new TypeError('Clock identity required');
+  if(onDiagnostic!==null&&typeof onDiagnostic!=='function')throw new TypeError('Private diagnostic sink required');
   if(recoveryTransfer&&(recoveryTransfer.generation!==generation||recoveryTransfer.nextOwner!==owner||!UUID.test(recoveryTransfer.runId??'')||!/^[a-f0-9]{64}$/.test(recoveryTransfer.manifestHash??'')))throw new Error('CLOCK_TRANSFER_PROOF_REQUIRED');
   const nextVersion=value=>{const n=BigInt(value);if(n<0n||n>=9223372036854775807n)throw new AdmissionError('CLOCK_VERSION_CLOSED');return String(n+1n)};
   let lastCommit = now(); let current = null; let uncertain = false; let inFlight = false; let stopped = false;let expectedAfter=null;
+  let acquisitionSequence=0,lastDiagnostic=null;
+  const diagnosticUuid=value=>typeof value==='string'&&UUID.test(value)?value:null;
+  const record=(operation,transaction)=>{
+    lastDiagnostic=Object.freeze({schema:'admission-clock-diagnostic-v1',owner,generation,operation,acquisitionSequence,transfer:Object.freeze({state:recoveryTransfer?'BOUND':'NONE',transferId:diagnosticUuid(recoveryTransfer?.transferId),previousOwner:diagnosticUuid(recoveryTransfer?.previousOwner),nextOwner:owner}),lastConfirmedClock:current?Object.freeze({...current}):null,uncertain,stopped,ticketSnapshot:'NOT_OBSERVED',transaction});
+    try{const pending=onDiagnostic?.(lastDiagnostic);if(pending&&typeof pending.then==='function')Promise.resolve(pending).catch(()=>{})}catch{/* Private telemetry cannot change the clock state. */}
+  };
   async function acquire(expectedOwner) {
     if (!UUID.test(expectedOwner) || current || inFlight) throw new TypeError('Expected previous clock owner required');
     if(uncertain||stopped)throw new AdmissionError('CLOCK_OWNER_CONFLICT');
     if(recoveryTransfer&&expectedOwner!==recoveryTransfer.previousOwner)throw new AdmissionError('CLOCK_OWNER_CONFLICT');
     inFlight = true;
+    acquisitionSequence++;
+    let transaction;
     try {
       current = await serializable(pool, async client => {
         const f = (await client.query(`SELECT generation,tick,clock_version${recoveryTransfer?',recovery_id':''} FROM saas.admission_fence WHERE id=1 FOR UPDATE`)).rows[0];
@@ -28,10 +37,10 @@ export function createClock({ pool, generation, owner = randomUUID(), recoveryTr
         await client.query('UPDATE saas.admission_fence SET clock_version=$1 WHERE id=1', [version]);
         await client.query('UPDATE saas.time_authority SET owner=$1,clock_version=$2,advanced_at=clock_timestamp() WHERE id=1', [owner, version]);
         return { tick: String(f.tick), version };
-      });
+      },{onDiagnostic:event=>{transaction=event}});
       lastCommit = now(); return owner;
     } catch (error) { if (error instanceof CommitUncertainError||error.code==='ROLLBACK_UNCERTAIN') uncertain = true;else expectedAfter=null;throw error; }
-    finally { inFlight = false; }
+    finally { inFlight = false;if(transaction)record('acquire',transaction); }
   }
   async function reconcile() {
     const row = (await pool.query(`SELECT f.generation,f.tick,f.clock_version,t.owner,t.tick AS authority_tick,t.clock_version AS authority_version,t.generation AS authority_generation${recoveryTransfer?',f.recovery_id':''} FROM saas.admission_fence f JOIN saas.time_authority t USING(id) WHERE f.id=1`)).rows[0];
@@ -43,6 +52,7 @@ export function createClock({ pool, generation, owner = randomUUID(), recoveryTr
   async function advance() {
     if (stopped || inFlight || !current || uncertain || now() - lastCommit < 100) return false;
     inFlight = true;
+    let transaction;
     try {
       const next = { tick: nextVersion(current.tick), version: nextVersion(current.version) };expectedAfter=next;
       await serializable(pool, async client => {
@@ -51,10 +61,10 @@ export function createClock({ pool, generation, owner = randomUUID(), recoveryTr
         if (f.rowCount !== 1) throw new AdmissionError('CLOCK_OWNER_CONFLICT');
         const t = await client.query('UPDATE saas.time_authority SET tick=$1,clock_version=$2,advanced_at=clock_timestamp() WHERE id=1 AND owner=$3 AND generation=$4 AND tick=$5 AND clock_version=$6 RETURNING tick', [next.tick, next.version, owner, generation, current.tick, current.version]);
         if (t.rowCount !== 1) throw new AdmissionError('CLOCK_OWNER_CONFLICT');
-      });
+      },{onDiagnostic:event=>{transaction=event}});
       current = next; lastCommit = now(); return true;
     } catch (error) { if (error instanceof CommitUncertainError||error.code==='ROLLBACK_UNCERTAIN') uncertain = true;else expectedAfter=null;throw error; }
-    finally { inFlight = false; }
+    finally { inFlight = false;if(transaction)record('advance',transaction); }
   }
-  return { owner, acquire, reconcile, advance, stop() { stopped = true; }, state: () => ({ ...current, uncertain, stopped }) };
+  return { owner, acquire, reconcile, advance, stop() { stopped = true; }, state: () => ({ ...current, uncertain, stopped }),diagnostic:()=>lastDiagnostic };
 }

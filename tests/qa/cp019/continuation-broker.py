@@ -48,6 +48,15 @@ class Broker:
   # Exact positive Root memory catches rollback of any delta, including one
   # above v1's floor. No new Root may adopt a ledger after this process ends.
   check(canonical(state)==canonical(self.state),'BROKER_LEDGER_MEMORY_MISMATCH');return state
+ def persist_charged(self,previous,after,scenario):
+  # SC013 counts real creations, including the counter's own O_EXCL temp.
+  # Fold that charge into the SAME transition: no recursive persist/sequence,
+  # and no temporary is opened if its case or accumulated cap is exhausted.
+  self.model.remaining(after,*self.args(),scenario,self.clock());check(scenario in after['scenarios'],'BROKER_PERSIST_CASE_REQUIRED')
+  check(all(after['scenarios'].get(name)==value for name,value in previous['scenarios'].items() if name!=scenario) and set(after['scenarios'])-set(previous['scenarios'])<=set([scenario]),'BROKER_PERSIST_CASE_MISMATCH')
+  result=copy.deepcopy(after);case=result['scenarios'][scenario]
+  check(result['total']['artifactFiles']+1<=self.model.GLOBAL['artifactFiles'] and case['total']['artifactFiles']+1<=self.model.CASE['artifactFiles'],'CONTINUATION_OVERFLOW')
+  result['total']['artifactFiles']+=1;case['total']['artifactFiles']+=1;self.validate(result);self.model.validate_progress(previous,result);check(result['sequence']==previous['sequence']+1,'BROKER_ROOT_SEQUENCE');self.store.persist(result);check(canonical(self.store.read())==canonical(result),'BROKER_DURABLE_READBACK');self.state=copy.deepcopy(result);return result
  def register(self,client_id,record):
   with self.lock:
    self.guard();check(isinstance(client_id,str) and len(client_id)<=64 and client_id not in self.clients and len(self.clients)<256,'BROKER_CLIENT_COLLISION')
@@ -72,14 +81,14 @@ class Broker:
       check(scenario==record['scope'] and request['name'] in record['allowedEnterCases'] and request['kind'] is None and request['amount'] is None,'BROKER_ENTER_DENIED');after=self.model.update(state,*self.args(),request['name'],self.clock(),scope=scenario)
      else:
       check(method=='charge' and request['name'] is None,'BROKER_METHOD');after=self.model.update(state,*self.args(),name,self.clock(),kind=request['kind'],amount=request['amount'])
-     self.model.validate_progress(state,after);self.store.persist(after);check(canonical(self.store.read())==canonical(after),'BROKER_DURABLE_READBACK');self.state=copy.deepcopy(after);state=after
+     state=self.persist_charged(state,after,request['name'] if method=='enter' else name)
     c['next']+=1;return {'schema':'cp024-budget-ack-v1','admissionHash':self.context['admissionHash'],'clientId':client_id,'sequence':request['sequence'],'rootPid':self.root_pid,'state':copy.deepcopy(state)}
    except BaseException:
     self.fail('BROKER_UNCERTAIN_OR_REJECTED');raise
- def root_update(self,mutator):
+ def root_update(self,mutator,*,scenario):
   with self.lock:
    try:
-    state=self.current();after=mutator(copy.deepcopy(state));self.validate(after);self.model.validate_progress(state,after);check(after['sequence']==state['sequence']+1,'BROKER_ROOT_SEQUENCE');self.store.persist(after);check(canonical(self.store.read())==canonical(after),'BROKER_DURABLE_READBACK');self.state=copy.deepcopy(after);return copy.deepcopy(after)
+    state=self.current();after=mutator(copy.deepcopy(state));self.validate(after);return copy.deepcopy(self.persist_charged(state,after,scenario))
    except BaseException:self.fail('BROKER_ROOT_UNCERTAIN');raise
  def ended(self,client_id,peer):
   with self.lock:

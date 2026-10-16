@@ -57,4 +57,8 @@ class Host(unittest.TestCase):
   with patch.object(h,'uptime',return_value=f.NOW):
    h.track_continuation_progress(s)
    with self.assertRaisesRegex(AssertionError,'PROGRESS_REGRESSION'):h.track_continuation_progress(old)
+ def test_root_charge_and_enter_forward_exact_case_to_single_persist(self):
+  import types
+  h.configure_continuation(context());seen=[];h.CONTINUATION_BROKER=types.SimpleNamespace(root_update=lambda fn,**kw:seen.append(kw['scenario']))
+  h.HOST_CASE='host-bootstrap';h.ledger_charge('artifactFiles',2,scenario='host-stage');h.enter_runtime_case('source-window','source-close-b');self.assertEqual(seen,['host-stage','source-close-b'])
 if __name__=='__main__':unittest.main()

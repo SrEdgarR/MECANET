@@ -280,7 +280,7 @@ def budget_update(state,scenario,kind,amount,now):
  return state
 def ledger_charge(kind,amount=1,scenario=None):
  scenario=scenario or HOST_CASE;assert scenario,'HOST_CASE_REQUIRED'
- return ledger_mutate(lambda state:budget_update(state,scenario,kind,amount,uptime()))
+ return ledger_mutate(lambda state:budget_update(state,scenario,kind,amount,uptime()),scenario=scenario)
 def budget_enter(state,scope,name,now):
  if CONTINUATION_CONTEXT is not None:return continuation_model().update(state,*continuation_args(),name,now,scope=scope)
  assert state.get('schema')=='cp019-budget-v1' and state.get('project')==ROOT.name and 0<=now-state['startedUptime']<=1800,'CP019_BUDGET_ABORT'
@@ -290,9 +290,9 @@ def budget_enter(state,scope,name,now):
  if case is not None:assert case['limits']==CASE_LIMITS and 0<=now-case['startedUptime']<=45 and set(case['total'])==set(CEILINGS) and all(type(v) is int and 0<=v<=CASE_LIMITS[k] for k,v in case['total'].items()),'CP019_BUDGET_ABORT'
  state['activeScenarios'][scope]=name;state['sequence']+=1;return state
 def enter_runtime_case(scope,name):
- return ledger_mutate(lambda state:budget_enter(state,scope,name,uptime()))
-def ledger_mutate(mutator):
- if CONTINUATION_CONTEXT is not None and CONTINUATION_BROKER is not None:return CONTINUATION_BROKER.root_update(mutator)
+ return ledger_mutate(lambda state:budget_enter(state,scope,name,uptime()),scenario=name)
+def ledger_mutate(mutator,*,scenario):
+ if CONTINUATION_CONTEXT is not None and CONTINUATION_BROKER is not None:return CONTINUATION_BROKER.root_update(mutator,scenario=scenario)
  p=budget_directory()/'ledger.json';assert p.is_file() and p.resolve()==p and not p.is_symlink(),'BUDGET_LEDGER_REQUIRED'
  lock=pathlib.Path(str(p)+'.lock');fd=None;temporary=None
  for _ in range(40):

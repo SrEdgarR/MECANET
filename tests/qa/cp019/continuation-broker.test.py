@@ -17,6 +17,26 @@ def register(broker,name):broker.register(name,{'containerId':'1'*64,'project':f
 def request(client_id,n,method,**options):return {'schema':'cp024-budget-rpc-v1','clientId':client_id,'admissionHash':context()['admissionHash'],'sequence':n,'method':method,'scenario':'source-window','name':None,'kind':None,'amount':None,**options}
 def enroll(broker,name):register(broker,name);return broker.request(name,(123,999,999),request(name,1,'enroll'))
 class Broker(unittest.TestCase):
+ def test_persist_temp_is_charged_in_same_sql_or_enter_transition(self):
+  store,broker=fixture();enroll(broker,'one');before=store.read();entered=broker.request('one',(123,999,999),request('one',2,'enter',name='source-close-b'))['state'];after=broker.request('one',(123,999,999),request('one',3,'charge',kind='sql',amount=3))['state']
+  self.assertEqual(entered['total']['artifactFiles'],before['total']['artifactFiles']+1);self.assertEqual(after['total']['artifactFiles'],before['total']['artifactFiles']+2);self.assertEqual(after['scenarios']['source-close-b']['total']['artifactFiles'],2);self.assertEqual(after['total']['sql'],3);self.assertEqual(after['sequence'],before['sequence']+2);self.assertEqual(len(store.saved),2)
+ def test_artifact_charge_counts_its_internal_temp_without_recursion(self):
+  store,broker=fixture();enroll(broker,'one');broker.request('one',(123,999,999),request('one',2,'enter',name='source-close-b'));before=store.read();after=broker.request('one',(123,999,999),request('one',3,'charge',kind='artifactFiles',amount=2))['state'];self.assertEqual(after['total']['artifactFiles'],before['total']['artifactFiles']+3);self.assertEqual(after['sequence'],before['sequence']+1);self.assertEqual(len(store.saved),2)
+ def test_root_update_requires_exact_case_and_charges_temp_before_ack(self):
+  store,broker=fixture();before=store.read();after=broker.root_update(lambda s:f.m.update(s,*broker.args(),'host-pg-start',f.NOW,kind='sql',amount=2),scenario='host-pg-start');self.assertEqual(after['total']['artifactFiles'],before['total']['artifactFiles']+1);self.assertEqual(after['scenarios']['host-pg-start']['total']['artifactFiles'],before['scenarios']['host-pg-start']['total']['artifactFiles']+1);self.assertEqual(after['sequence'],before['sequence']+1);self.assertEqual(after['total']['sql'],2)
+ def test_temp_overflow_denies_before_persistence_and_latches(self):
+  for global_limit in [False,True]:
+   store,broker=fixture();state=store.read()
+   for case,amount in ([('source-close-b',2000)] if not global_limit else [('source-close-b',2000),('source-migrate-a',2000),('source-migrate-b',2000),('source-migrate-central',1553)]):state=f.m.update(state,*broker.args(),case,f.NOW,kind='artifactFiles',amount=amount)
+   state['activeScenarios']['source-window']='source-close-b';store.value=copy.deepcopy(state);broker.state=copy.deepcopy(state);enroll(broker,'one');before=store.read()
+   with self.subTest(global_limit=global_limit),self.assertRaisesRegex(AssertionError,'OVERFLOW'):broker.request('one',(123,999,999),request('one',2,'charge',kind='sql',amount=1))
+   self.assertEqual(store.saved,[]);self.assertEqual(store.read(),before);self.assertIsNotNone(broker.failure)
+ def test_enroll_and_snapshot_create_no_temp_and_add_no_charge(self):
+  store,broker=fixture();before=store.read();enroll(broker,'one');broker.request('one',(123,999,999),request('one',2,'snapshot'));self.assertEqual(store.read(),before);self.assertEqual(store.saved,[])
+ def test_root_wrong_case_cannot_move_internal_cost_to_another_case(self):
+  store,broker=fixture()
+  with self.assertRaisesRegex(AssertionError,'CASE_REQUIRED|CASE_MISMATCH'):broker.root_update(lambda s:f.m.update(s,*broker.args(),'source-close-b',f.NOW,kind='sql'),scenario='host-pg-start')
+  self.assertEqual(store.saved,[]);self.assertIsNotNone(broker.failure)
  def test_ack_only_after_persistence_and_readback(self):
   store,broker=fixture();enroll(broker,'one');broker.request('one',(123,999,999),request('one',2,'enter',name='source-close-b'));reply=broker.request('one',(123,999,999),request('one',3,'charge',kind='sql',amount=3));self.assertEqual(reply['state'],store.saved[-1]);self.assertEqual(reply['state']['total']['sql'],3)
  def test_new_client_uses_live_root_highwater_not_a_stale_file_floor(self):
