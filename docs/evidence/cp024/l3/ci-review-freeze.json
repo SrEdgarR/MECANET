@@ -1,0 +1,245 @@
+{
+  "schema": "cp024-l3-ci-review-freeze-v1",
+  "at": "2026-10-15T19:01:13.172405+00:00",
+  "gitHead": "b16f5c3deecd80dea519ed962ecaf02ca415ce67",
+  "inputs": [
+    {
+      "path": ".github/workflows/p1-l1-verify.yml",
+      "sha256": "3220387a15d8942afda27204c621a0fa3fe67d0fa9eee0cd295541a48b5dee9c",
+      "bytes": 4405
+    },
+    {
+      "path": ".github/workflows/p1-l3-development.yml",
+      "sha256": "a0fbb11d36c8a998cc4550a38c495e1c6fcf9e331979a88fe66d2b5237b41d2f",
+      "bytes": 3385
+    },
+    {
+      "path": "scripts/ci/p1-l1.mjs",
+      "sha256": "1eb294d0d216ae5fff7f7de2b4eb5b8c5cfac9f7ef2a1290f272a44bd9021d0f",
+      "bytes": 23641
+    },
+    {
+      "path": "tests/qa/cp019/clock-restart-plan.mjs",
+      "sha256": "64f088be33b4e09c9b8f50d8e10347f6a3d51fedc113c444bf881430e38c36c1",
+      "bytes": 13984
+    },
+    {
+      "path": "tests/qa/cp019/continuation-artifact.py",
+      "sha256": "1b3ee68f20ec40f2e2dff3b7a80523d654121fc6387a198e0100ac721c291555",
+      "bytes": 5306
+    },
+    {
+      "path": "tests/qa/cp019/continuation-authority.mjs",
+      "sha256": "5d564b41af24268a2168ed1658d64e37435708b1298a30aebf87881e69001506",
+      "bytes": 2320
+    },
+    {
+      "path": "tests/qa/cp019/continuation-broker-unix.test.py",
+      "sha256": "47ea9de64d36c4adc0d66f3e7a62cbc5b1e8dcf0a4e9eea82ddd69ebd4c0cdf5",
+      "bytes": 4858
+    },
+    {
+      "path": "tests/qa/cp019/continuation-broker.mjs",
+      "sha256": "f2a1367356d0b0478afd8d9815f31fbfcd041b6cfe0135eb9c72615bd5c6130c",
+      "bytes": 3031
+    },
+    {
+      "path": "tests/qa/cp019/continuation-broker.py",
+      "sha256": "5307d7dcd50552d8d0afcef733cbdfc4ad6c9ecc08c00b80e274f5c5716a4411",
+      "bytes": 13502
+    },
+    {
+      "path": "tests/qa/cp019/continuation-broker.test.mjs",
+      "sha256": "8cc0295b6e5c7d1bf1e5005e649f2fb8bc40b5a4dcef6b9f66b799c87dd02dc9",
+      "bytes": 4805
+    },
+    {
+      "path": "tests/qa/cp019/continuation-broker.test.py",
+      "sha256": "b10127053f5f62ebe374a4e971240227605c2c639cfe135b8342aba2a3543378",
+      "bytes": 5766
+    },
+    {
+      "path": "tests/qa/cp019/continuation-budget.mjs",
+      "sha256": "e548c9e46a0c06c819cae78951ede0daa46ca874862ff570efe66c0373554fa0",
+      "bytes": 9246
+    },
+    {
+      "path": "tests/qa/cp019/continuation-budget.py",
+      "sha256": "f14b5de9fa3f8f327f7e9e15494fac2cccc90d9d5670f9c0fc34bfc963e0ec96",
+      "bytes": 9682
+    },
+    {
+      "path": "tests/qa/cp019/continuation-budget.test.mjs",
+      "sha256": "3bdc99379c6172d36762d6b1a1546b117b1613ce1b010b21ee1083cc6fc35e56",
+      "bytes": 8022
+    },
+    {
+      "path": "tests/qa/cp019/continuation-budget.test.py",
+      "sha256": "82697784c3996c17aca2e6602eacc0118b666f601011c5c7f207f052a814a12e",
+      "bytes": 6944
+    },
+    {
+      "path": "tests/qa/cp019/continuation-host.test.py",
+      "sha256": "b2d91a3f5257af82a04fbdd5a2c4663e9241db1b3c341f16c55ec115be52ad8c",
+      "bytes": 5429
+    },
+    {
+      "path": "tests/qa/cp019/continuation-ledger.mjs",
+      "sha256": "f6a76ebc07d2fbc8ba5fb3413bd467958f19b856f8148a2d9957e1194efdd548",
+      "bytes": 3198
+    },
+    {
+      "path": "tests/qa/cp019/continuation-store-linux.test.py",
+      "sha256": "aa63e54d48d13f7defb07d4e19d82d5bad9a04437f15f256bb6a5320c35a79b8",
+      "bytes": 4079
+    },
+    {
+      "path": "tests/qa/cp019/host.py",
+      "sha256": "81a8a46e2165e46302e1975cfe3f1b2c256fa0a02b70174b9f26b12392d767b0",
+      "bytes": 126982
+    },
+    {
+      "path": "tests/qa/cp019/ledger.mjs",
+      "sha256": "09e32ad953d82238c13cac6eb53b627247e25d4ff12a489c68b4594fbf7406b7",
+      "bytes": 4709
+    },
+    {
+      "path": "tests/qa/cp019/runner.py",
+      "sha256": "830c1033d34788e55da06ce3614cc6514f6a18be3f21fecd5b04f57151c966cf",
+      "bytes": 10362
+    },
+    {
+      "path": "tests/qa/cp019/runtime-driver.mjs",
+      "sha256": "2ca17bcf242851762ad9a81c4c3c559b2b287c976afe306126061a049b2160e9",
+      "bytes": 32674
+    },
+    {
+      "path": "tests/qa/cp019/runtime-overlay-authority.mjs",
+      "sha256": "3435ad0b23543bf799958f596a5dbb6590f671c71681c453903118b2cc958b0e",
+      "bytes": 1559
+    },
+    {
+      "path": "tests/qa/cp019/runtime-overlay.mjs",
+      "sha256": "bed95cdaea42e7fc8966925e2242e4f5109550df60fa6c2ad3c90fb3ed1811fd",
+      "bytes": 4403
+    },
+    {
+      "path": "tests/qa/cp019/runtime-overlay.py",
+      "sha256": "b24d1176cf5e2a5616e80eed59e76c6f3649c4f8824ee222cc1407c09b4690dc",
+      "bytes": 3615
+    },
+    {
+      "path": "tests/qa/cp019/runtime-overlay.test.mjs",
+      "sha256": "1e9a12dc1724637ecad0d119723ff214a93f12188e64374a2ebe3f02c10737ca",
+      "bytes": 5605
+    },
+    {
+      "path": "tests/qa/cp019/runtime-overlay.test.py",
+      "sha256": "edf1163f3ac70472eef412f9ac01036c3b3dca2cac187635e310eedaf5dce261",
+      "bytes": 4770
+    },
+    {
+      "path": "tests/qa/cp019/schema-check.mjs",
+      "sha256": "81ee99faaeb6501b982ebdb5791f645c24866e60590aabe6fd75e1bd0e78875f",
+      "bytes": 7632
+    },
+    {
+      "path": "tests/qa/cp019/schema-fault-probe.mjs",
+      "sha256": "fbf0e1a7da755265dfa7e797c7172e819467b4e3655c820bf22e7284d0b06b1d",
+      "bytes": 20244
+    },
+    {
+      "path": "tests/qa/cp019/source-config.mjs",
+      "sha256": "5689b6dfbf1a18fa4d003935b32121579ffa8b54457dea883c02b82a8660cb63",
+      "bytes": 7305
+    },
+    {
+      "path": "tests/qa/cp019/sql-probe.mjs",
+      "sha256": "5f110d49f53c0d56e47fb072c362f5c45acb627f1ba08b339822cc7217200a75",
+      "bytes": 16766
+    },
+    {
+      "path": "tests/qa/cp019/target-config.mjs",
+      "sha256": "8de9a599a51278f56a854498f7f3aabc83fb717f41d4cd1d072c6ddad3a28ad0",
+      "bytes": 21224
+    },
+    {
+      "path": "tests/qa/cp019/target-driver.mjs",
+      "sha256": "d5dc6cccb69637cec679ce5778bcdf5dd1e7a56743cb3b2b566a96c9ef3d5aeb",
+      "bytes": 20897
+    },
+    {
+      "path": "tests/qa/cp019/target-host.py",
+      "sha256": "1e6e54bea2524f7efe1f3d2af5114f6b54f7aa5cd1c40c300b333fc9bd5156f3",
+      "bytes": 61326
+    },
+    {
+      "path": "tests/qa/cp019/target-http-host.py",
+      "sha256": "c044a0432d9295ce7a8b73538b732387c55eb5ff9a7d3772fb25f76b6a6ea7c3",
+      "bytes": 27727
+    },
+    {
+      "path": "tests/qa/cp019/target-lifecycle.py",
+      "sha256": "262b9e1e09fe23e6eb99361afb9dd671811c8bcd754ca1383fd97cf2f5331281",
+      "bytes": 42207
+    },
+    {
+      "path": "tests/qa/cp019/target-prepare.mjs",
+      "sha256": "79edbc9b952e16c5b69adfef218e196bf2d46dc0ff422dc185181a24538469cf",
+      "bytes": 21437
+    },
+    {
+      "path": "tests/qa/cp019/target-probes-host.py",
+      "sha256": "5118c36434c3a106028086d58087b43cd63263b829f93cc7888783e1159214f8",
+      "bytes": 28478
+    },
+    {
+      "path": "tests/qa/cp019/target-readiness-host.py",
+      "sha256": "7918b57204d25e51d8b12c17469aca99e62e8f4ec028291258036a0665d38a1d",
+      "bytes": 20153
+    },
+    {
+      "path": "tests/qa/cp019/target-variant-host.py",
+      "sha256": "efc146874ee2328c50b2adbcf92955204b6329dde2de236220a63e38c832335b",
+      "bytes": 54972
+    },
+    {
+      "path": "tests/qa/cp019/target-variant-lineage.mjs",
+      "sha256": "52de44d3dd7a77f1f55b7c2c48e630d2c4014ee12a2344e9c08016ecc800d889",
+      "bytes": 11028
+    }
+  ],
+  "inputsSha256": "4eedcfadc5f7cf1aaf7190e60d78219cd1db4dd10c6e62232867c76d9e93e7bf",
+  "local": {
+    "environment": "Windows x64 Python3.12.14 / Node24.21.0",
+    "node": {
+      "pass": 138,
+      "fail": 0,
+      "command": "node --test twelve named affected L3 suites; exact tool output a2c181"
+    },
+    "python": {
+      "pass": 406,
+      "fail": 0,
+      "suites": 18,
+      "commands": "eighteen named affected suites in tool c6396d (405 PASS); broker changed final FIN negative rerun 8 PASS replacing previous7"
+    },
+    "syntax": "all changed Python parsed without import effects; Windows cannot execute AF_UNIX or Root fsync tests",
+    "sql": 0,
+    "http": 0
+  },
+  "linuxRequired": {
+    "status": "NOT VERIFIED",
+    "unix": "continuation-broker-unix.test.py, kernel SO_PEERCRED and two Node children",
+    "store": "continuation-store-linux.test.py as Root in exclusive ephemeral GitHub runner; fixed path absent/compare-create, fsync/readback, exact cleanup, measurement not VPS capacity"
+  },
+  "notApprovedByTests": [
+    "Root admission compare-create and lifetime receipt not implemented",
+    "closed consumer effects/runner linkage not accredited",
+    "current physical Environment Gate not accredited",
+    "no v2 attempt resources or publication",
+    "six physical L3 criteria not certified"
+  ],
+  "vps": "r03 STOPPED/KEEP; unchanged",
+  "secretOutput": false,
+  "sharedInfrastructureModified": false
+}

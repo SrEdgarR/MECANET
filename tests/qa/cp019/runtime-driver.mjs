@@ -14,7 +14,8 @@ import {validateApiConfig} from './entry.mjs';
 import {validateWorkerConfig} from './worker.mjs';
 import {SOURCE_PHASES,makeSourceRuntimeFixture,createSourceDriver,validateSourceHostReceipt,publishSourceReadonly,readSourceReceipt,readSourceDriverConfig} from './source-driver.mjs';
 import {readPrivateJson} from './prepare.mjs';
-import {readSourceConfigPrivate} from './source-config.mjs';
+import {readSourceConfigPrivate,validateSourceArtifact} from './source-config.mjs';
+import {readRuntimeOverlayAuthority} from './runtime-overlay-authority.mjs';
 import {openStageJournal} from '../../../server/saas/recovery/stage-journal.js';
 import {newLedger,measuredPool} from './ledger.mjs';
 import {createPgPool} from '../../../server/saas/db/pools.js';
@@ -119,7 +120,7 @@ export async function main(){
  const ledger=await newLedger('/run/qa-budget/ledger.json',{scenario:'source-window'});await ledger.enter(action==='source-config'?'source-clock-plan':action==='source-phase'?phase:'source-clock-ack');
  const {value:material,sha256:custodyHash}=await readPrivateJson('/run/qa-secrets/material.json'),foundation=(await readPrivateJson('/run/qa-secrets/source-foundation.json')).value,writers=(await readPrivateJson('/run/qa-secrets/source-writers.json')).value,correctives=(await readPrivateJson('/run/qa-secrets/source-correctives.json')).value,clockPlan=action==='source-phase'?undefined:(await readSourceConfigPrivate('/run/qa-secrets/source-clock-plan.json')).value,normalManifest=(await readSourceConfigPrivate('/run/qa-secrets/source-normal-manifest.json')).value,resource=(await readSourceConfigPrivate('/run/qa-secrets/source-resource.json')).value;
  const input={material,custodyHash,foundation,writers,correctives,normalManifest,normalManifestHash:sha256(normalManifest),resource,sourceCommit:process.env.QA_CODE_SHA};
- const artifact=JSON.parse(await readFile('/workspace/artifact.json','utf8'));refuse(artifact.sourceSha===input.sourceCommit&&artifact.digest==='sha256:'+material.artifactDigest&&sha256(artifact.entries)===material.artifactDigest,'RUNTIME_ARTIFACT_BINDING');
+ const artifact=JSON.parse(await readFile('/workspace/artifact.json','utf8'));refuse(artifact.sourceSha===input.sourceCommit&&validateSourceArtifact(artifact,material,normalManifest.migrationHashes,await readRuntimeOverlayAuthority())===input.sourceCommit,'RUNTIME_ARTIFACT_BINDING');
  if(action==='source-config'){const configs=deriveSourceRuntime({input,clockPlan,clockPlanHash:sha256(clockPlan)}),configHashes=await publishRuntimeConfigs({configs,project:material.source.project,ledger});console.log(JSON.stringify({type:'cp019-runtime-config',side:'source',configHashes,secretOutput:false,physicalStartup:'NOT VERIFIED'}));return;}
  if(action==='source-phase'){const cfg=await readSourceDriverConfig();refuse(cfg.phase===phase&&cfg.invocationId===process.env.QA_INVOCATION_ID&&cfg.sourceCommit===input.sourceCommit&&same(cfg.resource,resource)&&same(cfg.normalManifest,normalManifest),'RUNTIME_PHASE_BINDING');const journal=await openStageJournal({...cfg.journal,recoveryId:material.source.normal.runId,controllerOwner:material.controllerOwner,resourceHash:sha256(resource),operationIds:material.stageOperationIds,charge:(kind,n)=>ledger.charge(kind,n)});try{console.log(JSON.stringify(await atomicSourcePhase({cfg,...input,clockPlan,ledger,journal})));}finally{await journal.close()}return;}
  const invocationId=process.env.QA_INVOCATION_ID,ready='/run/qa-faults/'+invocationId+'-ready.json';refuse(UUID.test(invocationId??'')&&process.env.QA_READY_FILE===ready,'RUNTIME_READY_PATH');

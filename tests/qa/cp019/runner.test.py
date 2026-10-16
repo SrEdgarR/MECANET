@@ -7,7 +7,7 @@ SUMMARY={'schema':'cp021-resource-monitor-summary-v1','status':'PASS','failed':F
 
 def runner_functions():
  tree=ast.parse((HERE/'runner.py').read_text(encoding='utf-8'));functions=[n for n in tree.body if isinstance(n,(ast.FunctionDef,ast.AsyncFunctionDef))]
- helpers=next(n for n in tree.body if isinstance(n,ast.Assign) and any(isinstance(t,ast.Name) and t.id=='HELPERS' for t in n.targets));env={'json':json,'re':re,'stat':stat,'hashlib':hashlib,'threading':threading,'controller':c,'relay':types.SimpleNamespace(check=lambda:None,stop=lambda:None),'time':types.SimpleNamespace(monotonic=lambda:1),'now':lambda:'2026-10-15T00:00:00Z','current_step':'initial','booted':False,'monitor':None,'cleaning':False,'transport_failed':threading.Event(),'output_lock':threading.Lock(),'events':[]};exec(compile(ast.Module(body=[helpers],type_ignores=[]),'runner-constants','exec'),env)
+ helpers=next(n for n in tree.body if isinstance(n,ast.Assign) and any(isinstance(t,ast.Name) and t.id=='HELPERS' for t in n.targets));env={'json':json,'re':re,'stat':stat,'hashlib':hashlib,'threading':threading,'controller':c,'relay':types.SimpleNamespace(check=lambda:None,stop=lambda:None),'time':types.SimpleNamespace(monotonic=lambda:1),'now':lambda:'2026-10-15T00:00:00Z','current_step':'initial','booted':False,'monitor':None,'cleaning':False,'transport_failed':threading.Event(),'output_lock':threading.Lock(),'events':[],'HELPER_MODE':0o400,'continuation_session':None,'continuation_modules':None,'continuation':None};exec(compile(ast.Module(body=[helpers],type_ignores=[]),'runner-constants','exec'),env)
  exec(compile(ast.Module(body=functions,type_ignores=[]),'runner-isolated','exec'),env)
  # Pure replacements: tests never load or execute a remote helper.
  env.update(now=lambda:'2026-10-15T00:00:00Z',load=lambda *a:c,emit=lambda v:None,select=types.SimpleNamespace(select=lambda *a:([],[],[])),sys=types.SimpleNamespace(stdin=io.StringIO('')))
@@ -48,6 +48,12 @@ class Finish(unittest.TestCase):
   h,m,calls,step=self.fixture();out=c.safe_finish(h,None,True,step);self.assertEqual(calls,['cleanup','cleanup']);self.assertEqual(out['failure'],'RESOURCE_MONITOR_NOT_VERIFIED');self.assertIsNone(out['resourceMonitor'])
 
 class Runner(unittest.TestCase):
+ def test_v2_failure_before_session_keeps_metadata_and_never_fabricates_docker_cleanup(self):
+  _,env=runner_functions();calls=[];reports=[]
+  with tempfile.TemporaryDirectory() as tmp:
+   h=types.SimpleNamespace(ROOT=pathlib.Path(tmp),RESOURCE_LAST_SAMPLE=None,RESOURCE_FIRST_REJECTED_SAMPLE=None,cleanup=lambda:calls.append('FORBIDDEN_CLEANUP'))
+   env.update(h=h,monitor=types.SimpleNamespace(stop=lambda:(_ for _ in ()).throw(RuntimeError('private'))),plan={'sourceSha':'a'*40},started='now',failed=None,done=threading.Event(),emit=reports.append,continue_v2=lambda *args:(_ for _ in ()).throw(AssertionError('PUBLICATION_UNCERTAIN')))
+   self.assertEqual(env['run_program'](({},None)),1);self.assertEqual(calls,[]);final=next(v['report'] for v in reports if v['type']=='cp020-final-report');self.assertEqual(final['cleanup']['result'],'NOT VERIFIED');self.assertEqual(final['status'],'FAIL');self.assertTrue(env['done'].is_set());self.assertNotIn('private',str(final))
  def test_public_result_omits_material_passwords_cookies_and_nested_authority(self):
   value={'material':{'rolePasswords':{'qa_bootstrap':'SENTINEL_PASSWORD'},'sessionSecret':'SENTINEL_SESSION'},'arbitrary':['SENTINEL_COOKIE']};result=c.public_result(value);encoded=json.dumps(result)
   self.assertEqual(set(result),{'resultHash','resultBody','acceptance'});self.assertEqual(len(result['resultHash']),64);self.assertNotIn('SENTINEL',encoded);self.assertEqual(result['acceptance'],'NOT VERIFIED')
@@ -71,7 +77,7 @@ class Runner(unittest.TestCase):
    env['cleaning']=True;env[fn]('docker','stop','known');env['cleaning']=False
   self.assertEqual(calls,[('docker','stop','known')]*2)
  def test_actual_runner_finally_calls_cleanup_even_when_monitor_stop_throws(self):
-  tree,env=runner_functions();main=next(n for n in tree.body if isinstance(n,ast.Try));calls=[];reports=[]
+  tree,env=runner_functions();main=next(n for n in next(n for n in tree.body if isinstance(n,ast.FunctionDef) and n.name=='run_program').body if isinstance(n,ast.Try));calls=[];reports=[]
   with tempfile.TemporaryDirectory() as tmp:
    h=types.SimpleNamespace(ROOT=pathlib.Path(tmp),RESOURCE_LAST_SAMPLE={'firstViolation':'ADMISSION_CPU_LIMIT'},RESOURCE_FIRST_REJECTED_SAMPLE={'guardCode':'CP019_RESOURCE_ABORT'},cleanup=lambda:calls.append('STOP') or {'result':'PASS'});env.update(h=h,booted=True,monitor=types.SimpleNamespace(stop=lambda:(_ for _ in ()).throw(RuntimeError('STOP_FAILED'))),plan={'sourceSha':'a'*40},started='2026-10-15T00:00:00Z',failed=None,done=threading.Event(),emit=reports.append)
    port=types.SimpleNamespace(HostPort=lambda *a:None,execute=lambda _:(_ for _ in ()).throw(AssertionError('LOCAL_ABORT_REQUEST')),safe_finish=c.safe_finish,public_result=c.public_result);env['load']=lambda *a:port;env['controller']=port

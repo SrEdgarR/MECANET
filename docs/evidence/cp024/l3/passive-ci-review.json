@@ -1,0 +1,44 @@
+{
+  "schema": "cp024-passive-ci-boundary-review-v1",
+  "date": "2026-10-15",
+  "reviewer": "Root independent of L3 author",
+  "status": "PASS FOR CI ONLY",
+  "sourceFreeze": "root-passive-ci-freeze.json",
+  "sourceFreezeRawSha256": "9526d8665d86ef454e99f6018d62b074cc9f79d020366fe35fa1bbb6c4802351",
+  "reviewed": [
+    "Root O_EXCL claim fsync/readback/lifetime and no adoption after bind uncertainty",
+    "Publisher closed inputs/own exclusive V2 paths/precharge; no Docker/import effect",
+    "Port inherits135case program, denies reordered/repeated effect, nested alias dispatches original BASE method",
+    "Ephemeral Linux test requires fixed path absent, token and exact enumerated nonrecursive cleanup",
+    "Gate pins alone are not proof; full consuming outerRoot/monitor/relay/finally remains unverified"
+  ],
+  "tests": [
+    {
+      "case": "continuation-admission.test.py",
+      "exit": 0,
+      "output": "............\n----------------------------------------------------------------------\nRan 12 tests in 0.065s\n\nOK\n"
+    },
+    {
+      "case": "continuation-publication.test.py",
+      "exit": 0,
+      "output": ".....\n----------------------------------------------------------------------\nRan 5 tests in 0.023s\n\nOK\n"
+    },
+    {
+      "case": "continuation-port.test.py",
+      "exit": 0,
+      "output": ".....\n----------------------------------------------------------------------\nRan 5 tests in 0.038s\n\nOK\n"
+    },
+    {
+      "case": "continuation-host.test.py",
+      "exit": 0,
+      "output": "................\n----------------------------------------------------------------------\nRan 16 tests in 0.036s\n\nOK\n"
+    }
+  ],
+  "redRetained": "passive-ci-review-red.json; metadata assertion473259 used old frozen record, not a new functional test failure",
+  "unverified": [
+    "Linux admission fsync physical until new CI",
+    "Publisher/port physical effects, full outer runner and totalSQL/ACK/resource projection",
+    "Current Oracle Environment Gate"
+  ],
+  "vpsStartAuthorizedByReview": false
+}

@@ -1,0 +1,141 @@
+{
+  "schema": "cp024-sc016-counter-independent-peer-v1",
+  "date": "2026-10-15",
+  "reviewer": "/root/cp024_pos_sql",
+  "author": "/root/cp024_l3",
+  "scope": "read-only focal SC016 arithmetic, Root/Node budget adapter, identity and evidence boundary; no controller admission or physical execution approval",
+  "status": "PARTIAL / REQUIRED BEFORE V2 ADMISSION",
+  "authorityHash": "6e1fe2d6ef789eef9637fd0ec9f6c5703998899cbc9df4f8a8c35990364bfc92",
+  "files": {
+    "tests/qa/cp019/continuation-budget.py": "f14b5de9fa3f8f327f7e9e15494fac2cccc90d9d5670f9c0fc34bfc963e0ec96",
+    "tests/qa/cp019/continuation-budget.mjs": "e548c9e46a0c06c819cae78951ede0daa46ca874862ff570efe66c0373554fa0",
+    "tests/qa/cp019/continuation-ledger.mjs": "f6a76ebc07d2fbc8ba5fb3413bd467958f19b856f8148a2d9957e1194efdd548",
+    "tests/qa/cp019/host.py": "b71e7375a53cdc30c2842c2256b903c9ef3629bd3919e08570fc5ccfaa714a5e",
+    "tests/qa/cp019/continuation-budget.test.mjs": "3bdc99379c6172d36762d6b1a1546b117b1613ce1b010b21ee1083cc6fc35e56",
+    "tests/qa/cp019/continuation-budget.test.py": "82697784c3996c17aca2e6602eacc0118b666f601011c5c7f207f052a814a12e",
+    "tests/qa/cp019/continuation-host.test.py": "3265a0808c20bb50c622f82abd55fdb7a3ae8f88f4a403cfdf4ba51d32cc3af8",
+    "tests/qa/cp019/ledger.mjs": "2d1817b6f2b0d3f276b8ae826150b6bdc2cd59a2ab8aacb569e6fae72d42ca05",
+    "tests/qa/cp019/continuation-authority.mjs": "5d564b41af24268a2168ed1658d64e37435708b1298a30aebf87881e69001506"
+  },
+  "sourceLocations": {
+    "tests/qa/cp019/continuation-budget.py": {},
+    "tests/qa/cp019/continuation-budget.mjs": {},
+    "tests/qa/cp019/continuation-ledger.mjs": {
+      "let highWater=null": 17,
+      "async function read()": 18
+    },
+    "tests/qa/cp019/host.py": {
+      "def configure_continuation": 30,
+      "def track_continuation_progress": 89,
+      "def continuation_effect_guard": 104,
+      "def ledger_mutate": 266
+    },
+    "tests/qa/cp019/continuation-budget.test.mjs": {},
+    "tests/qa/cp019/continuation-budget.test.py": {},
+    "tests/qa/cp019/continuation-host.test.py": {},
+    "tests/qa/cp019/ledger.mjs": {},
+    "tests/qa/cp019/continuation-authority.mjs": {}
+  },
+  "controls": [
+    {
+      "property": "v1 immutable bytes,seq44,639artifacts,135cases and fixed original caps",
+      "status": "PASS",
+      "evidence": "pinned base hash plus registry hash and sum checks in both languages; local tests"
+    },
+    {
+      "property": "case45/global1800; once chosen start cannot move; only v2, no third attempt",
+      "status": "PASS",
+      "evidence": "exact admission scope and case starts; expired/backward/type/scope/overflow negatives, local tests only"
+    },
+    {
+      "property": "atomic increment under cross-language shared lock and sync-before-return",
+      "status": "PASS_BY_REVIEW",
+      "evidence": "same ledger.json.lock O_EXCL; read latest inside lock, temp fsync/atomic rename/directory sync; no lock eviction by age",
+      "limit": "true concurrent OS-process and Python/Node interleavings not executed by this peer"
+    },
+    {
+      "property": "known consumption rollback within existing reader",
+      "status": "PASS",
+      "evidence": "high-water comparisons; exact local filesystem reproduction denies stale same-instance read"
+    },
+    {
+      "property": "rollback across new reader/process using durable Root boundary",
+      "status": "FAIL / REQUIRED",
+      "finding": "CP024-CNT-01"
+    },
+    {
+      "property": "implicit admission and production binding",
+      "status": "PASS_FOR_CURRENT_CLOSED_STATE",
+      "evidence": "explicit context; production Node wrapper requires exact /run/qa-budget/ledger.json + RO Root authority/overlay; current host blocks known create/start/exec before consumer accreditation",
+      "limit": "Root admission, current VPS/mounts, first-effect accounting, consumers and durable abort enrollment remain NOT VERIFIED"
+    }
+  ],
+  "findings": [
+    {
+      "id": "CP024-CNT-01",
+      "severity": "REQUIRED",
+      "status": "OPEN",
+      "file": "tests/qa/cp019/continuation-ledger.mjs",
+      "line": 17,
+      "related": [
+        "tests/qa/cp019/continuation-budget.mjs:56",
+        "tests/qa/cp019/host.py:89"
+      ],
+      "problem": "highWater starts null in each adapter and validates only against immutable v1 floor. A fresh adapter accepts valid-shaped v2 state whose known charges/sequence regressed above that floor. This is already correctly disclosed as NOT VERIFIED by the author; the pure math core is not a durable Root seal.",
+      "reproduction": {
+        "environment": "Windows local temporary filesystem; new adapter instance model, not actual OS-process restart or VPS",
+        "originalConfirmedSqlCharges": 3,
+        "regressedAcceptedByFreshAdapter": 2,
+        "existingAdapter": "DENIED_CONTINUATION_PROGRESS_REGRESSION",
+        "durableRootSealProvided": false,
+        "effectfulSql": 0,
+        "http": 0,
+        "docker": 0,
+        "result": "REQUIRED_REPRODUCED"
+      },
+      "correctiveAction": "Before first v2 effect, wire a Root-only append-only hash-linked frontier seal and process/stage enrollment. A new process must prove exact authenticated frontier plus positive closure/no in-flight effects; a merely older lower-bound seal is insufficient. If continuation of a partially completed stage cannot prove the last confirmed charges and FIN, abort UNKNOWN irreversibly. Keep v1 bytes, all historical charges and clocks; do not create new attempts or weaken caps.",
+      "closureEvidence": "Focal RED→GREEN for rollback with a new reader/OS process, stale/missing/conflicting seal, concurrent enrollment, same ledger cross-process increments, exact original+v2 sums, first effect charged, immutable abort/no restart of uncertain stage. Prove file/directory binding and ownership without production resources.",
+      "resolveBefore": "SC016 Environment/consumer Gate and creation/publication/start of any remote v2 effect; does not block independent synthetic POS or local core work"
+    }
+  ],
+  "localVerification": {
+    "Node24_21": {
+      "tests": 14,
+      "status": "PASS",
+      "files": [
+        "tests/qa/cp019/continuation-budget.test.mjs"
+      ]
+    },
+    "Python3_12_14": {
+      "tests": 34,
+      "status": "PASS",
+      "files": [
+        "tests/qa/cp019/continuation-budget.test.py",
+        "tests/qa/cp019/continuation-host.test.py"
+      ]
+    },
+    "hostRetest": {
+      "tests": 15,
+      "status": "PASS",
+      "shaBeforeAndAfter": "b71e7375a53cdc30c2842c2256b903c9ef3629bd3919e08570fc5ccfaa714a5e",
+      "sourceStableDuringRun": true
+    },
+    "duplicateHistoricalClaims": false
+  },
+  "notVerified": [
+    "durable Root receipt across process restart",
+    "physical Linux cross-language concurrent mutations",
+    "actual root-owned RO mounts and current VPS Environment",
+    "first v2 publication charged and all active consumers accredited",
+    "physical PostgreSQL/recovery/ARM64 acceptance"
+  ],
+  "resources": {
+    "sourceEdits": 0,
+    "gitMutations": 0,
+    "ssh": 0,
+    "docker": 0,
+    "postgres": 0,
+    "productionChanges": 0,
+    "localTemporaryFilesystem": "only owned temporary ledger reproduction, removed explicitly after realpath/root verification"
+  }
+}
