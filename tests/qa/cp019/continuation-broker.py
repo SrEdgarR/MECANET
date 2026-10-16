@@ -3,7 +3,7 @@
 No import effects. No TCP, SQL, process creation, resource adoption or retries.
 The caller authenticates startup seal, Root lifetime and CREATED client CIDs.
 """
-import copy,datetime,hashlib,json,os,pathlib,secrets,socket,stat,struct,threading,time,re
+import copy,ctypes,datetime,hashlib,json,os,pathlib,socket,stat,struct,sys,threading,time,re
 
 def canonical(value):return json.dumps(value,sort_keys=True,separators=(',',':'),ensure_ascii=False,allow_nan=False).encode()
 def check(ok,label):
@@ -13,30 +13,61 @@ def syncdir(path):
  try:os.fsync(fd)
  finally:os.close(fd)
 
+def exchange_files(left,right):
+ """One Linux atomic name exchange. Unsupported kernels/FS fail closed.
+
+ Both slots already exist, on the same private filesystem. There is no copy,
+ replace, allocation or non-atomic rename fallback and no import-time probe.
+ """
+ check(sys.platform=='linux','BROKER_EXCHANGE_LINUX_REQUIRED')
+ libc=ctypes.CDLL(None,use_errno=True);exchange=getattr(libc,'renameat2',None);check(exchange is not None,'BROKER_EXCHANGE_UNAVAILABLE')
+ exchange.argtypes=[ctypes.c_int,ctypes.c_char_p,ctypes.c_int,ctypes.c_char_p,ctypes.c_uint];exchange.restype=ctypes.c_int
+ if exchange(-100,os.fsencode(left),-100,os.fsencode(right),2)!=0:raise OSError(ctypes.get_errno(),'BROKER_ATOMIC_EXCHANGE_FAILED')
+
 class RootFileStore:
- """Only the existing Root process writes; app mounts must be read-only."""
+ """Two precharged slots; one Root, atomic publication, durable ACK only.
+
+ The inactive inode is overwritten/fsynced, then atomically exchanged with
+ ledger.json. No new file is created per update. A failed step is terminal;
+ another Root cannot adopt either slot or repair a consumed attempt.
+ """
  def __init__(self,path):
-  self.path=pathlib.Path(path);check(os.geteuid()==0 and self.path==pathlib.Path('/opt/mecanet-qa-p1l3-r03/budget/continuations/v2/ledger.json'),'BROKER_ROOT_STORE_SCOPE')
- def read(self):
-  p=self.path;s=p.lstat();check(p.resolve()==p and stat.S_ISREG(s.st_mode) and s.st_uid==999 and stat.S_IMODE(s.st_mode)==0o600 and s.st_nlink==1 and 2<=s.st_size<=262144,'BROKER_LEDGER_CUSTODY')
+  self.path=pathlib.Path(path);check(os.geteuid()==0 and self.path==pathlib.Path('/opt/mecanet-qa-p1l3-r03/budget/continuations/v2/ledger.json'),'BROKER_ROOT_STORE_SCOPE');self.shadow=self.path.with_name('ledger-slot.json');self.failure=None
+  current=self.read_slot(self.path);other=self.read_slot(self.shadow);check(current[0]==other[0] and current[1][0]==other[1][0] and current[1]!=other[1],'BROKER_INITIAL_SLOT_BINDING');self.identities={self.path:current[1],self.shadow:other[1]};self.shadow_hash=hashlib.sha256(canonical(other[0])).hexdigest()
+  # Both already-published slots have identical reserved state. This positive
+  # kernel/filesystem probe happens while binding publication, before transport
+  # can enable effects or PostgreSQL START. Failure consumes v2 and stays KEEP.
+  try:
+   exchange_files(self.path,self.shadow);self.identities[self.path],self.identities[self.shadow]=self.identities[self.shadow],self.identities[self.path];syncdir(self.path.parent);check(self.read_slot(self.path)==(current[0],self.identities[self.path]) and self.read_slot(self.shadow)==(other[0],self.identities[self.shadow]),'BROKER_INITIAL_EXCHANGE_READBACK')
+  except BaseException:self.failure='BROKER_INITIAL_EXCHANGE_UNCERTAIN';raise
+ @staticmethod
+ def read_slot(p):
+  s=p.lstat();check(p.resolve()==p and stat.S_ISREG(s.st_mode) and s.st_uid==999 and stat.S_IMODE(s.st_mode)==0o600 and s.st_nlink==1 and 2<=s.st_size<=262144,'BROKER_LEDGER_CUSTODY')
   fd=os.open(p,os.O_RDONLY|os.O_NOFOLLOW)
   try:
-   before=os.fstat(fd);check((s.st_dev,s.st_ino,s.st_size,s.st_mtime_ns)==(before.st_dev,before.st_ino,before.st_size,before.st_mtime_ns),'BROKER_LEDGER_CHANGED');raw=os.read(fd,262145);after=os.fstat(fd);named=p.lstat();check(len(raw)==s.st_size and (before.st_dev,before.st_ino,before.st_size,before.st_mtime_ns)==(after.st_dev,after.st_ino,after.st_size,after.st_mtime_ns)==(named.st_dev,named.st_ino,named.st_size,named.st_mtime_ns),'BROKER_LEDGER_CHANGED');return json.loads(raw)
+   before=os.fstat(fd);keys=lambda s:(s.st_dev,s.st_ino,s.st_size,s.st_mtime_ns,s.st_ctime_ns,s.st_mode,s.st_uid,s.st_nlink);check(keys(s)==keys(before),'BROKER_LEDGER_CHANGED');raw=os.read(fd,262145);check(len(raw)==s.st_size and keys(before)==keys(os.fstat(fd))==keys(p.lstat()),'BROKER_LEDGER_CHANGED');return json.loads(raw),(s.st_dev,s.st_ino)
   finally:os.close(fd)
+ def read(self):
+  value,identity=self.read_slot(self.path);check(identity==self.identities[self.path],'BROKER_SLOT_IDENTITY_CHANGED');return value
  def persist(self,value):
-  raw=canonical(value);check(2<=len(raw)<=262144,'BROKER_LEDGER_SIZE');parent=self.path.parent;check(parent.resolve()==parent and not parent.is_symlink(),'BROKER_LEDGER_PARENT');tmp=parent/('.root-broker-'+secrets.token_hex(12)+'.tmp');fd=os.open(tmp,os.O_WRONLY|os.O_CREAT|os.O_EXCL|os.O_NOFOLLOW,0o600)
+  check(self.failure is None,'BROKER_SLOT_PREVIOUS_FAILURE');raw=canonical(value);check(2<=len(raw)<=262144,'BROKER_LEDGER_SIZE');parent=self.path.parent;check(parent.resolve()==parent and not parent.is_symlink(),'BROKER_LEDGER_PARENT');fd=None
   try:
-   with os.fdopen(fd,'wb') as f:f.write(raw);os.fchown(f.fileno(),999,999);os.fchmod(f.fileno(),0o600);os.fsync(f.fileno())
-   os.replace(tmp,self.path);syncdir(parent);check(canonical(self.read())==raw,'BROKER_DURABLE_READBACK')
+   previous=self.read();other,identity=self.read_slot(self.shadow);check(identity==self.identities[self.shadow] and hashlib.sha256(canonical(other)).hexdigest()==self.shadow_hash,'BROKER_SLOT_IDENTITY_CHANGED');fd=os.open(self.shadow,os.O_WRONLY|os.O_NOFOLLOW);opened=os.fstat(fd);check((opened.st_dev,opened.st_ino)==identity and opened.st_nlink==1 and stat.S_IMODE(opened.st_mode)==0o600 and opened.st_uid==999,'BROKER_SLOT_IDENTITY_CHANGED');offset=0
+   while offset<len(raw):
+    count=os.write(fd,raw[offset:]);check(count>0,'BROKER_SLOT_SHORT_WRITE');offset+=count
+   os.ftruncate(fd,len(raw));os.fsync(fd);check(self.read_slot(self.shadow)==(value,identity),'BROKER_SLOT_WRITE_READBACK');os.close(fd);fd=None
+   check(self.read_slot(self.path)==(previous,self.identities[self.path]),'BROKER_LEDGER_CHANGED');exchange_files(self.path,self.shadow);self.identities[self.path],self.identities[self.shadow]=self.identities[self.shadow],self.identities[self.path];syncdir(parent);check(canonical(self.read())==raw and self.read_slot(self.shadow)==(previous,self.identities[self.shadow]),'BROKER_DURABLE_READBACK');self.shadow_hash=hashlib.sha256(canonical(previous)).hexdigest()
+  except BaseException:self.failure='BROKER_SLOT_PERSIST_UNCERTAIN';raise
   finally:
-   if tmp.exists():tmp.unlink()
+   if fd is not None:os.close(fd)
 
 class Broker:
  def __init__(self,model,context,store,initial_seal,clock,verify_client,root_lifetime,root_identity=None):
   self.model=model;self.context=copy.deepcopy(context);self.store=store;self.clock=clock;self.verify_client=verify_client;self.lock=threading.RLock();self.clients={};self.failure=None;self.closed=False;self.root_pid=os.getpid();self.root_identity=root_identity or (lambda:{'pid':os.getpid(),'procStart':proc_start(os.getpid())});self.root_lifetime=copy.deepcopy(root_lifetime);check(self.root_lifetime==self.root_identity(),'BROKER_ROOT_LIFETIME_MISMATCH')
   actual=store.read();check(canonical(actual)==canonical(initial_seal),'BROKER_INITIAL_SEAL_NOT_EXACT');self.validate(actual);self.state=copy.deepcopy(actual)
  def args(self):c=self.context;return c['baseLedger'],c['baseLedgerHash'],c['admission']
- def validate(self,state):return self.model.validate(state,*self.args(),self.clock())
+ def validate(self,state):
+  result=self.model.validate(state,*self.args(),self.clock());self.model.validate_creation_upper(state);return result
  def guard(self):check(not self.closed and self.failure is None and os.getpid()==self.root_pid and self.root_identity()==self.root_lifetime,'BROKER_ROOT_LIFETIME_ENDED')
  def root_snapshot(self):
   with self.lock:return copy.deepcopy(self.current())
@@ -49,14 +80,14 @@ class Broker:
   # above v1's floor. No new Root may adopt a ledger after this process ends.
   check(canonical(state)==canonical(self.state),'BROKER_LEDGER_MEMORY_MISMATCH');return state
  def persist_charged(self,previous,after,scenario):
-  # SC013 counts real creations, including the counter's own O_EXCL temp.
-  # Fold that charge into the SAME transition: no recursive persist/sequence,
-  # and no temporary is opened if its case or accumulated cap is exhausted.
+  # The fixed Root store creates no file per update; both inodes were charged
+  # before publication. Legacy/test stores retain their actual temp cost.
   self.model.remaining(after,*self.args(),scenario,self.clock());check(scenario in after['scenarios'],'BROKER_PERSIST_CASE_REQUIRED')
   check(all(after['scenarios'].get(name)==value for name,value in previous['scenarios'].items() if name!=scenario) and set(after['scenarios'])-set(previous['scenarios'])<=set([scenario]),'BROKER_PERSIST_CASE_MISMATCH')
   result=copy.deepcopy(after);case=result['scenarios'][scenario]
-  check(result['total']['artifactFiles']+1<=self.model.GLOBAL['artifactFiles'] and case['total']['artifactFiles']+1<=self.model.CASE['artifactFiles'],'CONTINUATION_OVERFLOW')
-  result['total']['artifactFiles']+=1;case['total']['artifactFiles']+=1;self.validate(result);self.model.validate_progress(previous,result);check(result['sequence']==previous['sequence']+1,'BROKER_ROOT_SEQUENCE');self.store.persist(result);check(canonical(self.store.read())==canonical(result),'BROKER_DURABLE_READBACK');self.state=copy.deepcopy(result);return result
+  creations=0 if isinstance(self.store,RootFileStore) else 1
+  check(result['total']['artifactFiles']+creations<=self.model.GLOBAL['artifactFiles'] and case['total']['artifactFiles']+creations<=self.model.CASE['artifactFiles'],'CONTINUATION_OVERFLOW')
+  result['total']['artifactFiles']+=creations;case['total']['artifactFiles']+=creations;self.validate(result);self.model.validate_progress(previous,result);check(result['sequence']==previous['sequence']+1,'BROKER_ROOT_SEQUENCE');self.store.persist(result);check(canonical(self.store.read())==canonical(result),'BROKER_DURABLE_READBACK');self.state=copy.deepcopy(result);return result
  def register(self,client_id,record):
   with self.lock:
    self.guard();check(isinstance(client_id,str) and len(client_id)<=64 and client_id not in self.clients and len(self.clients)<256,'BROKER_CLIENT_COLLISION')
@@ -82,7 +113,7 @@ class Broker:
      else:
       check(method=='charge' and request['name'] is None,'BROKER_METHOD');after=self.model.update(state,*self.args(),name,self.clock(),kind=request['kind'],amount=request['amount'])
      state=self.persist_charged(state,after,request['name'] if method=='enter' else name)
-    c['next']+=1;return {'schema':'cp024-budget-ack-v1','admissionHash':self.context['admissionHash'],'clientId':client_id,'sequence':request['sequence'],'rootPid':self.root_pid,'state':copy.deepcopy(state)}
+    c['next']+=1;return {'schema':'cp024-budget-ack-v1','admissionHash':self.context['admissionHash'],'clientId':client_id,'sequence':request['sequence'],'rootPid':self.root_pid,'creationAccounting':self.model.validate_creation_upper(state),'state':copy.deepcopy(state)}
    except BaseException:
     self.fail('BROKER_UNCERTAIN_OR_REJECTED');raise
  def root_update(self,mutator,*,scenario):

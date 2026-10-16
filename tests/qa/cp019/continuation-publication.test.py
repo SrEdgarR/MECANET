@@ -20,7 +20,7 @@ class Publication(unittest.TestCase):
   if mutate:mutate(files)
   with patch.object(p,'ORIGINAL',p.sha(original)),patch.object(p,'MATERIAL',material):return p.prepare(archive(files,kind),overlay,original,source,target,o.m)
  def test_tar_hash_closure_and_all_files_directories_are_reserved_before_publication(self):
-  prepared=self.prepare();plan=prepared['plan'];self.assertEqual(plan['costs']['host-bootstrap'],14);self.assertEqual(plan['costs']['host-stage'],len(plan['runtimeDirectories'])+len(plan['runtimeFiles']));self.assertEqual(plan['costs']['host-config-source'],1);self.assertTrue(all(v.startswith('master/continuations/v2/runtime') for v in plan['runtimeDirectories']));self.assertNotIn('master/material.json',str(plan))
+  prepared=self.prepare();plan=prepared['plan'];self.assertEqual(plan['costs']['host-bootstrap'],15);self.assertEqual(plan['costs']['host-stage'],len(plan['runtimeDirectories'])+len(plan['runtimeFiles']));self.assertEqual(plan['costs']['host-config-source'],1);self.assertTrue(all(v.startswith('master/continuations/v2/runtime') for v in plan['runtimeDirectories']));self.assertNotIn('master/material.json',str(plan))
  def test_extra_missing_changed_link_and_traversal_input_denies_before_any_io(self):
   mutations=[lambda f:f.update({'extra':b'x'}),lambda f:f.pop('package.json'),lambda f:f.update({'package.json':b'wrong'}),lambda f:f.update({'../outside':b'x'})]
   for mutation in mutations:

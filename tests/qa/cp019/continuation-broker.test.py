@@ -27,9 +27,9 @@ class Broker(unittest.TestCase):
  def test_temp_overflow_denies_before_persistence_and_latches(self):
   for global_limit in [False,True]:
    store,broker=fixture();state=store.read()
-   for case,amount in ([('source-close-b',2000)] if not global_limit else [('source-close-b',2000),('source-migrate-a',2000),('source-migrate-b',2000),('source-migrate-central',1553)]):state=f.m.update(state,*broker.args(),case,f.NOW,kind='artifactFiles',amount=amount)
+   for case,amount in ([('source-close-b',1998)] if not global_limit else [('source-close-b',1998),('source-migrate-a',1998),('source-migrate-b',1998),('source-migrate-central',1257)]):state=f.m.update(state,*broker.args(),case,f.NOW,kind='artifactFiles',amount=amount)
    state['activeScenarios']['source-window']='source-close-b';store.value=copy.deepcopy(state);broker.state=copy.deepcopy(state);enroll(broker,'one');before=store.read()
-   with self.subTest(global_limit=global_limit),self.assertRaisesRegex(AssertionError,'OVERFLOW'):broker.request('one',(123,999,999),request('one',2,'charge',kind='sql',amount=1))
+   with self.subTest(global_limit=global_limit),self.assertRaisesRegex(AssertionError,'OVERFLOW|HISTORICAL_CREATION'):broker.request('one',(123,999,999),request('one',2,'charge',kind='sql',amount=1))
    self.assertEqual(store.saved,[]);self.assertEqual(store.read(),before);self.assertIsNotNone(broker.failure)
  def test_enroll_and_snapshot_create_no_temp_and_add_no_charge(self):
   store,broker=fixture();before=store.read();enroll(broker,'one');broker.request('one',(123,999,999),request('one',2,'snapshot'));self.assertEqual(store.read(),before);self.assertEqual(store.saved,[])

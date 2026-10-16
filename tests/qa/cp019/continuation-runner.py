@@ -15,6 +15,8 @@ GATES={
  'environment':{'positive-original-fin','pins-and-ownership','networks-and-ports','storage-and-keep','resources','foreign-preservation'},
  'publicationProjection':{'complete135','sql-rpc','http-journal-artifacts','time','root-and-docker-resources','storage'}}
 HASH=re.compile('[0-9a-f]{64}')
+HISTORICAL_CREATION_CASE={'host-bootstrap':50,'host-stage':172,'host-material':16,'host-config-source':28,'host-config-target':28,'host-pg-start':6}
+HISTORICAL_CREATION_PARENT='b2ed6589a6026fca7c8268fa726a58f4d459b70e1a52f086437150650db959f6'
 def check(ok,label):
  if not ok:raise AssertionError(label)
 def canonical(v):return json.dumps(v,sort_keys=True,separators=(',',':'),ensure_ascii=False,allow_nan=False).encode()
@@ -36,13 +38,19 @@ def validate_gates(bodies,pins,source_sha,runtime_hash,base):
   evidence=body.get('evidence');rows=body.get('checks');check(isinstance(evidence,list) and 0<len(evidence)<=256 and all(isinstance(e,dict) and set(e)=={'sha256','scope','environment'} and isinstance(e['sha256'],str) and HASH.fullmatch(e['sha256']) and isinstance(e['scope'],str) and 1<=len(e['scope'])<=256 and isinstance(e['environment'],str) and 1<=len(e['environment'])<=128 for e in evidence),'OUTER_GATE_PROVENANCE')
   hashes={e['sha256'] for e in evidence};check(isinstance(rows,list) and len(rows)==len(required) and {r.get('id') for r in rows if isinstance(r,dict)}==required and all(set(r)=={'id','status','evidenceHash'} and r['status']=='PASS' and r['evidenceHash'] in hashes for r in rows),'OUTER_GATE_CHECKS')
  projection=bodies['publicationProjection'];cases=projection.get('cases');check(isinstance(cases,dict) and set(cases)==set(base['plannedScenarios']),'OUTER_PROJECTION_COVERAGE')
- totals=dict.fromkeys(['artifactFiles','sql','http','journal'],0);seconds=0
+ totals=dict.fromkeys(['artifactFiles','sql','http','journal'],0);seconds=0;envelope=projection.get('jointArtifactUpper');known=HISTORICAL_CREATION_CASE;debt=sum(known.values())+2
+ if envelope is not None:
+  check(isinstance(envelope,dict) and set(envelope)=={'schema','baseLedgerHash','historicalUpper','knownCaseUpper','unknownHistoricalUpper','additionalGlobalUpper','additionalCaseUpper','producerProofHash'} and envelope['schema']=='cp026-joint-artifact-upper-v1' and envelope['baseLedgerHash']==HISTORICAL_CREATION_PARENT and envelope['historicalUpper']==debt and envelope['knownCaseUpper']==known and envelope['unknownHistoricalUpper']==2 and type(envelope['additionalGlobalUpper']) is int and envelope['additionalGlobalUpper']>=0 and isinstance(envelope['additionalCaseUpper'],dict) and set(envelope['additionalCaseUpper'])==set(cases) and envelope['producerProofHash'] in {e['sha256'] for e in projection['evidence']},'OUTER_JOINT_ARTIFACT_PROOF')
  for name,row in cases.items():
   check(isinstance(row,dict) and set(row)=={'additional','secondsUpperBound','evidenceHash'} and isinstance(row['additional'],dict) and set(row['additional'])==set(totals) and number(row['secondsUpperBound']) and 0<=row['secondsUpperBound']<45 and row['evidenceHash'] in {e['sha256'] for e in projection['evidence']},'OUTER_PROJECTION_CASE')
   prior=base['scenarios'].get(name,{'total':dict.fromkeys(totals,0)})['total']
-  for kind,amount in row['additional'].items():check(type(amount) is int and amount>=0 and prior[kind]+amount<=base['plannedScenarios'][name][kind],'OUTER_PROJECTION_CASE_OVERFLOW');totals[kind]+=amount
+  for kind,amount in row['additional'].items():
+   check(type(amount) is int and amount>=0 and prior[kind]+amount+(known.get(name,0)+2 if kind=='artifactFiles' else 0)<=base['plannedScenarios'][name][kind],'OUTER_PROJECTION_CASE_OVERFLOW')
+   if kind=='artifactFiles' and envelope is not None:check(amount==envelope['additionalCaseUpper'][name] and amount<=envelope['additionalGlobalUpper'],'OUTER_JOINT_ARTIFACT_CASE')
+   else:totals[kind]+=amount
   seconds+=row['secondsUpperBound']
- check(projection.get('additionalTotals')==totals and all(base['total'][k]+totals[k]<=v for k,v in {'artifactFiles':8192,'sql':200000,'http':300,'journal':1000}.items()) and number(projection.get('globalSecondsUpperBound')) and seconds<=projection['globalSecondsUpperBound']<1800,'OUTER_PROJECTION_GLOBAL')
+ if envelope is not None:totals['artifactFiles']=envelope['additionalGlobalUpper']
+ check(projection.get('additionalTotals')==totals and all(base['total'][k]+totals[k]+(debt if k=='artifactFiles' else 0)<=v for k,v in {'artifactFiles':8192,'sql':200000,'http':300,'journal':1000}.items()) and number(projection.get('globalSecondsUpperBound')) and seconds<=projection['globalSecondsUpperBound']<1800,'OUTER_PROJECTION_GLOBAL')
  check(projection.get('resourceEnvelope')=={'dockerNanoCpus':1000000000,'dockerMemoryBytes':2147483648,'postgresCount':1,'postgresConnections':60,'scopeBytes':2147483648,'admissionCpuExclusive':80,'monitorCpuExclusive':90},'OUTER_PROJECTION_RESOURCES')
  return True
 

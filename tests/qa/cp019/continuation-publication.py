@@ -41,9 +41,9 @@ def prepare(archive,overlay_raw,original_raw,source_compose_raw,target_compose_r
   while p.parent!=BASE:directories.add(p.parent);p=p.parent
  paths=sorted(p.relative_to(ROOT).as_posix() for p in directories);entries_plan=[{'path':(RUNTIME/name).relative_to(ROOT).as_posix(),'bytes':len(raw),'sha256':sha(raw)} for name,raw in sorted(files.items())]
  # Conservative directories count as artifacts too; no original charge is
- # removed. Bootstrap14 includes claim3, budget2+ledger1, authority1+files4,
+ # removed. Bootstrap15 includes claim3, budget2+ledger2, authority1+files4,
  # frontiers1, plan1 and the UNIX socket1, all before the corresponding effect.
- plan={'schema':'cp024-runtime-publication-v1','originalManifestHash':ORIGINAL,'materialHash':MATERIAL,'effectiveManifestHash':sha(files['artifact.json']),'runtimeHash':sha(overlay_raw),'archiveHash':sha(archive),'sourceComposeHash':sha(source_compose_raw),'targetComposeHash':sha(target_compose_raw),'sourceSha':effective['sourceSha'],'runtimeDirectories':paths,'runtimeFiles':entries_plan,'costs':{'host-bootstrap':14,'host-stage':len(files)+len(directories),'host-config-source':1,'host-config-target':1}}
+ plan={'schema':'cp024-runtime-publication-v1','originalManifestHash':ORIGINAL,'materialHash':MATERIAL,'effectiveManifestHash':sha(files['artifact.json']),'runtimeHash':sha(overlay_raw),'archiveHash':sha(archive),'sourceComposeHash':sha(source_compose_raw),'targetComposeHash':sha(target_compose_raw),'sourceSha':effective['sourceSha'],'runtimeDirectories':paths,'runtimeFiles':entries_plan,'costs':{'host-bootstrap':15,'host-stage':len(files)+len(directories),'host-config-source':1,'host-config-target':1}}
  return {'plan':plan,'files':files,'effective':effective,'overlayRaw':overlay_raw,'originalRaw':original_raw,'sourceRaw':source_compose_raw,'targetRaw':target_compose_raw}
 
 def validate_prepared(prepared):
@@ -54,7 +54,7 @@ def validate_prepared(prepared):
  for name in files:
   parts=pathlib.PurePosixPath(name);check(not parts.is_absolute() and '\\' not in name and all(v not in ['', '.', '..'] for v in name.split('/')),'PUBLICATION_PREPARED_PATH');path=RUNTIME/name
   while path.parent!=BASE:directories.add(path.parent);path=path.parent
- check(p['runtimeDirectories']==sorted(d.relative_to(ROOT).as_posix() for d in directories) and p['costs']=={'host-bootstrap':14,'host-stage':len(files)+len(directories),'host-config-source':1,'host-config-target':1},'PUBLICATION_COST_CHANGED');return True
+ check(p['runtimeDirectories']==sorted(d.relative_to(ROOT).as_posix() for d in directories) and p['costs']=={'host-bootstrap':15,'host-stage':len(files)+len(directories),'host-config-source':1,'host-config-target':1},'PUBLICATION_COST_CHANGED');return True
 
 def publish(prepared,claim,host_factory,broker_module,start_transport=False,before_effect=None):
  """No retry/cleanup/adoption after uncertainty. Caller must finish safely.
@@ -77,6 +77,7 @@ def publish(prepared,claim,host_factory,broker_module,start_transport=False,befo
   def write(path,raw,mode,uid=0,scenario='host-bootstrap'):before(scenario);return exclusive_file(path,raw,mode,uid)
   mkdir(ROOT/'budget/continuations');mkdir(ROOT/'budget/continuations/v2',999)
   write(ROOT/'budget/continuations/v2/ledger.json',canonical(claim.body['initialState']),0o600,999)
+  write(ROOT/'budget/continuations/v2/ledger-slot.json',canonical(claim.body['initialState']),0o600,999)
   mkdir(AUTHORITY);mkdir(BASE/'frontiers')
   for name,raw in [('admission.json',canonical(claim.context['admission'])),('v1-ledger.json',claim.context['baseLedger']),('runtime-overlay.json',prepared['overlayRaw']),('original-artifact.json',prepared['originalRaw'])]:write(AUTHORITY/name,raw,0o444)
   before('host-bootstrap');os.chmod(AUTHORITY,0o555);syncdir(BASE);write(BASE/'publication-plan.json',canonical(plan),0o400)

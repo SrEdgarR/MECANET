@@ -14,6 +14,8 @@ CASE={'artifactFiles':2000,'sql':8192,'http':80,'journal':1000}
 HASH=re.compile(r'^[0-9a-f]{64}$')
 SCHEMA='cp024-budget-continuation-v2'
 V1_HASH='b2ed6589a6026fca7c8268fa726a58f4d459b70e1a52f086437150650db959f6'
+HISTORICAL_CASE_UPPER={'host-bootstrap':50,'host-stage':172,'host-material':16,'host-config-source':28,'host-config-target':28,'host-pg-start':6}
+HISTORICAL_UNKNOWN_UPPER=2
 
 def check(ok,code='CONTINUATION_BUDGET_ABORT'):
  if not ok:raise AssertionError(code)
@@ -21,6 +23,22 @@ def canonical(value):return json.dumps(value,sort_keys=True,separators=(',',':')
 def sha(raw):return hashlib.sha256(raw).hexdigest()
 def number(value):return type(value) in [int,float] and math.isfinite(value)
 def totals(value,caps):return isinstance(value,dict) and set(value)==set(caps) and all(type(v) is int and 0<=v<=caps[k] for k,v in value.items())
+
+def creation_upper(state):
+ """Reserve unrecorded v1 creations without rewriting or inventing charges.
+
+ 44 completed mutations created 88 counter lock/temp files; fixed bootstrap
+ and tar parents add 42+170. The closed prefix allows at most one failed
+ mutation (2 creations). Its case is unknown: reserve it marginally for any
+ case, but only once globally. Source proof is in CP026, not inferred from
+ absence of trace. This diagnostic is not a second ledger or a refunded cost.
+ """
+ check(state.get('parentLedgerHash')==V1_HASH,'HISTORICAL_CREATION_PARENT')
+ known=sum(HISTORICAL_CASE_UPPER.values());upper=known+HISTORICAL_UNKNOWN_UPPER
+ return {'schema':'cp026-historical-creation-upper-v1','baseLedgerHash':V1_HASH,'knownCaseUpper':HISTORICAL_CASE_UPPER.copy(),'knownHistoricalUpper':known,'unknownHistoricalUpper':HISTORICAL_UNKNOWN_UPPER,'historicalUpper':upper,'recordedArtifacts':state['total']['artifactFiles'],'physicalArtifactsUpper':state['total']['artifactFiles']+upper,'casePhysicalUpper':{n:c['total']['artifactFiles']+HISTORICAL_CASE_UPPER.get(n,0)+HISTORICAL_UNKNOWN_UPPER for n,c in state['scenarios'].items()}}
+
+def validate_creation_upper(state):
+ proof=creation_upper(state);check(proof['physicalArtifactsUpper']<=GLOBAL['artifactFiles'],'HISTORICAL_CREATION_GLOBAL');check(all(v<=CASE['artifactFiles'] for v in proof['casePhysicalUpper'].values()),'HISTORICAL_CREATION_CASE');return proof
 
 def validate_base(raw,expected_hash):
  check(isinstance(raw,bytes) and 2<=len(raw)<=262144 and expected_hash==V1_HASH and sha(raw)==expected_hash,'CONTINUATION_V1_HASH')

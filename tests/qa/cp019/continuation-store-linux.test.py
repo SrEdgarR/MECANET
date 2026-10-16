@@ -16,11 +16,11 @@ class RootStore(unittest.TestCase):
    created.append(path)
   try:
    directory(ROOT);file(ROOT/'ci-owner.json',f.b.canonical({'owner':'isolated-ci-store-test','identity':token}));directory(ROOT/'budget');directory(ROOT/'budget/continuations');directory(ROOT/'budget/continuations/v2',999)
-   path=ROOT/'budget/continuations/v2/ledger.json';file(path,f.b.canonical(f.f.fresh()),0o600,999);store=f.b.RootFileStore(path);identity={'pid':os.getpid(),'procStart':f.b.proc_start(os.getpid())};broker=f.b.Broker(f.f.m,f.context(),store,store.read(),lambda:f.f.NOW,lambda *args:True,identity)
-   f.enroll(broker,'one');broker.request('one',(123,999,999),f.request('one',2,'enter',name='source-close-b'));start=time.perf_counter();durations=[]
+   path=ROOT/'budget/continuations/v2/ledger.json';file(path,f.b.canonical(f.f.fresh()),0o600,999);file(path.with_name('ledger-slot.json'),f.b.canonical(f.f.fresh()),0o600,999);store=f.b.RootFileStore(path);identity={'pid':os.getpid(),'procStart':f.b.proc_start(os.getpid())};broker=f.b.Broker(f.f.m,f.context(),store,store.read(),lambda:f.f.NOW,lambda *args:True,identity)
+   initial_names={p.name for p in path.parent.iterdir()};initial_inodes={p.stat().st_ino for p in path.parent.iterdir()};artifacts_before=store.read()['total']['artifactFiles'];f.enroll(broker,'one');broker.request('one',(123,999,999),f.request('one',2,'enter',name='source-close-b'));start=time.perf_counter();durations=[]
    for sequence in range(3,259):
     before=time.perf_counter();reply=broker.request('one',(123,999,999),f.request('one',sequence,'charge',kind='sql',amount=1));durations.append(time.perf_counter()-before);self.assertEqual(reply['state'],store.read())
-   elapsed=time.perf_counter()-start;self.assertEqual(store.read()['total']['sql'],256);self.assertEqual(path.stat().st_uid,999);self.assertEqual(stat.S_IMODE(path.stat().st_mode),0o600)
+   elapsed=time.perf_counter()-start;self.assertEqual(store.read()['total']['sql'],256);self.assertEqual(path.stat().st_uid,999);self.assertEqual(stat.S_IMODE(path.stat().st_mode),0o600);self.assertEqual(store.read()['total']['artifactFiles'],artifacts_before);self.assertEqual({p.name for p in path.parent.iterdir()},initial_names);self.assertEqual({p.stat().st_ino for p in path.parent.iterdir()},initial_inodes)
    # A new client cannot conceal rollback above the v1 floor from live Root.
    prior=store.read();prior['sequence']-=1;prior['total']['sql']-=1;prior['scenarios']['source-close-b']['total']['sql']-=1;store.persist(prior);f.register(broker,'two')
    with self.assertRaisesRegex(AssertionError,'MEMORY_MISMATCH'):broker.request('two',(123,999,999),f.request('two',1,'enroll'))

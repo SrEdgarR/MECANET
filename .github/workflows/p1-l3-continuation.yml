@@ -49,6 +49,12 @@ jobs:
           python3 -B -X utf8 tests/qa/cp019/runner.test.py
           python3 -B -X utf8 tests/qa/cp019/continuation-runner.test.py
           python3 -B -X utf8 tests/qa/cp019/resource-monitor.test.py
+      - name: Prove two-slot accounting and historical creation debt
+        run: |
+          python3 -B -X utf8 tests/qa/cp026/continuation-slots.test.py
+          python3 -B -X utf8 tests/qa/cp026/historical-creation.test.py
+          python3 -B -X utf8 tests/qa/cp026/historical-cross-language.test.py
+          sudo -n python3 -B -X utf8 tests/qa/cp026/continuation-slots-linux.test.py
       - name: Prove fixed Root fsync store in this exclusive ephemeral runner
         run: sudo -n python3 -B -X utf8 tests/qa/cp019/continuation-store-linux.test.py
       - name: Prove one immutable Root claim and reject a second OS process
