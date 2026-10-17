@@ -9,6 +9,8 @@ import {publishDevelopmentMaterial} from './p1-l3-postgres.mjs';
 import {closeDevelopmentSource,runRecoverySql} from './development-recovery.mjs';
 import {startDevelopmentApis,exerciseDevelopmentHttp} from './development-http.mjs';
 import {runDevelopmentRollbackProbes} from './development-faults.mjs';
+import {exerciseCiReadinessNegatives} from './ci-readiness-negatives.mjs';
+import {copyIndexFromRows,exerciseCiIntegrity} from './ci-integrity.mjs';
 import {copyClosedCiCluster,assertSourceFin,assertRecoveredClock,assertApiRestart} from './ci-cold-copy.mjs';
 const A='11111111-1111-4111-8111-111111111111',B='22222222-2222-4222-8222-222222222222';
 export async function runCiRecovery(o){
@@ -23,14 +25,14 @@ export async function runCiRecovery(o){
  const fin=await o.sourceFin();assert.equal(fin.owner,m.owner,'CI_SOURCE_FIN_OWNER');
  const sourceFin=assertSourceFin({schema:'cp027-ci-source-fin-v1',cid:fin.cid,owner:m.owner,sourceSha:m.sourceSha,exited:true,exitCode:fin.exitCode,pid:0,poolsEnded:true,api:sourceApiFin.map(x=>({instance:x.instance,exitCode:x.exitCode,drained:x.events.some(e=>e.type==='development-api-stopped'&&e.drained===true&&e.budget?.pools===0&&e.budget?.leased===0)}))});
  await o.publish('source-positive-fin.json',sourceFin);report.sourceFin={status:'PASS',sha256:sha256(sourceFin),apiProcesses:2,postgresExitCode:0};
- const targetData=resolve(root,'target/data');report.copy=await copyClosedCiCluster({root,source:m.data,target:targetData,sourceFin,beforeFile:deadline});
+ const targetData=resolve(root,'target/data');let copyIndex;report.copy=await copyClosedCiCluster({root,source:m.data,target:targetData,sourceFin,beforeFile:deadline,onIndex:rows=>{copyIndex=copyIndexFromRows(rows)}});
  await o.publish('cold-copy.json',report.copy);const sourceSnapshot={...sourceClosure.snapshot,sourceStopped:sourceFin,copyIndexHash:sha256(report.copy)};
- await o.publish('source-snapshot.json',sourceSnapshot);deadline();await o.createTarget();
+ await o.publish('source-snapshot.json',sourceSnapshot);report.integrity=await exerciseCiIntegrity({root,target:targetData,sourceFin,index:copyIndex,sourceSha:m.sourceSha,deadline});deadline();await o.createTarget();
  const connection={...o.connection,port:15433};let ready=false,attempts=0;const until=performance.now()+45000;
  while(performance.now()<until){deadline();const pool=await createPgPool({...connection,max:1,connectionTimeoutMillis:1000,statement_timeout:1000});try{beforeQuery();attempts++;const r=await pool.query("SELECT (SELECT system_identifier::text FROM pg_control_system()) AS id,current_setting('data_directory') AS directory,inet_server_port() AS port");assert.deepEqual(r.rows[0],{id:o.systemIdentifier,directory:targetData,port:15433});ready=true;break}catch(error){if(!['ECONNREFUSED','57P03','57P01','08006'].includes(error.code))throw error}finally{await pool.end()}await new Promise(resolve=>setTimeout(resolve,200))}
  assert.equal(ready,true,'CI_TARGET_READY_NOT_PROVEN');report.targetStartup={status:'PASS',attempts,sameSystemIdentifier:true,distinctDataDirectory:true};
  const sourcePrivateMaterial=JSON.parse(await readFile(resolve(root,'material.json'),'utf8'));
- const target=await runRecoverySql({targetConnection:connection,expectedDataDirectory:targetData,expectedSystemIdentifier:o.systemIdentifier,sourceSnapshot,sourcePrivateMaterial,sourceSha:m.sourceSha,keepRuntime:true,beforeQuery,interruptReconciliation:true,onMaterial:value=>custody('target-material.json',value)});
+ const target=await runRecoverySql({targetConnection:connection,expectedDataDirectory:targetData,expectedSystemIdentifier:o.systemIdentifier,sourceSnapshot,sourcePrivateMaterial,sourceSha:m.sourceSha,keepRuntime:true,beforeQuery,interruptReconciliation:true,probeReadinessStates:true,onMaterial:value=>custody('target-material.json',value)});
  o.onTargetRuntime(target);report.recovery=target.report;
  let targetApis=await startDevelopmentApis(target.context,{privateRoot:root,prefix:'restored'});o.onTargetApis(targetApis);
  const measured={...targetApis,http(...args){deadline();o.httpBudget();return targetApis.http(...args)}};
@@ -46,6 +48,8 @@ export async function runCiRecovery(o){
  const session=await measured.http(2,'GET','/api/auth/session',{cookie:state.cookie});assert.ok(session.status===200&&session.body.authenticated===true,'CI_RESTART_SESSION_LOST');
  const restoredHistory=await measured.http(1,'GET',`/api/tenants/${A}/operations/${o.sourceHttp.privateState.receiptKey}`,{cookie:state.cookie});assert.equal(restoredHistory.status,200,'CI_RESTART_HISTORY_DENIED');assert.deepEqual(restoredHistory.body.result,o.sourceHttp.privateState.receiptResult,'CI_RESTART_HISTORY_CHANGED');
  report.apiRestart={status:'PASS',previousProcesses,processes:targetApis.summary().processes,previousPositiveFin:true,newNodeProcesses:2,sameDatabase:true,sameClockOwner:true,sameSession:true,historicalResultPreserved:true,additionalHttpCalls:4,scope:'two API restarted, not clock/controller/PostgreSQL restart'};
+ report.readinessNegatives=await exerciseCiReadinessNegatives({context:target.context,onMaterial:value=>custody('readiness-negatives-plan.json',value),deadline});
+ if(o.exerciseBrowser)report.browser=await o.exerciseBrowser({context:target.context,apis:targetApis,sourceHttp:o.sourceHttp,sourceSnapshot,privateRoot:root});assertRecoveredClock(target.context);
  report.restartedApiFin=await targetApis.stop();await target.close();assertRecoveredClock(target.context);
  report.rollback=await runDevelopmentRollbackProbes({targetConnection:{...connection,password:target.targetPrivateMaterial.rolePasswords.qa_bootstrap},expectedDataDirectory:targetData,expectedSystemIdentifier:o.systemIdentifier,targetPrivateMaterial:target.targetPrivateMaterial,beforeQuery,onMaterial:value=>custody('rollback-material.json',value)});
  report.unexecutedFaults=['clock/controller/PostgreSQL restart during reconciliation','unknown write debt across physical copy','full outer durable journal','135-scenario sequence','Oracle shared host/resource coexistence'];report.status='PASS';return report;

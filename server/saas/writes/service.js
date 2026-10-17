@@ -1,6 +1,6 @@
 import {randomUUID} from 'node:crypto';
 import {setTimeout as sleep} from 'node:timers/promises';
-import {serializable} from '../admission/transaction.js';
+import {serializable,CommitUncertainError} from '../admission/transaction.js';
 import {failure} from '../auth/validation.js';
 import {canonicalWrite,canonicalUuid,decimal,fitPage,validateResult} from './validation.js';
 import {readInventory as inventoryRows,readMovements as movementRows,readOperation} from '../repositories/inventory.js';
@@ -80,6 +80,7 @@ export function createWriteService({controlPool,authority,writerPools,readerPool
   try{const rows=await control('SELECT * FROM saas.claim_write_intent($1::uuid,$2::uuid,$3::text,$4::uuid,$5::uuid)',[canonical.tenantId,operationId,sid,a.generation,ownerId],deadline);claimed=rows[0]}
   catch(error){throw safeError(error)}
   if(!claimed)throw failure('OPERATION_PENDING',409);
+  let localCommitAcknowledged=false;
   try{
    let fresh=await authorize(a,sid,canonical.tenantId,action);
    if(!fresh.writerDescriptor)throw failure('TENANT_UNAVAILABLE');
@@ -101,6 +102,7 @@ export function createWriteService({controlPool,authority,writerPools,readerPool
      const row=result.rows[0];if(!row)throw failure('WRITE_RESULT_INVALID');validateResult(row.result);
      committing=true;await command('COMMIT');await checkpoint('write.afterTenantCommit',{tenantId:canonical.tenantId,operationId});budget();return row;
     }catch(error){
+     if(committing)throw new CommitUncertainError(error);
      if(!committing){
       try{await command('ROLLBACK')}
       catch{throw failure('WRITE_UNCERTAIN')}
@@ -108,6 +110,7 @@ export function createWriteService({controlPool,authority,writerPools,readerPool
      throw error;
     }
    },{deadline});
+   localCommitAcknowledged=true;
    const result=validateResult(local.result);
    if(result.operationId!==operationId||result.dataEpoch!==canonical.dataEpoch||typeof local.result_hash!=='string'||!/^[a-f0-9]{64}$/.test(local.result_hash))throw failure('WRITE_RESULT_INVALID');
    const delta=decimal(String(local.logical_delta));if(BigInt(delta)>32768n)throw failure('WRITE_RESULT_INVALID');
@@ -115,7 +118,7 @@ export function createWriteService({controlPool,authority,writerPools,readerPool
    await checkpoint('write.projected',{tenantId:canonical.tenantId,operationId});return result;
   }catch(error){
    try{await control('SELECT saas.mark_write_unknown($1::uuid,$2::uuid,$3::uuid) AS marked',[canonical.tenantId,operationId,ownerId])}catch{}
-   throw safeError(error);
+   throw safeError(localCommitAcknowledged?new CommitUncertainError(error):error);
   }
  }
  async function classifyWork({authorityContext,sid,operationId,deadline=now()+8000}){

@@ -46,7 +46,8 @@ async function indexTree(root,beforeFile){
  }
  await walk(root);return{rows,dirs,bytes,hash:sha256(JSON.stringify(rows))};
 }
-export async function copyClosedCiCluster({root,source,target,sourceFin,beforeFile=()=>{}}){
+export async function copyClosedCiCluster({root,source,target,sourceFin,beforeFile=()=>{},onIndex}){
+ if(onIndex!==undefined)assert.equal(typeof onIndex,'function','CI_COPY_INDEX_CALLBACK_REQUIRED');
  assert.equal(process.platform,'linux','CI_COPY_LINUX_FSYNC_REQUIRED');assertSourceFin(sourceFin);({root,source,target}=validateCopyLocations(root,source,target));
  assert.equal(await realpath(root),root,'CI_COPY_ROOT_ALIAS');
  const parent=dirname(target);try{await lstat(parent);assert.fail('CI_COPY_TARGET_ALREADY_EXISTS')}catch(e){if(e.code!=='ENOENT')throw e}
@@ -56,5 +57,6 @@ export async function copyClosedCiCluster({root,source,target,sourceFin,beforeFi
  for(const row of before.rows){beforeFile();const file=resolve(target,row.path);await copyFile(resolve(source,row.path),file,1);const h=await open(file,'r+');try{await h.sync()}finally{await h.close()}}
  for(const directory of before.dirs.slice().reverse())await syncDirectory(resolve(target,relative(source,directory)));await syncDirectory(parent);await syncDirectory(root);
  const after=await indexTree(source,beforeFile),copied=await indexTree(target,beforeFile);assert.deepEqual(after.rows,before.rows,'CI_COPY_SOURCE_CHANGED');assert.deepEqual(copied.rows,before.rows,'CI_COPY_VERIFICATION_FAILED');
+ await onIndex?.(before.rows.map(row=>({...row})));
  return{schema:'cp027-ci-cold-copy-v1',status:'PASS',sourceBeforeHash:before.hash,sourceAfterHash:after.hash,targetHash:copied.hash,verifiedFiles:before.rows.length,verifiedBytes:before.bytes,fileFsync:true,directoryFsync:true,sourceFinHash:sha256(JSON.stringify(sourceFin))};
 }

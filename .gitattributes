@@ -88,3 +88,8 @@ docs/evidence/cp016/** -text whitespace=trailing-space,space-before-tab,cr-at-eo
 .github/workflows/p1-l3-continuation.yml text eol=lf
 tests/qa/cp027/*.mjs text eol=lf
 docs/evidence/cp027/** -text
+
+# CP028 executable test text and immutable sanitized receipts
+tests/qa/cp028/*.mjs text eol=lf
+tests/integration/ci-browser*.mjs text eol=lf
+docs/evidence/cp028/** -text whitespace=trailing-space,space-before-tab,cr-at-eol

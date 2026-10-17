@@ -4,6 +4,7 @@ import {resolve} from 'node:path';
 import {randomUUID,createHash} from 'node:crypto';
 import {spawn} from 'node:child_process';
 import {request} from 'node:https';
+import {prepareCiUi} from './ci-browser-ui.mjs';
 
 const origin='https://app.mecanet.test:18443',A='11111111-1111-4111-8111-111111111111',B='22222222-2222-4222-8222-222222222222';
 const guard=(ok,code)=>{if(!ok)throw Error(code)};
@@ -13,9 +14,10 @@ const guard=(ok,code)=>{if(!ok)throw Error(code)};
 export async function startDevelopmentApis(context,{privateRoot='.qa-private/cp023-development',prefix='source'}={}){
  const root=resolve(privateRoot),children=[],events=[],ca=await readFile(resolve(root,'tls/ca.crt'),'utf8');const stop=createDevelopmentApiStop(children);
  const env=Object.fromEntries(Object.entries(process.env).filter(([k])=>['SYSTEMROOT','WINDIR','PATH','PATHEXT','TEMP','TMP','USERPROFILE','APPDATA','LOCALAPPDATA','COMSPEC','SYSTEMDRIVE','HOMEDRIVE','HOMEPATH'].includes(k.toUpperCase())));env.REAL_API='false';
- try{for(const [i,port]of [[1,18441],[2,18442]]){
+ const frontend=process.env.MECANET_CI_BROWSER==='true'?await prepareCiUi(root):null;
+ try{for(const [i,port]of [[1,frontend?18443:18441],[2,18442]]){
   const instance='api'+i,path=resolve(root,`${prefix}-${instance}.json`);let config;
-  try{config=JSON.parse(await readFile(path,'utf8'));guard(config.instance===instance&&config.generation===context.id.generation,'EXISTING_CONFIG_MISMATCH')}catch(e){if(e.code!=='ENOENT')throw e;config={schema:'cp023-development-api-v1',acknowledgement:'CP023_OWN_LOOPBACK_CLUSTER',instance,port,expectedPort:context.expectedPort??15432,origin,ownerId:randomUUID(),generation:context.id.generation,recovery:{runId:context.id.runId,manifestHash:context.hashes.manifest,mode:context.mode??'NORMAL'},sessionSecret:context.sessionSecret,control:context.connectionFor('saas_api','mecanet_control'),sessions:context.connectionFor('saas_session','mecanet_control'),issuer:context.connectionFor('saas_issuer','mecanet_control'),entries:context.entries,writerEntries:context.writerEntries,tls:{keyFile:resolve(root,'tls/server.key'),certFile:resolve(root,'tls/server.crt')}};await writeFile(path,JSON.stringify(config),{flag:'wx',mode:0o600})}
+  try{config=JSON.parse(await readFile(path,'utf8'));guard(config.instance===instance&&config.generation===context.id.generation,'EXISTING_CONFIG_MISMATCH')}catch(e){if(e.code!=='ENOENT')throw e;config={...(frontend&&i===1?{frontend}:{}),schema:'cp023-development-api-v1',acknowledgement:'CP023_OWN_LOOPBACK_CLUSTER',instance,port,expectedPort:context.expectedPort??15432,origin,ownerId:randomUUID(),generation:context.id.generation,recovery:{runId:context.id.runId,manifestHash:context.hashes.manifest,mode:context.mode??'NORMAL'},sessionSecret:context.sessionSecret,control:context.connectionFor('saas_api','mecanet_control'),sessions:context.connectionFor('saas_session','mecanet_control'),issuer:context.connectionFor('saas_issuer','mecanet_control'),entries:context.entries,writerEntries:context.writerEntries,tls:{keyFile:resolve(root,'tls/server.key'),certFile:resolve(root,'tls/server.crt')}};await writeFile(path,JSON.stringify(config),{flag:'wx',mode:0o600})}
   assert.deepEqual(config.control,context.connectionFor('saas_api','mecanet_control'));assert.deepEqual(config.sessions,context.connectionFor('saas_session','mecanet_control'));assert.deepEqual(config.issuer,context.connectionFor('saas_issuer','mecanet_control'));assert.equal(config.expectedPort??15432,context.expectedPort??15432);assert.equal(config.sessionSecret,context.sessionSecret);assert.equal(config.recovery.runId,context.id.runId);assert.equal(config.recovery.manifestHash,context.hashes.manifest);
   const h=await open(path,'r+');try{await h.sync()}finally{await h.close()}assert.deepEqual(JSON.parse(await readFile(path,'utf8')),config);
   const child=spawn(process.execPath,['tests/integration/development-api.mjs',path],{cwd:process.cwd(),env,windowsHide:true,stdio:['pipe','pipe','pipe']});const row={child,instance,port,events:[],stderr:''};children.push(row);
