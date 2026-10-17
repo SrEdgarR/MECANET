@@ -25,3 +25,11 @@ Imagen ARM verificada por Root en `../preflight/image-identity.json`: manifest `
 `runRecoverySql` usa las funciones SQL productivas y `createClock`; sus anclas de manifiesto/journal/proof son fixtures explícitos. La copia binaria y la custodia Linux reales no convierten esas anclas en validación del protocolo exterior completo. Interrupción de reconciliación, reinicio con deuda UNKNOWN, journal integral, rollback de artefactos, 135 escenarios, Compose y convivencia/capacidad Oracle permanecen NOT VERIFIED hasta sus pruebas propias.
 
 Las siete pruebas puras CP027 y las nueve regresiones previas de reloj verifican adaptadores/guardas en Windows x64, sin PostgreSQL o HTTP. RED de STOP conservado en `stop-red.json`; no es recuperación física. Los resultados CI deben vincularse por separado a commit y runner.
+
+## Delta progresivo posterior al primer recorrido ARM PASS
+
+El primer recorrido físico corresponde al commit `a3885965652b54865e183f263fa0a4e2aad2276f` y al run39077703743; su evidencia se conserva por separado. Este delta requiere su propio run/SHA antes de acreditar efectos reales:
+
+- `interruptReconciliation:true` sólo en la llamada CI de recuperación. Un adaptador descarta exactamente una respuesta del SELECT real del reloj **después** del ACK del driver. El reloj productivo conserva UNCERTAIN y no avanza. La observación siguiente reconcilia positivamente el mismo responsable, sin adquisición nueva ni regeneración. No es pérdida física de red ni reinicio de trabajador.
+- Después de continuidad, ambas API originales terminan positivamente; se arrancan dos procesos nuevos, con PIDs distintos de ambos anteriores, contra la misma base y reloj. Dos readiness, sesión existente y resultado histórico intacto añaden cuatro HTTP. PostgreSQL y el responsable del reloj no se reinician.
+- Incremento nominal: un SELECT y cuatro HTTP; 36HTTP nominales totales. Mismos600s/8192SQL-controlador/80HTTP; sin recursos simultáneos extra, misma clausura y cleanup. Tres pruebas nuevas de componentes verifican el adaptador y las identidades, sin SQL/HTTP real local. No contar como nuevas las siete pruebas del mínimo.

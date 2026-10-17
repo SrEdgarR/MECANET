@@ -1,0 +1,47 @@
+{
+  "schema": "cp027-arm-progression-component-quality-v1",
+  "status": "PASS",
+  "parentSha": "a3885965652b54865e183f263fa0a4e2aad2276f",
+  "workingTreeSourceHashes": {
+    "tests/integration/development-reconcile-probe.mjs": "800a53da512011cfc42d449547ff159a49ca1e3081d89d924edf104cf187c6bd",
+    "tests/integration/development-recovery.mjs": "d7e726a2dc568786cf13ee589f411edb56577e366e165ff6e4d50ddb82a914ae",
+    "tests/integration/ci-recovery.mjs": "ae4303b07594c209565eeaa1408ba8e7297712dc85ea2339052b9c0eaf30592a",
+    "tests/integration/ci-cold-copy.mjs": "f21f6147b3f4aa56bb832d1a85685bc03e02eb6f09391ebfeef3cb0f328ca8ad",
+    "tests/integration/p1-l3-postgres.mjs": "c7227618b42adaf61fd5c3d7688f7062ab288e51fc851718cebca504083f1487",
+    "tests/qa/cp027/ci-reconcile-interruption.test.mjs": "d25f6e376eed4db0fc6404ae64611b0785dcf00b804c64461428c01a4646b99d",
+    "tests/qa/cp027/ci-api-restart.test.mjs": "83ed34a39631bfebacafaf2be6620ae1b782dc2b8e6f3055620f85cecee6e7b2",
+    ".github/workflows/p1-l3-continuation.yml": "a952126acae38b18b0ef3010f088427432c472f0f399ba8d8dbb7a157cd28b4f"
+  },
+  "tests": {
+    "command": "node --test tests/qa/cp027/ci-reconcile-interruption.test.mjs tests/qa/cp027/ci-api-restart.test.mjs",
+    "newCases": 3,
+    "passed": 3,
+    "failed": 0,
+    "environment": "Windows x64 Node24.21.0; doubles, no SQL or HTTP",
+    "red": "Missing new probe/export observed before implementation; not a product PostgreSQL failure"
+  },
+  "existingRecoverySelfTest": {
+    "status": "PASS",
+    "denied": 13,
+    "sqlCommands": 0,
+    "networkUsed": false
+  },
+  "syntax": "PASS",
+  "diffCheck": "PASS",
+  "realArmProgression": "NOT VERIFIED pending separate CI run",
+  "bounds": {
+    "seconds": 600,
+    "parentSql": 8192,
+    "http": 80,
+    "nominalAddedSql": 1,
+    "nominalAddedHttp": 4,
+    "nominalTotalHttp": 36
+  },
+  "noEffects": {
+    "postgresStartedLocally": false,
+    "ssh": false,
+    "vps": false,
+    "pos": false,
+    "push": false
+  }
+}
