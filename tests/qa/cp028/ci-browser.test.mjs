@@ -1,7 +1,7 @@
 // Pure browser admission guards. Does not import Playwright or start Chromium.
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {ciBrowserRequestAllowed,ciBrowserLaunchArgs,oldCiSessionCookie,assertCiBrowserTerminal,ciBrowserElfArchitecture} from '../../integration/ci-browser.mjs';
+import {ciBrowserRequestAllowed,ciBrowserLaunchArgs,oldCiSessionCookie,assertCiBrowserTerminal,ciBrowserElfArchitecture,classifyCiBrowserLaunchError,ciBrowserLaunchOptions,ciBrowserMissingHandleCleanup} from '../../integration/ci-browser.mjs';
 const base='https://app.mecanet.test:18443',A='11111111-1111-4111-8111-111111111111';
 test('CI browser admits only its exact same-origin UI and existing L2 paths',()=>{
  for(const path of ['/login','/favicon.ico','/assets/saas-A_1.js',`/app/${A}/inventario`,`/api/tenants/${A}/inventory?limit=20`,`/api/tenants/${A}/operations/aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa`,`/api/tenants/${A}/products/aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa/stock-receipts`])assert.equal(ciBrowserRequestAllowed(base+path),true,path);
@@ -29,4 +29,15 @@ test('browser executable must have a native little-endian AArch64 ELF header',()
  assert.equal(ciBrowserElfArchitecture(header),'AArch64 ELF64 little-endian');
  const x64=Buffer.from(header);x64.writeUInt16LE(62,18);assert.throws(()=>ciBrowserElfArchitecture(x64),/CI_BROWSER_NATIVE_EXECUTABLE_REQUIRED/);
  assert.throws(()=>ciBrowserElfArchitecture(Buffer.alloc(20)));assert.throws(()=>ciBrowserElfArchitecture(header.subarray(0,19)));
+});
+test('launch diagnostics retain closed positive facts without browser logs or credentials',()=>{
+ const e=Object.assign(Error('PRIVATE_COOKIE /private/path [pid=1234] Failed to move to new namespace: Operation not permitted; No usable sandbox!'),{name:'Error',code:'EACCES'}),r=classifyCiBrowserLaunchError(e);
+ assert.equal(r.facts.namespaceDenied,true);assert.equal(r.facts.noUsableSandbox,true);assert.equal(r.facts.appArmorMentioned,false);assert.equal(r.code,'EACCES');assert.deepEqual(r.browserPids,[1234]);assert.match(r.messageSha256,/^[a-f0-9]{64}$/);assert.equal(JSON.stringify(r).includes('PRIVATE_COOKIE'),false);assert.equal(JSON.stringify(r).includes('/private/path'),false);
+ assert.equal(classifyCiBrowserLaunchError(Error('error while loading shared libraries: PRIVATE')).facts.missingLibrary,true);
+ const unknown=classifyCiBrowserLaunchError({message:'PRIVATE_UNKNOWN',code:'PRIVATE_CODE',name:'PRIVATE_TYPE'});assert.equal(unknown.code,null);assert.equal(unknown.name,'UNKNOWN');assert.equal(Object.values(unknown.facts).some(Boolean),false);
+ assert.equal(ciBrowserMissingHandleCleanup(false),'NO PROCESS REQUESTED');assert.equal(ciBrowserMissingHandleCleanup(true),'NOT VERIFIED no returned browser handle');
+});
+test('preflight and real browser share sandbox, SPKI and environment configuration',()=>{
+ const options=ciBrowserLaunchOptions('/synthetic/private','A'.repeat(43)+'=',{PATH:'/synthetic/path',PRIVATE_TOKEN:'never'});
+ assert.equal(options.chromiumSandbox,true);assert.equal(options.ignoreHTTPSErrors,false);assert.equal(options.headless,true);assert.equal(options.timeout,15000);assert.equal(options.env.PRIVATE_TOKEN,undefined);assert.equal(options.env.HOME,'/synthetic/private');assert.equal(options.args.includes('--no-sandbox'),false);assert.equal(options.serviceWorkers,'block');assert.equal(options.acceptDownloads,false);
 });

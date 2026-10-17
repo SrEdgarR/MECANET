@@ -94,6 +94,8 @@ jobs:
           npm ci --prefix tests/integration/browser-toolchain --ignore-scripts --no-audit --no-fund
           npm audit --prefix tests/integration/browser-toolchain --audit-level=low
           node tests/integration/browser-toolchain/node_modules/playwright/cli.js install --with-deps chromium
+      - name: Prove sandboxed native Chromium startup before any PostgreSQL resource
+        run: node tests/integration/ci-browser.mjs --preflight
       - name: Prove actual native ARM64 runtime and standard runner tooling
         run: |
           test "$(uname -m)" = "aarch64"

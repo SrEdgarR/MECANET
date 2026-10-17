@@ -2,8 +2,9 @@
 // No POS, proxy, external origin, API permission or production credential.
 import assert from 'node:assert/strict';
 import {X509Certificate,createHash,randomUUID} from 'node:crypto';
-import {readFile,mkdir,lstat,realpath,open} from 'node:fs/promises';
+import {readFile,mkdir,lstat,realpath,open,writeFile} from 'node:fs/promises';
 import {resolve} from 'node:path';
+import {pathToFileURL} from 'node:url';
 const origin='https://app.mecanet.test:18443',A='11111111-1111-4111-8111-111111111111',B='22222222-2222-4222-8222-222222222222';
 const hash=bytes=>createHash('sha256').update(bytes).digest('hex');
 const uuid=/^[a-f0-9]{8}-[a-f0-9]{4}-[1-8][a-f0-9]{3}-[89ab][a-f0-9]{3}-[a-f0-9]{12}$/;
@@ -17,6 +18,38 @@ export function ciBrowserRequestAllowed(value){
 export function ciBrowserLaunchArgs(spki){
  assert.match(spki??'',/^[A-Za-z0-9+/]{43}=$/,'CI_BROWSER_SPKI_REQUIRED');
  return['--ignore-certificate-errors-spki-list='+spki,'--host-resolver-rules=MAP app.mecanet.test 127.0.0.1, EXCLUDE localhost','--no-proxy-server','--disable-quic'];
+}
+export function ciBrowserLaunchOptions(base,spki,sourceEnvironment=process.env){
+ const env=Object.fromEntries(['PATH','LD_LIBRARY_PATH','DISPLAY','XDG_RUNTIME_DIR'].filter(k=>sourceEnvironment[k]!==undefined).map(k=>[k,sourceEnvironment[k]]));Object.assign(env,{HOME:base,TMPDIR:resolve(base,'tmp'),TMP:resolve(base,'tmp'),TEMP:resolve(base,'tmp')});
+ return{headless:true,timeout:15000,chromiumSandbox:true,args:ciBrowserLaunchArgs(spki),env,ignoreHTTPSErrors:false,acceptDownloads:false,downloadsPath:resolve(base,'downloads'),serviceWorkers:'block',permissions:[],locale:'es-DO',timezoneId:'UTC',colorScheme:'light',reducedMotion:'reduce',viewport:{width:1440,height:1000}};
+}
+export function classifyCiBrowserLaunchError(error){
+ const message=String(error?.message??'');
+ const facts={noUsableSandbox:/No usable sandbox|SUID sandbox helper.*not configured correctly|Running as root without --no-sandbox/i.test(message),namespaceDenied:/Failed to move to new namespace|Failed to unshare|unshare.*Operation not permitted|user namespace.*(?:denied|not permitted)/i.test(message),appArmorMentioned:/apparmor|userns_create/i.test(message),missingLibrary:/error while loading shared libraries|cannot open shared object file/i.test(message),permissionDenied:/EACCES|Permission denied/i.test(message),pidOrThreadLimit:/pthread_create.*Resource temporarily unavailable|Cannot fork|fork: Resource temporarily unavailable|clone.*EAGAIN/i.test(message),executableMissing:/Executable doesn't exist|ENOENT/i.test(message),displayUnavailable:/Missing X server|The platform failed to initialize|ozone_platform_x11/i.test(message),processCrash:/Received signal|signal=SIG(?:SEGV|ABRT|TRAP|SYS)|FATAL:/i.test(message),timedOut:error?.name==='TimeoutError'||/Timeout.*exceeded/i.test(message)};
+ return{schema:'cp028-browser-launch-diagnostic-v1',name:['Error','TimeoutError'].includes(error?.name)?error.name:'UNKNOWN',code:['EACCES','ENOENT','EAGAIN','ENOMEM','ECONNRESET','ETIMEDOUT'].includes(error?.code)?error.code:null,messageBytes:Buffer.byteLength(message),messageSha256:hash(message),facts,browserPids:[...new Set([...message.matchAll(/\[pid=(\d{1,9})\]/g)].map(m=>Number(m[1])))].slice(0,4),rawMessagePublished:false};
+}
+export function ciBrowserMissingHandleCleanup(launchRequested){return launchRequested?'NOT VERIFIED no returned browser handle':'NO PROCESS REQUESTED'}
+async function rejectedBrowserProcesses(diagnostic){
+ const pids=diagnostic?.browserPids??[];if(!pids.length)return{status:'NOT VERIFIED',scope:'No returned handle and no PID in closed launch diagnostic',pids:[]};const rows=[];
+ for(const pid of pids){let state='UNKNOWN';try{await lstat('/proc/'+pid);state='PRESENT_NOT_ADOPTED';}catch(error){if(error.code==='ENOENT')state='ABSENT';}rows.push({pid,state});}
+ return{status:rows.every(x=>x.state==='ABSENT')?'PASS observed PIDs absent':'NOT VERIFIED',scope:'Read-only /proc observation of error-reported PIDs, not acknowledged browser/context close or process-tree FIN',pids:rows};
+}
+async function browserHostFacts(){
+ const result={uid:process.getuid(),architecture:process.arch,kernelPolicyChanged:false};
+ for(const [key,path]of [['unprivilegedUsernsClone','/proc/sys/kernel/unprivileged_userns_clone'],['appArmorRestrictUnprivilegedUserns','/proc/sys/kernel/apparmor_restrict_unprivileged_userns'],['maximumUserNamespaces','/proc/sys/user/max_user_namespaces']])try{const text=(await readFile(path,'utf8')).trim();result[key]=/^\d{1,12}$/.test(text)?Number(text):'NOT VERIFIED'}catch{result[key]='NOT VERIFIED'}
+ try{result.appArmorProfile=(await readFile('/proc/self/attr/current','utf8')).trim()==='unconfined'?'UNCONFINED':'CONFINED_OR_OTHER'}catch{result.appArmorProfile='NOT VERIFIED'}return result;
+}
+export async function preflightCiBrowser(){
+ assert.ok(process.platform==='linux'&&process.arch==='arm64'&&process.env.GITHUB_ACTIONS==='true'&&process.env.RUNNER_ENVIRONMENT==='github-hosted'&&process.env.GITHUB_REPOSITORY==='SrEdgarR/MECANET','CI_BROWSER_PREFLIGHT_RUNNER_REQUIRED');
+ const base=resolve('.qa-private/cp028-browser-preflight');await mkdir(base,{mode:0o700});for(const name of ['profile','tmp','downloads'])await mkdir(resolve(base,name),{mode:0o700});
+ const report={schema:'cp028-ci-browser-preflight-v1',status:'FAIL',sourceSha:process.env.GITHUB_SHA,stage:'EXECUTABLE',host:await browserHostFacts(),sandbox:true,networkRequests:0,postgresCreated:false,cleanup:'NOT VERIFIED'};let context,browser;
+ try{
+  const {chromium}=await import('./browser-toolchain/node_modules/playwright/index.mjs');const executable=await open(chromium.executablePath(),'r');try{const header=Buffer.alloc(20);assert.equal((await executable.read(header,0,20,0)).bytesRead,20);report.executable={architecture:ciBrowserElfArchitecture(header),headerSha256:hash(header)};}finally{await executable.close();}
+  report.stage='BROWSER_LAUNCH';const syntheticPin=hash(Buffer.from('CP028 browser startup preflight only; no TLS connection'));context=await chromium.launchPersistentContext(resolve(base,'profile'),ciBrowserLaunchOptions(base,Buffer.from(syntheticPin,'hex').toString('base64')));browser=context.browser();assert.ok(browser,'CI_BROWSER_PROCESS_REQUIRED');
+  await context.route('**/*',async route=>{report.networkRequests++;await route.abort('blockedbyclient')});report.stage='ABOUT_BLANK';const page=context.pages()[0]??await context.newPage();assert.equal(await page.evaluate(()=>1+1),2);assert.equal(page.url(),'about:blank');assert.equal(report.networkRequests,0,'CI_BROWSER_PREFLIGHT_NETWORK_FORBIDDEN');report.status='PASS';
+ }catch(error){report.launchDiagnostic=classifyCiBrowserLaunchError(error);report.failure='CI_BROWSER_PREFLIGHT_FAILED';}
+ finally{try{if(!context&&!browser){report.cleanup=ciBrowserMissingHandleCleanup(report.stage==='BROWSER_LAUNCH');report.rejectedLaunchProcesses=await rejectedBrowserProcesses(report.launchDiagnostic);}else{const errors=[];try{await context?.close();}catch{errors.push('CONTEXT');}try{await browser?.close();}catch{errors.push('BROWSER');}assert.ok(!errors.length&&(!browser||!browser.isConnected()),'CI_BROWSER_CLOSE_UNCERTAIN');report.cleanup='PASS acknowledged context/browser close';}assert.equal(report.networkRequests,0,'CI_BROWSER_PREFLIGHT_NETWORK_FORBIDDEN');}catch(error){report.status='FAIL';if(error.message==='CI_BROWSER_PREFLIGHT_NETWORK_FORBIDDEN')report.failure=error.message;else{report.cleanup='UNKNOWN';report.failure='CI_BROWSER_CLOSE_UNCERTAIN';}}}
+ await writeFile(resolve(base,'report.json'),JSON.stringify(report)+'\n',{flag:'wx',mode:0o600});console.log(JSON.stringify(report));return report;
 }
 export function oldCiSessionCookie(header){
  assert.ok(typeof header==='string'&&header.length>0&&header.length<=4096,'CI_BROWSER_OLD_SESSION_REQUIRED');
@@ -48,15 +81,14 @@ export async function exerciseCiBrowser({context,apis,sourceHttp,sourceSnapshot,
  const check=()=>{deadline();assert.ok(performance.now()-started<120000,'CI_BROWSER_LOCAL_DEADLINE');if(fatal)throw Error(fatal);};
  const record=name=>report.checks.push({name,status:'PASS'});
  const step=async(name,work)=>{report.stage=name;check();const result=await work();check();return result;};
- const close=()=>ending??=(async()=>{const errors=[];try{if(browserContext)await browserContext.close();}catch{errors.push('CONTEXT');}try{if(browser)await browser.close();}catch{errors.push('BROWSER');}if(errors.length||browser?.isConnected())report.cleanup='UNKNOWN';assert.ok(!errors.length&&(!browser||!browser.isConnected()),'CI_BROWSER_CLOSE_UNCERTAIN');report.cleanup='PASS acknowledged context/browser close';})();
+ const close=()=>ending??=(async()=>{if(!browserContext&&!browser){report.cleanup=ciBrowserMissingHandleCleanup(report.stage==='BROWSER_LAUNCH');report.rejectedLaunchProcesses=await rejectedBrowserProcesses(report.launchDiagnostic);return;}const errors=[];try{if(browserContext)await browserContext.close();}catch{errors.push('CONTEXT');}try{if(browser)await browser.close();}catch{errors.push('BROWSER');}if(errors.length||browser?.isConnected())report.cleanup='UNKNOWN';assert.ok(!errors.length&&(!browser||!browser.isConnected()),'CI_BROWSER_CLOSE_UNCERTAIN');report.cleanup='PASS acknowledged context/browser close';})();
  try{
   check();
   const base=resolve(root,'browser');await mkdir(base,{mode:0o700});for(const name of ['profile','tmp','downloads'])await mkdir(resolve(base,name),{mode:0o700});
   const cert=new X509Certificate(await readFile(resolve(root,'tls/server.crt'))),spki=createHash('sha256').update(cert.publicKey.export({format:'der',type:'spki'})).digest('base64');
   const {chromium}=await import('./browser-toolchain/node_modules/playwright/index.mjs');
   const executable=await open(chromium.executablePath(),'r');try{const header=Buffer.alloc(20);assert.equal((await executable.read(header,0,20,0)).bytesRead,20,'CI_BROWSER_NATIVE_EXECUTABLE_REQUIRED');report.browserExecutable={architecture:ciBrowserElfArchitecture(header),headerSha256:hash(header)};}finally{await executable.close();}
-  const environment=Object.fromEntries(['PATH','LD_LIBRARY_PATH','DISPLAY','XDG_RUNTIME_DIR'].filter(k=>process.env[k]!==undefined).map(k=>[k,process.env[k]]));Object.assign(environment,{HOME:base,TMPDIR:resolve(base,'tmp'),TMP:resolve(base,'tmp'),TEMP:resolve(base,'tmp')});
-  check();browserContext=await chromium.launchPersistentContext(resolve(base,'profile'),{headless:true,timeout:15000,chromiumSandbox:true,args:ciBrowserLaunchArgs(spki),env:environment,ignoreHTTPSErrors:false,acceptDownloads:false,downloadsPath:resolve(base,'downloads'),serviceWorkers:'block',permissions:[],locale:'es-DO',timezoneId:'UTC',colorScheme:'light',reducedMotion:'reduce',viewport:{width:1440,height:1000}});browser=browserContext.browser();assert.ok(browser,'CI_BROWSER_PROCESS_REQUIRED');check();
+  report.host=await browserHostFacts();report.stage='BROWSER_LAUNCH';check();browserContext=await chromium.launchPersistentContext(resolve(base,'profile'),ciBrowserLaunchOptions(base,spki));browser=browserContext.browser();assert.ok(browser,'CI_BROWSER_PROCESS_REQUIRED');check();
   browserContext.setDefaultTimeout(7000);browserContext.setDefaultNavigationTimeout(15000);watchdog=setTimeout(()=>{fail('CI_BROWSER_LOCAL_DEADLINE');void close().catch(()=>{});},Math.max(1,120000-(performance.now()-started)));
   browserContext.on('request',request=>{let done;const settled=new Promise(resolve=>{done=resolve;});activeRequests.set(request,{settled,done});});
   const finishRequest=request=>{const active=activeRequests.get(request);if(active){activeRequests.delete(request);active.done();}};
@@ -84,7 +116,8 @@ export async function exerciseCiBrowser({context,apis,sourceHttp,sourceSnapshot,
   const navigateInsideApp=path=>page.evaluate(value=>{history.pushState(null,'',value);window.dispatchEvent(new PopStateEvent('popstate'));},path);
   await step('B_BLOCKED',async()=>{await browserContext.clearCookies();await navigateInsideApp('/login');await page.getByRole('heading',{name:'Iniciar sesión',exact:true}).waitFor();await login('b@qa.invalid');await page.getByText('No tienes empresas disponibles.',{exact:true}).waitFor();assert.equal(await page.locator(`a[href*="/app/${B}/"]`).count(),0);await navigateInsideApp(`/app/${B}/inventario`);await page.getByRole('heading',{name:'Acceso no disponible',exact:true}).waitFor();assert.equal(await page.getByRole('heading',{name:'Existencias',exact:true}).count(),0);report.identitySwitch='Harness clears only its browser cookies; no server logout or session-revocation claim';});record('blocked-company-hidden-and-deep-link-denied-in-browser');
   await step('REQUEST_COMPLETION',async()=>{let timer;try{await Promise.race([(async()=>{while(activeRequests.size){await Promise.all([...activeRequests.values()].map(r=>r.settled));check();}})(),new Promise((_,reject)=>{timer=setTimeout(()=>reject(Error('CI_BROWSER_REQUESTS_UNFINISHED')),Math.max(1,Math.min(7000,120000-(performance.now()-started))));})]);}finally{clearTimeout(timer);}await Promise.all(responseTasks);check();});completed=true;
- }catch(error){report.failure=/^[A-Z][A-Z0-9_]{2,80}$/.test(error.message??'')?error.message:fatal??'CI_BROWSER_STEP_FAILED';}
+ }catch(error){if(report.stage==='BROWSER_LAUNCH')report.launchDiagnostic=classifyCiBrowserLaunchError(error);report.failure=/^[A-Z][A-Z0-9_]{2,80}$/.test(error.message??'')?error.message:fatal??'CI_BROWSER_STEP_FAILED';}
  finally{try{await close();await Promise.all(responseTasks);if(completed){check();assertCiBrowserTerminal(report,{fatal,activeRequests:activeRequests.size,assetCount:seenAssets.size});report.assets=[...seenAssets].map(([url,sha256])=>({url,sha256}));report.status='PASS';}}catch(error){report.status='FAIL';report.failure??=/^[A-Z][A-Z0-9_]{2,80}$/.test(error.message??'')?error.message:fatal??'CI_BROWSER_FINALIZATION_FAILED';if(!ending||browser?.isConnected())report.cleanup='UNKNOWN';}finally{clearTimeout(watchdog);report.elapsedMs=Math.round(performance.now()-started);}}
  if(report.status!=='PASS')throw Object.assign(Error('CI_BROWSER_NOT_VERIFIED'),{ciBrowserReport:report});return report;
 }
+if(process.argv[1]&&import.meta.url===pathToFileURL(resolve(process.argv[1])).href){assert.ok(process.argv.length===3&&process.argv[2]==='--preflight','CI_BROWSER_EXPLICIT_PREFLIGHT_REQUIRED');preflightCiBrowser().then(report=>{if(report.status!=='PASS')process.exitCode=1;}).catch(error=>{console.error(JSON.stringify({schema:'cp028-ci-browser-preflight-v1',status:'FAIL',failure:'CI_BROWSER_PREFLIGHT_FAILED',launchDiagnostic:classifyCiBrowserLaunchError(error)}));process.exitCode=1;});}
