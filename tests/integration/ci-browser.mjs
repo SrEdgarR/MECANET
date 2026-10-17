@@ -8,6 +8,9 @@ import {pathToFileURL} from 'node:url';
 const origin='https://app.mecanet.test:18443',A='11111111-1111-4111-8111-111111111111',B='22222222-2222-4222-8222-222222222222';
 const hash=bytes=>createHash('sha256').update(bytes).digest('hex');
 const uuid=/^[a-f0-9]{8}-[a-f0-9]{4}-[1-8][a-f0-9]{3}-[89ab][a-f0-9]{3}-[a-f0-9]{12}$/;
+export function validateCiBrowserRuntime(platform,architecture,env){
+ const required={'arm64-recovery':'arm64','x64-browser-recovery':'x64'}[env.MECANET_CI_PROFILE];assert.ok(required&&platform==='linux'&&architecture===required&&env.GITHUB_ACTIONS==='true'&&env.RUNNER_ENVIRONMENT==='github-hosted'&&env.GITHUB_REPOSITORY==='SrEdgarR/MECANET','CI_BROWSER_NATIVE_PROFILE_REQUIRED');return required;
+}
 export function ciBrowserRequestAllowed(value){
  try{const url=new URL(value);return url.origin===origin&&(!url.username&&!url.password)&&(
   ['/','/login','/cuenta/empresas','/saas.html','/favicon.ico'].includes(url.pathname)||/^\/assets\/saas-[A-Za-z0-9_-]+\.(?:js|css)$/.test(url.pathname)||
@@ -40,11 +43,11 @@ async function browserHostFacts(){
  try{result.appArmorProfile=(await readFile('/proc/self/attr/current','utf8')).trim()==='unconfined'?'UNCONFINED':'CONFINED_OR_OTHER'}catch{result.appArmorProfile='NOT VERIFIED'}return result;
 }
 export async function preflightCiBrowser(){
- assert.ok(process.platform==='linux'&&process.arch==='arm64'&&process.env.GITHUB_ACTIONS==='true'&&process.env.RUNNER_ENVIRONMENT==='github-hosted'&&process.env.GITHUB_REPOSITORY==='SrEdgarR/MECANET','CI_BROWSER_PREFLIGHT_RUNNER_REQUIRED');
+ validateCiBrowserRuntime(process.platform,process.arch,process.env);
  const base=resolve('.qa-private/cp028-browser-preflight');await mkdir(base,{mode:0o700});for(const name of ['profile','tmp','downloads'])await mkdir(resolve(base,name),{mode:0o700});
  const report={schema:'cp028-ci-browser-preflight-v1',status:'FAIL',sourceSha:process.env.GITHUB_SHA,stage:'EXECUTABLE',host:await browserHostFacts(),sandbox:true,networkRequests:0,postgresCreated:false,cleanup:'NOT VERIFIED'};let context,browser;
  try{
-  const {chromium}=await import('./browser-toolchain/node_modules/playwright/index.mjs');const executable=await open(chromium.executablePath(),'r');try{const header=Buffer.alloc(20);assert.equal((await executable.read(header,0,20,0)).bytesRead,20);report.executable={architecture:ciBrowserElfArchitecture(header),headerSha256:hash(header)};}finally{await executable.close();}
+  const {chromium}=await import('./browser-toolchain/node_modules/playwright/index.mjs');const executable=await open(chromium.executablePath(),'r');try{const header=Buffer.alloc(20);assert.equal((await executable.read(header,0,20,0)).bytesRead,20);report.executable={architecture:ciBrowserElfArchitecture(header,process.arch),headerSha256:hash(header)};}finally{await executable.close();}
   report.stage='BROWSER_LAUNCH';const syntheticPin=hash(Buffer.from('CP028 browser startup preflight only; no TLS connection'));context=await chromium.launchPersistentContext(resolve(base,'profile'),ciBrowserLaunchOptions(base,Buffer.from(syntheticPin,'hex').toString('base64')));browser=context.browser();assert.ok(browser,'CI_BROWSER_PROCESS_REQUIRED');
   await context.route('**/*',async route=>{report.networkRequests++;await route.abort('blockedbyclient')});report.stage='ABOUT_BLANK';const page=context.pages()[0]??await context.newPage();assert.equal(await page.evaluate(()=>1+1),2);assert.equal(page.url(),'about:blank');assert.equal(report.networkRequests,0,'CI_BROWSER_PREFLIGHT_NETWORK_FORBIDDEN');report.status='PASS';
  }catch(error){report.launchDiagnostic=classifyCiBrowserLaunchError(error);report.failure='CI_BROWSER_PREFLIGHT_FAILED';}
@@ -57,9 +60,9 @@ export function oldCiSessionCookie(header){
  const value=values[0].slice('__Host-mecanet-session='.length);assert.ok(value&&value.length<=512&&!/[\s;\r\n]/.test(value),'CI_BROWSER_OLD_SESSION_REQUIRED');
  return{name:'__Host-mecanet-session',value,url:origin,secure:true,httpOnly:true,sameSite:'Lax'};
 }
-export function ciBrowserElfArchitecture(header){
- assert.ok(Buffer.isBuffer(header)&&header.length===20&&header.subarray(0,6).equals(Buffer.from([0x7f,0x45,0x4c,0x46,2,1]))&&header.readUInt16LE(18)===183,'CI_BROWSER_NATIVE_EXECUTABLE_REQUIRED');
- return'AArch64 ELF64 little-endian';
+export function ciBrowserElfArchitecture(header,architecture='arm64'){
+ const machine={arm64:183,x64:62}[architecture];assert.ok(machine&&Buffer.isBuffer(header)&&header.length===20&&header.subarray(0,6).equals(Buffer.from([0x7f,0x45,0x4c,0x46,2,1]))&&header.readUInt16LE(18)===machine,'CI_BROWSER_NATIVE_EXECUTABLE_REQUIRED');
+ return architecture==='arm64'?'AArch64 ELF64 little-endian':'x86-64 ELF64 little-endian';
 }
 export function assertCiBrowserTerminal(report,{fatal,activeRequests,assetCount}){
  if(fatal)throw Error(fatal);assert.equal(activeRequests,0,'CI_BROWSER_REQUESTS_UNFINISHED');
@@ -68,14 +71,14 @@ export function assertCiBrowserTerminal(report,{fatal,activeRequests,assetCount}
  assert.equal(assetCount,3,'CI_BROWSER_ALL_THREE_ASSETS_REQUIRED');
 }
 export async function exerciseCiBrowser({context,apis,sourceHttp,sourceSnapshot,privateRoot,chargeHttp,deadline}){
- assert.equal(process.platform,'linux','CI_BROWSER_LINUX_REQUIRED');assert.equal(process.arch,'arm64','CI_BROWSER_NATIVE_ARM64_REQUIRED');assert.equal(process.env.GITHUB_ACTIONS,'true','CI_BROWSER_EPHEMERAL_RUNNER_REQUIRED');
+ validateCiBrowserRuntime(process.platform,process.arch,process.env);
  assert.equal(typeof chargeHttp,'function');assert.equal(typeof deadline,'function');assert.equal(typeof context?.query,'function');
  const root=resolve(privateRoot);assert.equal(root,resolve('.qa-private/cp023-ci'),'CI_BROWSER_OWN_ROOT_REQUIRED');assert.equal(await realpath(root),root);const owned=await lstat(root);assert.ok(owned.isDirectory()&&owned.uid===process.getuid()&&(owned.mode&0o077)===0,'CI_BROWSER_OWN_ROOT_REQUIRED');
  assert.ok(context.id.generation!==sourceSnapshot.generation,'CI_BROWSER_RECOVERED_GENERATION_REQUIRED');assert.ok(uuid.test(sourceHttp?.privateState?.receiptKey??''));
  const processes=apis.summary().processes;assert.equal(processes.length,2);assert.ok(processes.some(p=>p.instance==='api1'&&p.port===18443)&&processes.some(p=>p.instance==='api2'&&p.port===18442),'CI_BROWSER_SAME_ORIGIN_API1_REQUIRED');
  const expected=JSON.parse(await readFile('.qa-private/saas-toolchain/last-result.json','utf8'));assert.equal(expected.result,'PASS');assert.equal(expected.assets.length,3);
  const expectedAssets=new Map(expected.assets.map(a=>['/'+a.path.slice('client/dist-saas/'.length),a.sha256]));
- const report={schema:'cp028-ci-browser-v1',status:'FAIL',environment:'GitHub-hosted Linux arm64 / real Chromium / same-origin API1 / recovered PostgreSQL18.6',sourceSha:process.env.GITHUB_SHA,oracleAcceptance:'NOT VERIFIED',httpCalls:0,httpMaximum:44,stage:'PREFLIGHT',checks:[],consoleErrors:0,pageErrors:0,requestFailures:0,blockedExternal:0,assets:[],inputFingerprint:expected.inputFingerprintSha256,cleanup:'NOT VERIFIED'};
+ const report={schema:'cp028-ci-browser-v1',status:'FAIL',environment:'GitHub-hosted Linux '+process.arch+' / real Chromium / same-origin API1 / recovered PostgreSQL18.6',sourceSha:process.env.GITHUB_SHA,oracleAcceptance:'NOT VERIFIED',httpCalls:0,httpMaximum:44,stage:'PREFLIGHT',checks:[],consoleErrors:0,pageErrors:0,requestFailures:0,blockedExternal:0,assets:[],inputFingerprint:expected.inputFingerprintSha256,cleanup:'NOT VERIFIED'};
  let browserContext,browser,ending,watchdog,fatal=null,completed=false;const started=performance.now(),responseTasks=[],seenAssets=new Map(),activeRequests=new Map();
  const fail=code=>{fatal??=code;};
  const check=()=>{deadline();assert.ok(performance.now()-started<120000,'CI_BROWSER_LOCAL_DEADLINE');if(fatal)throw Error(fatal);};
@@ -87,7 +90,7 @@ export async function exerciseCiBrowser({context,apis,sourceHttp,sourceSnapshot,
   const base=resolve(root,'browser');await mkdir(base,{mode:0o700});for(const name of ['profile','tmp','downloads'])await mkdir(resolve(base,name),{mode:0o700});
   const cert=new X509Certificate(await readFile(resolve(root,'tls/server.crt'))),spki=createHash('sha256').update(cert.publicKey.export({format:'der',type:'spki'})).digest('base64');
   const {chromium}=await import('./browser-toolchain/node_modules/playwright/index.mjs');
-  const executable=await open(chromium.executablePath(),'r');try{const header=Buffer.alloc(20);assert.equal((await executable.read(header,0,20,0)).bytesRead,20,'CI_BROWSER_NATIVE_EXECUTABLE_REQUIRED');report.browserExecutable={architecture:ciBrowserElfArchitecture(header),headerSha256:hash(header)};}finally{await executable.close();}
+  const executable=await open(chromium.executablePath(),'r');try{const header=Buffer.alloc(20);assert.equal((await executable.read(header,0,20,0)).bytesRead,20,'CI_BROWSER_NATIVE_EXECUTABLE_REQUIRED');report.browserExecutable={architecture:ciBrowserElfArchitecture(header,process.arch),headerSha256:hash(header)};}finally{await executable.close();}
   report.host=await browserHostFacts();report.stage='BROWSER_LAUNCH';check();browserContext=await chromium.launchPersistentContext(resolve(base,'profile'),ciBrowserLaunchOptions(base,spki));browser=browserContext.browser();assert.ok(browser,'CI_BROWSER_PROCESS_REQUIRED');check();
   browserContext.setDefaultTimeout(7000);browserContext.setDefaultNavigationTimeout(15000);watchdog=setTimeout(()=>{fail('CI_BROWSER_LOCAL_DEADLINE');void close().catch(()=>{});},Math.max(1,120000-(performance.now()-started)));
   browserContext.on('request',request=>{let done;const settled=new Promise(resolve=>{done=resolve;});activeRequests.set(request,{settled,done});});

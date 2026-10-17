@@ -5,6 +5,7 @@ import {randomUUID,createHash} from 'node:crypto';
 import {spawn} from 'node:child_process';
 import {request} from 'node:https';
 import {prepareCiUi} from './ci-browser-ui.mjs';
+import {validateCiBrowserRuntime} from './ci-browser.mjs';
 
 const origin='https://app.mecanet.test:18443',A='11111111-1111-4111-8111-111111111111',B='22222222-2222-4222-8222-222222222222';
 const guard=(ok,code)=>{if(!ok)throw Error(code)};
@@ -14,7 +15,7 @@ const guard=(ok,code)=>{if(!ok)throw Error(code)};
 export async function startDevelopmentApis(context,{privateRoot='.qa-private/cp023-development',prefix='source'}={}){
  const root=resolve(privateRoot),children=[],events=[],ca=await readFile(resolve(root,'tls/ca.crt'),'utf8');const stop=createDevelopmentApiStop(children);
  const env=Object.fromEntries(Object.entries(process.env).filter(([k])=>['SYSTEMROOT','WINDIR','PATH','PATHEXT','TEMP','TMP','USERPROFILE','APPDATA','LOCALAPPDATA','COMSPEC','SYSTEMDRIVE','HOMEDRIVE','HOMEPATH'].includes(k.toUpperCase())));env.REAL_API='false';
- if(process.env.MECANET_CI_BROWSER==='true')assert.ok(process.platform==='linux'&&process.arch==='arm64'&&process.env.GITHUB_ACTIONS==='true'&&process.env.GITHUB_REPOSITORY==='SrEdgarR/MECANET','CI_BROWSER_ENVIRONMENT_REQUIRED');
+ if(process.env.MECANET_CI_BROWSER==='true')validateCiBrowserRuntime(process.platform,process.arch,process.env);
  const frontend=process.env.MECANET_CI_BROWSER==='true'?await prepareCiUi(root):null;
  try{for(const [i,port]of [[1,frontend?18443:18441],[2,18442]]){
   const instance='api'+i,path=resolve(root,`${prefix}-${instance}.json`);let config;

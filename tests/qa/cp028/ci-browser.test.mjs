@@ -1,7 +1,7 @@
 // Pure browser admission guards. Does not import Playwright or start Chromium.
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {ciBrowserRequestAllowed,ciBrowserLaunchArgs,oldCiSessionCookie,assertCiBrowserTerminal,ciBrowserElfArchitecture,classifyCiBrowserLaunchError,ciBrowserLaunchOptions,ciBrowserMissingHandleCleanup} from '../../integration/ci-browser.mjs';
+import {ciBrowserRequestAllowed,ciBrowserLaunchArgs,oldCiSessionCookie,assertCiBrowserTerminal,ciBrowserElfArchitecture,classifyCiBrowserLaunchError,ciBrowserLaunchOptions,ciBrowserMissingHandleCleanup,validateCiBrowserRuntime} from '../../integration/ci-browser.mjs';
 const base='https://app.mecanet.test:18443',A='11111111-1111-4111-8111-111111111111';
 test('CI browser admits only its exact same-origin UI and existing L2 paths',()=>{
  for(const path of ['/login','/favicon.ico','/assets/saas-A_1.js',`/app/${A}/inventario`,`/api/tenants/${A}/inventory?limit=20`,`/api/tenants/${A}/operations/aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa`,`/api/tenants/${A}/products/aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa/stock-receipts`])assert.equal(ciBrowserRequestAllowed(base+path),true,path);
@@ -40,4 +40,10 @@ test('launch diagnostics retain closed positive facts without browser logs or cr
 test('preflight and real browser share sandbox, SPKI and environment configuration',()=>{
  const options=ciBrowserLaunchOptions('/synthetic/private','A'.repeat(43)+'=',{PATH:'/synthetic/path',PRIVATE_TOKEN:'never'});
  assert.equal(options.chromiumSandbox,true);assert.equal(options.ignoreHTTPSErrors,false);assert.equal(options.headless,true);assert.equal(options.timeout,15000);assert.equal(options.env.PRIVATE_TOKEN,undefined);assert.equal(options.env.HOME,'/synthetic/private');assert.equal(options.args.includes('--no-sandbox'),false);assert.equal(options.serviceWorkers,'block');assert.equal(options.acceptDownloads,false);
+});
+test('browser x64 fallback remains an explicit native profile and cannot impersonate ARM64',()=>{
+ const env={GITHUB_ACTIONS:'true',RUNNER_ENVIRONMENT:'github-hosted',GITHUB_REPOSITORY:'SrEdgarR/MECANET',MECANET_CI_PROFILE:'x64-browser-recovery'};
+ assert.equal(validateCiBrowserRuntime('linux','x64',env),'x64');assert.equal(validateCiBrowserRuntime('linux','arm64',{...env,MECANET_CI_PROFILE:'arm64-recovery'}),'arm64');
+ for(const [platform,arch,vars]of [['linux','arm64',env],['win32','x64',env],['linux','x64',{...env,MECANET_CI_PROFILE:'auto'}],['linux','x64',{...env,RUNNER_ENVIRONMENT:'self-hosted'}]])assert.throws(()=>validateCiBrowserRuntime(platform,arch,vars));
+ const header=Buffer.alloc(20);header.set([0x7f,0x45,0x4c,0x46,2,1]);header.writeUInt16LE(62,18);assert.equal(ciBrowserElfArchitecture(header,'x64'),'x86-64 ELF64 little-endian');assert.throws(()=>ciBrowserElfArchitecture(header,'arm64'));assert.throws(()=>ciBrowserElfArchitecture(header,'auto'));
 });
