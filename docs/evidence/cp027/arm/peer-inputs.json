@@ -1,0 +1,30 @@
+{
+  "schema": "cp027-arm-peer-inputs-v1",
+  "date": "2026-10-17",
+  "baseSha": "a8ff0a3575e2baf43792a9a15b527893947abc29",
+  "provenance": "LOCAL",
+  "scope": "Focal review plus pure Node guards; no PG/Docker/ARM runtime executed by reviewer",
+  "sourceHashes": {
+    ".github/workflows/p1-l3-continuation.yml": "60636fd7f9aace64c33425c441e34012a64cef41ec2016848be7ab9fcbabb27f",
+    "tests/integration/ci-postgres.mjs": "7d621e2dcef4ae49fe71fb793aea483ab0483679e90b2e8a02e33087c46a8f00",
+    "tests/integration/development-recovery.mjs": "3474f641967b14c04ad0088cb9797b8611cdc02b4bc352bf1fc585184e75316d",
+    "tests/integration/development-faults.mjs": "b0d6122acb910e291a18acb91cdb18f57f4986b89b408417a9f78a6ae358a26e",
+    "tests/integration/development-http.mjs": "827f49f23365b9d036bb184210444786cfe36e1e109adc631298a6bf4223386c",
+    "tests/integration/ci-recovery.mjs": "6d99577995fb8f7e34f869550ce251d01a3da7549d6d5810b208de93e70417c7",
+    "tests/integration/ci-cold-copy.mjs": "c8caecac67b495d886413cb33202306ed694ba892cb376a69c3d17c104030df9",
+    "tests/qa/cp027/ci-api-stop.test.mjs": "a968d1cc64c3fa6ae500cbec505c58efb633eab77a1604f9027019300a7d1a3f",
+    "tests/qa/cp027/ci-arm-profile.test.mjs": "1ef44d1ad842eca922592b427506058b69ddc2a8741c612ccb502f156bbfb24a",
+    "tests/qa/cp027/ci-cold-copy.test.mjs": "ac76216b450545c67441f2c348ef410f24560cd6b0e4b9efe88285f1812d77b3",
+    "tests/qa/cp027/ci-target-clock.test.mjs": "59390786a79fe8bce3ca5bf9cd22e1eac509ed723091cdabe73e2611b005779a"
+  },
+  "required": [
+    {
+      "id": "CI-ARM-R1",
+      "status": "CLOSED",
+      "fix": "assertRecoveredClock after target APIs/pools drain",
+      "test": "a clock fault observed during target drain prevents a portable PASS"
+    }
+  ],
+  "openRequired": 0,
+  "peerSha256": "36a95e2d55be8f34f90745525821b4b4e4a00b1a0d6cbae78b99508eb7c8f96d"
+}

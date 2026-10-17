@@ -1,0 +1,12 @@
+{
+  "schema": "cp027-ci-stop-red-v1",
+  "status": "RED_REPRODUCED",
+  "sourceSha": "a8ff0a3575e2baf43792a9a15b527893947abc29",
+  "sourcePath": "tests/integration/development-http.mjs",
+  "first": "API_END_UNCERTAIN",
+  "second": "resolved undefined",
+  "stopCalls": 1,
+  "realProcesses": 0,
+  "sqlCommands": 0,
+  "networkUsed": false
+}

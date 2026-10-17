@@ -1,0 +1,59 @@
+{
+  "schema": "cp027-github-runner-boundary-v1",
+  "atUtc": "2026-10-17T22:59:56.462144+00:00",
+  "authenticatedAs": "SrEdgarR",
+  "repository": "SrEdgarR/MECANET",
+  "visibility": "public",
+  "private": false,
+  "actionsPermissions": {
+    "enabled": true,
+    "allowed_actions": "all",
+    "sha_pinning_required": false
+  },
+  "developSha": "86985fe7589032f202ebf0cb057a9b1384217151",
+  "existingCiHead": "a8ff0a3575e2baf43792a9a15b527893947abc29",
+  "hooksCount": 0,
+  "workflows": [
+    {
+      "id": 383488316,
+      "name": "P1 verification",
+      "path": ".github/workflows/p1-l1-verify.yml",
+      "state": "active"
+    },
+    {
+      "id": 385901457,
+      "name": "P1-L3 isolated continuation transport",
+      "path": ".github/workflows/p1-l3-continuation.yml",
+      "state": "active"
+    },
+    {
+      "id": 385778290,
+      "name": "P1-L3 development PostgreSQL and HTTP",
+      "path": ".github/workflows/p1-l3-development.yml",
+      "state": "active"
+    }
+  ],
+  "headCheckApps": [
+    "github-actions"
+  ],
+  "statusContexts": [],
+  "headDeploymentsCount": 0,
+  "billing": {
+    "classification": "NOT APPLICABLE private-minute allowance for this public standard runner",
+    "runnerLabel": "ubuntu-24.04-arm",
+    "costBasis": "GitHub Docs says standard public runners free/unlimited; repo public verified; no larger runner/cache/upload-artifact used",
+    "publishedPublicSpecification": {
+      "cpu": 4,
+      "ramGiB": 16,
+      "diskGiB": 14
+    },
+    "actualRunner": "NOT VERIFIED before dispatch",
+    "source": "https://docs.github.com/en/actions/reference/runners/github-hosted-runners"
+  },
+  "scope": "CP027 human direct permits existing L3 verification CI adaptation; no merge/POS/Oracle acceptance",
+  "limitations": [
+    "Known repo hooks/workflow/check/status/deploy mechanisms only, not universal external-account configuration proof",
+    "Runner scheduling and actual architecture/tooling require job preflight",
+    "No private/quota/billing setting changed"
+  ]
+}

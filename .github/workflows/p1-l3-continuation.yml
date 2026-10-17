@@ -61,12 +61,13 @@ jobs:
         run: sudo -n python3 -B -X utf8 tests/qa/cp019/continuation-admission-linux.test.py
 
   development-clock:
-    name: PostgreSQL real clock contention and two API (not ARM64 acceptance)
-    if: github.repository == 'SrEdgarR/MECANET' && github.event_name == 'push' && github.ref == 'refs/heads/codex/verify-p1-l3-continuation'
-    runs-on: ubuntu-24.04
+    name: ARM64 portable recovery, clock and two API (not Oracle acceptance)
+    if: github.repository == 'SrEdgarR/MECANET' && github.event_name == 'push' && github.event.repository.private == false && github.ref == 'refs/heads/codex/verify-p1-l3-continuation'
+    runs-on: ubuntu-24.04-arm
     timeout-minutes: 15
     env:
       CI: 'true'
+      MECANET_CI_PROFILE: 'arm64-recovery'
       REAL_API: 'false'
       VITEST_REAL_API: 'false'
     steps:
@@ -85,17 +86,25 @@ jobs:
           test "$(node --version)" = "v24.21.0"
           test "$(npm --version)" = "11.9.0"
           npm ci --prefix server/saas --ignore-scripts --no-audit --no-fund
+      - name: Prove actual native ARM64 runtime and standard runner tooling
+        run: |
+          test "$(uname -m)" = "aarch64"
+          test "$(node -p process.arch)" = "arm64"
+          test "$(docker version --format '{{.Server.Os}}/{{.Server.Arch}}')" = "linux/arm64"
+          openssl version
+          node -e 'const os=require("node:os"); console.log(JSON.stringify({sourceSha:process.env.GITHUB_SHA,runner:process.env.RUNNER_NAME,architecture:process.arch,platform:process.platform,kernel:os.release(),cpus:os.cpus().length,ramBytes:os.totalmem(),profile:process.env.MECANET_CI_PROFILE,secretsPrinted:false}))'
       - name: Prove generic clock and CI boundary guards
         run: |
           node --check tests/integration/ci-postgres.mjs
           node --check tests/integration/development-clock-probe.mjs
           node tests/integration/ci-postgres.mjs --self-test
           node tests/integration/p1-l3-postgres.mjs --self-test
+          node --test tests/qa/cp027/ci-cold-copy.test.mjs tests/qa/cp027/ci-arm-profile.test.mjs
           node --test tests/qa/admission-clock.unit.test.js tests/qa/cp023/clock-regression.test.mjs tests/qa/cp023/clock-contention.test.mjs tests/qa/cp023/clock-driver.test.mjs
-      - name: Run existing bounded PostgreSQL TLS and two API harness
+      - name: Run bounded ARM64 source, recovery and two API continuation
         id: integration
         continue-on-error: true
-        run: node tests/integration/ci-postgres.mjs run
+        run: node tests/integration/ci-postgres.mjs run-arm-recovery
       - name: Require SQL development result
         if: always()
         run: node tests/integration/ci-postgres.mjs assert-sql
@@ -105,6 +114,6 @@ jobs:
       - name: Confirm positive own PostgreSQL cleanup
         if: always()
         run: node tests/integration/ci-postgres.mjs cleanup
-      - name: Require real contention, same clock continuation and cleanup PASS
+      - name: Require portable recovery, selective reopening, clock continuation and cleanup PASS
         if: always()
         run: node tests/integration/ci-postgres.mjs assert-pass

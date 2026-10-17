@@ -1,0 +1,22 @@
+{
+  "schema": "cp027-postgres-arm64-identity-v1",
+  "atUtc": "2026-10-17T22:58:25.161234+00:00",
+  "classification": "DETECTED registry manifests/config by exact digest; execution NOT VERIFIED",
+  "source": "Docker Official Image library/postgres registry-1.docker.io",
+  "previousImageDigest": "sha256:885953109528ad3dfc90362b1a6f50a78620b5315be19f187753d267e484dc5b",
+  "previousDigestType": "platform manifest, not multiarch index",
+  "previousConfigDigest": "sha256:29754c7520f4b9654cf8ff98e19ac73b88e255c3a53f6236ebe9d52249bb6df3",
+  "resolvedTag": "18.6",
+  "tagIndexDigest": "sha256:74935e72241653ca55e0414067e6d8763aceb8a810eb51b452253ec3dcfc4336",
+  "image": "postgres@sha256:a63b24165ea0eacced7585766d790ac08bbaefe10a1841f87783a4505d29a69c",
+  "platform": {
+    "architecture": "arm64",
+    "os": "linux",
+    "variant": "v8"
+  },
+  "platformManifestDigest": "sha256:a63b24165ea0eacced7585766d790ac08bbaefe10a1841f87783a4505d29a69c",
+  "configDigest": "sha256:0336095afa072c685c93021dcfa4a5fee9cbce25ecd65121b58226c787afc0d0",
+  "version": "18.6-1.pgdg13+2",
+  "allFetchedDigestsVerified": true,
+  "tokenRecorded": false
+}

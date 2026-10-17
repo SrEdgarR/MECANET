@@ -1,0 +1,28 @@
+{
+  "schema": "cp027-root-ci-final-delta-review-v1",
+  "atUtc": "2026-10-17T23:05:34.696285+00:00",
+  "status": "PASS focal source review; physical ARM NOT VERIFIED before CI",
+  "changes": [
+    {
+      "path": "tests/integration/development-http.mjs",
+      "sha256": "0e32a8bbba3144d868e8b4dad210417ca071610550c814f41187cd8d0968deb2",
+      "scope": "runtime provenance label only"
+    },
+    {
+      "path": "tests/integration/p1-l3-postgres.mjs",
+      "sha256": "f27380934cc995d0139e85f8d870288a07b6422d94a721ecf513be8aa942b3ba",
+      "scope": "runtime provenance label only"
+    },
+    {
+      "path": "tests/integration/ci-postgres.mjs",
+      "sha256": "af2c523229f9c1e755a027079e06ba42a6bc5c730379026acdedd85756da54a4",
+      "scope": "deadline guards around own Docker CREATE/START, CID captured before post-create budget rejection; cleanup remains outside"
+    }
+  ],
+  "requiredClosed": [
+    "same600s window guards before/after source/target create/start",
+    "actual runtime metadata stops implying x64-only"
+  ],
+  "basePeer": "arm/peer-inputs.json preserves exact earlier review hashes; delta explicitly bound here",
+  "scope": "No policy/limits/credentials/SQL007/Oracle changes"
+}

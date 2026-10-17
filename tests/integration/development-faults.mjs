@@ -9,11 +9,11 @@ import {sha256} from '../../server/saas/recovery/protocol.js';
 import {sourceSnapshotSql} from '../qa/cp019/sql-probe.mjs';
 const A='11111111-1111-4111-8111-111111111111';
 const samePath=(a,b)=>resolve(a).replaceAll('\\','/').toLowerCase()===resolve(b).replaceAll('\\','/').toLowerCase();
-export async function runDevelopmentRollbackProbes({targetConnection,expectedDataDirectory,expectedSystemIdentifier,targetPrivateMaterial,operationMaterial,onMaterial,onStage=()=>{}}={}){
+export async function runDevelopmentRollbackProbes({targetConnection,expectedDataDirectory,expectedSystemIdentifier,targetPrivateMaterial,operationMaterial,onMaterial,beforeQuery,onStage=()=>{}}={}){
  const c=validateConnection(targetConnection),m=targetPrivateMaterial;assert.ok(c.host==='127.0.0.1'&&c.port===15433&&c.user==='qa_bootstrap'&&c.database==='postgres'&&c.ssl.servername==='localhost','OWN_RESTORED_TARGET_REQUIRED');assert.equal(c.password,m?.rolePasswords?.qa_bootstrap,'CHOSEN_ADMIN_REQUIRED');assert.equal(m.schema,'cp023-private-development-recovery-v1');assert.match(expectedSystemIdentifier??'',/^[0-9]{10,24}$/);const within=relative(resolve('.qa-private'),resolve(expectedDataDirectory));assert.ok(isAbsolute(expectedDataDirectory)&&within&&!within.startsWith('..')&&!isAbsolute(within)&&/cp023/i.test(within)&&samePath(await realpath(expectedDataDirectory),expectedDataDirectory),'OWN_TARGET_DIRECTORY_REQUIRED');assert.equal(typeof onMaterial,'function','CUSTODIED_OPERATIONS_REQUIRED');
  const pools=new Map(),checks=[],fingerprints=[],started=performance.now();let commands=0,stage='preflight';
  const pool=async(db,role='qa_bootstrap')=>{const key=db+':'+role;if(!pools.has(key))pools.set(key,await createPgPool({...c,database:db,user:role,password:m.rolePasswords[role],max:1,connectionTimeoutMillis:2000,statement_timeout:2000,lock_timeout:500,idle_in_transaction_session_timeout:5000,application_name:'mecanet-cp023-development-rollback'}));return pools.get(key)};
- const query=async(client,text,values=[],cleanup=false)=>{if(!cleanup)assert.ok(commands<80&&performance.now()-started<30000,'DEVELOPMENT_ROLLBACK_BUDGET');commands++;return client.query({text,values,query_timeout:2000})};
+ const query=async(client,text,values=[],cleanup=false)=>{if(!cleanup)assert.ok(commands<80&&performance.now()-started<30000,'DEVELOPMENT_ROLLBACK_BUDGET');beforeQuery?.();commands++;return client.query({text,values,query_timeout:2000})};
  const one=async(db,text,values=[])=>{const r=await query(await pool(db),text,values);assert.equal(r.rows.length,1);return r.rows[0]};
  const fingerprint=async db=>one(db,sourceSnapshotSql(db));
  const record=(name,extra={})=>{checks.push({name,status:'PASS',...extra});onStage({name,status:'PASS'})};
