@@ -76,6 +76,26 @@ function OperationStatus({ operation, message, busy, onLookup, onReplay }) {
   </section>;
 }
 
+function OperationLookup({ busy, onLookup }) {
+  const [reference, setReference] = useState(''); const [error, setError] = useState(''); const [checking, setChecking] = useState(false); const input = useRef(null);
+  async function submit(event) {
+    event.preventDefault(); if (busy || checking) return;
+    const id = reference.trim().toLowerCase();
+    if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/.test(id)) { setError('Introduce la referencia completa de la operación.'); input.current?.focus(); return; }
+    setError(''); setChecking(true);
+    try { await onLookup(id); } finally { setChecking(false); }
+  }
+  return <section className="inventory-panel" aria-labelledby="lookup-heading"><h2 id="lookup-heading">Consultar una operación</h2>
+    <p className="muted small">Consulta una referencia original de esta empresa. Esta acción no vuelve a enviar la operación.</p>
+    <form onSubmit={submit} noValidate aria-busy={busy || checking} className="inventory-form">
+      <div className="field"><label htmlFor="operation-lookup">Referencia de operación</label>
+        <input ref={input} id="operation-lookup" value={reference} onChange={event => setReference(event.target.value)} maxLength={36} autoComplete="off" spellCheck="false" disabled={busy || checking} aria-invalid={Boolean(error)} aria-describedby={error ? 'operation-lookup-error' : undefined} />
+        {error && <p id="operation-lookup-error" className="field-error">{error}</p>}</div>
+      <button type="submit" disabled={busy || checking}>{checking ? 'Consultando referencia…' : 'Consultar referencia'}</button>
+    </form>
+  </section>;
+}
+
 export function Inventory({ state, onCreate, onReceive, onCompanies, onRefresh, onNext, onMovements, onMovementNext, onOperationsNext, onLookup, onReplay }) {
   const [selected, setSelected] = useState(null); const trigger = useRef(null);
   const permits = action => state.tenant.permissions.includes(action);
@@ -88,6 +108,7 @@ export function Inventory({ state, onCreate, onReceive, onCompanies, onRefresh, 
       <div className="button-row"><button type="button" onClick={onCompanies}>Cambiar empresa</button><button type="button" onClick={onRefresh} disabled={state.writeBusy}>Actualizar inventario</button></div>
     </div>
     <OperationStatus operation={state.operation} message={state.operationMessage} busy={state.writeBusy} onLookup={onLookup} onReplay={onReplay} />
+    <OperationLookup busy={state.writeBusy} onLookup={onLookup} />
     {state.operations.filter(item => item.operationId !== state.operation?.operationId && ['PENDING', 'UNKNOWN'].includes(item.state)).length > 0
       && <section className="inventory-panel" aria-labelledby="pending-heading"><h2 id="pending-heading">Operaciones por comprobar</h2><ul className="operation-list">
         {state.operations.filter(item => item.operationId !== state.operation?.operationId && ['PENDING', 'UNKNOWN'].includes(item.state)).map(item => <li key={item.operationId}><span>{labels[item.state]}</span><span className="operation-reference">{item.operationId}</span><button type="button" disabled={state.writeBusy} onClick={() => onLookup(item.operationId)}>Consultar esta operación</button></li>)}

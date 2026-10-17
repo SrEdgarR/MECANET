@@ -1,0 +1,13 @@
+✔ CI browser admits only its exact same-origin UI and existing L2 paths (0.9846ms)
+✔ Chromium certificate exception is limited to the supplied SPKI and resolver is loopback (0.6703ms)
+✔ old source cookie stays private, exact and host-only without a global TLS bypass (0.6012ms)
+✔ terminal browser evidence rejects late events after acknowledged cleanup (1.0837ms)
+✔ browser executable must have a native little-endian AArch64 ELF header (0.3341ms)
+ℹ tests 5
+ℹ suites 0
+ℹ pass 5
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 82.2015

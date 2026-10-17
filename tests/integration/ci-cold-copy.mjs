@@ -23,6 +23,10 @@ export function assertPortableRecovery(r){
  for(const key of ['historical','oldSessionInvalid','oldEpochRejected','companyBBlocked'])assert.equal(r.continuation[key],true,'CI_CONTINUITY_'+key.toUpperCase());return true;
 }
 export function assertRecoveredClock(context){assert.ok(typeof context?.clockFailure==='function'&&context.clockFailure()===null,'CI_TARGET_CLOCK_FAILED');return true}
+export function captureCiTargetClockDiagnostic(context){
+ const failure=context.clockFailure(),guard=failure?.guard;
+ return{schema:'cp028-ci-target-clock-diagnostic-v1',failure:failure===null?null:{sqlState:/^[0-9A-Z]{5}$/.test(failure?.sqlState??'')?failure.sqlState:null,guard:['ADMISSION_BUSY','COMMIT_UNCERTAIN','ROLLBACK_UNCERTAIN','CLOCK_OWNER_CONFLICT','CLOCK_VERSION_CLOSED','DEVELOPMENT_CLOCK_STATE_UNSAFE','DEVELOPMENT_CLOCK_DIAGNOSTIC_LIMIT','DEVELOPMENT_CLOCK_RESULT_REQUIRED'].includes(guard)?guard:'DEVELOPMENT_RECOVERY_FAILED'},driver:context.clockDriver.diagnostic()};
+}
 export function assertApiRestart(fin,previous,next){
  const identities=rows=>{assert.deepEqual(rows?.map(x=>x.instance).sort(),['api1','api2'],'CI_API_RESTART_IDENTITIES');assert.ok(rows.every(x=>Number.isSafeInteger(x.pid)&&x.pid>0)&&new Set(rows.map(x=>x.pid)).size===2,'CI_API_RESTART_IDENTITIES')};identities(previous);identities(next);
  assert.deepEqual(fin?.map(x=>x.instance).sort(),['api1','api2'],'CI_API_RESTART_POSITIVE_FIN');

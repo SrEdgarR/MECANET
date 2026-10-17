@@ -68,6 +68,7 @@ jobs:
     env:
       CI: 'true'
       MECANET_CI_PROFILE: 'arm64-recovery'
+      MECANET_CI_BROWSER: 'true'
       REAL_API: 'false'
       VITEST_REAL_API: 'false'
     steps:
@@ -86,6 +87,13 @@ jobs:
           test "$(node --version)" = "v24.21.0"
           test "$(npm --version)" = "11.9.0"
           npm ci --prefix server/saas --ignore-scripts --no-audit --no-fund
+      - name: Build and audit the exact final SaaS UI in the isolated SC008 lane
+        run: node scripts/ci/saas-toolchain.mjs verify
+      - name: Install the locked isolated browser and its Linux dependencies
+        run: |
+          npm ci --prefix tests/integration/browser-toolchain --ignore-scripts --no-audit --no-fund
+          npm audit --prefix tests/integration/browser-toolchain --audit-level=low
+          node tests/integration/browser-toolchain/node_modules/playwright/cli.js install --with-deps chromium
       - name: Prove actual native ARM64 runtime and standard runner tooling
         run: |
           test "$(uname -m)" = "aarch64"
@@ -100,7 +108,7 @@ jobs:
           node tests/integration/ci-postgres.mjs --self-test
           node tests/integration/p1-l3-postgres.mjs --self-test
           node --test tests/qa/cp027/ci-cold-copy.test.mjs tests/qa/cp027/ci-arm-profile.test.mjs tests/qa/cp027/ci-api-stop.test.mjs tests/qa/cp027/ci-target-clock.test.mjs tests/qa/cp027/ci-reconcile-interruption.test.mjs tests/qa/cp027/ci-api-restart.test.mjs
-          node --test tests/qa/cp028/ci-integrity.test.mjs tests/qa/cp028/ci-readiness-negatives.test.mjs tests/qa/cp028/tenant-commit-boundary.test.mjs tests/qa/cp028/ci-browser-ui.test.mjs
+          node --test tests/qa/cp028/ci-integrity.test.mjs tests/qa/cp028/ci-readiness-negatives.test.mjs tests/qa/cp028/tenant-commit-boundary.test.mjs tests/qa/cp028/ci-browser-ui.test.mjs tests/qa/cp028/ci-target-pool-boundary.test.mjs tests/qa/cp028/ci-browser.test.mjs
           node --test tests/qa/admission-clock.unit.test.js tests/qa/cp023/clock-regression.test.mjs tests/qa/cp023/clock-contention.test.mjs tests/qa/cp023/clock-driver.test.mjs
       - name: Run bounded ARM64 source, recovery and two API continuation
         id: integration

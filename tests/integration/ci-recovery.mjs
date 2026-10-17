@@ -11,11 +11,11 @@ import {startDevelopmentApis,exerciseDevelopmentHttp} from './development-http.m
 import {runDevelopmentRollbackProbes} from './development-faults.mjs';
 import {exerciseCiReadinessNegatives} from './ci-readiness-negatives.mjs';
 import {copyIndexFromRows,exerciseCiIntegrity} from './ci-integrity.mjs';
-import {copyClosedCiCluster,assertSourceFin,assertRecoveredClock,assertApiRestart} from './ci-cold-copy.mjs';
+import {copyClosedCiCluster,assertSourceFin,assertRecoveredClock,assertApiRestart,captureCiTargetClockDiagnostic} from './ci-cold-copy.mjs';
 const A='11111111-1111-4111-8111-111111111111',B='22222222-2222-4222-8222-222222222222';
 export async function runCiRecovery(o){
  const {root,marker:m,integration,apis,beforeQuery,deadline}=o;
- const report={schema:'cp027-ci-portable-recovery-v1',status:'FAIL',environment:process.platform+' '+process.arch,oracleAcceptance:'NOT VERIFIED',outerProtocol:'NOT VERIFIED; SQL fixture proof anchors, not outer L3 journal/manifest'};
+ const report={schema:'cp027-ci-portable-recovery-v1',status:'FAIL',environment:process.platform+' '+process.arch,oracleAcceptance:'NOT VERIFIED',outerProtocol:'NOT VERIFIED; SQL fixture proof anchors, not outer L3 journal/manifest'};let targetContext;
  try{
  async function custody(name,value){deadline();const receipt=await publishDevelopmentMaterial(resolve(root,name),value);const h=await open(root,'r');try{await h.sync()}finally{await h.close()}return{...receipt,directoryDurability:'LINUX_DIRECTORY_FSYNC_ACK'}}
  const sourceApiFin=await apis.stop();assert.ok(sourceApiFin?.length===2,'CI_SOURCE_API_FIN_REQUIRED');
@@ -33,7 +33,7 @@ export async function runCiRecovery(o){
  assert.equal(ready,true,'CI_TARGET_READY_NOT_PROVEN');report.targetStartup={status:'PASS',attempts,sameSystemIdentifier:true,distinctDataDirectory:true};
  const sourcePrivateMaterial=JSON.parse(await readFile(resolve(root,'material.json'),'utf8'));
  const target=await runRecoverySql({targetConnection:connection,expectedDataDirectory:targetData,expectedSystemIdentifier:o.systemIdentifier,sourceSnapshot,sourcePrivateMaterial,sourceSha:m.sourceSha,keepRuntime:true,beforeQuery,interruptReconciliation:true,probeReadinessStates:true,onMaterial:value=>custody('target-material.json',value)});
- o.onTargetRuntime(target);report.recovery=target.report;
+ targetContext=target.context;o.onTargetRuntime(target);report.recovery=target.report;
  let targetApis=await startDevelopmentApis(target.context,{privateRoot:root,prefix:'restored'});o.onTargetApis(targetApis);
  const measured={...targetApis,http(...args){deadline();o.httpBudget();return targetApis.http(...args)}};
  const targetHttp=await exerciseDevelopmentHttp(target.context,measured);report.targetHttp=targetHttp.report;
@@ -53,5 +53,5 @@ export async function runCiRecovery(o){
  report.restartedApiFin=await targetApis.stop();await target.close();assertRecoveredClock(target.context);
  report.rollback=await runDevelopmentRollbackProbes({targetConnection:{...connection,password:target.targetPrivateMaterial.rolePasswords.qa_bootstrap},expectedDataDirectory:targetData,expectedSystemIdentifier:o.systemIdentifier,targetPrivateMaterial:target.targetPrivateMaterial,beforeQuery,onMaterial:value=>custody('rollback-material.json',value)});
  report.unexecutedFaults=['clock/controller/PostgreSQL restart during reconciliation','unknown write debt across physical copy','full outer durable journal','135-scenario sequence','Oracle shared host/resource coexistence'];report.status='PASS';return report;
- }catch(error){if(error.developmentApiStartupCleanup)report.apiRestartStartupCleanup=error.developmentApiStartupCleanup;error.portableRecoveryReport=report;throw error}
+ }catch(error){if(targetContext)report.targetClockDiagnostic=captureCiTargetClockDiagnostic(targetContext);if(error.readinessReport)report.readinessNegatives=error.readinessReport;if(error.ciBrowserReport)report.browser=error.ciBrowserReport;if(error.developmentApiStartupCleanup)report.apiRestartStartupCleanup=error.developmentApiStartupCleanup;error.portableRecoveryReport=report;throw error}
 }

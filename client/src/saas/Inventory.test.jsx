@@ -13,6 +13,38 @@ function ui(state = {}, props = {}) {
 }
 
 describe('square private inventory screen', () => {
+  it('looks up a manually entered original reference without creating or replaying an operation', async () => {
+    const actions = ui(); const user = userEvent.setup(); const id = 'CCCCCCCC-CCCC-4CCC-8CCC-CCCCCCCCCCCC';
+    await user.type(screen.getByLabelText('Referencia de operación'), id);
+    await user.click(screen.getByRole('button', { name: 'Consultar referencia' }));
+    expect(actions.onLookup).toHaveBeenCalledWith(id.toLowerCase());
+    expect(actions.onCreate).not.toHaveBeenCalled(); expect(actions.onReceive).not.toHaveBeenCalled(); expect(actions.onReplay).not.toHaveBeenCalled();
+  });
+  it('associates an invalid manual reference with its input and does not dispatch a lookup', async () => {
+    const actions = ui(); const user = userEvent.setup();
+    await user.type(screen.getByLabelText('Referencia de operación'), 'referencia incompleta');
+    await user.click(screen.getByRole('button', { name: 'Consultar referencia' }));
+    expect(screen.getByLabelText('Referencia de operación')).toHaveFocus();
+    expect(screen.getByLabelText('Referencia de operación')).toHaveAttribute('aria-invalid', 'true');
+    expect(screen.getByLabelText('Referencia de operación')).toHaveAccessibleDescription('Introduce la referencia completa de la operación.');
+    expect(actions.onLookup).not.toHaveBeenCalled();
+  });
+  it('does not dispatch a manual lookup while an existing write is still busy', () => {
+    const actions = ui({ writeBusy: true });
+    expect(screen.getByLabelText('Referencia de operación')).toBeDisabled();
+    expect(screen.getByRole('button', { name: 'Consultar referencia' })).toBeDisabled();
+    expect(actions.onLookup).not.toHaveBeenCalled();
+  });
+  it('waits for the selected lookup and preserves its reference without duplicate dispatch', async () => {
+    let finish; const done = new Promise(resolve => { finish = resolve; });
+    const actions = ui({}, { onLookup: vi.fn(() => done) }); const user = userEvent.setup();
+    await user.type(screen.getByLabelText('Referencia de operación'), 'cccccccc-cccc-4ccc-8ccc-cccccccccccc');
+    await user.click(screen.getByRole('button', { name: 'Consultar referencia' }));
+    expect(screen.getByRole('button', { name: 'Consultando referencia…' })).toBeDisabled();
+    expect(actions.onLookup).toHaveBeenCalledTimes(1); finish();
+    await screen.findByRole('button', { name: 'Consultar referencia' });
+    expect(screen.getByLabelText('Referencia de operación')).toHaveValue('cccccccc-cccc-4ccc-8ccc-cccccccccccc');
+  });
   it('brings a focused row action into its scroll region without submitting or reading', () => {
     const actions = ui();
     const region = screen.getByRole('region', { name: 'Existencias de productos' });
