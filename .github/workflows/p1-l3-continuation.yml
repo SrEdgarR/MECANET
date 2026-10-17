@@ -99,7 +99,7 @@ jobs:
           node --check tests/integration/development-clock-probe.mjs
           node tests/integration/ci-postgres.mjs --self-test
           node tests/integration/p1-l3-postgres.mjs --self-test
-          node --test tests/qa/cp027/ci-cold-copy.test.mjs tests/qa/cp027/ci-arm-profile.test.mjs
+          node --test tests/qa/cp027/ci-cold-copy.test.mjs tests/qa/cp027/ci-arm-profile.test.mjs tests/qa/cp027/ci-api-stop.test.mjs tests/qa/cp027/ci-target-clock.test.mjs
           node --test tests/qa/admission-clock.unit.test.js tests/qa/cp023/clock-regression.test.mjs tests/qa/cp023/clock-contention.test.mjs tests/qa/cp023/clock-driver.test.mjs
       - name: Run bounded ARM64 source, recovery and two API continuation
         id: integration
