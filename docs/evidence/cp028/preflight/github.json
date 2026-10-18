@@ -1,0 +1,68 @@
+{
+  "schema": "cp028-ci-boundary-v1",
+  "login": "SrEdgarR",
+  "repo": {
+    "full_name": "SrEdgarR/MECANET",
+    "private": false,
+    "visibility": "public"
+  },
+  "develop": "86985fe7589032f202ebf0cb057a9b1384217151",
+  "hooks": [],
+  "workflows": [
+    {
+      "id": 383488316,
+      "node_id": "W_kwDOUnmRl84W25E8",
+      "name": "P1 verification",
+      "path": ".github/workflows/p1-l1-verify.yml",
+      "state": "active",
+      "created_at": "2026-10-13T13:39:04.000-04:00",
+      "updated_at": "2026-10-13T19:05:37.000-04:00",
+      "url": "https://api.github.com/repos/SrEdgarR/MECANET/actions/workflows/383488316",
+      "html_url": "https://github.com/SrEdgarR/MECANET/blob/develop/.github/workflows/p1-l1-verify.yml",
+      "badge_url": "https://github.com/SrEdgarR/MECANET/workflows/P1%20verification/badge.svg"
+    },
+    {
+      "id": 385901457,
+      "node_id": "W_kwDOUnmRl84XAGOR",
+      "name": "P1-L3 isolated continuation transport",
+      "path": ".github/workflows/p1-l3-continuation.yml",
+      "state": "active",
+      "created_at": "2026-10-15T15:04:47.000-04:00",
+      "updated_at": "2026-10-15T15:04:47.000-04:00",
+      "url": "https://api.github.com/repos/SrEdgarR/MECANET/actions/workflows/385901457",
+      "html_url": "https://github.com/SrEdgarR/MECANET/blob/develop/.github/workflows/p1-l3-continuation.yml",
+      "badge_url": "https://github.com/SrEdgarR/MECANET/workflows/P1-L3%20isolated%20continuation%20transport/badge.svg"
+    },
+    {
+      "id": 385778290,
+      "node_id": "W_kwDOUnmRl84W_oJy",
+      "name": "P1-L3 development PostgreSQL and HTTP",
+      "path": ".github/workflows/p1-l3-development.yml",
+      "state": "active",
+      "created_at": "2026-10-15T12:47:28.000-04:00",
+      "updated_at": "2026-10-15T12:47:28.000-04:00",
+      "url": "https://api.github.com/repos/SrEdgarR/MECANET/actions/workflows/385778290",
+      "html_url": "https://github.com/SrEdgarR/MECANET/blob/develop/.github/workflows/p1-l3-development.yml",
+      "badge_url": "https://github.com/SrEdgarR/MECANET/workflows/P1-L3%20development%20PostgreSQL%20and%20HTTP/badge.svg"
+    }
+  ],
+  "PRs": [
+    {
+      "baseRefName": "develop",
+      "headRefOid": "dee053f5fc20d12408249bc1bdf2307fde7c49c8",
+      "isDraft": true,
+      "number": 5,
+      "state": "OPEN"
+    },
+    {
+      "baseRefName": "codex/verify-p1-l3-development",
+      "headRefOid": "1250e7c5e2818f135fccc2be896aa6f368698c75",
+      "isDraft": true,
+      "number": 6,
+      "state": "OPEN"
+    }
+  ],
+  "deployments": [],
+  "scope": "known GitHub mechanisms only; Vercel disconnect human evidence reused",
+  "runner": "standard public ubuntu-24.04-arm; no paid/larger/self-hosted/resource changes"
+}

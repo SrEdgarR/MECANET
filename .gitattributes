@@ -83,3 +83,13 @@ server/saas/db/migrations/006-*.sql text eol=lf
 # Reproduce CI module text and preserve raw CP-016 evidence file hashes.
 scripts/ci/*.mjs text eol=lf
 docs/evidence/cp016/** -text whitespace=trailing-space,space-before-tab,cr-at-eol
+
+# CP027 reviewed verification sources and raw receipts retain byte identity.
+.github/workflows/p1-l3-continuation.yml text eol=lf
+tests/qa/cp027/*.mjs text eol=lf
+docs/evidence/cp027/** -text
+
+# CP028 executable test text and immutable sanitized receipts
+tests/qa/cp028/*.mjs text eol=lf
+tests/integration/ci-browser*.mjs text eol=lf
+docs/evidence/cp028/** -text whitespace=trailing-space,space-before-tab,cr-at-eol

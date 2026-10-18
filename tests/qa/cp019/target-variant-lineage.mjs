@@ -36,7 +36,7 @@ function indexShape(index){
 }
 function validateAnchor(anchor){
  exact(anchor,['schema','project','path','registryHash','startedUptime','sequence','total'],'VARIANT_LEDGER_ANCHOR');
- check(anchor.schema==='target-variant-budget-anchor-v1'&&anchor.project===SOURCE&&anchor.path==='/opt/'+SOURCE+'/budget/ledger.json'&&HASH.test(anchor.registryHash??'')&&Number.isFinite(anchor.startedUptime)&&anchor.startedUptime>=0&&Number.isSafeInteger(anchor.sequence)&&anchor.sequence>=0,'VARIANT_LEDGER_ANCHOR');
+ check(anchor.schema==='target-variant-budget-anchor-v1'&&anchor.project===SOURCE&&['/opt/'+SOURCE+'/budget/ledger.json','/opt/'+SOURCE+'/budget/continuations/v2/ledger.json'].includes(anchor.path)&&HASH.test(anchor.registryHash??'')&&Number.isFinite(anchor.startedUptime)&&anchor.startedUptime>=0&&Number.isSafeInteger(anchor.sequence)&&anchor.sequence>=0,'VARIANT_LEDGER_ANCHOR');
  exact(anchor.total,['sql','http','journal','artifactFiles'],'VARIANT_LEDGER_ANCHOR');for(const[k,v]of Object.entries(anchor.total))check(Number.isSafeInteger(v)&&v>=0&&v<=VARIANT_CAPS[k],'VARIANT_LEDGER_ANCHOR');return anchor;
 }
 function materialPair(original,effective){
@@ -84,6 +84,6 @@ export function completeTargetVariantLineage(context,sourceInputs){
 /** Values are authenticated Root reads, not a token allowing SQL. All counters
  * remain in the same global ledger; a retry cannot refresh its start time. */
 export function assertVariantLedgerContinuity(addition,current,registryHash){
- const a=validateAnchor(addition?.ledgerAnchor);check(same(addition.caps,VARIANT_CAPS)&&registryHash===a.registryHash&&current?.schema==='cp019-budget-v1'&&current.project===SOURCE&&current.startedUptime===a.startedUptime&&Number.isSafeInteger(current.sequence)&&current.sequence>=a.sequence,'VARIANT_LEDGER_CHANGED');
+ const a=validateAnchor(addition?.ledgerAnchor);check(a.path==='/opt/'+SOURCE+(current?.schema==='cp024-budget-continuation-v2'?'/budget/continuations/v2/ledger.json':'/budget/ledger.json'),'VARIANT_LEDGER_ATTEMPT_CHANGED');check(same(addition.caps,VARIANT_CAPS)&&registryHash===a.registryHash&&['cp019-budget-v1','cp024-budget-continuation-v2'].includes(current?.schema)&&current.project===SOURCE&&current.startedUptime===a.startedUptime&&Number.isSafeInteger(current.sequence)&&current.sequence>=a.sequence,'VARIANT_LEDGER_CHANGED');
  exact(current.total,['sql','http','journal','artifactFiles'],'VARIANT_LEDGER_CHANGED');for(const[k,n]of Object.entries(current.total))check(Number.isSafeInteger(n)&&n>=a.total[k]&&n<=VARIANT_CAPS[k],'VARIANT_LEDGER_RESET');return true;
 }

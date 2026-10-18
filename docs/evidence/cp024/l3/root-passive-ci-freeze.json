@@ -1,0 +1,54 @@
+{
+  "schema": "cp024-root-passive-ci-freeze-v1",
+  "date": "2026-10-15",
+  "parentFreezeRawSha256": "1fee7c33176fc866b14d0c1fa6debe547cacd0cac9943b84f132eb0c48ae90ef",
+  "deltaProvenance": "author message confirms final2port files, original7 unchanged; Root raw bytes matched before test",
+  "files": [
+    {
+      "path": "tests/qa/cp019/continuation-admission.py",
+      "sha256": "78b60c8924c45bf79e5c94820d63be606f22a7b2daf7094cb164a6aa44061b16",
+      "bytes": 9071
+    },
+    {
+      "path": "tests/qa/cp019/continuation-admission.test.py",
+      "sha256": "4c6a826a3dc2042d02e957f2ebf16097aa29f4283e6b2cc281308c55075f5ccd",
+      "bytes": 6367
+    },
+    {
+      "path": "tests/qa/cp019/continuation-admission-linux.test.py",
+      "sha256": "fa2527b500b995280b875b3d26f52f68e9f8b8e05aa329c91108d4882510a1a8",
+      "bytes": 3780
+    },
+    {
+      "path": "tests/qa/cp019/continuation-publication.py",
+      "sha256": "a2bf05d46854cbe5f577aeeab3d7dfd04711481e7738eb660b1f9cd96fe1fd33",
+      "bytes": 11424
+    },
+    {
+      "path": "tests/qa/cp019/continuation-publication.test.py",
+      "sha256": "6e7199942abb2cc8157babe5b2f8620f2889b2b73547cd08c8e7299ccf58fa4d",
+      "bytes": 4693
+    },
+    {
+      "path": "tests/qa/cp019/continuation-port.py",
+      "sha256": "e7bc7eca2857ee3996be11945a59f0338409f0f547a91180082295a736d7521e",
+      "bytes": 7246
+    },
+    {
+      "path": "tests/qa/cp019/continuation-port.test.py",
+      "sha256": "764d52a0d0aab6bad3a1ac3b2288da54dec79303fbc715486a696f6a39fd4bdc",
+      "bytes": 5300
+    },
+    {
+      "path": "tests/qa/cp019/host.py",
+      "sha256": "88ba72750aa1c7763ff11032ecc24e2af89475bd8bca9baa27ff7be7edb85a50",
+      "bytes": 127256
+    },
+    {
+      "path": "tests/qa/cp019/continuation-host.test.py",
+      "sha256": "f9dca02346f0e132afd086de63c8128cd40b69300e84dffd940f1d2e3910c56e",
+      "bytes": 5838
+    }
+  ],
+  "scope": "CI ONLY; no outer runner or VM gate"
+}

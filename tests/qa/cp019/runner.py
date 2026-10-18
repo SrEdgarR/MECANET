@@ -1,6 +1,7 @@
 import base64, datetime, hashlib, importlib.util, json, os, pathlib, re, stat, sys, threading, time
 
 DIR=pathlib.Path(__file__).resolve().parent
+HELPER_MODE=0o400
 sys.dont_write_bytecode=True
 def canon(v):return json.dumps(v,sort_keys=True,separators=(',',':'),ensure_ascii=False,allow_nan=False).encode()
 output_lock=threading.Lock();done=threading.Event();transport_failed=threading.Event();current_step='initial'
@@ -13,7 +14,7 @@ def now():return datetime.datetime.now(datetime.timezone.utc).isoformat(timespec
 HELPERS=frozenset(['host.py','tls_bundle.py','target-host.py','target-lifecycle.py','target-variant-host.py','target-readiness-host.py','browser-config.py','controller.py','resource-monitor.py','resource-sample.py','budget-limits.json','run.py'])
 def private_bytes(path):
  assert path.resolve()==path and not path.is_symlink(),'HELPER_CUSTODY';before=path.lstat();keys=('st_dev','st_ino','st_uid','st_mode','st_nlink','st_size','st_mtime_ns','st_ctime_ns')
- assert stat.S_ISREG(before.st_mode) and before.st_uid==0 and before.st_mode&0o777==0o400 and before.st_nlink==1 and 2<=before.st_size<=262144,'HELPER_CUSTODY'
+ assert stat.S_ISREG(before.st_mode) and before.st_uid==0 and before.st_mode&0o777==HELPER_MODE and before.st_nlink==1 and 2<=before.st_size<=262144,'HELPER_CUSTODY'
  fd=os.open(path,os.O_RDONLY|getattr(os,'O_NOFOLLOW',0))
  try:
   opened=os.fstat(fd);assert all(getattr(opened,k)==getattr(before,k) for k in keys),'HELPER_CHANGED';raw=b''
@@ -29,13 +30,10 @@ def load(name,file):
  assert file in HELPERS and file.endswith('.py') and file!='run.py','HELPER_NAME';p=DIR/file;assert hashlib.sha256(private_bytes(p)).hexdigest()==plan['helpers'][file],'HELPER_HASH'
  s=importlib.util.spec_from_file_location(name,p);m=importlib.util.module_from_spec(s);sys.modules[name]=m;s.loader.exec_module(m);return m
 
-assert os.geteuid()==0 and DIR.resolve()==DIR and not DIR.is_symlink(),'CONTROLLER_ROOT'
-plan_raw=private_bytes(DIR/'controller-plan.json');plan=validate_plan(json.loads(plan_raw));assert canon(plan)==plan_raw,'CONTROLLER_PLAN_CANONICAL'
-for name,hash_value in plan['helpers'].items():
- p=DIR/name;assert hashlib.sha256(private_bytes(p)).hexdigest()==hash_value,'HELPER_HASH'
-h=load('cp021_host','host.py');controller=load('cp021_controller','controller.py');events=[];started=now();failed=None;booted=False;monitor=None;cleaning=False
-relay=controller.RelayInput(sys.stdin);relay.start()
-original_run=h.run;original_bounded=h.run_bounded
+def initialize(host_module,controller_module,selected_plan):
+ global h,controller,plan,events,started,failed,booted,monitor,cleaning,relay,original_run,original_bounded,continuation_session,continuation_modules
+ h=host_module;controller=controller_module;plan=selected_plan;events=[];started=now();failed=None;booted=False;monitor=None;cleaning=False;continuation_session=None;continuation_modules=None
+ relay=controller.RelayInput(sys.stdin);relay.start();original_run=h.run;original_bounded=h.run_bounded;h.run=guarded_run;h.run_bounded=guarded_bounded
 def require_control():
  assert not transport_failed.is_set(),'CONTROLLER_TRANSPORT_FAILED';relay.check()
 def guarded_run(*args,**kwargs):
@@ -48,7 +46,6 @@ def guarded_bounded(*args,**kwargs):
   require_control()
   if monitor is not None:monitor.check()
  return original_bounded(*args,**kwargs)
-h.run=guarded_run;h.run_bounded=guarded_bounded
 def validate_stage(host,expected):
  manifest,_=host.target_bridge().read_private(host.ROOT/'staging/artifact.json',0,262144,0o444)
  assert manifest.get('sourceSha')==manifest.get('codeSha')==expected['sourceSha'] and manifest.get('baseline')=='4d1cf193000106dd20555f6c70acab3cb264fd3a7bfe0a9cf8be662eddb2b3ec','STAGED_SOURCE_MISMATCH'
@@ -57,7 +54,6 @@ def validate_stage(host,expected):
   assert len(entries)==1 and entries[0].get('sha256')==sha,'STAGED_HELPER_MISMATCH'
 def heartbeat():
  while not done.wait(10):emit({'type':'cp020-heartbeat','step':current_step,'at':now(),'meaning':'progress only; no FIN/readiness proof'})
-threading.Thread(target=heartbeat,daemon=True).start()
 def step(name,fn):
  global current_step,booted,monitor
  if name!='cleanup':require_control()
@@ -78,7 +74,7 @@ def browser():
  b=load('cp020_browser_config','browser-config.py');bridge=h.target_bridge();m,base,bindings=bridge.bundle_context(h)
  values={}
  for key,path,uid in [('acceptance',h.TARGET/'secrets/acceptance.json',999),('sourceHistory',h.ROOT/'secrets/source-history.json',999),('written',h.TARGET/'secrets/target-written-results.json',999)]:values[key]=bridge.read400(path,uid)[0]
- art=json.loads((h.ROOT/'staging/artifact.json').read_bytes());source_entry=[e for e in art['entries'] if e['path']=='tests/qa/cp019/acceptance.mjs'];assert len(source_entry)==1,'ACCEPTANCE_SOURCE'
+ art=json.loads((getattr(h,'runtime_directory',lambda:h.ROOT/'staging')()/'artifact.json').read_bytes());source_entry=[e for e in art['entries'] if e['path']=='tests/qa/cp019/acceptance.mjs'];assert len(source_entry)==1,'ACCEPTANCE_SOURCE'
  config=b.make_config(m,base,bindings,values,plan['browser'],source_entry[0]['sha256'])
  config_hash=h.canonical_hash(config);ref={**b.make_reference(config),'schema':'cp020-browser-reference-v1'};h.set_host_case('browser-login');h.write_plain(h.TARGET/'master/browser-config-ref.json',canon(ref),0o400,0)
  ca=(h.TARGET/'config/ca.crt').read_bytes();cert=(h.TARGET/'tls/web/server.crt').read_bytes()
@@ -98,23 +94,66 @@ def post_gui():
  v=json.loads(output);assert v['type']=='cp019-acceptance' and v['mode']=='browser-postcheck' and v['status']=='PASS','BROWSER_SQL_RESULT'
  report,sha=h.target_bridge().read400(h.TARGET/'evidence/acceptance-browser-postcheck.json');assert report['status']=='PASS','BROWSER_SQL_REPORT'
  return {'status':'PASS','reportHash':sha,'jobProof':proof,'secretsPrinted':False}
-try:
- port=controller.HostPort(h,step,browser,post_gui)
+
+def effective_host(runtime):
+ global DIR,HELPER_MODE
+ DIR=runtime/'tests/qa/cp019';HELPER_MODE=0o444;return load('cp024_effective_host','host.py')
+
+def continue_v2(entry,modules):
+ global h,original_run,original_bounded,monitor,booted,continuation_session,continuation_modules
+ # The owning Root supplies authenticated in-memory modules and prepared bodies.
+ # This function never stages helpers/plan before the first charged effect.
+ continuation_modules=modules
+ if monitor is None:monitor=modules.monitor.ResourceMonitor(h,raw_run=original_run);monitor.start()
+ require_control();monitor.check()
+ continuation_session=modules.outer.begin(entry,modules,monitor,require_control,effective_host)
+ h=continuation_session['host'];monitor.h=h;original_run=h.run;original_bounded=h.run_bounded;h.run=guarded_run;h.run_bounded=guarded_bounded;booted=True
+ port=modules.port.make_port(controller,continuation_session,step,browser,post_gui,entry['gates']['environment'],modules.publication)
  controller.execute(port)
-except BaseException as e:
- failed=str(e) if isinstance(e,AssertionError) and re.fullmatch('[A-Z0-9_ /-]{1,100}',str(e)) else 'UNEXPECTED_CONTROLLER_ERROR'
- emit({'type':'cp020-failure','code':failed,'at':now()})
-finally:
- cleaning=True
- outcome=controller.safe_finish(h,monitor,booted,step);cleanup=outcome['cleanup'];monitor_result=outcome['resourceMonitor'];failed=failed or outcome['failure']
- try:relay.check()
- except AssertionError as error:failed=failed or str(error)
- relay.stop()
- if cleanup and cleanup.get('result')!='PASS':emit({'type':'cp020-cleanup','result':cleanup})
- ledger=None
- if (h.ROOT/'budget/ledger.json').exists():ledger=json.loads((h.ROOT/'budget/ledger.json').read_bytes())
- report={'schema':'cp021-remote-run-v1','sourceSha':plan['sourceSha'],'startedAt':started,'completedAt':now(),'status':'FAIL' if failed else 'INTEGRAL PIPELINE PASS / SIX CRITERIA STILL TO RECONCILE','failure':failed,'events':events,'cleanup':cleanup,'ledger':ledger,'secretsPrinted':False,'sharedInfrastructureModified':False,'extraVariants':'NOT VERIFIED' if failed else 'PIPELINE COMPLETED / ACCEPTANCE RECONCILIATION REQUIRED','resourceMonitor':monitor_result,'resourceAdmission':{'lastSample':h.RESOURCE_LAST_SAMPLE,'firstFailureSample':h.RESOURCE_FIRST_REJECTED_SAMPLE}}
- if transport_failed.is_set():failed=failed or 'CONTROLLER_TRANSPORT_FAILED';report['failure']=failed;report['status']='FAIL'
- done.set();emit({'type':'cp020-final-report','report':report})
-if transport_failed.is_set():failed=failed or 'CONTROLLER_TRANSPORT_FAILED'
-sys.exit(1 if failed else 0)
+
+def run_program(continuation=None):
+ global cleaning,failed
+ threading.Thread(target=heartbeat,daemon=True).start()
+ try:
+  if continuation is None:controller.execute(controller.HostPort(h,step,browser,post_gui))
+  else:continue_v2(*continuation)
+ except BaseException as e:
+  failed=str(e) if isinstance(e,AssertionError) and re.fullmatch('[A-Z0-9_ /-]{1,100}',str(e)) else 'UNEXPECTED_CONTROLLER_ERROR'
+  if continuation_session is not None:continuation_session['claim'].fail('OUTER_EXECUTION_FAILED');continuation_session['broker'].fail('OUTER_EXECUTION_FAILED')
+  emit({'type':'cp020-failure','code':failed,'at':now()})
+ finally:
+  cleaning=True
+  # Until passive publication returns, no Docker effect can have occurred.
+  # Do not fabricate a cleanup PASS or traverse incomplete runtime metadata.
+  if continuation is not None and continuation_session is None:
+   try:summary=monitor.stop() if monitor is not None else None
+   except BaseException:summary={'schema':'cp021-resource-monitor-summary-v1','status':'FAIL','failed':True,'error':'RESOURCE_MONITOR_NOT_VERIFIED','samples':0}
+   outcome={'cleanup':{'result':'NOT VERIFIED','scope':'NO DOCKER EFFECT AUTHORIZED / PARTIAL METADATA KEEP'},'resourceMonitor':summary,'failure':'CONTINUATION_ENTRY_NOT_COMPLETED'}
+  else:outcome=controller.safe_finish(h,monitor,booted,step)
+  cleanup=outcome['cleanup'];monitor_result=outcome['resourceMonitor'];failed=failed or outcome['failure']
+  transport=None
+  if continuation_session is not None:
+   result=continuation_modules.outer.finish_transport(continuation_session,failed);failed=failed or result['failure'];transport=result['transport']
+  try:relay.check()
+  except AssertionError as error:failed=failed or str(error)
+  relay.stop()
+  if cleanup and cleanup.get('result')!='PASS':emit({'type':'cp020-cleanup','result':cleanup})
+  ledger=None
+  budget=getattr(h,'budget_directory',lambda:h.ROOT/'budget')()
+  try:
+   if (budget/'ledger.json').exists():ledger=json.loads((budget/'ledger.json').read_bytes())
+  except BaseException:failed=failed or 'FINAL_LEDGER_NOT_VERIFIED'
+  report={'schema':'cp024-remote-continuation-v2' if continuation is not None else 'cp021-remote-run-v1','sourceSha':plan['sourceSha'],'startedAt':started,'completedAt':now(),'status':'FAIL' if failed else 'INTEGRAL PIPELINE PASS / SIX CRITERIA STILL TO RECONCILE','failure':failed,'events':events,'cleanup':cleanup,'ledger':ledger,'secretsPrinted':False,'sharedInfrastructureModified':False,'extraVariants':'NOT VERIFIED' if failed else 'PIPELINE COMPLETED / ACCEPTANCE RECONCILIATION REQUIRED','resourceMonitor':monitor_result,'resourceAdmission':{'lastSample':h.RESOURCE_LAST_SAMPLE,'firstFailureSample':h.RESOURCE_FIRST_REJECTED_SAMPLE},'continuationTransport':transport}
+  if transport_failed.is_set():failed=failed or 'CONTROLLER_TRANSPORT_FAILED';report['failure']=failed;report['status']='FAIL'
+  done.set();emit({'type':'cp020-final-report','report':report})
+ if transport_failed.is_set():failed=failed or 'CONTROLLER_TRANSPORT_FAILED'
+ return 1 if failed else 0
+
+def main():
+ global plan
+ assert len(sys.argv)==1 and os.geteuid()==0 and DIR.resolve()==DIR and not DIR.is_symlink(),'CONTROLLER_ROOT'
+ plan_raw=private_bytes(DIR/'controller-plan.json');plan=validate_plan(json.loads(plan_raw));assert canon(plan)==plan_raw,'CONTROLLER_PLAN_CANONICAL'
+ for name,hash_value in plan['helpers'].items():assert hashlib.sha256(private_bytes(DIR/name)).hexdigest()==hash_value,'HELPER_HASH'
+ initialize(load('cp021_host','host.py'),load('cp021_controller','controller.py'),plan);return run_program()
+
+if __name__=='__main__':sys.exit(main())

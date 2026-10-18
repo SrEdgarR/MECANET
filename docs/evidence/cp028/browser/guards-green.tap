@@ -1,0 +1,28 @@
+TAP version 13
+# Subtest: CI browser admits only its exact same-origin UI and existing L2 paths
+ok 1 - CI browser admits only its exact same-origin UI and existing L2 paths
+  ---
+  duration_ms: 0.9865
+  type: 'test'
+  ...
+# Subtest: Chromium certificate exception is limited to the supplied SPKI and resolver is loopback
+ok 2 - Chromium certificate exception is limited to the supplied SPKI and resolver is loopback
+  ---
+  duration_ms: 0.6676
+  type: 'test'
+  ...
+# Subtest: old source cookie stays private, exact and host-only without a global TLS bypass
+ok 3 - old source cookie stays private, exact and host-only without a global TLS bypass
+  ---
+  duration_ms: 0.5993
+  type: 'test'
+  ...
+1..3
+# tests 3
+# suites 0
+# pass 3
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 68.3372

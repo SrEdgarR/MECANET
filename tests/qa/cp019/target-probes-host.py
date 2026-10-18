@@ -28,18 +28,22 @@ def namespace(h,variant=False):
  check(h.TARGET==pathlib.Path('/opt')/TARGET if not variant else getattr(h,'kind',None)=='promote-prefix' and h.TARGET==pathlib.Path('/opt')/TARGET/'variants/promote-prefix','PROBE_NAMESPACE')
  h.own(h.ROOT);h.own(h.TARGET);h.preserve();h.guard_resources(h.facts(),[],h.expected_owners())
 def budget(h,case,scope,sql=0):
- state,sh=read(h,h.ROOT/'budget/ledger.json',999,0o600);now=h.uptime();check(state.get('schema')=='cp019-budget-v1' and state.get('project')==SOURCE and 0<=now-state['startedUptime']<=1800 and state.get('plannedScopes',{}).get(case)==scope and state.get('plannedScenarios',{}).get(case)==h.CASE_LIMITS,'PROBE_BUDGET')
+ state,sh=read(h,getattr(h,'budget_directory',lambda:h.ROOT/'budget')()/'ledger.json',999,0o600);now=h.uptime();check(state.get('schema') in ['cp019-budget-v1','cp024-budget-continuation-v2'] and state.get('project')==SOURCE and 0<=now-state['startedUptime']<=1800 and state.get('plannedScopes',{}).get(case)==scope and state.get('plannedScenarios',{}).get(case)==h.CASE_LIMITS,'PROBE_BUDGET')
  check(set(state['total'])==set(h.CEILINGS) and all(type(n) is int and 0<=n<=h.CEILINGS[k] for k,n in state['total'].items()) and state['total']['sql']+sql<=h.CEILINGS['sql'],'PROBE_BUDGET')
+ if state.get('schema')=='cp024-budget-continuation-v2':h.validate_budget_remaining(state,case,now)
  old=state.get('scenarios',{}).get(case)
- if old is not None:check(old['limits']==h.CASE_LIMITS and 0<=now-old['startedUptime']<45 and set(old['total'])==set(h.CASE_LIMITS) and all(type(n) is int and 0<=n<=h.CASE_LIMITS[k] for k,n in old['total'].items()) and old['total']['sql']+sql<=h.CASE_LIMITS['sql'],'PROBE_CASE_EXPIRED')
+ if old is not None and old.get('startedUptime') is not None:check(old['limits']==h.CASE_LIMITS and 0<=now-old['startedUptime']<45 and set(old['total'])==set(h.CASE_LIMITS) and all(type(n) is int and 0<=n<=h.CASE_LIMITS[k] for k,n in old['total'].items()) and old['total']['sql']+sql<=h.CASE_LIMITS['sql'],'PROBE_CASE_EXPIRED')
 def enter(h,case,scope,sql=0):
  budget(h,case,scope,sql);h.set_host_case(case);h.enter_runtime_case(scope,case)
 def artifact(h,m):
- a,ah=read(h,h.ROOT/'staging/artifact.json',0,0o444);check(SHA.fullmatch(a.get('sourceSha','')) and a.get('digest')=='sha256:'+m['artifactDigest'] and digest(a['entries'])==m['artifactDigest'],'PROBE_ARTIFACT');return a
+ a,ah=read(h,getattr(h,'runtime_directory',lambda:h.ROOT/'staging')()/'artifact.json',0,0o444);check(SHA.fullmatch(a.get('sourceSha','')),'PROBE_ARTIFACT')
+ if callable(getattr(h,'validate_runtime_artifact',None)):h.validate_runtime_artifact(a,m)
+ else:check(a.get('digest')=='sha256:'+m['artifactDigest'] and digest(a['entries'])==m['artifactDigest'],'PROBE_ARTIFACT')
+ return a
 def migration_hashes(h,a):
  out={}
  for scope,name in [('central','006-control-recovery.sql'),('tenant','006-tenant-recovery.sql')]:
-  path='server/saas/db/migrations/'+name;entries=[x for x in a['entries'] if x['path']==path];check(len(entries)==1 and HASH.fullmatch(entries[0].get('sha256','')),'PROBE_MIGRATION_ENTRY');raw,rh=read(h,h.ROOT/'staging'/path,0,0o444,262144,False);check(rh==entries[0]['sha256'] and len(raw)==entries[0]['bytes'],'PROBE_MIGRATION_HASH');out[scope]=rh
+  path='server/saas/db/migrations/'+name;entries=[x for x in a['entries'] if x['path']==path];check(len(entries)==1 and HASH.fullmatch(entries[0].get('sha256','')),'PROBE_MIGRATION_ENTRY');raw,rh=read(h,getattr(h,'runtime_directory',lambda:h.ROOT/'staging')()/path,0,0o444,262144,False);check(rh==entries[0]['sha256'] and len(raw)==entries[0]['bytes'],'PROBE_MIGRATION_HASH');out[scope]=rh
  return out
 def make_schema_config(m,r,source_sha,hashes,ca,mode,invocation):
  schema_case(mode);check(UUID.fullmatch(invocation or '') and SHA.fullmatch(source_sha or '') and set(hashes)=={'central','tenant'} and all(HASH.fullmatch(x or '') for x in hashes.values()) and isinstance(ca,str) and 0<len(ca)<=65536,'PROBE_SCHEMA_INPUT')

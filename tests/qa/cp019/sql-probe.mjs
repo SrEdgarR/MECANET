@@ -36,7 +36,7 @@ export async function runSqlProbe({adminConnection,ledger,binding,sourceEndProof
  const b=validateSqlProbeBinding(binding),admin=validateConnection(adminConnection);
  requireValue(admin.host==='postgres'&&admin.database==='postgres'&&admin.user==='qa_bootstrap'&&ledger?.charge&&ledger?.snapshot);
  requireValue(verifyEndProof(sourceEndProof,observedEnd)===b.sourceEndProofHash&&sourceEndProof.recoveryId===b.targetRunId&&sourceEndProof.sourceResourceHash===b.sourceResourceHash);
- const budget=await ledger.snapshot();requireValue(budget.schema==='cp019-budget-v1'&&budget.project===b.project&&GLOBAL_LIMITS.sql-budget.total.sql>=120&&budget.plannedScenarios?.['sql-probe']?.sql===CASE_LIMITS.sql
+ const budget=await ledger.snapshot();requireValue(['cp019-budget-v1','cp024-budget-continuation-v2'].includes(budget.schema)&&budget.project===b.project&&GLOBAL_LIMITS.sql-budget.total.sql>=120&&budget.plannedScenarios?.['sql-probe']?.sql===CASE_LIMITS.sql
  &&CASE_LIMITS.sql-(budget.scenarios?.['sql-probe']?.total.sql??0)>=120);
  const started=performance.now(),cases=[],fingerprints=[],centralHash=sha256(await readFile(new URL('../../../server/saas/db/migrations/006-control-recovery.sql',import.meta.url))),tenantHash=sha256(await readFile(new URL('../../../server/saas/db/migrations/006-tenant-recovery.sql',import.meta.url)));
  let commands=0,live=0,maximumLive=0;

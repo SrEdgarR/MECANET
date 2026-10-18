@@ -1,0 +1,218 @@
+{
+  "schema": "cp024-sc016-broker-independent-peer-v1",
+  "date": "2026-10-15",
+  "reviewer": "/root/cp024_pos_sql",
+  "author": "/root/cp024_l3",
+  "status": "PASS_FOCAL_FOR_CI_PUBLICATION_ONLY",
+  "materialRequiredBeforeCiPublication": 0,
+  "environmentGate": "NOT VERIFIED",
+  "physicalExecutionAuthorizedByThisReview": false,
+  "scope": "single-writer Root counter, Node transport, immutable authority and runtime overlay; ongoing Root admission/runner/Environment composition explicitly excluded",
+  "authorityHash": "6e1fe2d6ef789eef9637fd0ec9f6c5703998899cbc9df4f8a8c35990364bfc92",
+  "freezeReference": {
+    "path": "docs/evidence/cp024/l3/ci-review-freeze.json",
+    "sha256": "07b2bbcf8e5d6e707bfc9ed9179f1d3b6a7fd3e59b0be11a6f776007a5639a34"
+  },
+  "files": {
+    "tests/qa/cp019/continuation-broker.py": "5307d7dcd50552d8d0afcef733cbdfc4ad6c9ecc08c00b80e274f5c5716a4411",
+    "tests/qa/cp019/continuation-broker.mjs": "f2a1367356d0b0478afd8d9815f31fbfcd041b6cfe0135eb9c72615bd5c6130c",
+    "tests/qa/cp019/continuation-broker.test.py": "b10127053f5f62ebe374a4e971240227605c2c639cfe135b8342aba2a3543378",
+    "tests/qa/cp019/continuation-broker.test.mjs": "8cc0295b6e5c7d1bf1e5005e649f2fb8bc40b5a4dcef6b9f66b799c87dd02dc9",
+    "tests/qa/cp019/continuation-broker-unix.test.py": "47ea9de64d36c4adc0d66f3e7a62cbc5b1e8dcf0a4e9eea82ddd69ebd4c0cdf5",
+    "tests/qa/cp019/continuation-store-linux.test.py": "aa63e54d48d13f7defb07d4e19d82d5bad9a04437f15f256bb6a5320c35a79b8",
+    "tests/qa/cp019/continuation-budget.py": "f14b5de9fa3f8f327f7e9e15494fac2cccc90d9d5670f9c0fc34bfc963e0ec96",
+    "tests/qa/cp019/continuation-budget.mjs": "e548c9e46a0c06c819cae78951ede0daa46ca874862ff570efe66c0373554fa0",
+    "tests/qa/cp019/continuation-ledger.mjs": "f6a76ebc07d2fbc8ba5fb3413bd467958f19b856f8148a2d9957e1194efdd548",
+    "tests/qa/cp019/ledger.mjs": "09e32ad953d82238c13cac6eb53b627247e25d4ff12a489c68b4594fbf7406b7",
+    "tests/qa/cp019/continuation-authority.mjs": "5d564b41af24268a2168ed1658d64e37435708b1298a30aebf87881e69001506",
+    "tests/qa/cp019/runtime-overlay.mjs": "bed95cdaea42e7fc8966925e2242e4f5109550df60fa6c2ad3c90fb3ed1811fd",
+    "tests/qa/cp019/runtime-overlay.py": "b24d1176cf5e2a5616e80eed59e76c6f3649c4f8824ee222cc1407c09b4690dc",
+    "tests/qa/cp019/runtime-overlay-authority.mjs": "3435ad0b23543bf799958f596a5dbb6590f671c71681c453903118b2cc958b0e"
+  },
+  "locations": {
+    "tests/qa/cp019/continuation-broker.py": {
+      "class RootFileStore": [
+        16
+      ],
+      "def persist": [
+        26
+      ],
+      "class Broker": [
+        34
+      ],
+      "def current": [
+        46
+      ],
+      "def request": [
+        56
+      ],
+      "def root_update": [
+        79
+      ],
+      "def verify_docker_peer": [
+        155
+      ],
+      "class UnixServer": [
+        90
+      ],
+      "def handle": [
+        112
+      ],
+      "def stop": [
+        87,
+        138
+      ]
+    },
+    "tests/qa/cp019/continuation-broker.mjs": {
+      "function newBrokerLedger": [
+        6
+      ]
+    },
+    "tests/qa/cp019/continuation-broker.test.py": {
+      "def persist": [
+        11
+      ],
+      "class Broker": [
+        19
+      ],
+      "def request": [
+        17
+      ]
+    },
+    "tests/qa/cp019/continuation-broker.test.mjs": {},
+    "tests/qa/cp019/continuation-broker-unix.test.py": {},
+    "tests/qa/cp019/continuation-store-linux.test.py": {},
+    "tests/qa/cp019/continuation-budget.py": {},
+    "tests/qa/cp019/continuation-budget.mjs": {},
+    "tests/qa/cp019/continuation-ledger.mjs": {},
+    "tests/qa/cp019/ledger.mjs": {
+      "return newBrokerLedger": [
+        14
+      ]
+    },
+    "tests/qa/cp019/continuation-authority.mjs": {
+      "function readContinuationAuthority": [
+        12
+      ]
+    },
+    "tests/qa/cp019/runtime-overlay.mjs": {
+      "function makeRuntimeOverlay": [
+        13
+      ]
+    },
+    "tests/qa/cp019/runtime-overlay.py": {},
+    "tests/qa/cp019/runtime-overlay-authority.mjs": {}
+  },
+  "controls": [
+    {
+      "property": "charge serialized before downstream effect",
+      "status": "PASS_BY_REVIEW_AND_LOCAL_MODELS",
+      "evidence": "Root RLock covers exact current state, model update, durable store, readback and ACK; measuredPool awaits charge before query; Node serial RPC has one pending request and no reconnect/retransmit"
+    },
+    {
+      "property": "Root file persistence before ACK",
+      "status": "PASS_BY_REVIEW / REAL_LINUX_NOT_VERIFIED",
+      "evidence": "RootFileStore writes exclusive temp, fchown999/fchmod600, file fsync, atomic replace, parent fsync, custody readback; request performs further exact readback before publishing latest memory and ACK"
+    },
+    {
+      "property": "new client cannot conceal rollback above v1 floor while original Root lives",
+      "status": "PASS_LOCAL_MODEL",
+      "evidence": "Root holds exact memory state; every enrollment/current read compares bytes canonically; stale derived ledger latches failure even for a fresh client; original counter-peer reproduction is addressed for this architecture"
+    },
+    {
+      "property": "ACK or persistence uncertainty",
+      "status": "PASS_LOCAL_MODEL",
+      "evidence": "persist exception and transport error irreversibly latch broker/client failure; stored charges not refunded; no retransmission, connection replacement or takeover by TTL"
+    },
+    {
+      "property": "Root/client lifetimes and positive transport closure",
+      "status": "PASS_BY_REVIEW_WITH_PHYSICAL_LIMITS",
+      "evidence": "fixed Root PID/procStart checked every broker operation; SO_PEERCRED uid/gid and exact Root CREATED CID/project/service/owner/PID verified at enrollment; original peer/procStart bound on following requests; closed client cannot re-enroll. EOF is transport closure only. Server stop with a live client reports clientFIN NOT VERIFIED and latches failure",
+      "limit": "actual Docker peer identity/cgroup and Root post-crash admission NOT VERIFIED here; no SQL/HTTP/lease FIN inferred"
+    },
+    {
+      "property": "bound frames and consumers",
+      "status": "PASS_BY_REVIEW",
+      "evidence": "4096-byte request buffer;262144-byte ACK;8 live connections;256 registered client references; exact fields/sequence/admission/scenario and per-record allowed enter cases; production Node wrapper uses broker, explicit mutable file adapter remains test fixture only"
+    },
+    {
+      "property": "closed immutable authority and overlay",
+      "status": "PASS_LOCAL_TESTS",
+      "evidence": "Root0 immutable authority mount, pinned original manifest/material, SHA-linked effective manifest; no replacing sealed bytes/removing entries; allowed QA adaptations and exact two SQL006 corrections only; POS/product/dependency/budgetJSON changes rejected"
+    },
+    {
+      "property": "time/counter guarantees",
+      "status": "PASS_UNCHANGED_CORE",
+      "evidence": "same45s/case1800global/fixedv2and135cases; totals include exactv1seq44/639artifacts; fixed8192/200000SQL/300HTTP/8192artifact/1000journal; both model hashes unchanged versus prior counter peer"
+    }
+  ],
+  "localVerification": {
+    "Node": {
+      "tests": 16,
+      "status": "PASS",
+      "files": [
+        "continuation-broker.test.mjs",
+        "runtime-overlay.test.mjs"
+      ],
+      "runtime": "24.21"
+    },
+    "Python": {
+      "tests": 16,
+      "status": "PASS",
+      "files": [
+        "continuation-broker.test.py:8",
+        "runtime-overlay.test.py:8"
+      ],
+      "runtime": "3.12.14"
+    },
+    "historicalCoreTestsReusedByExactHash": {
+      "Node": 14,
+      "Python": 19
+    },
+    "physicalUnixTransport": "NOT VERIFIED on Windows; required independent Linux CI suite",
+    "physicalRootFileStore": "NOT VERIFIED on Windows; required exclusive ephemeral Linux Root CI suite"
+  },
+  "previousFinding": {
+    "id": "CP024-CNT-01",
+    "priorReport": "docs/evidence/cp024/l3/counter-peer.json",
+    "priorFailPreserved": true,
+    "currentMechanism": "local live-Root single writer and exact memory comparison correct the fresh-client rollback gap",
+    "wholeFindingStatus": "OPEN_UNTIL_ROOT_ADMISSION_RUNNER_AND_LINUX_CI_VERIFIED",
+    "mustNotClaimCompleteCounter": true
+  },
+  "remainingBeforeV2Effect": [
+    {
+      "item": "One Root lifetime sealed at first admission; a restarted Root must not pass a new current PID/procStart and current ledger as if they were original authority",
+      "resolveBefore": "first v2 publication/admission and any post-crash process enrollment"
+    },
+    {
+      "item": "All app/job mounts read-only for counter and exact broker endpoint/client reference; Root writes only its own v2 counter; no writer bypass to original budget or explicit fixture adapter",
+      "resolveBefore": "consumer/Environment Gate"
+    },
+    {
+      "item": "First creation/publication charged from the actual v2 global start; immutable v1/attempt identity and restrictive abort preserved",
+      "resolveBefore": "first v2 metadata effect"
+    },
+    {
+      "item": "Linux AF_UNIX two actual Node processes, SO_PEERCRED/procStart, exact readback/durability and cleanup tests pass; report their scope separately from Docker/VPS/ARM64",
+      "resolveBefore": "depending on this implementation physically"
+    },
+    {
+      "item": "Root lifecycle/runner full review, resource projection, fresh VPS preflight, exact budget receipts, no live resources on stop or uncertain stage adoption",
+      "resolveBefore": "START/SQL/HTTP on shared VPS"
+    }
+  ],
+  "notes": [
+    "Broker constructor is a trusted composition boundary; root_lifetime/initial_seal must come from immutable first admission, not a fresh process recomputing identity after a crash",
+    "Explicit newContinuationLedger adapter retains prior known limitation for local filesystem fixtures; production env path resolves to newBrokerLedger and never writes the mounted counter",
+    "Only code/test review for safe isolated CI publication; no merge, TERMINAL, new cohort or infrastructure policy approval"
+  ],
+  "resources": {
+    "sourceEdits": 0,
+    "gitMutations": 0,
+    "ssh": 0,
+    "docker": 0,
+    "postgres": 0,
+    "productionChanges": 0
+  }
+}

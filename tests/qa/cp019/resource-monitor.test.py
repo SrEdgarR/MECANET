@@ -16,6 +16,15 @@ def monitor():
  with patch.object(m,'read_root_json',return_value={'consumers':[]}):v=m.ResourceMonitor(h,raw_run=lambda *args:'')
  return v
 class PassiveModels(unittest.TestCase):
+ def test_first_sample_requires_positive_completion_and_does_not_use_timeout_as_success(self):
+  v=monitor();v._started=True
+  with patch.object(v._first_complete,'wait',return_value=False),self.assertRaisesRegex(AssertionError,'FIRST_SAMPLE_UNKNOWN'):v.first_sample()
+  self.assertEqual(v._samples,0)
+ def test_first_sample_retains_rejection_even_after_the_completion_event(self):
+  v=monitor();v._started=True;v.fail('RESOURCE_CPU_LIMIT');v._record_sample(.1,0)
+  with self.assertRaisesRegex(AssertionError,'RESOURCE_CPU_LIMIT'):v.first_sample()
+ def test_positive_first_sample_is_not_a_cpu_or_fin_acceptance_claim(self):
+  v=monitor();v._started=True;v._thread=types.SimpleNamespace(is_alive=lambda:True);v._record_sample(.1,0);out=v.first_sample();self.assertEqual(out['samples'],1);self.assertEqual(out['cpuSamples'],0);self.assertEqual(out['containerFIN'],'NOT VERIFIED');self.assertEqual(out['sqlFIN'],'NOT VERIFIED')
  def test_import_and_constructor_never_launch_processes(self):
   with patch.object(m.subprocess,'check_output',side_effect=AssertionError('PROCESS_FORBIDDEN')):
    v=monitor();self.assertFalse(v.abortFlag.is_set());self.assertEqual(v.summary()['samples'],0)

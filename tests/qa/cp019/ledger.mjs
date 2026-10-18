@@ -3,9 +3,17 @@ import {CASE_LIMITS,GLOBAL_LIMITS} from './budget-limits.mjs';
 import {open,readFile,rename,unlink,lstat,realpath} from 'node:fs/promises';
 import {dirname,resolve} from 'node:path';import {uptime} from 'node:os';import {randomUUID} from 'node:crypto';
 import {syncDirectory} from '../../../server/saas/recovery/protocol.js';
+import {newContinuationLedger} from './continuation-ledger.mjs';
+import {readContinuationAuthority} from './continuation-authority.mjs';
+import {readRuntimeOverlayAuthority} from './runtime-overlay-authority.mjs';
+import {newBrokerLedger} from './continuation-broker.mjs';
 const ceilings=GLOBAL_LIMITS;
 const refuse=(ok)=>{if(!ok)throw Error('CP019_BUDGET_ABORT');};
-export async function newLedger(file,{scenario,limits={},sync=syncDirectory}={}){
+export async function newLedger(file,{scenario,limits={},sync=syncDirectory,continuation=null}={}){
+ if(continuation===null&&process.env.QA_BUDGET_ATTEMPT!==undefined){
+  refuse(process.env.QA_BUDGET_ATTEMPT==='v2'&&resolve(file)==='/run/qa-budget/ledger.json');continuation=await readContinuationAuthority();await readRuntimeOverlayAuthority();return newBrokerLedger({scenario,limits,continuation});
+ }
+ if(continuation!==null)return newContinuationLedger(file,{scenario,limits,sync,continuation});
  file=resolve(file);refuse(typeof scenario==='string'&&/^[a-z][a-z0-9-]{0,47}$/.test(scenario));refuse(await realpath(dirname(file))===dirname(file));const s=await lstat(file);refuse(s.isFile()&&!s.isSymbolicLink());
  const perCase=CASE_LIMITS;const maximum={...perCase,...limits};for(const[k,v]of Object.entries(maximum))refuse(Object.hasOwn(perCase,k)&&Number.isInteger(v)&&v>=0&&v<=perCase[k]);
  async function update(mutator){

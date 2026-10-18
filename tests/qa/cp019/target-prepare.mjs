@@ -11,6 +11,7 @@ import {canonical,sha256,verifyCopyIndex,validateStageRecords,syncDirectory} fro
 import {validateMaterial} from '../../../server/saas/recovery/custody.js';
 import {makeSourceRuntimeFixture,publishSourceReadonly} from './source-driver.mjs';
 import {makeTargetConfigBundle} from './target-config.mjs';
+import {readRuntimeOverlayAuthority} from './runtime-overlay-authority.mjs';
 import {serializeTargetBundle,publishTargetConfigBundle} from './target-bundle-io.mjs';
 import {copyOffline,verifyOfflineBoundary} from './copy-offline.mjs';
 import {newLedger} from './ledger.mjs';
@@ -28,7 +29,7 @@ export const TARGET_PREPARE_PATHS=Object.freeze({config:'/run/qa-secrets/target-
 
 /** A complete source capture is consumed byte-for-byte. It is never extended
  * from current target SQL, flags, placeholders or newly chosen credentials. */
-export function assembleTarget(input){
+export function assembleTarget(input,{runtimeOverlay=null}={}){
  const {config:c,...v}=input??{};exact(c,ASSEMBLE_KEYS,'TARGET_PREPARE_CONFIG');const inputKeys=[...INPUT_KEYS,...(Object.hasOwn(v,'variantLineage')?['variantLineage']:[])];exact(v,inputKeys,'TARGET_PREPARE_INPUTS');exact(c.inputHashes,inputKeys,'TARGET_PREPARE_HASHES');
  refuse(c.schema==='cp019-target-prepare-v1'&&c.project===TARGET&&SHA.test(c.sourceSha??'')&&SHA.test(c.producerSha??'')&&HASH.test(c.sourceJournalRawHash??''),'TARGET_PREPARE_BINDING');
  for(const k of inputKeys)refuse(HASH.test(c.inputHashes[k]??'')&&sha256(v[k])===c.inputHashes[k],'TARGET_PREPARE_INPUT_HASH');
@@ -39,7 +40,7 @@ export function assembleTarget(input){
  exact(v.sourceLiveEnd,['endProof','observedEnd','hash'],'TARGET_PREPARE_SOURCE_END');
  refuse(c.sourceEndProofHash===sha256(c.sourceEndProof)&&c.sourceEndProof.sourceResourceHash===sha256(resource)&&v.sourceLiveEnd.hash===c.sourceEndProofHash&&same(v.sourceLiveEnd.endProof,c.sourceEndProof)&&same(v.sourceLiveEnd.observedEnd,c.observedSourceEnd),'TARGET_PREPARE_SOURCE_END');
  const sourceFixture=makeSourceRuntimeFixture({material:original,custodyHash:c.inputHashes.material,foundation:v.foundation,writers:v.writers,correctives:v.correctives,sourceCommit:c.producerSha,normalManifest:n,normalManifestHash:c.inputHashes.sourceNormalManifest,resource});
- const bundle=makeTargetConfigBundle({material:m,baseSha:'86985fe7589032f202ebf0cb057a9b1384217151',producerArtifact:v.producerArtifact,verifierArtifact:v.verifierArtifact,sourceNormalManifest:n,sourceResource:resource,targetResource:c.targetResource,observedResources:c.observedResources,sourceEndProof:c.sourceEndProof,observedEnd:c.observedSourceEnd,copyIndex:v.copyIndex,sourceJournalRecords:v.sourceJournalRecords,sourceJournalCopyCheckpoint:c.sourceJournalCopyCheckpoint,sourceJournalFinalCheckpoint:c.sourceJournalFinalCheckpoint,sourceGuardSnapshots:s.sourceGuardSnapshots,sourceFingerprints:s.sourceFingerprints,sourceLocalImages:s.sourceLocalImages,sourceClock:s.sourceClock,roleVerifierHashes:s.roleVerifierHashes,canarySecurityVersion:s.canarySecurityVersion,sourceFixture,targetCa:v.targetCa,...(lineage?{variantLineage:context}:{})});
+ const bundle=makeTargetConfigBundle({material:m,runtimeOverlay,baseSha:'86985fe7589032f202ebf0cb057a9b1384217151',producerArtifact:v.producerArtifact,verifierArtifact:v.verifierArtifact,sourceNormalManifest:n,sourceResource:resource,targetResource:c.targetResource,observedResources:c.observedResources,sourceEndProof:c.sourceEndProof,observedEnd:c.observedSourceEnd,copyIndex:v.copyIndex,sourceJournalRecords:v.sourceJournalRecords,sourceJournalCopyCheckpoint:c.sourceJournalCopyCheckpoint,sourceJournalFinalCheckpoint:c.sourceJournalFinalCheckpoint,sourceGuardSnapshots:s.sourceGuardSnapshots,sourceFingerprints:s.sourceFingerprints,sourceLocalImages:s.sourceLocalImages,sourceClock:s.sourceClock,roleVerifierHashes:s.roleVerifierHashes,canarySecurityVersion:s.canarySecurityVersion,sourceFixture,targetCa:v.targetCa,...(lineage?{variantLineage:context}:{})});
  const configBundleHash=sha256(bundle),split=serializeTargetBundle(bundle,configBundleHash);
  return{bundle,configBundleHash,configBundleHeaderHash:split.headerSha256,sourceCaptureHash:c.inputHashes.sourceCapture,custodyHash,manifestHash:bundle.anchors.manifestHash,planHash:bundle.planHash,budgetCase:lineage?VARIANT_CASES[lineage.kind][0]:'manifest-final',...(lineage?{variantLineageHash:lineage.additionHash}:{})};
 }
@@ -105,7 +106,7 @@ async function liveCopy(c){
 }
 async function copyBeforeTarget(c){
  validateCopyConfig(c);refuse(c.invocationId===process.env.QA_INVOCATION_ID,'TARGET_PREPARE_COPY_INVOCATION');const ledger=await newLedger('/run/qa-budget/ledger.json',{scenario:'copy-offline'});
- const started=performance.now(),checkBudget=async()=>{const s=await ledger.snapshot(),elapsed=uptime()-s.startedUptime;refuse(s.schema==='cp019-budget-v1'&&s.project===SOURCE&&elapsed>=0&&elapsed<=1800&&performance.now()-started<=120000&&Object.entries({sql:GLOBAL_LIMITS.sql,http:300,journal:1000,artifactFiles:GLOBAL_LIMITS.artifactFiles}).every(([k,max])=>Number.isSafeInteger(s.total?.[k])&&s.total[k]>=0&&s.total[k]<=max),'TARGET_PREPARE_COPY_BUDGET');};await checkBudget();
+ const started=performance.now(),checkBudget=async()=>{const s=await ledger.snapshot(),elapsed=uptime()-s.startedUptime;refuse(['cp019-budget-v1','cp024-budget-continuation-v2'].includes(s.schema)&&s.project===SOURCE&&elapsed>=0&&elapsed<=1800&&performance.now()-started<=120000&&Object.entries({sql:GLOBAL_LIMITS.sql,http:300,journal:1000,artifactFiles:GLOBAL_LIMITS.artifactFiles}).every(([k,max])=>Number.isSafeInteger(s.total?.[k])&&s.total[k]>=0&&s.total[k]<=max),'TARGET_PREPARE_COPY_BUDGET');};await checkBudget();
  // PGDATA is measured by its separate 10000-file/2GiB bounds. The existing
  // artifact ledger charges the immutable index and metadata publications.
  const result=await copyOffline({sourceRoot:TARGET_PREPARE_PATHS.sourceData,copyRoot:TARGET_PREPARE_PATHS.backup,indexPath:TARGET_PREPARE_PATHS.copyIndex,resource:c.sourceResource,endProof:c.sourceEndProof,observeBoundary:async()=>{await checkBudget();return(await liveCopy(c)).boundary},ledger,checkpoint:checkBudget});
@@ -122,7 +123,7 @@ async function assembleFromFiles(c){
  v.copyIndex=(await strictRead(paths.sourceJournal+'/copy-index.json',{limit:INDEX,mode:0o600,expectedHash:c.inputHashes.copyIndex})).value;
  const log=(await strictRead(paths.sourceJournal+'/source.jsonl',{limit:JOURNAL,mode:0o600,json:false,expectedHash:c.sourceJournalRawHash})).value;
  v.sourceJournalRecords=await validateSourceJournalSnapshot({raw:log,rawHash:c.sourceJournalRawHash,recordsHash:c.inputHashes.sourceJournalRecords,copyCheckpoint:c.sourceJournalCopyCheckpoint,finalCheckpoint:c.sourceJournalFinalCheckpoint,headNames:await readdir(paths.sourceJournal+'/heads'),readHead:async n=>(await strictRead(paths.sourceJournal+'/heads/'+n,{mode:0o600})).value,readPlan:async n=>(await strictRead(paths.sourceJournal+'/plans/'+n,{mode:0o600})).value});
- const built=assembleTarget({config:c,...v}),scenario=built.budgetCase;refuse(scenario,'TARGET_PREPARE_VARIANT_KIND');const ledger=await newLedger('/run/qa-budget/ledger.json',{scenario});
+ const built=assembleTarget({config:c,...v},{runtimeOverlay:await readRuntimeOverlayAuthority()}),scenario=built.budgetCase;refuse(scenario,'TARGET_PREPARE_VARIANT_KIND');const ledger=await newLedger('/run/qa-budget/ledger.json',{scenario});
  await publishOrMatch('/run/qa-secrets/material.json',v.variantLineage?.effectiveMaterial??v.material,ledger);await publishOrMatch('/run/qa-secrets/source-capture.json',v.sourceCapture,ledger);
  const published=await publishTargetConfigBundle({bundle:built.bundle,expectedFullHash:built.configBundleHash,ledger});refuse(published.headerSha256===built.configBundleHeaderHash,'TARGET_PREPARE_PUBLICATION');
  return{type:'cp019-target-prepared',status:'PASS',configBundleHash:built.configBundleHash,configBundleHeaderHash:built.configBundleHeaderHash,sourceCaptureHash:built.sourceCaptureHash,custodyHash:built.custodyHash,manifestHash:built.manifestHash,planHash:built.planHash,budgetCase:built.budgetCase,...(variant?{variantLineageHash:built.variantLineageHash}:{}),filesPublished:published.filesPublished,filesReused:published.filesReused,secretOutput:false,physicalRecovery:'NOT VERIFIED'};

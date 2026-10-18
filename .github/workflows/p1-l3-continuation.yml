@@ -1,0 +1,153 @@
+name: P1-L3 isolated continuation transport
+
+on:
+  push:
+    branches: [codex/verify-p1-l3-continuation]
+  pull_request:
+    branches: [codex/verify-p1-l3-development]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: p1-l3-continuation-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  transport:
+    name: Linux UNIX budget transport (not recovery acceptance)
+    if: github.repository == 'SrEdgarR/MECANET'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 7
+    env:
+      CI: 'true'
+      REAL_API: 'false'
+      VITEST_REAL_API: 'false'
+    steps:
+      - name: Checkout without persisted credentials
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
+        with:
+          persist-credentials: false
+      - name: Use pinned Node
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: '24.21.0'
+          package-manager-cache: false
+      - name: Prove counters, overlay and real Linux cross-process transport
+        run: |
+          test "$(node --version)" = "v24.21.0"
+          test "$(uname -m)" = "x86_64"
+          node --test tests/qa/cp019/continuation-budget.test.mjs tests/qa/cp019/continuation-broker.test.mjs tests/qa/cp019/runtime-overlay.test.mjs
+          python3 -X utf8 tests/qa/cp019/continuation-budget.test.py
+          python3 -X utf8 tests/qa/cp019/continuation-host.test.py
+          python3 -X utf8 tests/qa/cp019/runtime-overlay.test.py
+          python3 -X utf8 tests/qa/cp019/continuation-broker.test.py
+          python3 -X utf8 tests/qa/cp019/continuation-broker-unix.test.py
+          python3 -B -X utf8 tests/qa/cp019/continuation-admission.test.py
+          python3 -B -X utf8 tests/qa/cp019/continuation-publication.test.py
+          python3 -B -X utf8 tests/qa/cp019/continuation-port.test.py
+          python3 -B -X utf8 tests/qa/cp019/runner.test.py
+          python3 -B -X utf8 tests/qa/cp019/continuation-runner.test.py
+          python3 -B -X utf8 tests/qa/cp019/resource-monitor.test.py
+      - name: Prove two-slot accounting and historical creation debt
+        run: |
+          python3 -B -X utf8 tests/qa/cp026/continuation-slots.test.py
+          python3 -B -X utf8 tests/qa/cp026/historical-creation.test.py
+          python3 -B -X utf8 tests/qa/cp026/historical-cross-language.test.py
+          sudo -n python3 -B -X utf8 tests/qa/cp026/continuation-slots-linux.test.py
+      - name: Prove fixed Root fsync store in this exclusive ephemeral runner
+        run: sudo -n python3 -B -X utf8 tests/qa/cp019/continuation-store-linux.test.py
+      - name: Prove one immutable Root claim and reject a second OS process
+        run: sudo -n python3 -B -X utf8 tests/qa/cp019/continuation-admission-linux.test.py
+
+  development-clock:
+    name: ${{ matrix.label }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - label: ARM64 portable recovery and two API (not Oracle acceptance)
+            runner: ubuntu-24.04-arm
+            profile: arm64-recovery
+            architecture: arm64
+            kernel_architecture: aarch64
+            docker_architecture: arm64
+            browser: 'false'
+            mode: run-arm-recovery
+          - label: Linux x64 final browser and recovery (not ARM64 or Oracle acceptance)
+            runner: ubuntu-22.04
+            profile: x64-browser-recovery
+            architecture: x64
+            kernel_architecture: x86_64
+            docker_architecture: amd64
+            browser: 'true'
+            mode: run-browser-recovery
+    if: github.repository == 'SrEdgarR/MECANET' && github.event_name == 'push' && github.event.repository.private == false && github.ref == 'refs/heads/codex/verify-p1-l3-continuation'
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 15
+    env:
+      CI: 'true'
+      MECANET_CI_PROFILE: ${{ matrix.profile }}
+      MECANET_CI_BROWSER: ${{ matrix.browser }}
+      REAL_API: 'false'
+      VITEST_REAL_API: 'false'
+    steps:
+      - name: Checkout exact source without persisted credentials
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
+        with:
+          persist-credentials: false
+      - name: Use pinned Node without package cache
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: '24.21.0'
+          package-manager-cache: false
+      - name: Install locked backend without lifecycle scripts
+        run: |
+          npm install --global npm@11.9.0 --ignore-scripts --no-audit --no-fund
+          test "$(node --version)" = "v24.21.0"
+          test "$(npm --version)" = "11.9.0"
+          npm ci --prefix server/saas --ignore-scripts --no-audit --no-fund
+      - name: Build and audit the exact final SaaS UI in the isolated SC008 lane
+        if: matrix.browser == 'true'
+        run: node scripts/ci/saas-toolchain.mjs verify
+      - name: Install the locked isolated browser and its Linux dependencies
+        if: matrix.browser == 'true'
+        run: |
+          npm ci --prefix tests/integration/browser-toolchain --ignore-scripts --no-audit --no-fund
+          npm audit --prefix tests/integration/browser-toolchain --audit-level=low
+          node tests/integration/browser-toolchain/node_modules/playwright/cli.js install --with-deps chromium
+      - name: Prove sandboxed native Chromium startup before any PostgreSQL resource
+        if: matrix.browser == 'true'
+        run: node tests/integration/ci-browser.mjs --preflight
+      - name: Prove actual native runtime and standard runner tooling
+        run: |
+          test "$(uname -m)" = "${{ matrix.kernel_architecture }}"
+          test "$(node -p process.arch)" = "${{ matrix.architecture }}"
+          test "$(docker version --format '{{.Server.Os}}/{{.Server.Arch}}')" = "linux/${{ matrix.docker_architecture }}"
+          openssl version
+          node -e 'const os=require("node:os"); console.log(JSON.stringify({sourceSha:process.env.GITHUB_SHA,runner:process.env.RUNNER_NAME,architecture:process.arch,platform:process.platform,kernel:os.release(),cpus:os.cpus().length,ramBytes:os.totalmem(),profile:process.env.MECANET_CI_PROFILE,secretsPrinted:false}))'
+      - name: Prove generic clock and CI boundary guards
+        run: |
+          node --check tests/integration/ci-postgres.mjs
+          node --check tests/integration/development-clock-probe.mjs
+          node tests/integration/ci-postgres.mjs --self-test
+          node tests/integration/p1-l3-postgres.mjs --self-test
+          node --test tests/qa/cp027/ci-cold-copy.test.mjs tests/qa/cp027/ci-arm-profile.test.mjs tests/qa/cp027/ci-api-stop.test.mjs tests/qa/cp027/ci-target-clock.test.mjs tests/qa/cp027/ci-reconcile-interruption.test.mjs tests/qa/cp027/ci-api-restart.test.mjs
+          node --test tests/qa/cp028/ci-integrity.test.mjs tests/qa/cp028/ci-readiness-negatives.test.mjs tests/qa/cp028/tenant-commit-boundary.test.mjs tests/qa/cp028/ci-browser-ui.test.mjs tests/qa/cp028/ci-target-pool-boundary.test.mjs tests/qa/cp028/ci-browser.test.mjs tests/qa/cp028/ci-failed-run-report.test.mjs
+          node --test tests/qa/admission-clock.unit.test.js tests/qa/cp023/clock-regression.test.mjs tests/qa/cp023/clock-contention.test.mjs tests/qa/cp023/clock-driver.test.mjs
+      - name: Run bounded source, recovery and two API continuation
+        id: integration
+        continue-on-error: true
+        run: node tests/integration/ci-postgres.mjs ${{ matrix.mode }}
+      - name: Require SQL development result
+        if: always()
+        run: node tests/integration/ci-postgres.mjs assert-sql
+      - name: Require HTTP development result
+        if: always()
+        run: node tests/integration/ci-postgres.mjs assert-http
+      - name: Confirm positive own PostgreSQL cleanup
+        if: always()
+        run: node tests/integration/ci-postgres.mjs cleanup
+      - name: Require portable recovery, selective reopening, clock continuation and cleanup PASS
+        if: always()
+        run: node tests/integration/ci-postgres.mjs assert-pass

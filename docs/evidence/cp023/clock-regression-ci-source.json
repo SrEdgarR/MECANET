@@ -1,0 +1,121 @@
+{
+  "schema": "cp023-generic-clock-ci-source-v1",
+  "status": "SOURCE FROZEN / PHYSICAL CI NOT EXECUTED BY AUTHOR",
+  "createdAt": "2026-10-16T03:47:19.691015+00:00",
+  "base": "42bbf292c038f9185d9006c09a38094e525e5ccb",
+  "files": [
+    {
+      "path": ".github/workflows/p1-l3-continuation.yml",
+      "sha256": "5e49a880c85ad1e090b536f77f5291212e585da05b9c5164e2de624d533d504d",
+      "bytes": 4749
+    },
+    {
+      "path": "server/saas/admission/clock.js",
+      "sha256": "a9067ea88e016f27d9cc9ea3ab7e9f09f826d77ef0f04686cc313e3977f9870c",
+      "bytes": 7289
+    },
+    {
+      "path": "server/saas/admission/transaction.js",
+      "sha256": "33f9c9f335a087d4e1421f2c04dd4eac3caf0d452bd1bfb3fc2e10a4855c7af4",
+      "bytes": 8410
+    },
+    {
+      "path": "tests/integration/ci-postgres.mjs",
+      "sha256": "11f1546e341cea867e65ad4860bc08719183784bce351fe4c57fc866d5756ee4",
+      "bytes": 24977
+    },
+    {
+      "path": "tests/integration/p1-l3-postgres.mjs",
+      "sha256": "c25937c52820fe3b13f62f4c12c0e3e5464aec61e1568bf645bde33e28db5ece",
+      "bytes": 33025
+    },
+    {
+      "path": "tests/qa/admission.unit.test.js",
+      "sha256": "e2005a41423fecea9bddea71e63ea365f491bf2ec2433a4eda22fb264c0e6982",
+      "bytes": 6498
+    },
+    {
+      "path": "tests/integration/development-clock-driver.mjs",
+      "sha256": "dc627f5f2b3d721f1eb0a3ee7f379bd8d50fe82f5ab903e0ce67f40ae16610a0",
+      "bytes": 6311
+    },
+    {
+      "path": "tests/integration/development-clock-probe.mjs",
+      "sha256": "42b9e66c02295efa65f1944a34f72612a1d3037bf09b5051bf3a0302f2d8b3aa",
+      "bytes": 5317
+    },
+    {
+      "path": "tests/qa/cp023/clock-regression.test.mjs",
+      "sha256": "58367e35f49b43d155cebcd347fad231ae79413e71c4d4e57dd4bf3a08320270",
+      "bytes": 6968
+    },
+    {
+      "path": "tests/qa/cp023/clock-driver.test.mjs",
+      "sha256": "4a321ddecd1c703940bcbd2d6fd7b5f9dc886d1f1e0603a8d14bb70c932eef4f",
+      "bytes": 8615
+    },
+    {
+      "path": "tests/qa/cp023/clock-contention.test.mjs",
+      "sha256": "97cfd9b57509b2aa14db372823289bc735f7fddc5d76b61bcb405d8e5863ad27",
+      "bytes": 4248
+    }
+  ],
+  "sourceSelection": "Two generic admission product modules plus generic development driver/probe/tests and existing schema3 CI composition only. No schema4, POS, SQL007, UI, private QA data or credentials.",
+  "boundary": {
+    "runner": "existing standard ubuntu24.04 x64 only; never ARM64/VPS acceptance",
+    "trigger": "push exact continuation branch only; preflight accepts exactly development/continuation refs",
+    "budgets": "Existing limits unchanged:600s,8192 parent SQL,80 HTTP,60 PG connections,1CPU/1GiB PostgreSQL,2API",
+    "roles": "Clock receives no new grants; legitimate saas_api admission_version UPDATE used for separately metered contender; positive role privilege check before probe",
+    "resourcesExecutedByAuthor": [],
+    "gitMutationsByAuthor": []
+  },
+  "causalProbe": {
+    "realEnvironment": "NOT VERIFIED until new GitHub run",
+    "preparedMechanism": "After real SERIALIZABLE SELECT set_config ACK, separate existing measured saas_api connection autocommits admission_version; same product UPDATE must produce three PostgreSQL40001 with ROLLBACK ACK. Same clock driver returnsfalse and later true at ordinary120ms cadence; SQL fence and authority tick/version agree, acquisitionSequence1.",
+    "legacyComparison": "The exact same live product rejection is observed and rethrown before the new driver classifies it. A catch-all legacy adapter would stop; a separate old timer is explicitly NOT executed.",
+    "guaranteesUnchanged": "No reacquire/reconcile/newretry/timeout change/reset; uncertainty remains fatal; existing thirteen HTTP checks run afterwards."
+  },
+  "localEvidence": [
+    {
+      "tool": "d55f05",
+      "kind": "RED",
+      "result": "5 of6 generic regression tests failed on previous product modules; deadline incorrectly ADMISSION_BUSY and diagnostics absent"
+    },
+    {
+      "tool": "bc959c",
+      "kind": "GREEN",
+      "result": "9 generic clock/regression tests passed after exact product port"
+    },
+    {
+      "tool": "dda13c",
+      "kind": "RED",
+      "result": "new branch/report gates exports missing before implementation"
+    },
+    {
+      "tool": "0b7597",
+      "kind": "GREEN",
+      "result": "3 initial contention guards passed"
+    },
+    {
+      "tool": "d9a1e6",
+      "kind": "GREEN",
+      "result": "35 affected Node tests and CI pure self-test12denials/3clock assertions PASS; git diff --check PASS. No SQL/network/Docker."
+    }
+  ],
+  "limitations": [
+    "p1-l3-postgres self-test local NOT VERIFIED because bcryptjs backend dependencies absent in this isolated CI worktree; pinned npm ci exists before checks in job",
+    "No YAML parser installed locally; workflow reviewed as text, GitHub validation remains pending",
+    "SQL boundary-double test never represented as PostgreSQL evidence",
+    "No Git push, draft PR edit, merge, remote resource or deployment performed by author"
+  ],
+  "primaryReferences": [
+    {
+      "url": "https://www.postgresql.org/docs/18/transaction-iso.html",
+      "use": "Snapshot fixed at first nontransaction statement; actual concurrent UPDATE after snapshot must cause serialization failure, to be proven in CI"
+    },
+    {
+      "url": "https://www.postgresql.org/docs/18/sql-begin.html",
+      "use": "Autocommit contender statement acknowledged before clock UPDATE"
+    }
+  ]
+}
