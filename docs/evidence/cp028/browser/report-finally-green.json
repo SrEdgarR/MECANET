@@ -1,0 +1,21 @@
+{
+  "schema": "cp028-failed-report-regression-v1",
+  "status": "PASS",
+  "redExitCode": 1,
+  "greenTests": 11,
+  "newTests": 1,
+  "profilesInNewTest": [
+    "arm64-recovery",
+    "x64-browser-recovery"
+  ],
+  "scope": "child processes on Windows x64 denied before private mkdir/PG/HTTP; no database or browser",
+  "sourceHashes": {
+    "tests/integration/ci-postgres.mjs": "c7110320e277e7f1aa864a1f669df6d7d260a60d60b0dc8e919bfd127a79139c",
+    "tests/qa/cp028/ci-failed-run-report.test.mjs": "d2cdd1087d93d873b040b45a45dfbd65c90483b9b0703eb09af9e23c9c4066be",
+    ".github/workflows/p1-l3-continuation.yml": "694c9f3fc1e1c90595a90ca28f09c0355659366674b4460e7a1ea36bb037d701"
+  },
+  "cause": "finally referenced HTTP counter declared only inside try; now initialized at run scope",
+  "rawRed": "report-finally-red.txt",
+  "sqlEffects": 0,
+  "httpEffects": 0
+}

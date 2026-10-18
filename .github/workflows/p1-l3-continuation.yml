@@ -133,7 +133,7 @@ jobs:
           node tests/integration/ci-postgres.mjs --self-test
           node tests/integration/p1-l3-postgres.mjs --self-test
           node --test tests/qa/cp027/ci-cold-copy.test.mjs tests/qa/cp027/ci-arm-profile.test.mjs tests/qa/cp027/ci-api-stop.test.mjs tests/qa/cp027/ci-target-clock.test.mjs tests/qa/cp027/ci-reconcile-interruption.test.mjs tests/qa/cp027/ci-api-restart.test.mjs
-          node --test tests/qa/cp028/ci-integrity.test.mjs tests/qa/cp028/ci-readiness-negatives.test.mjs tests/qa/cp028/tenant-commit-boundary.test.mjs tests/qa/cp028/ci-browser-ui.test.mjs tests/qa/cp028/ci-target-pool-boundary.test.mjs tests/qa/cp028/ci-browser.test.mjs
+          node --test tests/qa/cp028/ci-integrity.test.mjs tests/qa/cp028/ci-readiness-negatives.test.mjs tests/qa/cp028/tenant-commit-boundary.test.mjs tests/qa/cp028/ci-browser-ui.test.mjs tests/qa/cp028/ci-target-pool-boundary.test.mjs tests/qa/cp028/ci-browser.test.mjs tests/qa/cp028/ci-failed-run-report.test.mjs
           node --test tests/qa/admission-clock.unit.test.js tests/qa/cp023/clock-regression.test.mjs tests/qa/cp023/clock-contention.test.mjs tests/qa/cp023/clock-driver.test.mjs
       - name: Run bounded source, recovery and two API continuation
         id: integration
